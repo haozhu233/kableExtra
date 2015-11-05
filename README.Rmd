@@ -1,0 +1,8 @@
+---
+output: 
+  md_document:
+    variant: markdown_github
+---
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+Everyone loves `kable`, so do I. Even though there are some other available packages in `R` to build beautiful tables, `kable` is still my go-to function whenever I want to build a table in `rmarkdown` or `Shiny`. After using `kable` for a long time, I can see the only reason that prevents people from using `kable` is its simplicityThis package is designed to enhance `kable`'s functionality without destorying its beauty of simplicity by using our favorite `pipe` syntax. 
