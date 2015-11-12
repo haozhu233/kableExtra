@@ -5,4 +5,10 @@ output:
 ---
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-Everyone loves `kable`, so do I. Even though there are some other available packages in `R` to build beautiful tables, `kable` is still my go-to function whenever I want to build a table in `rmarkdown` or `Shiny`. After using `kable` for a long time, I can see the only reason that prevents people from using `kable` is its simplicityThis package is designed to enhance `kable`'s functionality without destorying its beauty of simplicity by using our favorite `pipe` syntax. 
+#Introduction
+If CRAN allows, I really want to call this package `kable%>%`. Well, let's sit down and get back to the reality. Now you have `kableExtra`.
+
+Everyone loves `kable`, so do I. It is the most straight forward, convenient table generating function in R (in my opinion). At the same time, it won't through you some useless messages that you need to think of a way to get rid of. Also, if you are planning to "knit" a document, you probably have already have `knitr` loaded. Why would you want to load another "table generator" package if the original one can fulfill your need.  
+
+
+Even though there are some other available packages in `R` to build beautiful tables, `kable` is still my go-to function whenever I want to build a table in `rmarkdown` or `Shiny`. After using `kable` for a long time, I can see the only reason that prevents people from using `kable` is its simplicityThis package is designed to enhance `kable`'s functionality without destorying its beauty of simplicity by using our favorite `pipe` syntax. 

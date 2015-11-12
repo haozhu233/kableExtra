@@ -8,4 +8,3 @@ latextable_1 <- kable(rtable, format = "latex")
 latextable_2 <- kable(rtable, format = "latex", caption = "Table", row.names = T, align = c("l", "c", "c"))
 latextable_3 <- kable(rtable, format = "latex", booktab = T)
 latextable_4 <- kable(rtable, format = "latex", booktab = T, caption = "Table")
-

@@ -1,9 +1,20 @@
 Package: kableExtra
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Title: Decorate kable output using pipe syntax
+Version: 0.0.1
+Authors@R: c(
+    person("Hao", "Zhu", email = "haozhu@hsl.harvard.edu", role = c("aut", "cre"))
+    )
+Description: A set of functions aiming to strengthen the functionality of
+    knitr::kable without destroying its simplicity by adopting pipe syntax.
+License: MIT + file LICENSE
 LazyData: TRUE
+Depends:
+    R (>= 3.1.2)
+Imports:
+    knitr (>= 1.10),
+    magrittr,
+    stringr (>= 1.0)
+Suggests:
+    testthat
+RoxygenNote: 5.0.0
