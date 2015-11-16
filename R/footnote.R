@@ -14,11 +14,13 @@
 #' "number", "alphabet" and "symbol".
 #'
 #' @export
-add_footnote <- function(input, label = NULL, notation = "alphabet", threeparttable = F) {
+add_footnote <- function(input, label = NULL, notation = "alphabet",
+                         threeparttable = F) {
   if (is.null(label)){return(input)}
   # Define available id list
   if (!notation %in% c("number", "alphabet", "symbol")){
-    warning('Please select your notation within "number", "alphabet" and "symbol". Now add_footnote is using "alphabet" as default.')
+    warning('Please select your notation within "number", "alphabet" and ',
+            '"symbol". Now add_footnote is using "alphabet" as default.')
   }
   if (notation == "symbol") {notation = paste0(notation, ".", attr(input, "format"))}
   ids.ops <- data.frame(
@@ -27,14 +29,18 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
     symbol.latex = c(
       "*", "\\\\dag", "\\\\ddag", "\\\\S", "\\\\P",
       "**", "\\\\dag\\\\dag", "\\\\ddag\\\\ddag", "\\\\S\\\\S", "\\\\P\\\\P",
-      "***", "\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag", "\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P",
-      "****", "\\\\dag\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag\\\\ddag", "\\\\S\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P\\\\P"
+      "***", "\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag",
+      "\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P",
+      "****", "\\\\dag\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag\\\\ddag",
+      "\\\\S\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P\\\\P"
     ),
     symbol.html = c(
       "*", "&dagger;", "&Dagger;", "&sect;", "&para;",
       "**", "&dagger;&dagger;", "&Dagger;&Dagger;", "&sect;&sect;", "&para;&para;",
-      "*", "&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;", "&sect;&sect;&sect;", "&para;&para;&para;",
-      "**", "&dagger;&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;&Dagger;", "&sect;&sect;&sect;&sect;", "&para;&para;&para;&para;"
+      "*", "&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;",
+      "&sect;&sect;&sect;", "&para;&para;&para;",
+      "**", "&dagger;&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;&Dagger;",
+      "&sect;&sect;&sect;&sect;", "&para;&para;&para;&para;"
     ),
     symbol.markdown = c(
       "\\*", "†", "‡", "§", "¶",
@@ -50,6 +56,7 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
     )
   )
   ids <- ids.ops[,notation]
+  # pandoc cannot recognize ^*^ as * is a special character. We have to use ^\*^
   ids.intable <- gsub("\\*", "\\\\*", ids)
 
   #count the number of items in label and intable notation
@@ -60,8 +67,14 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
                   count.intablenoot, "[note] in your table."))
   }
 
+  export <- input
+
+  # Footnote solution for markdown and pandoc. It is not perfect as
+  # markdown doesn't support complex table formats but this solution
+  # should be able to satisfy people who don't want to spend extra
+  # time to define their `kable` output.
   if(!attr(input, "format") %in% c("html", "latex")){
-    export <- input
+    # In table notation
     if(count.intablenoot != 0){
       for(i in 1:count.intablenoot){
         export[which(str_detect(export, "\\[note\\]"))[1]] <-
@@ -69,6 +82,20 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
             paste0(rep(" ", 4 - nchar(as.character(ids[i]))),
               collapse = "")), export[which(str_detect(export, "\\[note\\]"))[1]])
       }
+    }
+    # Fix extra in table notation
+    extra.notation <- as.numeric(
+      str_extract(
+        str_extract_all(
+          paste0(export, collapse = ""), "\\[note[0-9]{1,2}\\]"
+          )[[1]],
+        "[0-9]{1,2}"))
+    for(i in extra.notation){
+      export <- gsub(paste0("\\[note", i, "\\]"),
+                     paste0("^", ids.intable[i], "^",
+                            paste0(rep(" ", 4 - nchar(as.character(ids[i]))),
+                            collapse = "")),
+                     export)
     }
 
     export[length(export)+1] <- ""
@@ -80,13 +107,17 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
 
   # Generate latex table footnote --------------------------------
   if(attr(input, "format")=="latex"){
+    kable_info <- magic_mirror(input)
+    if(threeparttable == F | latex.tabular == "longtable"){
+
+    }
     # If longtable is used, then use page footnote instead of threeparttable
     # as it makes more sense to see the footnote at the bottom of page if
     # table is longer than one page.
     if(grepl("\\\\begin\\{longtable\\}", input)){
-
       for(i in 1:count.intablenoot){
-        input <- sub("\\[note\\]", paste0("\\\\footnote[", ids[i], "]{", label[i], "}"), input)
+        export <- sub("\\[note\\]",
+                    paste0("\\\\footnote[", ids[i], "]{", label[i], "}"), export)
       }
     }else{
       # Regular cases other than longtable
@@ -98,13 +129,14 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
 
       # Replace in-table notation with appropriate symbol
       for(i in 1:count.intablenoot){
-        input <- sub("\\[note\\]", paste0("\\\\textsuperscript{", ids[i], "}"), input)
+        export <- sub("\\[note\\]", paste0("\\\\textsuperscript{", ids[i], "}"), export)
       }
 
-      if(grepl("\\\\caption\\{.*?\\}", input)){
-        export <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{", input)
+      if(grepl("\\\\caption\\{.*?\\}", export)){
+        export <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{", export)
       }else{
-        export <- sub("\\\\begin\\{tabular\\}", "\\\\begin{threeparttable}\n\\\\begin{tabular}", input)
+        export <- sub("\\\\begin\\{tabular\\}",
+                      "\\\\begin{threeparttable}\n\\\\begin{tabular}", export)
       }
       export <- gsub(
         "\\\\end\\{tabular\\}",
@@ -116,7 +148,6 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", threepartta
     }
   }
   if(attr(input, "format")=="html"){
-    export <- input
   }
   return(export)
 }

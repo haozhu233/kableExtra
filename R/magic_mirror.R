@@ -5,24 +5,46 @@
 #' @export
 
 magic_mirror <- function(input){
-  if(!"knitr_kable" %in% attr(input, "format")){
+  if(!"knitr_kable" %in% attr(input, "class")){
     warning("magic_mirror may not be able to produce correct result if the",
             " input table is not rendered by knitr::kable. ")
   }
   kable_format <- attr(input, "format")
   if (kable_format == "latex"){
-    magic_mirror_latex(input)
+    kable_info <- magic_mirror_latex(input)
   }
   if (kable_format == "html"){
-    magic_mirror_html(input)
+    kable_info <- magic_mirror_html(input)
   }
+  return(kable_info)
 }
 
 #' Magic mirror for latex tables
 magic_mirror_latex <- function(input){
-  # kable will put a begin{table} shell if caption is not NULL
-  caption <- ifelse(
-    str_detect(input, "\\\\caption\\{.*?\\}"),
-    str_match(input, "caption\\{(.*?)\\}")[2], NULL
+  kable_info <- list(tabular = NULL, booktabs = NULL, align = NULL,
+                     ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
+                     caption = NULL, contents = NULL)
+  # Tabular
+  kable_info$tabular <- ifelse(
+    grepl("\\\\begin\\{tabular\\}", input),
+    "tabular", "longtable"
   )
+  # Booktabs
+  kable_info$booktabs <- ifelse(grepl("\\\\toprule", input), TRUE, FALSE)
+  # Align
+  kable_info$align <- gsub("\\|", "", str_match(
+    input, paste0("\\\\begin\\{", kable_info$tabular,"\\}\\{(.*?)\\}"))[2])
+  # N of columns
+  kable_info$ncol <- nchar(kable_info$align)
+  # N of rows
+  kable_info$nrow <- str_count(input, "\\\\\n")
+  # Caption
+  kable_info$caption <- str_match(input, "caption\\{(.*?)\\}")[2]
+  # Contents
+  kable_info$contents <- str_match_all(input, "\n(.*)\\\\\\\\")[[1]][,2]
+  # Column names
+  kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
+  # Row names
+  kable_info$rownames <- str_extract(kable_info$contents, "^[^ &]*")
+  return(kable_info)
 }
