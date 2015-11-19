@@ -10,11 +10,12 @@ Description: A set of functions aiming to strengthen the functionality of
 License: MIT + file LICENSE
 LazyData: TRUE
 Depends:
-    R (>= 3.1.2),
-    stringr (>= 1.0)
+    R (>= 3.1.2)
 Imports:
     knitr (>= 1.10),
-    magrittr
+    magrittr,
+    stringr (>= 1.0),
+    XML
 Suggests:
     testthat
 RoxygenNote: 5.0.1

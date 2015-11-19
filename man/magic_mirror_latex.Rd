@@ -2,11 +2,11 @@
 % Please edit documentation in R/magic_mirror.R
 \name{magic_mirror_latex}
 \alias{magic_mirror_latex}
-\title{Magic mirror for latex tables}
+\title{Magic mirror for latex tables --------------}
 \usage{
 magic_mirror_latex(input)
 }
 \description{
-Magic mirror for latex tables
+Magic mirror for latex tables --------------
 }
 

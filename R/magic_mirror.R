@@ -1,7 +1,8 @@
 #' Magic mirror that returns kable's attributes
 #'
 #' @param input The output of kable
-#'
+#' @importFrom knitr kable
+#' @import stringr
 #' @export
 
 magic_mirror <- function(input){
@@ -19,7 +20,8 @@ magic_mirror <- function(input){
   return(kable_info)
 }
 
-#' Magic mirror for latex tables
+#' Magic mirror for latex tables --------------
+#' @param input The output of kable
 magic_mirror_latex <- function(input){
   kable_info <- list(tabular = NULL, booktabs = NULL, align = NULL,
                      ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
@@ -56,3 +58,46 @@ magic_mirror_latex <- function(input){
   kable_info$rownames <- str_extract(kable_info$contents, "^[^ &]*")
   return(kable_info)
 }
+
+#' Magic Mirror for html table --------
+#'
+#' @param input The output of kable
+#'
+#' @importFrom XML readHTMLTable
+magic_mirror_html <- function(input){
+  kable_info <- list(table.attr = NULL, align = NULL,
+                     ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
+                     caption = NULL, contents = NULL)
+  kable_data <- readHTMLTable(input[1])
+  # Caption
+  kable_info$caption <- names(kable_data)
+  # Contents
+  kable_info$contents <- kable_data[[1]]
+  # colnames
+  kable_info$colnames <- str_replace_all(
+    str_trim(names(kable_data[[1]])), "V[0-9]{1,2}", ""
+  )
+  # rownames
+  kable_info$rownames <- as.character(kable_data[[1]][,1])
+  if(str_trim(names(kable_data[[1]])[1]) != "V1"){
+    kable_info$rownames <- c(str_trim(names(kable_data[[1]])[1]),
+                             kable_info$rownames)}
+  # ncol
+  kable_info$ncol <- length(kable_info$colnames)
+  # nrow
+  kable_info$nrow <- length(kable_info$rownames)
+  # table.attr
+  kable_info$table.attr <- str_match(input, "<table class = '(.*)'>")[2]
+  # align
+  kable_info$align <- str_match_all(
+    input, 'style=\\"text-align:([^;]*);'
+    )[[1]][,2]
+  kable_info$align <- paste0(
+    str_extract(tail(kable_info$align, kable_info$ncol), "."), collapse = ""
+  )
+  return(kable_info)
+}
+
+#' @export
+magrittr::`%>%`
+

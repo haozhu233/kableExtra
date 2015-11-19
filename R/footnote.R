@@ -14,9 +14,10 @@
 #' "number", "alphabet" and "symbol".
 #'
 #' @export
-add_footnote <- function(input, label = NULL, notation = "alphabet",
+add_footnote <- function(input, label = NULL, notation = "alphabet", escape = T,
                          threeparttable = F) {
   if (is.null(label)){return(input)}
+
   # Define available id list
   if (!notation %in% c("number", "alphabet", "symbol")){
     warning('Please select your notation within "number", "alphabet" and ',
@@ -43,26 +44,32 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
       "&sect;&sect;&sect;&sect;", "&para;&para;&para;&para;"
     ),
     symbol.markdown = c(
-      "\\*", "†", "‡", "§", "¶",
-      "\\*\\*", "††", "‡‡", "§§", "¶¶",
-      "\\*\\*\\*", "†††", "‡‡‡", "§§§", "¶¶¶",
-      "\\*\\*\\*\\*", "††††", "‡‡‡‡", "§§§§", "¶¶¶¶"
+      "\\*", "\u2020", "\u2021", "\u00A7", "\u00B6",
+      "\\*\\*", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
+      "\\*\\*\\*", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
+      "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
+      "\\*\\*\\*\\*", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
+      "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
     ),
     symbol.pandoc = c(
-      "\\*", "†", "‡", "§", "¶",
-      "\\*\\*", "††", "‡‡", "§§", "¶¶",
-      "\\*\\*\\*", "†††", "‡‡‡", "§§§", "¶¶¶",
-      "\\*\\*\\*\\*", "††††", "‡‡‡‡", "§§§§", "¶¶¶¶"
+      "\\*", "\u2020", "\u2021", "\u00A7", "\u00B6",
+      "\\*\\*", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
+      "\\*\\*\\*", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
+      "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
+      "\\*\\*\\*\\*", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
+      "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
     )
   )
   ids <- ids.ops[,notation]
   # pandoc cannot recognize ^*^ as * is a special character. We have to use ^\*^
   ids.intable <- gsub("\\*", "\\\\*", ids)
   ids.simple <- c(
-    "*", "†", "‡", "§", "¶",
-    "**", "††", "‡‡", "§§", "¶¶",
-    "***", "†††", "‡‡‡", "§§§", "¶¶¶",
-    "****", "††††", "‡‡‡‡", "§§§§", "¶¶¶¶"
+    "*", "\u2020", "\u2021", "\u00A7", "\u00B6",
+    "**", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
+    "***", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
+    "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
+    "****", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
+    "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
   )
 
   #count the number of items in label and intable notation
@@ -117,6 +124,9 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
 
   # Generate latex table footnote --------------------------------
   if(attr(input, "format")=="latex"){
+    # Clean the entry for labels when escape is enabled
+    if (escape = T){label <- knitr:::escape_latex(label)}
+
     kable_info <- magic_mirror(input)
     if(kable_info$tabular == "longtable"){
       if(notation != "number"){
@@ -220,6 +230,3 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
   }
   return(export)
 }
-
-
-
