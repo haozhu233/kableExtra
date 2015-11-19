@@ -33,13 +33,21 @@ magic_mirror_latex <- function(input){
   kable_info$booktabs <- ifelse(grepl("\\\\toprule", input), TRUE, FALSE)
   # Align
   kable_info$align <- gsub("\\|", "", str_match(
-    input, paste0("\\\\begin\\{", kable_info$tabular,"\\}\\{(.*?)\\}"))[2])
+    input, paste0("\\\\begin\\{", kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
   # N of columns
   kable_info$ncol <- nchar(kable_info$align)
-  # N of rows
-  kable_info$nrow <- str_count(input, "\\\\\n")
   # Caption
   kable_info$caption <- str_match(input, "caption\\{(.*?)\\}")[2]
+  # N of rows
+  kable_info$nrow <- str_count(input, "\\\\\n") -
+    # in the dev version (currently as of 11.2015) of knitr, when longtable is
+    # enabled, caption is moved inside the tabular environment. As a result,
+    # the number of rows should be adjusted.
+    ifelse(
+      kable_info$tabular == "longtable" & !is.na(kable_info$caption) &
+        !str_detect(input, "\\\\begin\\{table\\}\\n\\n\\\\caption"),
+      1,0
+    )
   # Contents
   kable_info$contents <- str_match_all(input, "\n(.*)\\\\\\\\")[[1]][,2]
   # Column names

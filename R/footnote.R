@@ -58,6 +58,12 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
   ids <- ids.ops[,notation]
   # pandoc cannot recognize ^*^ as * is a special character. We have to use ^\*^
   ids.intable <- gsub("\\*", "\\\\*", ids)
+  ids.simple <- c(
+    "*", "†", "‡", "§", "¶",
+    "**", "††", "‡‡", "§§", "¶¶",
+    "***", "†††", "‡‡‡", "§§§", "¶¶¶",
+    "****", "††††", "‡‡‡‡", "§§§§", "¶¶¶¶"
+  )
 
   #count the number of items in label and intable notation
   count.label = length(label)
@@ -69,6 +75,16 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
 
   export <- input
 
+  # Find out if there are any extra in-table notations needed to be corrected
+  extra.notation <- as.numeric(
+    str_extract(
+      str_extract_all(
+        paste0(export, collapse = ""), "\\[note[0-9]{1,2}\\]"
+      )[[1]],
+      "[0-9]{1,2}"))
+
+
+
   # Footnote solution for markdown and pandoc. It is not perfect as
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
@@ -79,21 +95,15 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
       for(i in 1:count.intablenoot){
         export[which(str_detect(export, "\\[note\\]"))[1]] <-
           sub("\\[note\\]", paste0("^", ids.intable[i], "^",
-            paste0(rep(" ", 4 - nchar(as.character(ids[i]))),
+            paste0(rep(" ", 4 - ceiling(i/5)),
               collapse = "")), export[which(str_detect(export, "\\[note\\]"))[1]])
       }
     }
     # Fix extra in table notation
-    extra.notation <- as.numeric(
-      str_extract(
-        str_extract_all(
-          paste0(export, collapse = ""), "\\[note[0-9]{1,2}\\]"
-          )[[1]],
-        "[0-9]{1,2}"))
     for(i in extra.notation){
       export <- gsub(paste0("\\[note", i, "\\]"),
                      paste0("^", ids.intable[i], "^",
-                            paste0(rep(" ", 4 - nchar(as.character(ids[i]))),
+                            paste0(rep(" ", 4 - ceiling(i/5)),
                             collapse = "")),
                      export)
     }
@@ -108,46 +118,105 @@ add_footnote <- function(input, label = NULL, notation = "alphabet",
   # Generate latex table footnote --------------------------------
   if(attr(input, "format")=="latex"){
     kable_info <- magic_mirror(input)
-    if(threeparttable == F | latex.tabular == "longtable"){
+    if(kable_info$tabular == "longtable"){
+      if(notation != "number"){
+        warning("Currently, if you enabled longtable in kable, you can only use",
+                " number as your footnote notations. ")
+      }
+      if(threeparttable == T){
+        warning("Currently, threeparttable does not support longtable.")
+      }
+      # If longtable is used, then use page footnote instead of threeparttable
+      # as it makes more sense to see the footnote at the bottom of page if
+      # table is longer than one page.
 
-    }
-    # If longtable is used, then use page footnote instead of threeparttable
-    # as it makes more sense to see the footnote at the bottom of page if
-    # table is longer than one page.
-    if(grepl("\\\\begin\\{longtable\\}", input)){
-      for(i in 1:count.intablenoot){
+      # Longtable doesn't support footnote in caption directly.
+      # See http://tex.stackexchange.com/questions/50151/footnotes-in-longtable-captions
+      count.in.caption.note <- str_count(kable_info$caption, "\\[note\\]")
+      if (count.in.caption.note != 0){
+        # Since caption is the first part of table, we can just start
+        caption.footnote <- paste0("\\\\addtocounter{footnote}{-", count.in.caption.note, "}")
+        for(i in 1:count.in.caption.note){
+          export <- sub("\\[note\\]", "\\\\protect\\\\footnotemark ", export)
+          caption.footnote <- paste0(
+            caption.footnote, "\n\\\\stepcounter{footnote}\\\\footnotetext{", label[i], "}"
+          )
+        }
+
+        if (str_detect(export, "\\\\toprule")){
+          export <- sub("\\\\toprule",
+                        paste0("\\\\toprule\n", caption.footnote), export)
+        }else{
+          export <- sub("\\\\hline",
+                        paste0("\\\\hline\n", caption.footnote), export)
+        }
+      }
+      for(i in (count.in.caption.note + 1):count.intablenoot){
         export <- sub("\\[note\\]",
-                    paste0("\\\\footnote[", ids[i], "]{", label[i], "}"), export)
+                      paste0("\\\\footnote[", i, "]{", label[i], "}"), export)
+      }
+      for(i in extra.notation){
+        export <- gsub(paste0("\\[note", i, "\\]"),
+                       paste0("\\\\footnotemark[", i, "]"),
+                       export)
       }
     }else{
-      # Regular cases other than longtable
-      # generate footer with appropriate symbol
-      footer <- ""
-      for(i in 1:count.label){
-        footer <- paste0(footer,"\\\\item [", ids[i], "] ", label[i], "\n")
-      }
-
       # Replace in-table notation with appropriate symbol
       for(i in 1:count.intablenoot){
-        export <- sub("\\[note\\]", paste0("\\\\textsuperscript{", ids[i], "}"), export)
+        export <- sub("\\[note\\]", paste0("\\\\textsuperscript{", ids.intable[i], "}"), export)
       }
 
-      if(grepl("\\\\caption\\{.*?\\}", export)){
-        export <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{", export)
-      }else{
-        export <- sub("\\\\begin\\{tabular\\}",
-                      "\\\\begin{threeparttable}\n\\\\begin{tabular}", export)
+      # Fix extra in table notation
+      for(i in extra.notation){
+        export <- gsub(paste0("\\[note", i, "\\]"),
+                       paste0("\\\\textsuperscript{", ids.intable[i], "}"),
+                       export)
       }
-      export <- gsub(
-        "\\\\end\\{tabular\\}",
-        paste0(
-          "\\\\end{tabular}\n\\\\begin{tablenotes}\n\\\\small\n",
-          footer, "\\\\end{tablenotes}\n\\\\end{threeparttable}"
-        ),
-        export)
+      if(threeparttable == T){
+        # generate footer with appropriate symbol
+        footer <- ""
+        for(i in 1:count.label){
+          footer <- paste0(footer,"\\\\item [", ids[i], "] ", label[i], "\n")
+        }
+
+        if(grepl("\\\\caption\\{.*?\\}", export)){
+          export <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{", export)
+        }else{
+          export <- sub("\\\\begin\\{tabular\\}",
+                        "\\\\begin{threeparttable}\n\\\\begin{tabular}", export)
+        }
+        export <- gsub(
+          "\\\\end\\{tabular\\}",
+          paste0(
+            "\\\\end{tabular}\n\\\\begin{tablenotes}\n\\\\small\n",
+            footer, "\\\\end{tablenotes}\n\\\\end{threeparttable}"
+          ),
+          export)
+      }else{
+          table.width <- max(nchar(
+            str_replace_all(
+              str_replace_all(kable_info$contents, "\\[note\\]", ""),
+              "\\[note[0-9]{1,2}\\]", ""))) + 2 * (kable_info$ncol - 1)
+          footer <- ""
+          for (i in 1:count.label){
+            label.wrap <- strwrap(label[i], table.width)
+            footer <- paste0(footer, "\\\\multicolumn{", kable_info$ncol,
+                             "}{l}{\\\\textsuperscript{", ids[i], "} ",
+                             label.wrap[1], "}\\\\\\\\\n")
+            if(length(label.wrap) > 1){
+              for (j in 2:length(label.wrap)){
+                footer <- paste0(footer, "\\\\multicolumn{", kable_info$ncol,
+                                 "}{l}{", label.wrap[j], "}\\\\\\\\\n")
+              }
+            }
+          }
+          export <- gsub("\\\\end\\{tabular\\}",
+                         paste0(footer, "\\\\end{tabular}"), export)
+      }
     }
   }
   if(attr(input, "format")=="html"){
+
   }
   return(export)
 }
