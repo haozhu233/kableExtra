@@ -6,6 +6,9 @@
 \usage{
 magic_mirror_latex(input)
 }
+\arguments{
+\item{input}{The output of kable}
+}
 \description{
 Magic mirror for latex tables --------------
 }

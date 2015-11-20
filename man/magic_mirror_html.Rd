@@ -6,6 +6,9 @@
 \usage{
 magic_mirror_html(input)
 }
+\arguments{
+\item{input}{The output of kable}
+}
 \description{
 Magic Mirror for html table --------
 }

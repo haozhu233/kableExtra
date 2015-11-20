@@ -14,8 +14,8 @@
 #' "number", "alphabet" and "symbol".
 #'
 #' @export
-add_footnote <- function(input, label = NULL, notation = "alphabet", escape = T,
-                         threeparttable = F) {
+add_footnote <- function(input, label = NULL, notation = "number",
+                         threeparttable = FALSE) {
   if (is.null(label)){return(input)}
 
   # Define available id list
@@ -83,12 +83,12 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", escape = T,
   export <- input
 
   # Find out if there are any extra in-table notations needed to be corrected
-  extra.notation <- as.numeric(
+  extra.notation <- unique(as.numeric(
     str_extract(
       str_extract_all(
         paste0(export, collapse = ""), "\\[note[0-9]{1,2}\\]"
       )[[1]],
-      "[0-9]{1,2}"))
+      "[0-9]{1,2}")))
 
 
 
@@ -124,8 +124,9 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", escape = T,
 
   # Generate latex table footnote --------------------------------
   if(attr(input, "format")=="latex"){
-    # Clean the entry for labels when escape is enabled
-    if (escape = T){label <- knitr:::escape_latex(label)}
+    # Clean the entry for labels
+      label <- knitr:::escape_latex(label)
+      label <- gsub("\\\\", "\\\\\\\\", label)
 
     kable_info <- magic_mirror(input)
     if(kable_info$tabular == "longtable"){
@@ -226,7 +227,32 @@ add_footnote <- function(input, label = NULL, notation = "alphabet", escape = T,
     }
   }
   if(attr(input, "format")=="html"){
+    # Clean the entry for labels
+    label <- knitr:::escape_html(label)
 
+    # Replace in-table notation with appropriate symbol
+    for(i in 1:count.intablenoot){
+      export <- sub("\\[note\\]", paste0("<sup>", ids.intable[i], "</sup>"), export)
+    }
+
+    # Fix extra in table notation
+    for(i in extra.notation){
+      export <- gsub(paste0("\\[note", i, "\\]"),
+                     paste0("<sup>", ids.intable[i], "</sup>"),
+                     export)
+    }
+
+    # Build footer
+    footer <- "<tfoot>\n"
+    for(i in 1:count.label){
+      footer <- paste0(footer, "<tr>\n<td style = 'padding: 0; border:0;' ",
+                       "colspan='100%'><sup>", ids[i],"</sup> ",
+                       label[i], "</td>\n</tr>\n")
+    }
+    footer <- paste0(footer, "</tfoot>\n")
+
+    # Paste footer to the table
+    export[1] <- gsub("</tbody>\n", paste0("</tbody>\n", footer), export[1])
   }
   return(export)
 }
