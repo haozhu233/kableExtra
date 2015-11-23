@@ -38,9 +38,9 @@ add_footnote <- function(input, label = NULL, notation = "number",
     symbol.html = c(
       "*", "&dagger;", "&Dagger;", "&sect;", "&para;",
       "**", "&dagger;&dagger;", "&Dagger;&Dagger;", "&sect;&sect;", "&para;&para;",
-      "*", "&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;",
+      "***", "&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;",
       "&sect;&sect;&sect;", "&para;&para;&para;",
-      "**", "&dagger;&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;&Dagger;",
+      "****", "&dagger;&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;&Dagger;",
       "&sect;&sect;&sect;&sect;", "&para;&para;&para;&para;"
     ),
     symbol.markdown = c(

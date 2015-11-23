@@ -3,6 +3,8 @@
 export("%>%")
 export(add_footnote)
 export(magic_mirror)
+export(rmd_format)
 import(stringr)
 importFrom(XML,readHTMLTable)
 importFrom(knitr,kable)
+importFrom(rmarkdown,metadata)
