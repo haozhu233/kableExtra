@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Decorate kable output using pipe syntax
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: c(
     person("Hao", "Zhu", email = "haozhu@hsl.harvard.edu", role = c("aut", "cre")),
     person("Will", "Beasley", email = "wibeasley@hotmail.com", role = "ctb")
