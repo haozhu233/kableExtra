@@ -12,6 +12,7 @@
 #' notations in your notes.
 #' @param notation You can select the format of your footnote notation from
 #' "number", "alphabet" and "symbol".
+#' @param threeparttable Boolean value indicating if a \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should be used.
 #'
 #' @export
 add_footnote <- function(input, label = NULL, notation = "number",
