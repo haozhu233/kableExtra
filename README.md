@@ -34,11 +34,16 @@ library(kableExtra)
 
 cars %>%
   head() %>%
-  rename("speed[note]" = speed) %>% 
+  rename("speed[note]" = speed) %>%
   kable(caption = "Head of cars [note]") %>%
   add_footnote(
-    label = c("Footnote in caption", 
+    label = c("Footnote in caption",
       "Footnote in table"),
     notation = "number" # Or "alphabet"/"symbol"
   )
 ```
+
+Examples
+--------
+
+These two documents demonstrate the different behaviors under HTML and LaTeX (including booktabs and longtable) \* HTML demo: <http://rpubs.com/haozhu233/kableExtra_footnote_html> \* PDF demo: <https://www.dropbox.com/s/qk7msi64mndn67y/brief_demo_pdf.pdf?dl=0>
