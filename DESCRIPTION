@@ -3,7 +3,8 @@ Type: Package
 Title: Decorate kable output using pipe syntax
 Version: 0.0.1
 Authors@R: c(
-    person("Hao", "Zhu", email = "haozhu@hsl.harvard.edu", role = c("aut", "cre"))
+    person("Hao", "Zhu", email = "haozhu@hsl.harvard.edu", role = c("aut", "cre")),
+    person("Will", "Beasley", email = "wibeasley@hotmail.com", role = "ctb")
     )
 Description: A set of functions aiming to strengthen the functionality of
     knitr::kable without destroying its simplicity by adopting pipe syntax.
