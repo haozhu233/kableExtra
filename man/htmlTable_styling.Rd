@@ -4,13 +4,23 @@
 \alias{htmlTable_styling}
 \title{HTML table attributes}
 \usage{
-htmlTable_styling(bootstrap_options = "bs-table", font_size = NULL,
-  full_width = T)
+htmlTable_styling(bootstrap_options = "bs-table", full_width = T,
+  float = c("left", "center", "right"), font_size = NULL)
 }
 \arguments{
-\item{bootstrap_options}{Common HTML table formats}
+\item{bootstrap_options}{A character vector for bootstrap table options. For
+detailed information, please check the package vignette or visit the
+w3schools' [Bootstrap Page](https://www.w3schools.com/bootstrap/bootstrap_tables.asp)
+. Possible options include "bs-table", "striped", "bordered", "hover",
+"condensed" and "responsive".}
 
-\item{font_size}{}
+\item{full_width}{A `TRUE` of `FALSE` variable controlling whether the HTML
+table should have 100\% width.}
+
+\item{float}{A character string determining whether and how the HTML table
+should float on the page.}
+
+\item{font_size}{A numeric input for table font size}
 }
 \description{
 This function provides a set of shortcuts to common HTML table

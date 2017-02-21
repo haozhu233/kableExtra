@@ -1,0 +1,54 @@
+---
+title: "htmlTable_styling Guide"
+output: 
+  html_document:
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{htmlTable Styling Guide}
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+# Basic HTML 
+```{r}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:5, 1:2]
+
+kable(dt, format = "html")
+```
+
+# Basic Bootstrap Table
+```{r}
+kable(dt, format = "html", table.attr = htmlTable_styling())
+```
+
+# Boostrap Table Options
+## Striped
+```{r}
+kable(dt, format = "html", table.attr = htmlTable_styling(bootstrap_options = "striped"))
+```
+
+## Striped + Hover
+```{r}
+kable(dt, format = "html", table.attr = htmlTable_styling(c("striped", "hover")))
+```
+
+## Other bootstrap options
+```{r}
+kable(dt, format = "html", 
+      table.attr = htmlTable_styling(c("striped", "bordered", "hover", "condensed", "responsive")))
+```
+
+# "Thin" Table and Floating options
+```{r}
+kable(dt, format = "html", 
+      table.attr = htmlTable_styling(
+        c("striped", "bordered", "condensed"), 
+        full_width = F, 
+        float = "center"
+      ))
+```
+
+
+

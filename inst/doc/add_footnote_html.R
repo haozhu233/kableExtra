@@ -1,10 +1,4 @@
----
-title: add_footnote - HTML
-output: html_document
----
-
-# Through Pandoc
-```{r through_pandoc}
+## ----through_pandoc------------------------------------------------------
 library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:2]
@@ -14,25 +8,18 @@ dt[3, 2] <- paste0(dt[3, 2], "[note]")
 
 kable(dt) %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
-```
 
-# Through HTML
-## Plain HTML
-```{r through_html}
+## ----through_html--------------------------------------------------------
 kable(dt, format = "html") %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
-```
 
-## HTML + bootstrap table
-```{r through_html_bootstrap}
+## ----through_html_bootstrap----------------------------------------------
 kable(dt, format = "html", table.attr = htmlTable_styling()) %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
-```
 
-## HTML + bootstrap narrow table
-```{r through_latex_longtable}
+## ----through_latex_longtable---------------------------------------------
 kable(dt, format = "html", 
       table.attr = htmlTable_styling(c("striped", "bordered"), 
                                      full_width = F)) %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
-```
+
