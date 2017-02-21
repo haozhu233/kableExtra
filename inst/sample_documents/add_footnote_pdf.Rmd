@@ -29,10 +29,9 @@ kable(dt, format = "latex", booktabs = T) %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
 ```
 
-## LaTeX + longtable
+## LaTeX + longtable + booktabs
+Centered Table + page footnotes
 ```{r through_latex_longtable}
-kable(dt, format = "latex", longtable = T) 
-
-# %>%
-#   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
+kable(dt, format = "latex", longtable = T, booktabs = T) %>%
+  add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
 ```
