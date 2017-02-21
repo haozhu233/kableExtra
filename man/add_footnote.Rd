@@ -4,8 +4,8 @@
 \alias{add_footnote}
 \title{Add footnote}
 \usage{
-add_footnote(input, label = NULL, notation = "number",
-  threeparttable = FALSE)
+add_footnote(input, label = NULL, notation = c("alphabet", "number",
+  "symbol"), threeparttable = FALSE)
 }
 \arguments{
 \item{input}{The direct output of your \code{kable} function or your last
@@ -26,4 +26,3 @@ global knitr option \code{knitr.table.format}. In latex, we are using the
 \code{threeparttable} package so you need to import this package in your
 \code{YAML} header.
 }
-

@@ -12,4 +12,3 @@ magic_mirror_html(input)
 \description{
 Magic Mirror for html table --------
 }
-

@@ -12,4 +12,3 @@ magic_mirror_latex(input)
 \description{
 Magic mirror for latex tables --------------
 }
-

@@ -9,4 +9,3 @@ rmd_format()
 \description{
 If the export format of the Rmarkdown document exist,
 }
-

@@ -12,4 +12,3 @@ magic_mirror(input)
 \description{
 Magic mirror that returns kable's attributes
 }
-

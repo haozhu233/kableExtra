@@ -15,54 +15,18 @@
 #' @param threeparttable Boolean value indicating if a \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should be used.
 #'
 #' @export
-add_footnote <- function(input, label = NULL, notation = "number",
+add_footnote <- function(input, label = NULL,
+                         notation = c("alphabet", "number", "symbol"),
                          threeparttable = FALSE) {
-  if (is.null(label)){return(input)}
+  if (is.null(label)) return(input)
 
-  # Define available id list
-  if (!notation %in% c("number", "alphabet", "symbol")){
-    warning('Please select your notation within "number", "alphabet" and ',
-            '"symbol". Now add_footnote is using "alphabet" as default.')
+  notation <- match.arg(notation)
+  if (notation == "symbol") {
+    notation <- paste0(notation, ".", attr(input, "format"))
   }
-  if (notation == "symbol") {notation = paste0(notation, ".", attr(input, "format"))}
-  ids.ops <- data.frame(
-    number = as.character(1:20),
-    alphabet = letters[1:20],
-    symbol.latex = c(
-      "*", "\\\\dag", "\\\\ddag", "\\\\S", "\\\\P",
-      "**", "\\\\dag\\\\dag", "\\\\ddag\\\\ddag", "\\\\S\\\\S", "\\\\P\\\\P",
-      "***", "\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag",
-      "\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P",
-      "****", "\\\\dag\\\\dag\\\\dag\\\\dag", "\\\\ddag\\\\ddag\\\\ddag\\\\ddag",
-      "\\\\S\\\\S\\\\S\\\\S", "\\\\P\\\\P\\\\P\\\\P"
-    ),
-    symbol.html = c(
-      "*", "&dagger;", "&Dagger;", "&sect;", "&para;",
-      "**", "&dagger;&dagger;", "&Dagger;&Dagger;", "&sect;&sect;", "&para;&para;",
-      "***", "&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;",
-      "&sect;&sect;&sect;", "&para;&para;&para;",
-      "****", "&dagger;&dagger;&dagger;&dagger;", "&Dagger;&Dagger;&Dagger;&Dagger;",
-      "&sect;&sect;&sect;&sect;", "&para;&para;&para;&para;"
-    ),
-    symbol.markdown = c(
-      "\\*", "\u2020", "\u2021", "\u00A7", "\u00B6",
-      "\\*\\*", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
-      "\\*\\*\\*", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
-      "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
-      "\\*\\*\\*\\*", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
-      "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
-    ),
-    symbol.pandoc = c(
-      "\\*", "\u2020", "\u2021", "\u00A7", "\u00B6",
-      "\\*\\*", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
-      "\\*\\*\\*", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
-      "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
-      "\\*\\*\\*\\*", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
-      "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
-    )
-  )
-  ids <- ids.ops[,notation]
-  # pandoc cannot recognize ^*^ as * is a special character. We have to use ^\*^
+
+  ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra"))
+  ids <- ids.ops[, notation]
   ids.intable <- gsub("\\*", "\\\\*", ids)
   ids.simple <- c(
     "*", "\u2020", "\u2021", "\u00A7", "\u00B6",
@@ -74,11 +38,11 @@ add_footnote <- function(input, label = NULL, notation = "number",
   )
 
   #count the number of items in label and intable notation
-  count.label = length(label)
-  count.intablenoot = sum(str_count(input, "\\[note\\]"))
-  if (count.intablenoot != 0 & count.label != count.intablenoot){
+  count.label <- length(label)
+  count.intablenote <- sum(str_count(input, "\\[note\\]"))
+  if (count.intablenote != 0 & count.label != count.intablenote){
     warning(paste("You entered", count.label, "labels but you put",
-                  count.intablenoot, "[note] in your table."))
+                  count.intablenote, "[note] in your table."))
   }
 
   export <- input
@@ -96,15 +60,17 @@ add_footnote <- function(input, label = NULL, notation = "number",
   # Footnote solution for markdown and pandoc. It is not perfect as
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
-  # time to define their `kable` output.
-  if(!attr(input, "format") %in% c("html", "latex")){
+  # time to define their `kable` format.
+  if (!attr(input, "format") %in% c("html", "latex")) {
     # In table notation
-    if(count.intablenoot != 0){
-      for(i in 1:count.intablenoot){
+    if (count.intablenote != 0) {
+      for (i in 1:count.intablenote) {
+        replace_note <- paste0("^", ids.intable[i], "^",
+          paste0(rep(" ", 4 - ceiling(i/5)), collapse = ""))
+
         export[which(str_detect(export, "\\[note\\]"))[1]] <-
-          sub("\\[note\\]", paste0("^", ids.intable[i], "^",
-            paste0(rep(" ", 4 - ceiling(i/5)),
-              collapse = "")), export[which(str_detect(export, "\\[note\\]"))[1]])
+          sub("\\[note\\]", replace_note,
+              export[which(str_detect(export, "\\[note\\]"))[1]])
       }
     }
     # Fix extra in table notation
@@ -163,7 +129,7 @@ add_footnote <- function(input, label = NULL, notation = "number",
                         paste0("\\\\hline\n", caption.footnote), export)
         }
       }
-      for(i in (count.in.caption.note + 1):count.intablenoot){
+      for(i in (count.in.caption.note + 1):count.intablenote){
         export <- sub("\\[note\\]",
                       paste0("\\\\footnote[", i, "]{", label[i], "}"), export)
       }
@@ -174,7 +140,7 @@ add_footnote <- function(input, label = NULL, notation = "number",
       }
     }else{
       # Replace in-table notation with appropriate symbol
-      for(i in 1:count.intablenoot){
+      for(i in 1:count.intablenote){
         export <- sub("\\[note\\]", paste0("\\\\textsuperscript{", ids.intable[i], "}"), export)
       }
 
@@ -232,7 +198,7 @@ add_footnote <- function(input, label = NULL, notation = "number",
     label <- knitr:::escape_html(label)
 
     # Replace in-table notation with appropriate symbol
-    for(i in 1:count.intablenoot){
+    for(i in 1:count.intablenote){
       export <- sub("\\[note\\]", paste0("<sup>", ids.intable[i], "</sup>"), export)
     }
 
