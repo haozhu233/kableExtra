@@ -51,7 +51,8 @@ kable(dt, format = "html") %>%
 
 ```{r}
 kable(dt, format = "html") %>%
-      htmlTable_styling(c("striped", "bordered", "condensed"), full_width = F, float = "left")
+  htmlTable_styling(c("striped", "bordered", "condensed"), full_width = F, float = "left") %>%
+  htmlTable_add_header_above(c("", "Names" = 2))
 ```
 
 
