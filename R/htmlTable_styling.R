@@ -5,19 +5,19 @@
 #'
 #' @param bootstrap_options A character vector for bootstrap table options. For
 #' detailed information, please check the package vignette or visit the
-#' w3schools' [Bootstrap Page](https://www.w3schools.com/bootstrap/bootstrap_tables.asp)
+#' w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 #' . Possible options include "bs-table", "striped", "bordered", "hover",
 #' "condensed" and "responsive".
-#' @param full_width A `TRUE` of `FALSE` variable controlling whether the HTML
+#' @param full_width A `TRUE` or `FALSE` variable controlling whether the HTML
 #' table should have 100\% width.
 #' @param float A character string determining whether and how the HTML table
-#' should float on the page.
+#' should float on the page. Values could be "left", "center", "right"
 #' @param font_size A numeric input for table font size
 #'
 #' @export
 htmlTable_styling <- function(bootstrap_options = "bs-table",
                              full_width = T,
-                             float = c("left", "center", "right"),
+                             float = c("center", "left", "right"),
                              font_size = NULL) {
   bootstrap_options <- match.arg(
     bootstrap_options,

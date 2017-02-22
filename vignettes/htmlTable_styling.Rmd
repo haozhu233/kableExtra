@@ -45,8 +45,16 @@ kable(dt, format = "html",
 kable(dt, format = "html", 
       table.attr = htmlTable_styling(
         c("striped", "bordered", "condensed"), 
-        full_width = F, 
-        float = "center"
+        full_width = F
+      ))
+```
+
+```{r}
+kable(dt, format = "html", 
+      table.attr = htmlTable_styling(
+        c("striped", "bordered", "condensed"), 
+        full_width = F,
+        float = "left"
       ))
 ```
 

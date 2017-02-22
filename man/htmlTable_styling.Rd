@@ -10,7 +10,7 @@ htmlTable_styling(bootstrap_options = "bs-table", full_width = T,
 \arguments{
 \item{bootstrap_options}{A character vector for bootstrap table options. For
 detailed information, please check the package vignette or visit the
-w3schools' [Bootstrap Page](https://www.w3schools.com/bootstrap/bootstrap_tables.asp)
+w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 . Possible options include "bs-table", "striped", "bordered", "hover",
 "condensed" and "responsive".}
 
