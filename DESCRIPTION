@@ -18,7 +18,8 @@ Imports:
     knitr (>= 1.10),
     magrittr,
     stringr (>= 1.0),
-    XML,
+    xml2,
+    rvest,
     rmarkdown (>= 0.2.64)
 Suggests:
     testthat

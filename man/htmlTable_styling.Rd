@@ -4,25 +4,26 @@
 \alias{htmlTable_styling}
 \title{HTML table attributes}
 \usage{
-htmlTable_styling(bootstrap_options = "bs-table", full_width = T,
-  float = c("left", "center", "right"), font_size = NULL)
+htmlTable_styling(kable_input, bootstrap_options = "basic", full_width = T,
+  float = c("center", "left", "right"), font_size = NULL)
 }
 \arguments{
 \item{bootstrap_options}{A character vector for bootstrap table options. For
 detailed information, please check the package vignette or visit the
 w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
-. Possible options include "bs-table", "striped", "bordered", "hover",
+. Possible options include "basic", "striped", "bordered", "hover",
 "condensed" and "responsive".}
 
-\item{full_width}{A `TRUE` of `FALSE` variable controlling whether the HTML
+\item{full_width}{A `TRUE` or `FALSE` variable controlling whether the HTML
 table should have 100\% width.}
 
 \item{float}{A character string determining whether and how the HTML table
-should float on the page.}
+should float on the page. Values could be "left", "center", "right"}
 
 \item{font_size}{A numeric input for table font size}
 }
 \description{
-This function provides a set of shortcuts to common HTML table
-formats
+This function provides a cleaner approach to modify the style
+of HTML tables other than using the `table.attr` option in `knitr::kable()`.
+Currenly, it assumes the HTML document has boot
 }

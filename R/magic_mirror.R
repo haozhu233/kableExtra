@@ -1,7 +1,6 @@
 #' Magic mirror that returns kable's attributes
 #'
 #' @param input The output of kable
-#' @importFrom knitr kable
 #' @import stringr
 #' @export
 
@@ -62,13 +61,11 @@ magic_mirror_latex <- function(input){
 #' Magic Mirror for html table --------
 #'
 #' @param input The output of kable
-#'
-#' @importFrom XML readHTMLTable
 magic_mirror_html <- function(input){
   kable_info <- list(table.attr = NULL, align = NULL,
                      ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
                      caption = NULL, contents = NULL)
-  kable_data <- readHTMLTable(input[1])
+  kable_data <- html_table(read_html(input))
   # Caption
   kable_info$caption <- names(kable_data)
   # Contents
@@ -98,6 +95,5 @@ magic_mirror_html <- function(input){
   return(kable_info)
 }
 
-#' @export
-magrittr::`%>%`
+
 
