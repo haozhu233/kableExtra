@@ -1,0 +1,20 @@
+---
+title: "kable_styling - PDF"
+output: 
+  pdf_document:
+    keep_tex: true
+---
+
+```{r, include=FALSE}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:5, 1:2]
+
+kable(dt)
+```
+
+```{r}
+kable(dt, format = "latex") 
+```
+
+

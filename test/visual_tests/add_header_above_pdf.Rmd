@@ -1,0 +1,24 @@
+---
+title: "add_header_above"
+output: 
+  pdf_document:
+    keep_tex: true
+---
+
+# Plain LaTeX 
+```{r}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:5, 1:4]
+
+kable(dt, format = "latex") %>%
+  add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
+  add_header_above(c(" ", "a" = 3, "b" = 1))
+```
+
+# Basic Bootstrap Table
+```{r}
+kable(dt, format = "latex", booktabs = T) %>%
+  add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
+  add_header_above(c(" ", "a" = 3, "b" = 1))
+```

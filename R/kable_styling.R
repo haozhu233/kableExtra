@@ -16,6 +16,35 @@
 #' @param font_size A numeric input for table font size
 #'
 #' @export
+kable_styling <- function(kable_input,
+                          bootstrap_options = "basic",
+                          full_width = T,
+                          float = c("center", "left", "right"),
+                          font_size = NULL,
+                          latex_hold_position = F,
+                          latex_scale_down = F) {
+  kable_format <- attr(kable_input, "format")
+  if (!kable_format %in% c("html", "latex")) {
+    stop("Please specify output format in your kable function. Currently ",
+         "generic markdown table using pandoc is not supported.")
+  }
+  if (kable_format == "html") {
+    return(htmlTable_styling(kable_input,
+                             bootstrap_options = bootstrap_options,
+                             full_width = full_width,
+                             float = float,
+                             font_size = font_size))
+  }
+  if (kable_format == "latex") {
+    return(pdfTable_styling(full_width = full_width,
+                            float = float,
+                            font_size = font_size,
+                            latex_hold_position = latex_hold_position,
+                            latex_scale_down = latex_scale_down))
+  }
+}
+
+# htmlTable Styling ------------
 htmlTable_styling <- function(kable_input,
                               bootstrap_options = "basic",
                               full_width = T,
@@ -51,7 +80,7 @@ htmlTable_styling <- function(kable_input,
   }
   if (!is.null(font_size)) {
     kable_xml_style <- c(kable_xml_style,
-                          paste0("font-size: ", font_size, "px;"))
+                         paste0("font-size: ", font_size, "px;"))
   }
   if (!full_width) {
     kable_xml_style <- c(kable_xml_style, "width: auto !important;")
@@ -60,15 +89,25 @@ htmlTable_styling <- function(kable_input,
   float <- match.arg(float)
   if (float == "center") {
     kable_xml_style <- c(kable_xml_style,
-                          "margin-left:auto; margin-right:auto;")
+                         "margin-left:auto; margin-right:auto;")
   }
   if (float == "right") {
     kable_xml_style <- c(kable_xml_style,
-                          "float: right;")
+                         "float: right;")
   }
   if (length(kable_xml_style) != 0) {
     xml_attr(kable_xml, "style") <- paste(kable_xml_style, collapse = " ")
   }
   return(structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable"))
+}
+
+# LaTeX table style
+pdfTable_styling <- function(kable_input,
+                             full_width = T,
+                             float = c("center", "left", "right"),
+                             font_size = NULL,
+                             latex_hold_position = F,
+                             latex_scale_down = F) {
+
 }

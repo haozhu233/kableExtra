@@ -1,8 +1,6 @@
 ---
-title: "htmlTable_styling Guide"
-output: 
-  html_document:
-    number_sections: true
+title: "kable_styling - HTML"
+output: html_document
 vignette: >
   %\VignetteIndexEntry{htmlTable Styling Guide}
   %\VignetteEngine{knitr::rmarkdown} 
@@ -15,44 +13,48 @@ library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:2]
 
-kable_input <- kable(dt, format = "html")
+kable(dt, format = "html")
 ```
 
 # Basic Bootstrap Table
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling()
+  kable_styling()
 ```
 
 # Boostrap Table Options
 ## Striped
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling(bootstrap_options = "striped")
+  kable_styling(bootstrap_options = "striped")
 ```
 
 ## Striped + Hover
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling(c("striped", "hover"))
+  kable_styling(c("striped", "hover"))
 ```
 
 ## Other bootstrap options
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling(c("striped", "bordered", "hover", "condensed", "responsive"))
+  kable_styling(c("striped", "bordered", "hover", "condensed", "responsive"))
 ```
 
 # "Thin" Table and Floating options
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling(c("striped", "bordered", "condensed"), full_width = F)
+  kable_styling(c("striped", "bordered", "condensed"), full_width = F)
 ```
 
 ```{r}
 kable(dt, format = "html") %>%
-  htmlTable_styling(c("striped", "bordered", "condensed"), full_width = F, float = "left") %>%
-  htmlTable_add_header_above(c("", "Names" = 2))
+  kable_styling(c("striped", "bordered", "condensed"), full_width = F, 
+                float = "left", font_size = 10) %>%
+  add_header_above(c(" ", "Names" = 2)) %>%
+  add_header_above(c(" " = 2, "Names")) %>%
+  add_header_above(c("Names[note]" = 3)) %>%
+  add_footnote("note")
 ```
 
 
