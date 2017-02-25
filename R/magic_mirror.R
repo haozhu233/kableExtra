@@ -22,19 +22,23 @@ magic_mirror <- function(input){
 #' Magic mirror for latex tables --------------
 #' @param input The output of kable
 magic_mirror_latex <- function(input){
-  kable_info <- list(tabular = NULL, booktabs = NULL, align = NULL,
-                     ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
-                     caption = NULL, contents = NULL)
+  kable_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
+                     valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
+                     rownames = NULL, caption = NULL, contents = NULL,
+                     centering = FALSE, table_env = FALSE)
   # Tabular
   kable_info$tabular <- ifelse(
     grepl("\\\\begin\\{tabular\\}", input),
     "tabular", "longtable"
   )
   # Booktabs
-  kable_info$booktabs <- ifelse(grepl("\\\\toprule", input), TRUE, FALSE)
+  kable_info$booktabs <- grepl("\\\\toprule", input)
   # Align
   kable_info$align <- gsub("\\|", "", str_match(
     input, paste0("\\\\begin\\{", kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
+  # valign
+  kable_info$valign <- gsub("\\|", "", str_match(
+    input, paste0("\\\\begin\\{", kable_info$tabular,"\\}(.*)\\{.*?\\}"))[2])
   # N of columns
   kable_info$ncol <- nchar(kable_info$align)
   # Caption
@@ -55,6 +59,11 @@ magic_mirror_latex <- function(input){
   kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
   # Row names
   kable_info$rownames <- str_extract(kable_info$contents, "^[^ &]*")
+
+  kable_info$centering <- grepl("\\\\centering", input)
+
+  kable_info$table_env <- (!is.na(kable_info$caption) &
+                             kable_info$tabular != "longtable")
   return(kable_info)
 }
 
@@ -63,7 +72,7 @@ magic_mirror_latex <- function(input){
 #' @param input The output of kable
 magic_mirror_html <- function(input){
   kable_info <- list(table.attr = NULL, align = NULL,
-                     ncol=NULL, nrow=NULL, colnames = NULL, rownames = NULL,
+                     ncol = NULL, nrow = NULL, colnames = NULL, rownames = NULL,
                      caption = NULL, contents = NULL)
   kable_data <- html_table(read_html(input))
   # Caption

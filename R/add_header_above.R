@@ -94,7 +94,9 @@ pdfTable_new_header_generator <- function(header_df, booktabs = F) {
   cline_end <- cumsum(header_df$colspan)
   cline_start <- c(0, cline_end) + 1
   cline_start <- cline_start[-length(cline_start)]
-  cline_type <- switch(booktabs + 1, "\\\\cline{", "\\\\cmidrule(l{2pt}r{2pt}){")
+  cline_type <- switch(booktabs + 1,
+                       "\\\\cline{",
+                       "\\\\cmidrule(l{2pt}r{2pt}){")
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")
