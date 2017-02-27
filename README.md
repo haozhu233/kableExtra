@@ -38,5 +38,5 @@ kable(dt, booktabs = T, caption = "Demo Table") %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
   add_footnote(c("table footnote"))
 ```
-<img src="http://i.imgur.com/kHFBF3H.png" style="height: 200px;"/>
-<img src="http://i.imgur.com/q46hzOR.png" style="height: 200px;"/>
+<img src="http://i.imgur.com/kHFBF3Hm.png" style="height: 200px;"/>
+<img src="http://i.imgur.com/q46hzORm.png" style="height: 200px;"/>
