@@ -27,16 +27,23 @@ devtools::install_github("haozhu233/kableExtra")
 ```r
 library(knitr)
 library(kableExtra)
-options(knitr.table.format = "html")
-# switch to "latex" in a pdf environment
 dt <- mtcars[1:5, 1:4]
 
-kable(dt, booktabs = T, caption = "Demo Table") %>%
+# HTML table
+kable(dt, format = "html", caption = "Demo Table") %>%
   kable_styling(bootstrap_options = "striped", 
-                latex_options = "striped",
-                full_width = F, font_size = 9) %>%
+                full_width = F) %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
   add_footnote(c("table footnote"))
+
+# LaTeX Table
+kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), 
+                full_width = F) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
+  add_footnote(c("table footnote"))
+  
 ```
+### Results
 <img src="http://i.imgur.com/kHFBF3Hm.png" style="height: 200px;"/>
 <img src="http://i.imgur.com/q46hzORm.png" style="height: 200px;"/>
