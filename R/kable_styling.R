@@ -113,7 +113,7 @@ pdfTable_styling <- function(kable_input,
                              latex_options = "basic",
                              full_width = F,
                              position = c("center", "left", "right",
-                                       "float_left", "float_right"),
+                                          "float_left", "float_right"),
                              font_size = NULL) {
 
   latex_options <- match.arg(
@@ -122,55 +122,151 @@ pdfTable_styling <- function(kable_input,
     several.ok = T
   )
 
-  out = NULL
+  out <- NULL
   out <- as.character(kable_input)
   table_info <- magic_mirror(kable_input)
-  valign <- sub("\\[", "\\\\[", table_info$valign)
-  valign <- sub("\\]", "\\\\]", valign)
-  begin_tabular <- paste0("\\\\begin\\{", table_info$tabular, "\\}", valign)
-  end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
+  table_info$valign2 <- sub("\\[", "\\\\[", table_info$valign)
+  table_info$valign2 <- sub("\\]", "\\\\]", table_info$valign2)
+  table_info$valign3 <- sub("\\[", "", table_info$valign)
+  table_info$valign3 <- sub("\\]", "", table_info$valign3)
+  table_info$begin_tabular <- paste0("\\\\begin\\{", table_info$tabular, "\\}",
+                                     table_info$valign2)
+  table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
 
 
   if ("striped" %in% latex_options) {
-    usepackage_latex("xcolor", "table")
-    out <- paste0(
-      # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
-      "\\rowcolors{2}{gray!6}{white}\n",
-      out,
-      "\n\\rowcolors{2}{white}{white}"
-    )
+    out <- styling_latex_striped(out)
   }
 
   # hold_position is only meaningful in a table environment
   if ("hold_position" %in% latex_options & table_info$table_env) {
-    table_env <- "\\\\begin\\{table\\}"
-    out <- sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]", out)
+    out <- styling_latex_hold_position(out)
   }
 
-  if ("scale_down" %in% latex_options | full_width) {
-    out <- sub(begin_tabular,
-               paste0("\\\\resizebox\\{\\\\textwidth\\}\\{\\!\\}\\{",
-                      begin_tabular),
-               out)
-    out <- sub(end_tabular, paste0(end_tabular, "\\}"), out)
+  if ("scale_down" %in% latex_options) {
+    out <- styling_latex_scale_down(out, table_info)
   }
 
   if (full_width) {
-    size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
-    col_max_length <- apply(size_matrix, 1, max) + 4
-    col_ratio <- round(col_max_length / sum(col_max_length) * 0.9, 2)
-    col_align <- paste0("p{", col_ratio, "\\\\hsize}")
-    col_align <- paste0("{", paste(col_align, collapse = ""), "}")
+    out <- styling_latex_full_width(out, table_info)
+  }
 
-    out <- sub(paste0(begin_tabular, "\\{[^\\\\n]*\\}"), begin_tabular, out)
-    out <- sub(begin_tabular, paste0(begin_tabular, col_align), out)
+  if (!is.null(font_size)) {
+    out <- styling_latex_font_size(out, table_info, font_size)
   }
 
   position <- match.arg(position)
-  if (position == "right") {
-    warning("Right a")
-  }
+  out <- styling_latex_position(out, table_info, position, latex_options)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   return(out)
+}
+
+styling_latex_striped <- function(x) {
+  usepackage_latex("xcolor", "table")
+  paste0(
+    # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
+    "\\rowcolors{2}{gray!6}{white}\n", x, "\n\\rowcolors{2}{white}{white}")
+}
+
+styling_latex_hold_position <- function(x) {
+  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]", x)
+}
+
+styling_latex_scale_down <- function(x, table_info) {
+  # You cannot put longtable in a resizebox
+  # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
+  if (table_info$tabular == "longtable") {
+    warning("Longtable cannot be resized.")
+    return(x)
+  }
+  x <- sub(table_info$begin_tabular,
+           paste0("\\\\resizebox\\{\\\\textwidth\\}\\{\\!\\}\\{",
+                  table_info$begin_tabular),
+           x)
+  sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
+}
+
+styling_latex_full_width <- function(x, table_info) {
+  size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
+  col_max_length <- apply(size_matrix, 1, max) + 4
+  col_ratio <- round(col_max_length / sum(col_max_length), 2)
+  col_align <- paste0("p{\\\\dimexpr", col_ratio,
+                      "\\\\linewidth-2\\\\tabcolsep}")
+  col_align <- paste0("{", paste(col_align, collapse = ""), "}")
+  x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
+           table_info$begin_tabular, x)
+  sub(table_info$begin_tabular,
+      paste0(table_info$begin_tabular, col_align), x)
+}
+
+styling_latex_position <- function(x, table_info, position, latex_options) {
+  hold_position <- "hold_position" %in% latex_options
+  switch(
+    position,
+    center = styling_latex_position_center(x, table_info, hold_position),
+    left = styling_latex_position_left(x, table_info),
+    right = styling_latex_position_right(x, table_info, hold_position),
+    float_left = styling_latex_position_float(x, table_info, "l"),
+    float_right = styling_latex_position_float(x, table_info, "r")
+  )
+}
+
+styling_latex_position_center <- function(x, table_info, hold_position) {
+  if (!table_info$table_env & table_info$tabular == "tabular") {
+    table_env_setup <- "\\begin{table}"
+    if (hold_position) {
+      table_env_setup <- paste0(table_env_setup, "[!h]")
+    }
+    return(paste0(table_env_setup, "\n\\centering", x, "\n\\end{table}"))
+  }
+  return(x)
+}
+
+styling_latex_position_left <- function(x, table_info) {
+  if (table_info$tabular != "longtable") return(sub("\\\\centering\\n", "", x))
+  longtable_option <- "\\[l\\]"
+  sub(paste0("\\\\begin\\{longtable\\}", table_info$valign2),
+      paste0("\\\\begin\\{longtable\\}", longtable_option), x)
+}
+
+styling_latex_position_right <- function(x, table_info, hold_position) {
+  warning("Position = right is only supported for longtable in LaTeX. ",
+          "Setting back to center...")
+  styling_latex_position_center(x, table_info, hold_position)
+}
+
+styling_latex_position_float <- function(x, table_info, option) {
+  if (table_info$tabular == "longtable") {
+    warning("wraptable is not supported for longtable.")
+    if (option == "l") return(styling_latex_position_left(x, table_info))
+    if (option == "r") return(styling_latex_position_right(x, table_info, F))
+  }
+  if (table_info$table_env) {
+    usepackage_latex("wrapfig")
+    size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
+    col_max_length <- apply(size_matrix, 1, max) + 4
+    option <- sprintf("\\\\begin\\{wraptable\\}\\{%s\\}", option)
+    option <- paste0(option, "\\{",sum(col_max_length) * 0.15, "cm\\}")
+    x <- sub("\\\\begin\\{table\\}\\[\\!h\\]", "\\\\begin\\{table\\}", x)
+    x <- sub("\\\\begin\\{table\\}", option, x)
+    x <- sub("\\\\end\\{table\\}", "\\\\end\\{wraptable\\}", x)
+    return(x)
+  }
+}
+
+styling_latex_font_size <- function(x, table_info, font_size) {
+  row_height <- font_size + 2
+  if (table_info$tabular == "tabular" & table_info$table_env) {
+    return(sub(table_info$begin_tabular,
+               paste0("\\\\fontsize\\{", font_size, "\\}\\{", row_height,
+                      "\\}\\\\selectfont\n", table_info$begin_tabular),
+               x))
+  }
+  # For longtable and tabular without table environment. Simple wrap around
+  # fontsize is good enough
+  return(paste0(
+    "\\begingroup\\fontsize{", font_size, "}{", row_height, "}\\selectfont\n", x,
+    "\\endgroup"
+  ))
 }

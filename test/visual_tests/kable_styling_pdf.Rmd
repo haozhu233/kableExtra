@@ -5,16 +5,63 @@ output:
     keep_tex: true
 ---
 
-```{r, include=FALSE}
+```{r}
 library(knitr)
 library(kableExtra)
-dt <- mtcars[1:5, 1:2]
-
-kable(dt)
+dt <- mtcars[1:5, 1:8]
 ```
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
 ```{r}
-kable(dt, format = "latex") 
+kable(dt[1:3], format = "latex", booktabs = T, caption = "xxx") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+```{r}
+kable(dt, format = "latex", booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+```{r}
+kable(dt, format = "latex", longtable = T) %>%
+  kable_styling(latex_options = c("hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+
+```{r}
+kable(dt, format = "latex", caption = "sss") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+```{r}
+kable(dt, format = "latex", booktabs = T, caption = "sss") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat.
+
+```{r}
+kable(dt, format = "latex", booktabs = T, longtable = T, caption = "sss") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper mauris quis risus dignissim pellentesque. Vivamus in est finibus, porta enim in, sagittis sapien. Mauris dapibus ex nec interdum laoreet. Suspendisse sed venenatis nunc. Donec magna mauris, imperdiet eget mi eget, fringilla vestibulum nisl. Pellentesque scelerisque a elit at blandit. Etiam maximus eget urna quis vestibulum. Cras finibus mi non aliquam condimentum. Mauris feugiat libero vitae massa posuere, et congue turpis convallis. Vestibulum aliquam, quam et accumsan posuere, magna nisl ornare nunc, ac sodales metus elit ac erat. 
+
+```{r}
+kable(dt, format = "latex", booktabs = F, longtable = T, caption = "sss") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), font_size = 6, position = "float_left")
 ```
 
 

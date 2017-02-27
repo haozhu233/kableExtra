@@ -32,7 +32,7 @@ kable(dt, format = "html") %>%
 ## Striped + Hover
 ```{r}
 kable(dt, format = "html") %>%
-  kable_styling(c("striped", "hover"))
+  kable_styling(c("striped", "hover", "primary"))
 ```
 
 ## Other bootstrap options
@@ -47,15 +47,16 @@ kable(dt, format = "html") %>%
   kable_styling(c("striped", "bordered", "condensed"), full_width = F)
 ```
 
+;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, 
+;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, 
+;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, 
 ```{r}
 kable(dt, format = "html") %>%
-  kable_styling(c("striped", "bordered", "condensed"), full_width = F, 
-                float = "left", font_size = 10) %>%
-  add_header_above(c(" ", "Names" = 2)) %>%
-  add_header_above(c(" " = 2, "Names")) %>%
-  add_header_above(c("Names[note]" = 3)) %>%
-  add_footnote("note")
+  kable_styling(c("striped", "condensed"), full_width = F, 
+                position = "float_right", font_size = 10) %>%
+  add_header_above(c(" ", "Names[note]" = 2)) %>%
+  add_footnote("footnote")
 ```
 
-
+;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, ;ojadsf sadfls;af ewejdalsf,asf ,weifojsfakslf, 
 

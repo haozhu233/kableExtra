@@ -1,10 +1,6 @@
 ---
-title: add_footnote - PDF
+title: "add_footnote - PDF"
 output: pdf_document
-vignette: >
-  %\VignetteIndexEntry{Use add_footnote in PDF document}
-  %\VignetteEngine{knitr::rmarkdown} 
-  %\VignetteEncoding{UTF-8}
 ---
 
 # Through Pandoc

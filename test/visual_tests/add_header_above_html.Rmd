@@ -1,6 +1,6 @@
 ---
 title: "add_header_above"
-output: pdf_document
+output: html_document
 ---
 
 # Plain LaTeX 
@@ -9,14 +9,16 @@ library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:4]
 
-kable(dt, format = "latex") %>%
+kable(dt, format = "html") %>%
   add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
   add_header_above(c(" ", "c" = 3, "d" = 1))
 ```
 
 # Basic Bootstrap Table
 ```{r}
-kable(dt, format = "latex", booktabs = T) %>%
+kable(dt, format = "html") %>%
+  kable_styling(full_width = F, 
+                bootstrap_options = c("striped", "bordered")) %>%
   add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
   add_header_above(c(" ", "c" = 3, "d" = 1))
 ```

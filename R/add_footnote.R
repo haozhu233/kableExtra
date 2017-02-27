@@ -28,14 +28,6 @@ add_footnote <- function(input, label = NULL,
   ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra"))
   ids <- ids.ops[, notation]
   ids.intable <- gsub("\\*", "\\\\*", ids)
-  # ids.simple <- c(
-  #   "*", "\u2020", "\u2021", "\u00A7", "\u00B6",
-  #   "**", "\u2020\u2020", "\u2021\u2021", "\u00A7\u00A7", "\u00B6\u00B6",
-  #   "***", "\u2020\u2020\u2020", "\u2021\u2021\u2021",
-  #   "\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6",
-  #   "****", "\u2020\u2020\u2020\u2020", "\u2021\u2021\u2021\u2021",
-  #   "\u00A7\u00A7\u00A7\u00A7", "\u00B6\u00B6\u00B6\u00B6"
-  # )
 
   #count the number of items in label and intable notation
   count.label <- length(label)

@@ -4,9 +4,9 @@
 \alias{kable_styling}
 \title{HTML table attributes}
 \usage{
-kable_styling(kable_input, bootstrap_options = "basic", full_width = T,
-  float = c("center", "left", "right"), font_size = NULL,
-  latex_hold_position = F, latex_scale_down = F)
+kable_styling(kable_input, bootstrap_options = "basic",
+  latex_options = "basic", full_width = NULL, position = c("center",
+  "left", "right", "float_left", "float_right"), font_size = NULL)
 }
 \arguments{
 \item{bootstrap_options}{A character vector for bootstrap table options. For
@@ -18,7 +18,7 @@ w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Boots
 \item{full_width}{A `TRUE` or `FALSE` variable controlling whether the HTML
 table should have 100\% width.}
 
-\item{float}{A character string determining whether and how the HTML table
+\item{position}{A character string determining whether and how the HTML table
 should float on the page. Values could be "left", "center", "right"}
 
 \item{font_size}{A numeric input for table font size}

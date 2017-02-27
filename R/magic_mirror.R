@@ -42,7 +42,7 @@ magic_mirror_latex <- function(input){
   # N of columns
   kable_info$ncol <- nchar(kable_info$align)
   # Caption
-  kable_info$caption <- str_match(input, "caption\\{(.*?)\\}")[2]
+  kable_info$caption <- str_match(input, "caption\\{(.*?)\\n")[2]
   # N of rows
   kable_info$nrow <- str_count(input, "\\\\\n") -
     # in the dev version (currently as of 11.2015) of knitr, when longtable is
@@ -55,6 +55,9 @@ magic_mirror_latex <- function(input){
     )
   # Contents
   kable_info$contents <- str_match_all(input, "\n(.*)\\\\\\\\")[[1]][,2]
+  if (kable_info$tabular == "longtable" & !is.na(kable_info$caption)) {
+    kable_info$contents <- kable_info$contents[-1]
+  }
   # Column names
   kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
   # Row names
