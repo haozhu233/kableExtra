@@ -4,15 +4,32 @@
 #' of HTML tables other than using the `table.attr` option in `knitr::kable()`.
 #' Currenly, it assumes the HTML document has boot
 #'
-#' @param bootstrap_options A character vector for bootstrap table options. For
-#' detailed information, please check the package vignette or visit the
-#' w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
-#' . Possible options include "basic", "striped", "bordered", "hover",
-#' "condensed" and "responsive".
+#' @param kable_input Output of `knitr::kable()` with `format` specified
+#' @param bootstrap_options A character vector for bootstrap table options.
+#' Please see package documentation site or visit the w3schools'
+#' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
+#' for more information. Possible options include `basic`, `striped`,
+#' `bordered`, `hover`, `condensed` and `responsive`.
+#' @param latex_options A character vector for LaTeX table options. Please see
+#' package documentation site for more information. Possible options include
+#' `basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
+#' alternative row colors to the table. It will imports `LaTeX` package `xcolor`
+#' if enabled. `hold_position` will "hold" the floating table to the exact
+#' position. It is useful when the `LaTeX` table is contained in a `table`
+#' environment after you specified captions in `kable()`. It will force the
+#' table to stay in the position where it was created in the document.
+#' `scale_down` is useful for super wide table. It will automatically adjust
+#' the table to page width.
 #' @param full_width A `TRUE` or `FALSE` variable controlling whether the HTML
-#' table should have 100\% width.
-#' @param position A character string determining whether and how the HTML table
-#' should float on the page. Values could be "left", "center", "right"
+#' table should have 100\% width. Since HTML and pdf have different flavors on
+#' the preferable format for `full_width`. If not specified, a HTML table will
+#' have full width by default but this option will be set to `FALSE` for a
+#' LaTeX table
+#' @param position A character string determining how to position the table
+#' on a page. Possible values include `left`, `center`, `right`, `float_left`
+#' and `float_right`. Please see the package doc site for demonstrations. For
+#' a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
+#' imported.
 #' @param font_size A numeric input for table font size
 #'
 #' @export
@@ -214,11 +231,7 @@ styling_latex_position <- function(x, table_info, position, latex_options) {
 
 styling_latex_position_center <- function(x, table_info, hold_position) {
   if (!table_info$table_env & table_info$tabular == "tabular") {
-    table_env_setup <- "\\begin{table}"
-    if (hold_position) {
-      table_env_setup <- paste0(table_env_setup, "[!h]")
-    }
-    return(paste0(table_env_setup, "\n\\centering", x, "\n\\end{table}"))
+    return(paste0("\\begin{table}[!h]\n\\centering", x, "\n\\end{table}"))
   }
   return(x)
 }
@@ -242,17 +255,21 @@ styling_latex_position_float <- function(x, table_info, option) {
     if (option == "l") return(styling_latex_position_left(x, table_info))
     if (option == "r") return(styling_latex_position_right(x, table_info, F))
   }
+  usepackage_latex("wrapfig")
+  size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
+  col_max_length <- apply(size_matrix, 1, max) + 4
   if (table_info$table_env) {
-    usepackage_latex("wrapfig")
-    size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
-    col_max_length <- apply(size_matrix, 1, max) + 4
     option <- sprintf("\\\\begin\\{wraptable\\}\\{%s\\}", option)
     option <- paste0(option, "\\{",sum(col_max_length) * 0.15, "cm\\}")
     x <- sub("\\\\begin\\{table\\}\\[\\!h\\]", "\\\\begin\\{table\\}", x)
     x <- sub("\\\\begin\\{table\\}", option, x)
     x <- sub("\\\\end\\{table\\}", "\\\\end\\{wraptable\\}", x)
-    return(x)
+  } else {
+    option <- sprintf("\\begin{wraptable}{%s}", option)
+    option <- paste0(option, "{",sum(col_max_length) * 0.15, "cm}")
+    x <- paste0(option, x, "\\end{wraptable}")
   }
+  return(x)
 }
 
 styling_latex_font_size <- function(x, table_info, font_size) {

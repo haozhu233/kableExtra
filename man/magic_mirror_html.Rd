@@ -4,10 +4,10 @@
 \alias{magic_mirror_html}
 \title{Magic Mirror for html table --------}
 \usage{
-magic_mirror_html(input)
+magic_mirror_html(kable_input)
 }
 \arguments{
-\item{input}{The output of kable}
+\item{kable_input}{The output of kable}
 }
 \description{
 Magic Mirror for html table --------

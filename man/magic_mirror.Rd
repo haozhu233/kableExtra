@@ -4,11 +4,11 @@
 \alias{magic_mirror}
 \title{Magic mirror that returns kable's attributes}
 \usage{
-magic_mirror(input)
+magic_mirror(kable_input)
 }
 \arguments{
-\item{input}{The output of kable}
+\item{kable_input}{The output of kable}
 }
 \description{
-Magic mirror that returns kable's attributes
+Mirror mirror tell me, how does this kable look like?
 }

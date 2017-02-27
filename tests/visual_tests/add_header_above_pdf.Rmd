@@ -1,0 +1,36 @@
+---
+title: "add_header_above"
+output: pdf_document
+---
+
+```{r}
+library(knitr)
+library(kableExtra)
+options(knitr.table.format = "latex")
+# switch to "latex" in a pdf environment
+dt <- mtcars[1:5, 1:4]
+
+kable(dt, booktabs = T) %>%
+  kable_styling(bootstrap_options = "striped", 
+                latex_options = "striped",
+                full_width = F) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
+  add_footnote(c("table footnote"))
+```
+
+```{r}
+kable(dt, format = "latex", booktabs = T) %>%
+  add_header_above(c(" ", "a" = 2, "b" = 2))
+```
+
+
+```{r}
+kable(dt, format = "latex", booktabs = T, longtable = T, caption = "aaa") %>%
+  add_header_above(c(" ", "a" = 2, "b" = 2))
+```
+
+```{r}
+kable(dt, format = "latex", booktabs = T, caption = "aaa") %>%
+  add_header_above(c(" ", "a" = 2, "b" = 2))
+```
+

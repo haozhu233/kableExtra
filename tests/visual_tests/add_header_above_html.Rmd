@@ -7,11 +7,15 @@ output: html_document
 ```{r}
 library(knitr)
 library(kableExtra)
+options(knitr.table.format = "html")
 dt <- mtcars[1:5, 1:4]
 
-kable(dt, format = "html") %>%
-  add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
-  add_header_above(c(" ", "c" = 3, "d" = 1))
+kable(dt, booktabs = T, caption = "Demo Table") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"), 
+                latex_options = c("striped", "hold_position"),
+                full_width = F) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
+  add_footnote(c("table footnote"))
 ```
 
 # Basic Bootstrap Table

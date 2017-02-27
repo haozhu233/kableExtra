@@ -4,10 +4,10 @@
 \alias{magic_mirror_latex}
 \title{Magic mirror for latex tables --------------}
 \usage{
-magic_mirror_latex(input)
+magic_mirror_latex(kable_input)
 }
 \arguments{
-\item{input}{The output of kable}
+\item{kable_input}{The output of kable}
 }
 \description{
 Magic mirror for latex tables --------------

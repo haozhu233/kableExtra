@@ -2,10 +2,22 @@
 % Please edit documentation in R/add_header_above.R
 \name{add_header_above}
 \alias{add_header_above}
-\title{Add an extra header row above the current header}
+\title{Add a header row on top of current header}
 \usage{
 add_header_above(kable_input, header = NULL)
 }
+\arguments{
+\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+
+\item{header}{A (named) character vector with `colspan` as values. For
+example, `c(" " = 1, "title" = 2)` can be used to create a new header row
+for a 3-column table with "title" spanning across column 2 and 3. For
+convenience, when `colspan` equals to 1, users can drop the ` = 1` part.
+As a result, `c(" ", "title" = 2)` is the same as `c(" " = 1, "title" = 2)`.}
+}
 \description{
-Add an extra header row above the current header
+Tables with multiple rows of header rows are extremely useful
+to demonstrate grouped data. This function takes the output of a `kable()`
+function and adds an header row on top of it. This function can work with
+both `HTML` and `LaTeX` outputs
 }

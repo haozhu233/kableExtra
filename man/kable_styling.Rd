@@ -9,17 +9,36 @@ kable_styling(kable_input, bootstrap_options = "basic",
   "left", "right", "float_left", "float_right"), font_size = NULL)
 }
 \arguments{
-\item{bootstrap_options}{A character vector for bootstrap table options. For
-detailed information, please check the package vignette or visit the
-w3schools' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
-. Possible options include "basic", "striped", "bordered", "hover",
-"condensed" and "responsive".}
+\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+
+\item{bootstrap_options}{A character vector for bootstrap table options.
+Please see package documentation site or visit the w3schools'
+\href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
+for more information. Possible options include `basic`, `striped`,
+`bordered`, `hover`, `condensed` and `responsive`.}
+
+\item{latex_options}{A character vector for LaTeX table options. Please see
+package documentation site for more information. Possible options include
+`basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
+alternative row colors to the table. It will imports `LaTeX` package `xcolor`
+if enabled. `hold_position` will "hold" the floating table to the exact
+position. It is useful when the `LaTeX` table is contained in a `table`
+environment after you specified captions in `kable()`. It will force the
+table to stay in the position where it was created in the document.
+`scale_down` is useful for super wide table. It will automatically adjust
+the table to page width.}
 
 \item{full_width}{A `TRUE` or `FALSE` variable controlling whether the HTML
-table should have 100\% width.}
+table should have 100\% width. Since HTML and pdf have different flavors on
+the preferable format for `full_width`. If not specified, a HTML table will
+have full width by default but this option will be set to `FALSE` for a
+LaTeX table}
 
-\item{position}{A character string determining whether and how the HTML table
-should float on the page. Values could be "left", "center", "right"}
+\item{position}{A character string determining how to position the table
+on a page. Possible values include `left`, `center`, `right`, `float_left`
+and `float_right`. Please see the package doc site for demonstrations. For
+a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
+imported.}
 
 \item{font_size}{A numeric input for table font size}
 }

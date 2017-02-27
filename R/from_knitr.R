@@ -1,8 +1,8 @@
 # These functions are imported from knitr/highr as `:::` is not recommended by
 # CRAN
 
-#' escape special LaTeX characters
-#' @author Yihui Xie
+# escape special LaTeX characters
+# @author Yihui Xie
 escape_latex <- function(x, newlines = FALSE, spaces = FALSE) {
   x = gsub('\\\\', '\\\\textbackslash', x)
   x = gsub('([#$%&_{}])', '\\\\\\1', x)
@@ -14,8 +14,8 @@ escape_latex <- function(x, newlines = FALSE, spaces = FALSE) {
   x
 }
 
-#' escape special HTML characters
-#' @author Yihui Xie
+# escape special HTML characters
+# @author Yihui Xie
 escape_html <- function(x) {
   x = gsub('&', '&amp;', x)
   x = gsub('<', '&lt;', x)

@@ -1,49 +1,42 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-This package is still in an "as-is" state. You can save a lot of finger-typing time by using it but you still need to understand what is really going on behind the hood, which is still far behind my goal. Also, since the default output format of `kable` is `markdown`, which doesn't support high-level table customization, it may not work well in many cases. I would recommend you to set the `format` option in each `kable` function or to define `options(knitr.table.format = 'html')` or `latex` somewhere in your document.
+# kableExtra
+When we are talking about table generators in R, knitr::kable wins the favor of a lot of people by its ultimate simplicity. Unlike those powerful table rendering engine such as xtable, tables or even gridExtra, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
-Introduction to kableExtra
-==========================
+> This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
-When we are talking about table generators in `R`, `knitr::kable` wins the favor of a lot of people by its ultimate simplicity. Unlike those powerful table rendering engine such as `xtable`, `tables` or even `gridExtra`, the philosophy behind `kable` is to make it easy for programmers to use. Just as it claimed in its function description, &gt; This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
+However, the ultimate simplicity of `kable()` brought troubles to some people, especially some new R users who may not have got exposed to other table making packages in R. It is not rare to see people including experienced user asking questions like how to center/left-align a table on Stack Overflow or twitter. These are the reasons why this package `kableExtra` was created. 
 
-However, we also see a lot of people getting frustrated online for the lack of functionality of `kable`. It is kind of unfair to `kable` as it is supposed to be "simple" by design. However, it is also understandable as people cry because they love to use this function instead of those complicated alternatives.
+I hope with `kableExtra`, you can
 
-In `kableExtra`, we are not intended to build another table generator engine as there have been a lot (actually too many in my personal opinion) in `R`. This package is an attempt to extend `knitr::kable`'s functionality without destroying the beauty of its simplicity by using the pipe syntax from `magrittr`. We will follow the literal programming practice and try to make the progress of building a table in `R` go together with the flow of logic in your mind. We will also borrow the idea of *"grammar of graphics"* from `ggplot2` and `ggvis` and implement it in the progress of table generating tasks.
+- Use default base `kable()` for all simple tables
+- Use `kable()` with `kableExtra` to generate 90 % of complex/advanced/self-customized/beautiful tables in either HTML or LaTeX
+- Only have to mess with raw HTML/LaTeX in the last 10% cases where `kableExtra` cannot solve the problem
 
-Vocabulary & Grammar
---------------------
+## Features
+### Pipable syntax
+`kableExtra` is NOT a table generating package. It is a package that can **"add features"** to a `kable()` output using a syntax that every useR loves - the pipes `%>%`. We see similar approaches to deal with plots in packages like `ggvis` and `plotly`. There is no reason why we cannot use it with tables. 
 
-Here is a list of features that we would love to see in this package. I bolded these that have been done.
+### Unified functions for both HTML and PDF
+Most functionalities in `kableExtra` can work in both HTML and PDF. In fact, as long as you specifies format in `kable()` (which can be set globally through option `knitr.table.format`), functions in this package will pick the right way to manipulate the table be themselves. As a result, if users want to left align the table, `kable(...) %>% kable_styling(position = "left")` will work in both HTML and PDF. 
 
--   **add\_footnote()**
--   add\_indent()
--   col\_markup()
--   row\_markup()
--   add\_stripe()
--   add\_hover()
--   add\_textcolor()
--   add\_bgcolor()
--   **magic\_mirror()**
--   reverse\_kable()
-
-The syntax of this package is just like what you are doing in `dplyr` or `ggvis`. Here is an example of adding footnote to a `kable` object.
-
-``` r
-library(knitr)
-library(kableExtra)
-
-cars %>%
-  head() %>%
-  rename("speed[note]" = speed) %>%
-  kable(caption = "Head of cars [note]") %>%
-  add_footnote(
-    label = c("Footnote in caption",
-      "Footnote in table"),
-    notation = "number" # Or "alphabet"/"symbol"
-  )
+## Install
+```r
+devtools::install_github("haozhu233/kableExtra")
 ```
 
-Examples
---------
+## Basic Usage
+```r
+library(knitr)
+library(kableExtra)
+options(knitr.table.format = "html")
+# switch to "latex" in a pdf environment
+dt <- mtcars[1:5, 1:4]
 
-These two documents demonstrate the different behaviors under HTML and LaTeX (including booktabs and longtable) \* HTML demo: <http://rpubs.com/haozhu233/kableExtra_footnote_html> \* PDF demo: <https://www.dropbox.com/s/qk7msi64mndn67y/brief_demo_pdf.pdf?dl=0>
+kable(dt, booktabs = T, caption = "Demo Table") %>%
+  kable_styling(bootstrap_options = "striped", 
+                latex_options = "striped",
+                full_width = F, font_size = 9) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
+  add_footnote(c("table footnote"))
+```
+<img src="http://i.imgur.com/kHFBF3H.png" style="height: 200px;"/>
+<img src="http://i.imgur.com/q46hzOR.png" style="height: 200px;"/>
