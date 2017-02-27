@@ -37,16 +37,34 @@ kable_styling <- function(kable_input,
                           bootstrap_options = "basic",
                           latex_options = "basic",
                           full_width = NULL,
-                          position = c("center", "left", "right",
-                                       "float_left", "float_right"),
+                          position = "center",
                           font_size = NULL) {
+
+  if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
+    bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
+  }
+  if (length(latex_options) == 1 && latex_options == "basic") {
+    latex_options <- getOption("kable_styling_latex_options", "basic")
+  }
+  if (position == "center") {
+    position <- getOption("kable_styling_position", "center")
+  }
+  position <- match.arg(position,
+                        c("center", "left", "right", "float_left", "float_right"))
+  if (is.null(font_size)) {
+    font_size <- getOption("kable_styling_font_size", NULL)
+  }
+
   kable_format <- attr(kable_input, "format")
+
   if (!kable_format %in% c("html", "latex")) {
     stop("Please specify output format in your kable function. Currently ",
          "generic markdown table using pandoc is not supported.")
   }
   if (kable_format == "html") {
-    if (is.null(full_width)) full_width <- T
+    if (is.null(full_width)) {
+      full_width <- getOption("kable_styling_full_width", T)
+    }
     return(htmlTable_styling(kable_input,
                              bootstrap_options = bootstrap_options,
                              full_width = full_width,
@@ -54,7 +72,9 @@ kable_styling <- function(kable_input,
                              font_size = font_size))
   }
   if (kable_format == "latex") {
-    if (is.null(full_width)) full_width <- F
+    if (is.null(full_width)) {
+      full_width <- getOption("kable_styling_full_width", F)
+    }
     return(pdfTable_styling(kable_input,
                             latex_options = latex_options,
                             full_width = full_width,
@@ -70,7 +90,7 @@ htmlTable_styling <- function(kable_input,
                               position = c("center", "left", "right",
                                            "float_left", "float_right"),
                               font_size = NULL) {
-
+  table_info <- magic_mirror(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
 
   # Modify class
@@ -121,8 +141,11 @@ htmlTable_styling <- function(kable_input,
   if (length(kable_xml_style) != 0) {
     xml_attr(kable_xml, "style") <- paste(kable_xml_style, collapse = " ")
   }
-  return(structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable"))
+
+  out <- structure(as.character(kable_xml), format = "html",
+                   class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
+  return(out)
 }
 
 # LaTeX table style
@@ -176,6 +199,7 @@ pdfTable_styling <- function(kable_input,
   out <- styling_latex_position(out, table_info, position, latex_options)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
   return(out)
 }
 

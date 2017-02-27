@@ -17,14 +17,23 @@
 #'
 #' @export
 add_footnote <- function(input, label = NULL,
-                         notation = c("alphabet", "number", "symbol"),
+                         notation = "alphabet",
                          threeparttable = FALSE) {
   if (is.null(label)) return(input)
 
-  notation <- match.arg(notation)
+  if (notation == "alphabet") {
+    notation <- getOption("kable_footnote_notation", "alphabet")
+  }
+  if (!threeparttable) {
+    threeparttable <- getOption("kable_footnote_threeparttable", FALSE)
+  }
+
+  notation <- match.arg(notation, c("alphabet", "number", "symbol"))
   if (notation == "symbol") {
     notation <- paste0(notation, ".", attr(input, "format"))
   }
+
+  table_info <- NULL
 
   ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra"))
   ids <- ids.ops[, notation]
@@ -86,8 +95,8 @@ add_footnote <- function(input, label = NULL,
     label <- escape_latex(label)
     label <- gsub("\\\\", "\\\\\\\\", label)
 
-    kable_info <- magic_mirror(input)
-    if (kable_info$tabular == "longtable") {
+    table_info <- magic_mirror(input)
+    if (table_info$tabular == "longtable") {
       if (notation != "number") {
         warning("Notation is set to 'number' and other formats are not supported.")
         notation <- "number"
@@ -104,8 +113,8 @@ add_footnote <- function(input, label = NULL,
       # See http://tex.stackexchange.com/questions/50151/footnotes-in-longtable-captions
 
       count.in.caption.note <- 0
-      if (!is.na(kable_info$caption)) {
-        count.in.caption.note <- str_count(kable_info$caption, "\\[note\\]")
+      if (!is.na(table_info$caption)) {
+        count.in.caption.note <- str_count(table_info$caption, "\\[note\\]")
       }
       if (count.in.caption.note != 0) {
         caption.footnote <- paste0("\\\\addtocounter{footnote}{-",
@@ -173,17 +182,17 @@ add_footnote <- function(input, label = NULL,
       } else {
         table.width <- max(nchar(
           str_replace_all(
-            str_replace_all(kable_info$contents, "\\[note\\]", ""),
-            "\\[note[0-9]{1,2}\\]", ""))) + 2 * (kable_info$ncol - 1)
+            str_replace_all(table_info$contents, "\\[note\\]", ""),
+            "\\[note[0-9]{1,2}\\]", ""))) + 2 * (table_info$ncol - 1)
         footer <- ""
         for (i in 1:count.label) {
           label.wrap <- strwrap(label[i], table.width)
-          footer <- paste0(footer, "\\\\multicolumn{", kable_info$ncol,
+          footer <- paste0(footer, "\\\\multicolumn{", table_info$ncol,
                            "}{l}{\\\\textsuperscript{", ids[i], "} ",
                            label.wrap[1], "}\\\\\\\\\n")
           if (length(label.wrap) > 1) {
             for (j in 2:length(label.wrap)) {
-              footer <- paste0(footer, "\\\\multicolumn{", kable_info$ncol,
+              footer <- paste0(footer, "\\\\multicolumn{", table_info$ncol,
                                "}{l}{", label.wrap[j], "}\\\\\\\\\n")
             }
           }
@@ -198,8 +207,8 @@ add_footnote <- function(input, label = NULL,
   # HTML Tables -------------------
   if (attr(input, "format") == "html") {
     # Clean the entry for labels
+    table_info <- magic_mirror(input)
     label <- escape_html(label)
-
     # Replace in-table notation with appropriate symbol
     for (i in 1:count.intablenote) {
       export <- sub("\\[note\\]",
@@ -226,5 +235,6 @@ add_footnote <- function(input, label = NULL,
     # Paste footer to the table
     export[1] <- gsub("</tbody>\n", paste0("</tbody>\n", footer), export[1])
   }
+  attr(export, "original_kable_meta") <- table_info
   return(export)
 }

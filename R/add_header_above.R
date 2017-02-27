@@ -30,6 +30,7 @@ add_header_above <- function(kable_input, header = NULL) {
 # HTML
 htmlTable_add_header_above <- function(kable_input, header = NULL) {
   if (is.null(header)) return(kable_input)
+  table_info <- magic_mirror(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
   # somehow xml2 cannot directly search by name here (it will result in a crash)
   kable_xml_thead <- xml_child(kable_xml, 1)
@@ -49,8 +50,10 @@ htmlTable_add_header_above <- function(kable_input, header = NULL) {
 
   new_header_row <- htmlTable_new_header_generator(header)
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
-  return(structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable"))
+  out <- structure(as.character(kable_xml), format = "html",
+                   class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
+  return()
 }
 
 standardize_header_input <- function(header) {
@@ -88,6 +91,7 @@ pdfTable_add_header_above <- function(kable_input, header = NULL) {
                     pdfTable_new_header_generator(header, table_info$booktabs)),
              as.character(kable_input))
   out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
   return(out)
 }
 

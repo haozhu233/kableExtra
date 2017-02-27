@@ -22,6 +22,7 @@ Most functionalities in `kableExtra` can work in both HTML and PDF. In fact, as 
 ```r
 devtools::install_github("haozhu233/kableExtra")
 ```
+`kableExtra` will be submitted to CRAN soon. 
 
 ## Basic Usage
 ```r
