@@ -19,7 +19,12 @@ I hope with `kableExtra`, you can
 Most functionalities in `kableExtra` can work in both HTML and PDF. In fact, as long as you specifies format in `kable()` (which can be set globally through option `knitr.table.format`), functions in this package will pick the right way to manipulate the table be themselves. As a result, if users want to left align the table, `kable(...) %>% kable_styling(position = "left")` will work in both HTML and PDF. 
 
 ## Install
+Some LaTeX features in `kableExtra`, such as striped line, requires rmarkdown 1.4.0+, which is not yet on CRAN. It is highly recommended to install the dev version of rmarkdown before you try this package. If you only use this package for HTML table, it doesn't matter what version of rmarkdown you are using.
 ```r
+# install.packages("devtools")
+devtools::install_github("rstudio/rmarkdown")
+
+# For dev version
 devtools::install_github("haozhu233/kableExtra")
 ```
 `kableExtra` will be submitted to CRAN soon. 
@@ -48,3 +53,13 @@ kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
 ### Results
 <img src="http://i.imgur.com/kHFBF3Hm.png" style="height: 200px;"/>
 <img src="http://i.imgur.com/q46hzORm.png" style="height: 200px;"/>
+
+## More Information
+For more information, please check the package vignette.
+
+- [Create Awesome HTML Table with knitr::kable and kableExtra](http://rpubs.com/haozhu233/kableExtra_HTML)
+
+## Limitations
+- `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky. 
+- In HTML, `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning. 
+- In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. 

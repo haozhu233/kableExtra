@@ -53,7 +53,7 @@ htmlTable_add_header_above <- function(kable_input, header = NULL) {
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
   attr(out, "original_kable_meta") <- table_info
-  return()
+  return(out)
 }
 
 standardize_header_input <- function(header) {

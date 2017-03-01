@@ -11,7 +11,7 @@
 #' @param label A vector of footnotes you want to add. You don't need to add
 #' notations in your notes.
 #' @param notation You can select the format of your footnote notation from
-#' "number", "alphabet" and "symbol".
+#' `number`, `alphabet` and `symbol`.
 #' @param threeparttable Boolean value indicating if a
 #' \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should be used.
 #'

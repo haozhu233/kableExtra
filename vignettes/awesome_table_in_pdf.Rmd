@@ -1,0 +1,175 @@
+---
+title: "Create Awesome LaTeX Table with knitr::kable and kableExtra"
+author: "Hao Zhu"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Create Awesome LaTeX Table with knitr::kable and kableExtra}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+***
+
+> _**Some functionalities of this package, such as striped line, require the `extra_dependencies` feature from rmarkdown 1.4.0, which has not yet been released on CRAN in February, 2017. If necessary, please install the dev version of rmarkdown from github before you try this package**_
+
+***
+
+# Overview
+The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+
+# Installation
+Some LaTeX features in `kableExtra`, such as striped line, requires rmarkdown 1.4.0+, which is not yet on CRAN. It is highly recommended to install the dev version of rmarkdown before you try this package. If you only use this package for HTML table, it doesn't matter what version of rmarkdown you are using.
+```r
+# install.packages("devtools")
+devtools::install_github("rstudio/rmarkdown")
+
+# For dev version
+devtools::install_github("haozhu233/kableExtra")
+```
+# Getting Started
+Here we are using the first few columns and rows from dataset `mtcars`
+```{r}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:5, 1:6]
+```
+
+When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.*
+
+```{r}
+options(knitr.table.format = "latex") 
+## If you don't define format here, you'll need put `format = "latex"` 
+## in every kable function.
+```
+
+## Plain LaTeX
+Plain LaTeX table looks relatively ugly in 2017.
+```{r}
+kable(dt)
+```
+
+## LaTeX Table with Booktabs
+Similar with Bootstrap in HTML, in LaTeX, you can also use a trick to make your table look prettier as well. The different part is that, this time you don't need to pipe kable outputs to another function. Instead, you should call `booktabs = T` directly in `kable()`
+```{r}
+kable(dt, booktabs = T)
+```
+
+# Table Styles
+`kable_styling` in LaTeX uses the same syntax and structure as `kable_styling` in HTML. However, instead of `bootstrap_options`, you should specify `latex_options` instead. 
+
+## LaTeX Options
+Similar with `bootstap_options`, `latex_options` is also a charter vector with a bunch of options including `striped`, `hold_position` and `scale_down`.
+
+### Striped
+Even though in the LaTeX world, people usually call it `alternative row colors` but here I'm using its bootstrap name for consistency. Note that to make it happen, LaTeX package `xcolor` is required to be loaded. In an environment like rmarkdown::pdf_document (rmarkdown 1.4.0 +), `kable_styling` will load it automatically if `striped` is enabled. However, in other cases, you probably need to import that package by yourself. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling(latex_options = "striped")
+```
+
+### Hold Position
+If you provide a table caption in `kable()`, it will put your LaTeX tabular in a `table` environment, unless you are using `longtable`. A `table` environment will automatically find the best place (it thinks) to put your table. However, in many cases, you do want your table to appear in a position you want it to be. In this case, you can use this `hold_position` options here.
+```{r}
+kable(dt, caption = "Demo table", booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+### Scale down
+When you have a super-wide table and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, it will also scale up your table if your table is too small. It was named as `scale_down` because scale up is usually not very useful. In fact, when you want to "scale up" a table, you should use `full_width = T` instead in most cases. 
+```{r}
+kable(cbind(dt, dt, dt), booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+```
+```{r}
+kable(cbind(dt), booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+
+## Full Width or Not?
+By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `FALSE` for LaTeX tables (note that for HTML, the default is `TRUE` since 100% width is the real "default" for bootstrap tables). Also, if you use `full_width` in LaTeX, you will loss your in-cell text alignment settings and everything will be left-aligned. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling(full_width = T)
+```
+
+## Position
+Table Position only matters when the table doesn't have `full_width`. You can choose to align the table to `center` or `left` side of the page. The default value of position is `center`. 
+
+Note that even though you can select to `right` align your table but the table will actually be centered. Somehow it is very difficult to right align a table in LaTeX (since it's not very useful in the real world?). If you know how to do it, please send out an issue or PR and let me know. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling(position = "center")
+```
+
+Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires rmarkdown 1.4.0 +. If you rmarkdown version < 1.4.0, you need to load the package through a customed LaTeX template file. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling(position = "float_right")
+```
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
+
+## Font Size
+If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling(font_size = 7)
+```
+
+# Add Extra Header Rows
+Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling() %>%
+  add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
+```
+
+In fact, if you want to add another row of header on top, please feel free to do so. 
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling() %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)) %>%
+  add_header_above(c(" ", "Group 4" = 4, "Group 5" = 2)) %>%
+  add_header_above(c(" ", "Group 6" = 6))
+```
+
+# Add footnote
+## Notation System
+You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
+
+### Alphabet
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling() %>%
+  add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+```
+
+### Number
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling() %>%
+  add_footnote(c("Footnote 1", "Have a good day."), notation = "number")
+```
+
+### Symbol
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling() %>%
+  add_footnote(c("Footnote 1", "Footnote 2", "Footnote 3"), notation = "symbol")
+```
+
+## In-table markers
+By design, `add_footnote()` will transform any `[note]` to in-table footnote markers. 
+```{r}
+kable(dt, caption = "Demo Table[note]", booktabs = T) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
+  add_footnote(c("This table is from mtcars", 
+                 "Group 1 contains mpg, cyl and disp", 
+                 "Group 2 contains hp, drat and wt"), 
+               notation = "symbol")
+```

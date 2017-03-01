@@ -6,12 +6,12 @@
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param bootstrap_options A character vector for bootstrap table options.
-#' Please see package documentation site or visit the w3schools'
+#' Please see package vignette or visit the w3schools'
 #' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 #' for more information. Possible options include `basic`, `striped`,
 #' `bordered`, `hover`, `condensed` and `responsive`.
 #' @param latex_options A character vector for LaTeX table options. Please see
-#' package documentation site for more information. Possible options include
+#' package vignette for more information. Possible options include
 #' `basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
 #' alternative row colors to the table. It will imports `LaTeX` package `xcolor`
 #' if enabled. `hold_position` will "hold" the floating table to the exact
@@ -233,7 +233,7 @@ styling_latex_full_width <- function(x, table_info) {
   col_max_length <- apply(size_matrix, 1, max) + 4
   col_ratio <- round(col_max_length / sum(col_max_length), 2)
   col_align <- paste0("p{\\\\dimexpr", col_ratio,
-                      "\\\\linewidth-2\\\\tabcolsep}")
+                      "\\\\columnwidth-2\\\\tabcolsep}")
   col_align <- paste0("{", paste(col_align, collapse = ""), "}")
   x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
            table_info$begin_tabular, x)
