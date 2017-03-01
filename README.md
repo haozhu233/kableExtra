@@ -7,7 +7,7 @@ When we are talking about table generators in R, knitr::kable wins the favor of 
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
-However, the ultimate simplicity of `kable()` brought troubles to some people, especially some new R users who may not have got exposed to other table making packages in R. It is not rare to see people including experienced user asking questions like how to center/left-align a table on Stack Overflow or twitter. These are the reasons why this package `kableExtra` was created. 
+However, the ultimate simplicity of `kable()` also brought troubles to some of us, especially for new R users, who may not have a lot of experience on generating tables in R. It is not rare to see people including experienced users asking questions like how to center/left-align a table on Stack Overflow. Also, for me personally, I found myself repeatedly parsing CSS into `kable()` for some very simple features like striped lines. For LaTeX, it's even worse since I'm almost Stack Overflow dependent for LaTeX... That's why this package `kableExtra` was created. 
 
 I hope with `kableExtra`, you can
 
