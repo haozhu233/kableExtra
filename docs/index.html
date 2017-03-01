@@ -26,6 +26,22 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
 
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+    @media (max-width: 550px) {
+      .right-panel {
+        padding-top: 40px;
+        border-top: 1px solid #E1E1E1;
+      }
+    }
+    @media (min-width: 550px) {
+      .right-panel {
+        margin-top: 10%;
+        padding-left: 40px;
+        border-left: 1px solid #E1E1E1;
+      }
+    }
+
+  </style>
 
 </head>
 <body>
@@ -37,10 +53,10 @@
     <div class="row">
       <div class="six columns" style="margin-top: 25%; margin-bottom: 25%;">
         <h4>kableExtra</h4>
-        <p style="color: gray;">Construct complex table with <code>kable()</code> + </code><code>%>%</code></p>
-        <p style="color: #bbb;">by <a href="https://github.com/haozhu233" style="text-decoration: none; color: #bbb;">@haozhu233</a> under MIT</p>
+        <p style="color: gray;">Construct complex table with <code>knitr::kable()</code> + </code><code>%>%</code></p>
+        <p style="color: #bbb;">by <a href="https://github.com/haozhu233" style="text-decoration: none; color: #bbb;">@haozhu233</a> under MIT License</p>
       </div>
-      <div class="six columns" style="margin-top: 10%; padding-left: 40px; border-left: 1px solid #E1E1E1;">
+      <div class="six columns right-panel">
         <img src="img/screenshot.png" style="width:100%;"/>
         <hr>
         <strong>Complete Package Vignettes</strong>
