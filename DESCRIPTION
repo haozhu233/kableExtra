@@ -1,27 +1,26 @@
 Package: kableExtra
 Type: Package
-Title: Decorate kable output using pipe syntax
-Version: 0.0.1.9000
+Title: Construct Complex Table with kable and Pipe Syntax
+Version: 0.1.0
 Authors@R: c(
-    person("Hao", "Zhu", email = "haozhu@hsl.harvard.edu", role = c("aut", "cre")),
+    person("Hao", "Zhu", email = "haozhu233@gmail.com", role = c("aut", "cre")),
     person("Will", "Beasley", email = "wibeasley@hotmail.com", role = "ctb"),
     person("Yihui", "Xie", email = "xie@yihui.name", role = "ctb")
     )
-Description: A set of functions aiming to strengthen the functionality of
-    knitr::kable without destroying its simplicity by adopting pipe syntax.
+Description: A collection of functions to build complex HTML or LaTeX tables on top of kable output.
 License: MIT + file LICENSE
 LazyData: TRUE
-URL: https://github.com/haozhu233/kableExtra
+URL: http://haozhu233.github.io/kableExtra/
 BugReports: https://github.com/haozhu233/kableExtra/issues
 Depends:
     R (>= 3.1.2)
 Imports:
-    knitr (>= 1.10),
+    knitr (>= 1.13),
     magrittr,
     stringr (>= 1.0),
     xml2,
     rvest,
-    rmarkdown (>= 1.3)
+    rmarkdown (>= 1.3.0)
 Suggests:
     testthat
 VignetteBuilder: knitr

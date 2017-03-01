@@ -64,3 +64,8 @@ For more information, please check the package vignette.
 - `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky. 
 - In HTML, `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning. 
 - In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. 
+
+## To-do
+- A function to insert a gap row (or group title row in the middle of a table)
+- A function to easily add title column indent
+- Some ways to change text/background color of cells
