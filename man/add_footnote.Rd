@@ -4,8 +4,8 @@
 \alias{add_footnote}
 \title{Add footnote}
 \usage{
-add_footnote(input, label = NULL, notation = c("alphabet", "number",
-  "symbol"), threeparttable = FALSE)
+add_footnote(input, label = NULL, notation = "alphabet",
+  threeparttable = FALSE)
 }
 \arguments{
 \item{input}{The direct output of your \code{kable} function or your last
@@ -15,7 +15,7 @@ add_footnote(input, label = NULL, notation = c("alphabet", "number",
 notations in your notes.}
 
 \item{notation}{You can select the format of your footnote notation from
-"number", "alphabet" and "symbol".}
+`number`, `alphabet` and `symbol`.}
 
 \item{threeparttable}{Boolean value indicating if a
 \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should be used.}

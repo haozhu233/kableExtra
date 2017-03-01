@@ -1,0 +1,160 @@
+---
+title: "Create Awesome HTML Table with knitr::kable and kableExtra"
+author: "Hao Zhu"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Create Awesome HTML Table with knitr::kable and kableExtra}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+
+# Installation
+Some LaTeX features in `kableExtra`, such as striped line, requires rmarkdown 1.4.0+, which is not yet on CRAN. It is highly recommended to install the dev version of rmarkdown before you try this package. If you only use this package for HTML table, it doesn't matter what version of rmarkdown you are using.
+```r
+# install.packages("devtools")
+devtools::install_github("rstudio/rmarkdown")
+
+# For dev version
+devtools::install_github("haozhu233/kableExtra")
+```
+# Getting Started
+Here we are using the first few columns and rows from dataset `mtcars`
+```{r}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:5, 1:6]
+```
+
+When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.*
+
+```{r}
+options(knitr.table.format = "html") 
+## If you don't define format here, you'll need put `format = "html"` in every kable function.
+```
+
+## Basic HTML Table
+Basic HTML output of `kable` looks very crude. To the end, it's just a plain HTML table without any love from css.
+```{r}
+kable(dt)
+```
+
+## Apply Bootstrap
+When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
+```{r}
+kable(dt) %>%
+  kable_styling()
+```
+
+# Table Styles
+`kable_styling` offers server other ways to customize the look of a HTML table. 
+
+## Bootstrap Options
+If you are not familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
+
+For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+The option `condensed` can also be handy in many cases when you don't want your table to be too large. It has slightly shorter row height.
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+Tables with option `responsive` looks the same with others on a large screen. However, on a small screen like phone, they are horizontally scrollable. Please resize your window to see the result.
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Full Width or Not?
+By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks as long as you specified. )
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+## Position
+Table Position only matters when the table doesn't have `full_width`. You can choose to align the table to `center`, `left` or `right` side of the page
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. 
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "float_right")
+```
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
+
+## Font Size
+If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
+```{r}
+kable(dt) %>%
+  kable_styling(bootstrap_options = "striped", font_size = 7)
+```
+
+# Add Extra Header Rows
+Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
+```{r}
+kable(dt) %>%
+  kable_styling("striped") %>%
+  add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
+```
+
+In fact, if you want to add another row of header on top, please feel free to do so. 
+```{r}
+kable(dt) %>%
+  kable_styling(c("striped", "bordered")) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)) %>%
+  add_header_above(c(" ", "Group 4" = 4, "Group 5" = 2)) %>%
+  add_header_above(c(" ", "Group 6" = 6))
+```
+
+# Add footnote
+## Notation System
+You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
+
+### Alphabet
+```{r}
+kable(dt) %>%
+  kable_styling("striped") %>%
+  add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+```
+
+### Number
+```{r}
+kable(dt) %>%
+  kable_styling("striped") %>%
+  add_footnote(c("Footnote 1", "Have a good day."), notation = "number")
+```
+
+### Symbol
+```{r}
+kable(dt) %>%
+  kable_styling("striped") %>%
+  add_footnote(c("Footnote 1", "Footnote 2", "Footnote 3"), notation = "symbol")
+```
+
+## In-table markers
+By design, `add_footnote()` will transform any `[note]` to in-table footnote markers. 
+```{r}
+kable(dt, caption = "Demo Table[note]") %>%
+  kable_styling("striped") %>%
+  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
+  add_footnote(c("This table is from mtcars", 
+                 "Group 1 contains mpg, cyl and disp", 
+                 "Group 2 contains hp, drat and wt"), 
+               notation = "symbol")
+```

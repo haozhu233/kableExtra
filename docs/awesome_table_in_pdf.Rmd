@@ -6,10 +6,6 @@ output:
   pdf_document:
     toc: true
     toc_depth: 2
-vignette: >
-  %\VignetteIndexEntry{Create Awesome LaTeX Table with knitr::kable and kableExtra}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ***

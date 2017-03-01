@@ -5,20 +5,20 @@
 \title{HTML table attributes}
 \usage{
 kable_styling(kable_input, bootstrap_options = "basic",
-  latex_options = "basic", full_width = NULL, position = c("center",
-  "left", "right", "float_left", "float_right"), font_size = NULL)
+  latex_options = "basic", full_width = NULL, position = "center",
+  font_size = NULL)
 }
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
 
 \item{bootstrap_options}{A character vector for bootstrap table options.
-Please see package documentation site or visit the w3schools'
+Please see package vignette or visit the w3schools'
 \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 for more information. Possible options include `basic`, `striped`,
 `bordered`, `hover`, `condensed` and `responsive`.}
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
-package documentation site for more information. Possible options include
+package vignette for more information. Possible options include
 `basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
 alternative row colors to the table. It will imports `LaTeX` package `xcolor`
 if enabled. `hold_position` will "hold" the floating table to the exact
