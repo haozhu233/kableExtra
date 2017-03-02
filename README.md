@@ -34,6 +34,8 @@ Some LaTeX features in `kableExtra`, such as striped line, requires rmarkdown 1.
 # install.packages("devtools")
 devtools::install_github("rstudio/rmarkdown")
 
+install.packages("kableExtra")
+
 # For dev version
 devtools::install_github("haozhu233/kableExtra")
 ```
