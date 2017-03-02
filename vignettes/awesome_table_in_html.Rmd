@@ -4,6 +4,7 @@ author: "Hao Zhu"
 date: "`r Sys.Date()`"
 output: 
   html_document:
+    theme: simplex
     toc: true
     toc_depth: 2
     toc_float: true
@@ -12,6 +13,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+> &#x26A0; For LaTeX tables, please see the [package site](http://haozhu233.github.io/kableExtra/) for more information.
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
