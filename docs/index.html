@@ -40,6 +40,19 @@
         border-left: 1px solid #E1E1E1;
       }
     }
+    a.muted-link {
+      text-decoration: none;
+      color: #bbb;
+      border-bottom: 1px dashed #ddd;
+    }
+    a.muted-link:hover {
+      color: #d14;
+    }
+    a.normal-link {
+      text-decoration: none;
+      color: #d14;
+      border-bottom: 1px dashed #d14;
+    }
 
   </style>
 
@@ -54,8 +67,8 @@
       <div class="six columns" style="margin-top: 25%; margin-bottom: 25%;">
         <h4>kableExtra</h4>
         <p style="color: gray;">Construct complex table with <code>knitr::kable()</code> + </code><code>%>%</code></p>
-        <p style="color: #bbb;">by <a href="https://github.com/haozhu233" style="text-decoration: none; color: #bbb;">@haozhu233</a> under a MIT License. </p>
-        <p style="color: #bbb; font-size: 90%; margin-top: -25px;">View on <a href="https://github.com/haozhu233/kableExtra" style="text-decoration: none; color: #bbb;">Github</a> and <a href="http://cran.r-project.org/package=kableExtra" style="text-decoration: none; color: #bbb;">CRAN</a></p>
+        <p style="color: #bbb;">by <a href="https://github.com/haozhu233" class="muted-link">@haozhu233</a> under a MIT License. </p>
+        <p style="color: #bbb; font-size: 90%; margin-top: -25px;">View on <a href="https://github.com/haozhu233/kableExtra" class="muted-link">Github</a> and <a href="http://cran.r-project.org/package=kableExtra" class="muted-link">CRAN</a></p>
       </div>
       <div class="six columns right-panel">
         <img src="img/screenshot.png" style="width:100%;"/>
@@ -63,10 +76,10 @@
         <strong>Complete Package Vignettes</strong>
         <ul>
           <li>
-            <a href="awesome_table_in_html.html" style="color: #d14;">for HTML</a>
+            <a href="awesome_table_in_html.html" class="normal-link">for HTML</a>
           </li>
           <li>
-            <a href="awesome_table_in_pdf.pdf" style="color: #d14;">for LaTeX</a>
+            <a href="awesome_table_in_pdf.pdf" class="normal-link">for LaTeX</a>
           </li>
         </ul>
       </div>
