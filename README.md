@@ -2,8 +2,14 @@
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](http://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](http://cran.r-project.org/package=kableExtra)
 
+***
 
-When we are talking about table generators in R, knitr::kable wins the favor of a lot of people by its ultimate simplicity. Unlike those powerful table rendering engine such as xtable, tables or even gridExtra, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
+Some LaTeX features of this package requires the dev version of rmarkdown. 
+
+***
+
+
+When we are talking about table generators in R, knitr::kable wins a lot of people's flavor by its ultimate simplicity. Unlike those powerful table rendering engine such as `xtable`, `tables` or even `gridExtra`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
