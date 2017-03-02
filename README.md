@@ -1,6 +1,6 @@
 # kableExtra
-![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)
-![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)
+[![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](http://cran.r-project.org/package=kableExtra)
+[![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](http://cran.r-project.org/package=kableExtra)
 
 ***
 
