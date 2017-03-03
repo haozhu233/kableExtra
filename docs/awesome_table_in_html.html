@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-03-01" />
+<meta name="date" content="2017-03-02" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-03-01</em></h4>
+<h4 class="date"><em>2017-03-02</em></h4>
 
 </div>
 
@@ -993,7 +993,7 @@ Hornet Sportabout
 </div>
 <div id="full-width-or-not" class="section level2">
 <h2>Full Width or Not?</h2>
-<p>By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don’t want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have <code>full_width</code> or not in <code>kable_styling</code>. By default, <code>full_width</code> is set to be <code>TRUE</code> for HTML tables (note that for LaTeX, the default is <code>FALSE</code> since I don’t want to change the “common” looks as long as you specified. )</p>
+<p>By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don’t want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have <code>full_width</code> or not in <code>kable_styling</code>. By default, <code>full_width</code> is set to be <code>TRUE</code> for HTML tables (note that for LaTeX, the default is <code>FALSE</code> since I don’t want to change the “common” looks unless you specified it.)</p>
 <pre class="r"><code>kable(dt) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F)</code></pre>
 <?xml version="1.0" encoding="UTF-8" ?>
