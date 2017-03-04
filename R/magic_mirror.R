@@ -83,7 +83,7 @@ magic_mirror_html <- function(kable_input){
   # Caption
   kable_info$caption <- xml_text(xml_child(kable_xml, "caption"))
   # Contents
-  kable_info$contents <- html_table(read_html(as.character(kable_input)))[[1]]
+  # kable_info$contents <- html_table(read_html(as.character(kable_input)))[[1]]
   # colnames
   kable_info$colnames <- lapply(xml_children(xml_child(kable_xml, "thead")),
                                 xml_children)
