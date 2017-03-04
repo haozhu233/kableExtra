@@ -72,10 +72,11 @@ For more information, please check the package vignette.
 - [Create Awesome HTML Table with knitr::kable and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html)
 - [Create Awesome LaTeX Table with knitr::kable and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
-## Limitations
+## Limitations/Known bug
 - `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky. 
 - In HTML, `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning. 
 - In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. 
+- If you are using the CRAN version, when you run rmarkdown from console using RScript, you need to include `library(methods)` at the begining due to a `rvest` issue. By default, `library(methods)` is loaded in R GUI and RStudio. I eliminated the step requires `rvest` in current github version since it doesn't provide a very useful feature. See [this SO post for details](http://stackoverflow.com/questions/35351443/rvest-html-nodes-error-cannot-coerce-type-environment-to-vector-of-type-l). Thanks twitter user @Gimperion for reporting. 
 
 ## To-do
 - A function to insert a gap row (or group title row in the middle of a table)
