@@ -9,7 +9,7 @@ Some LaTeX features of this package requires the dev version of rmarkdown.
 ***
 
 
-When we are talking about table generators in R, knitr::kable wins a lot of people's flavor by its ultimate simplicity. Unlike those powerful table rendering engine such as `xtable`, `tables` or even `gridExtra`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
+When we are talking about table generators in R, knitr::kable wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as `xtable`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
@@ -82,3 +82,4 @@ For more information, please check the package vignette.
 - A function to insert a gap row (or group title row in the middle of a table)
 - A function to easily add title column indent
 - Some ways to change text/background color of cells
+- Find a way to let align table caption.

@@ -63,7 +63,7 @@ kable(dt) %>%
 `kable_styling` offers server other ways to customize the look of a HTML table. 
 
 ## Bootstrap Options
-If you are not familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
+If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
 
 For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
 ```{r}

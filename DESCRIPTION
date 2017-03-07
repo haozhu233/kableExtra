@@ -5,7 +5,8 @@ Version: 0.1.0.9000
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre')),
     person('Will', 'Beasley', email = 'wibeasley@hotmail.com', role = 'ctb'),
-    person('Yihui', 'Xie', email = 'xie@yihui.name', role = 'ctb')
+    person('Yihui', 'Xie', email = 'xie@yihui.name', role = 'ctb'),
+    person('Thomas', 'Travison', email = 'tgt@hsl.harvard.edu', role = 'aut')
     )
 Description: A collection of functions to help build complex HTML or 'LaTeX' 
     tables using 'kable()' from 'knitr' and the piping syntax from 'magrittr'. 

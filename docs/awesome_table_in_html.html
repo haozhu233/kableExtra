@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-03-04" />
+<meta name="date" content="2017-03-07" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-03-04</em></h4>
+<h4 class="date"><em>2017-03-07</em></h4>
 
 </div>
 
@@ -550,7 +550,7 @@ Hornet Sportabout
 <p><code>kable_styling</code> offers server other ways to customize the look of a HTML table.</p>
 <div id="bootstrap-options" class="section level2">
 <h2>Bootstrap Options</h2>
-<p>If you are not familiar with twitter bootstrap, you probably have already known its predefined classes, including <code>striped</code>, <code>bordered</code>, <code>hover</code>, <code>condensed</code> and <code>responsive</code>. If you are not familiar, no worries, you can take a look at their <a href="http://getbootstrap.com/css/#tables">documentation site</a> to get a sense of how they look like. All of these options are available here.</p>
+<p>If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including <code>striped</code>, <code>bordered</code>, <code>hover</code>, <code>condensed</code> and <code>responsive</code>. If you are not familiar, no worries, you can take a look at their <a href="http://getbootstrap.com/css/#tables">documentation site</a> to get a sense of how they look like. All of these options are available here.</p>
 <p>For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:</p>
 <pre class="r"><code>kable(dt) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
