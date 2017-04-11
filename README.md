@@ -4,7 +4,7 @@
 
 ***
 
-Some LaTeX features of this package requires the dev version of rmarkdown. 
+Some LaTeX features of this package are not supported in some customized rmarkdown templates. 
 
 ***
 
@@ -29,17 +29,12 @@ I hope with `kableExtra`, you can
 Most functionalities in `kableExtra` can work in both HTML and PDF. In fact, as long as you specifies format in `kable()` (which can be set globally through option `knitr.table.format`), functions in this package will pick the right way to manipulate the table be themselves. As a result, if users want to left align the table, `kable(...) %>% kable_styling(position = "left")` will work in both HTML and PDF. 
 
 ## Install
-Some LaTeX features in `kableExtra`, such as striped line, requires rmarkdown 1.4.0+, which is not yet on CRAN. It is highly recommended to install the dev version of rmarkdown before you try this package. If you only use this package for HTML table, it doesn't matter what version of rmarkdown you are using.
 ```r
-# install.packages("devtools")
-devtools::install_github("rstudio/rmarkdown")
-
 install.packages("kableExtra")
 
 # For dev version
 devtools::install_github("haozhu233/kableExtra")
 ```
-`kableExtra` will be submitted to CRAN soon. 
 
 ## Basic Usage
 ```r
