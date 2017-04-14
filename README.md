@@ -2,13 +2,6 @@
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](http://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](http://cran.r-project.org/package=kableExtra)
 
-***
-
-Some LaTeX features of this package are not supported in some customized rmarkdown templates. 
-
-***
-
-
 When we are talking about table generators in R, knitr::kable wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as `xtable`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
@@ -17,9 +10,13 @@ However, the ultimate simplicity of `kable()` also brought troubles to some of u
 
 I hope with `kableExtra`, you can
 
-- Use default base `kable()` for all simple tables
+- Use default base `kable()` (Or a good alternative for markdown tables is `pander::pander()`) for all simple tables
 - Use `kable()` with `kableExtra` to generate 90 % of complex/advanced/self-customized/beautiful tables in either HTML or LaTeX
 - Only have to mess with raw HTML/LaTeX in the last 10% cases where `kableExtra` cannot solve the problem
+
+***
+This package can load required LaTeX package automatically in vanilla rmarkdown. For customized rmarkdown templates, it is recommended to load related LaTeX packages manually.
+***
 
 ## Features
 ### Pipable syntax
