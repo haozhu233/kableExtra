@@ -58,8 +58,8 @@ kable_styling <- function(kable_input,
   kable_format <- attr(kable_input, "format")
 
   if (!kable_format %in% c("html", "latex")) {
-    stop("Please specify output format in your kable function. Currently ",
-         "generic markdown table using pandoc is not supported.")
+      message("Currently generic markdown table using pandoc is not supported.")
+      return(kable_input)
   }
   if (kable_format == "html") {
     if (is.null(full_width)) {
