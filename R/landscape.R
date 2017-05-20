@@ -1,9 +1,7 @@
 #' Print the table on an isolated landscape page in PDF
 #'
-#' @description For very wide tables in PDF documents, sometimes it might be a
-#' good idea to have a single landscape page to house it. This function
-#' will rotate the PDF page for the applied table in LaTeX environment. It won't
-#' have any effects on HTML.
+#' @description This function will put the table on an single landscape page.
+#' It's useful for wide tables that cann't be printed on a portrait page.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param margin Customizable page margin for special needs. Values can be

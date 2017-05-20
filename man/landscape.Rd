@@ -13,8 +13,6 @@ landscape(kable_input, margin = NULL)
 "1cm", "1in" or similar.}
 }
 \description{
-For very wide tables in PDF documents, sometimes it might be a
-good idea to have a single landscape page to house it. This function
-will rotate the PDF page for the applied table in LaTeX environment. It won't
-have any effects on HTML.
+This function will put the table on an single landscape page.
+It's useful for wide tables that cann't be printed on a portrait page.
 }

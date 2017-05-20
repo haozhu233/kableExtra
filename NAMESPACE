@@ -3,6 +3,7 @@
 export("%>%")
 export(add_footnote)
 export(add_header_above)
+export(add_indent)
 export(kable_styling)
 export(landscape)
 export(magic_mirror)
