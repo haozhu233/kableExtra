@@ -32,11 +32,7 @@ htmlTable_add_header_above <- function(kable_input, header = NULL) {
   if (is.null(header)) return(kable_input)
   table_info <- magic_mirror(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
-  # somehow xml2 cannot directly search by name here (it will result in a crash)
-  kable_xml_thead <- xml_child(kable_xml, 1)
-  if (xml_name(kable_xml_thead) != "thead") {
-    kable_xml_thead <- xml_child(kable_xml, 2)
-  }
+  kable_xml_thead <- xml_tpart(kable_xml, "thead")
 
   header <- standardize_header_input(header)
 

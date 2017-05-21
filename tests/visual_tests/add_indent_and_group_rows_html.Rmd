@@ -1,0 +1,29 @@
+---
+title: "indents & row_group"
+output: html_document
+---
+
+# Introduction
+Nam non libero ut felis euismod efficitur. Maecenas ligula nisi, rutrum eu turpis quis, semper ultricies nibh. Quisque vehicula cursus erat. Donec aliquam augue ut magna vehicula lacinia. Quisque efficitur, arcu condimentum mollis scelerisque, tellus libero accumsan elit, in eleifend lorem lectus ut erat. Ut sit amet nulla quis turpis semper mattis. Ut rhoncus vitae nulla sit amet ultrices. Nulla justo ligula, rhoncus et interdum vel, cursus ut sem. Nullam elementum ullamcorper neque, imperdiet tempus sapien tincidunt et. Nulla diam nulla, varius ut nisi quis, hendrerit fringilla mi. In volutpat tincidunt faucibus. Donec luctus, mauris vitae consectetur placerat, elit velit tristique mauris, sed malesuada nisl sem eu justo. Nunc enim quam, pharetra vitae velit vel, posuere lacinia turpis. Proin volutpat porttitor ligula.
+
+```{r}
+library(knitr)
+library(kableExtra)
+dt <- mtcars[1:10, 1:8]
+```
+
+```{r}
+kable(dt[1:5,], format = "html") %>%
+  kable_styling(c("striped")) %>%
+  add_indent(c(3, 5)) %>%
+  add_indent(5)
+```
+
+```{r}
+kable(dt, format = "html") %>%
+  kable_styling("striped") %>%
+  group_rows("Group 1", 2, 4) %>%
+  group_rows("Group 2", 6, 7)  %>%
+  group_rows("Group 3", 9, 10)
+```
+

@@ -30,3 +30,21 @@ rmd_format <- function(){
 usepackage_latex <- function(name, options = NULL) {
   invisible(knit_meta_add(list(latex_dependency(name, options))))
 }
+
+# Find the right xml section. Since xml_child + search name will result in a
+# crash (at least on my machine), here is a helper function.
+xml_tpart <- function(x, part) {
+  xchildren <- xml_children(x)
+  children_names <- xml_name(xchildren)
+  return(xchildren[[which(children_names == part)]])
+}
+
+positions_corrector <- function(positions, group_header_rows, n_row) {
+  pc_matrix <- data.frame(row_id = 1:n_row)
+  pc_matrix$group_header <- pc_matrix$row_id %in% group_header_rows
+  pc_matrix$adj <- cumsum(pc_matrix$group_header)
+  pc_matrix$old_id <- cumsum(!pc_matrix$group_header)
+  pc_matrix$old_id[duplicated(pc_matrix$old_id)] <- NA
+  adjust_numbers <- pc_matrix$adj[pc_matrix$old_id %in% positions]
+  return(adjust_numbers + positions)
+}
