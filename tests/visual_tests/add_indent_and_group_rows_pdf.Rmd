@@ -1,6 +1,6 @@
 ---
 title: "indents & row_group"
-output: html_document
+output: pdf_document
 ---
 
 # Introduction
@@ -13,15 +13,15 @@ dt <- mtcars[1:10, 1:8]
 ```
 
 ```{r}
-kable(dt[1:5,], format = "html") %>%
-  kable_styling(c("striped")) %>%
+kable(dt[1:5,], format = "latex", booktabs = T) %>%
+  kable_styling() %>%
   add_indent(c(3, 5)) %>%
   add_indent(5)
 ```
 
 ```{r}
-kable(dt, format = "html") %>%
-  kable_styling("striped", full_width = F) %>%
+kable(dt, format = "latex", booktabs = T) %>%
+  kable_styling() %>%
   group_rows("Group 1", 4, 7) %>%
   group_rows("Group 2", 8, 10)
 ```

@@ -1,6 +1,9 @@
 #' Add indentations to row headers
 #' @export
 add_indent <- function(kable_input, positions) {
+  if (!is.numeric(positions)) {
+    stop("Positions can only take numeric row numbers (excluding header rows).")
+  }
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     message("Currently generic markdown table using pandoc is not supported.")
@@ -16,14 +19,8 @@ add_indent <- function(kable_input, positions) {
 
 # Add indentation for LaTeX
 add_indent_latex <- function(kable_input, positions) {
-  table_info <- attr(kable_input, "original_kable_meta")
-  if (is.null(table_info)) {
-    table_info <- magic_mirror(kable_input)
-  }
+  table_info <- magic_mirror(kable_input)
 
-  if (!is.numeric(positions)) {
-    stop("Positions can only take numeric row numbers (excluding header rows).")
-  }
   if (max(positions) > table_info$nrow - 1) {
     stop("There aren't that many rows in the table. Check positions in ",
          "add_indent_latex.")
