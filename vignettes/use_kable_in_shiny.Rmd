@@ -1,6 +1,10 @@
 ---
 title: "Use kable in Shiny"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{Use kable in Shiny}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

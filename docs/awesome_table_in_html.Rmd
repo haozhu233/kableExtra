@@ -14,6 +14,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+> Please see the package documentation site for how to use it in LaTeX.
+
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
 
