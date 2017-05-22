@@ -122,6 +122,10 @@ htmlTable_styling <- function(kable_input,
   if (!is.null(font_size)) {
     kable_xml_style <- c(kable_xml_style,
                          paste0("font-size: ", font_size, "px;"))
+    kable_caption_node <- xml_tpart(kable_xml, "caption")
+    if (!is.null(kable_caption_node)) {
+      xml_attr(kable_caption_node, "style") <- "font-size: initial !important;"
+    }
   }
   if (!full_width) {
     kable_xml_style <- c(kable_xml_style, "width: auto !important;")

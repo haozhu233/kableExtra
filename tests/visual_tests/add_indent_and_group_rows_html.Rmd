@@ -20,8 +20,8 @@ kable(dt[1:5,], format = "html") %>%
 ```
 
 ```{r}
-kable(dt, format = "html") %>%
-  kable_styling("striped", full_width = F) %>%
+kable(dt, format = "html", caption = "aaa") %>%
+  kable_styling("striped", full_width = F, font_size = 5) %>%
   group_rows("Group 1", 4, 7) %>%
   group_rows("Group 2", 8, 10)
 ```

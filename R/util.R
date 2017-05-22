@@ -36,6 +36,7 @@ usepackage_latex <- function(name, options = NULL) {
 xml_tpart <- function(x, part) {
   xchildren <- xml_children(x)
   children_names <- xml_name(xchildren)
+  if(!part %in% children_names) return(NULL)
   return(xchildren[[which(children_names == part)]])
 }
 

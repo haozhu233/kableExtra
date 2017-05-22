@@ -56,7 +56,8 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   return(out)
 }
 
-group_rows_latex <- function(kable_input, group_label, start_row, end_row, gap_space) {
+group_rows_latex <- function(kable_input, group_label, start_row, end_row,
+                             gap_space) {
   table_info <- magic_mirror(kable_input)
   out <- kable_input
 
