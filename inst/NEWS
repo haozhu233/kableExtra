@@ -1,0 +1,19 @@
+kableExtra 0.2.0
+--------------------------------------------------------------------------------
+
+* Added `add_indent()` feature to add indentations to rows in HTML and LaTeX.
+
+* Added `group_rows()` feature to group rows together in HTML and LaTeX.
+
+* Changing `font_size` in `kable_styling` won't affect table caption any more.
+
+* Fixed a bug in `scale_down` in `kable_styling` on landscape page in LaTeX.
+
+* Changed `stop` to `message` on format checking.
+
+
+
+kableExtra 0.1.0
+--------------------------------------------------------------------------------
+
+* Initial Release

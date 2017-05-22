@@ -84,7 +84,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
     )
   }
   out <- sub(rowtext, new_rowtext, out)
-  if (table_info$booktabs)
+  attr(out, "original_kable_meta") <- table_info
   out <- add_indent(out, seq(start_row, end_row))
   return(out)
 }
