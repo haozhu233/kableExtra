@@ -1,6 +1,6 @@
 # kableExtra
-[![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](http://cran.r-project.org/package=kableExtra)
-[![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](http://cran.r-project.org/package=kableExtra)
+[![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](https://cran.r-project.org/package=kableExtra)
+[![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](https://cran.r-project.org/package=kableExtra)
 
 When we are talking about table generators in R, knitr::kable wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as `xtable`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
