@@ -1,5 +1,21 @@
 #' Put a few rows of a table into one category
 #'
+#' @description Group a few rows in a table together under a label.
+#'
+#' @param kable_input Output of `knitr::kable()` with `format` specified
+#' @param group_label A character string for the name of the group
+#' @param start_row A numeric value that tells the function in which row the
+#' group starts. Note that the counting excludes header rows and other group
+#' labeling rows
+#' @param end_row A numeric value that tells the function in which row the group
+#' ends.
+#' @param label_row_css A character string for any customized css used for the
+#' labeling row. By default, the labeling row will have a solid black line
+#' underneath. Only useful for HTML documents.
+#' @param latex_gap_space A character value telling LaTeX how large the gap
+#' between the previous row and the group labeling row. Only useful for LaTeX
+#' documents.
+#'
 #' @export
 group_rows <- function(kable_input, group_label, start_row, end_row,
                        label_row_css = "border-bottom: 1px solid;",

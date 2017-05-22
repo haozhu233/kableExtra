@@ -4,8 +4,29 @@
 \alias{group_rows}
 \title{Put a few rows of a table into one category}
 \usage{
-group_rows(kable_input, group_name, start_row, end_row)
+group_rows(kable_input, group_label, start_row, end_row,
+  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.5em")
+}
+\arguments{
+\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+
+\item{group_label}{A character string for the name of the group}
+
+\item{start_row}{A numeric value that tells the function in which row the
+group starts. Note that the counting excludes header rows and other group
+labeling rows}
+
+\item{end_row}{A numeric value that tells the function in which row the group
+ends.}
+
+\item{label_row_css}{A character string for any customized css used for the
+labeling row. By default, the labeling row will have a solid black line
+underneath. Only useful for HTML documents.}
+
+\item{latex_gap_space}{A character value telling LaTeX how large the gap
+between the previous row and the group labeling row. Only useful for LaTeX
+documents.}
 }
 \description{
-Put a few rows of a table into one category
+Group a few rows in a table together under a label.
 }

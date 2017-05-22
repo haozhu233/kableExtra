@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+To use `knitr::kable()` and `kableExtra` in shiny couldn't be simpler. 
 ```{r, eval = FALSE}
 library(shiny)
 

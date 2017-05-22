@@ -11,6 +11,9 @@ kableExtra 0.2.0
 
 * Changed `stop` to `message` on format checking.
 
+* Added an example for how to use it in Shiny.
+
+* Fixed a few errors in the LaTeX vignette file.
 
 
 kableExtra 0.1.0

@@ -1,4 +1,9 @@
 #' Add indentations to row headers
+#'
+#' @param kable_input Output of `knitr::kable()` with `format` specified
+#' @param positions A vector of numeric row numbers for the rows that need to
+#' be indented.
+#'
 #' @export
 add_indent <- function(kable_input, positions) {
   if (!is.numeric(positions)) {
