@@ -169,14 +169,6 @@ pdfTable_styling <- function(kable_input,
   out <- NULL
   out <- as.character(kable_input)
   table_info <- magic_mirror(kable_input)
-  table_info$valign2 <- sub("\\[", "\\\\[", table_info$valign)
-  table_info$valign2 <- sub("\\]", "\\\\]", table_info$valign2)
-  table_info$valign3 <- sub("\\[", "", table_info$valign)
-  table_info$valign3 <- sub("\\]", "", table_info$valign3)
-  table_info$begin_tabular <- paste0("\\\\begin\\{", table_info$tabular, "\\}",
-                                     table_info$valign2)
-  table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
-
 
   if ("striped" %in% latex_options) {
     out <- styling_latex_striped(out)

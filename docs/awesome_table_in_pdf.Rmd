@@ -171,7 +171,7 @@ The following features are introduced in `kableExtra` 0.2.0.
 Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
 ```{r}
 kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
-  kable_styling(latex_options = "hold_position") %>%
+  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
   add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
   add_footnote(c("This table is from mtcars", 
                  "Group 1 contains mpg, cyl and disp", 

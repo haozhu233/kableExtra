@@ -39,10 +39,19 @@ magic_mirror_latex <- function(kable_input){
   kable_info$booktabs <- grepl("\\\\toprule", kable_input)
   # Align
   kable_info$align <- gsub("\\|", "", str_match(
-    kable_input, paste0("\\\\begin\\{", kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
+    kable_input, paste0("\\\\begin\\{",
+                        kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
+  kable_info$align_vector <- unlist(strsplit(kable_info$align, ""))
   # valign
   kable_info$valign <- gsub("\\|", "", str_match(
     kable_input, paste0("\\\\begin\\{", kable_info$tabular,"\\}(.*)\\{.*?\\}"))[2])
+  kable_info$valign2 <- sub("\\[", "\\\\[", kable_info$valign)
+  kable_info$valign2 <- sub("\\]", "\\\\]", kable_info$valign2)
+  kable_info$valign3 <- sub("\\[", "", kable_info$valign)
+  kable_info$valign3 <- sub("\\]", "", kable_info$valign3)
+  kable_info$begin_tabular <- paste0("\\\\begin\\{", kable_info$tabular, "\\}",
+                                     kable_info$valign2)
+  kable_info$end_tabular <- paste0("\\\\end\\{", kable_info$tabular, "\\}")
   # N of columns
   kable_info$ncol <- nchar(kable_info$align)
   # Caption

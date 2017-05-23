@@ -86,12 +86,6 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
       "}}\\\\\\\\\n",
       rowtext
     )
-    # last_row <- paste0(table_info$contents[end_row + 1], "\\\\\\\\")
-    # out <- sub(
-    #   last_row,
-    #   paste0(last_row, "\n\\\\addlinespace[", gap_space, "]"),
-    #   out
-    # )
   } else {
     rowtext <- paste0("\\\\hline\n", rowtext)
     new_rowtext <- paste0(
