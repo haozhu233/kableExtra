@@ -75,3 +75,4 @@ For more information, please check the package vignette.
 [x] A function to easily add title column indent
 [ ] Some ways to change text/background color of cells
 [ ] Find a way to let align table caption.
+[ ] Add `column_spec`

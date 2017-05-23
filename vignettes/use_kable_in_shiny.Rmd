@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-To use `knitr::kable()` and `kableExtra` in shiny couldn't be simpler. 
+Since the output is just HTML, it's very easy to use `kable` and `kableExtra` in the Shiny environment. For example:
 ```{r, eval = FALSE}
 library(shiny)
 
@@ -53,7 +53,7 @@ shinyApp(ui = ui, server = server)
 
 ```
 
-To simply:
+You can copy/paste the code above or simply run:
 
 ```{r, eval=FALSE}
 shiny::runGist("https://gist.github.com/haozhu233/9e675e1a8a1bb4744f9ebc9246a2366b")

@@ -177,6 +177,7 @@ kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
                  "Group 1 contains mpg, cyl and disp", 
                  "Group 2 contains hp, drat and wt"), 
                notation = "symbol") %>%
+  group_rows("Group 1", 4, 5) %>%
   landscape()
 ```
 

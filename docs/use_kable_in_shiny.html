@@ -120,7 +120,7 @@ $(document).ready(function () {
 </div>
 
 
-<p>To use <code>knitr::kable()</code> and <code>kableExtra</code> in shiny couldn’t be simpler.</p>
+<p>Since the output is just HTML, it’s very easy to use <code>kable</code> and <code>kableExtra</code> in the Shiny environment. For example:</p>
 <pre class="r"><code>library(shiny)
 
 ui &lt;- fluidPage(
@@ -157,7 +157,7 @@ server &lt;- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server)</code></pre>
-<p>To simply:</p>
+<p>You can copy/paste the code above or simply run:</p>
 <pre class="r"><code>shiny::runGist(&quot;https://gist.github.com/haozhu233/9e675e1a8a1bb4744f9ebc9246a2366b&quot;)</code></pre>
 
 
