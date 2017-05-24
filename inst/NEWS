@@ -3,7 +3,9 @@ kableExtra 0.2.1
 
 * Added `column_spec()` to customize the look of the selected column.
 
-* Improve language in docs.
+* Improved the look of HTML grouped header row.
+
+* Fixed an error in a documentation.
 
 kableExtra 0.2.0
 --------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 \alias{column_spec}
 \title{Specify the look of the selected column}
 \usage{
-column_spec(kable_input, column, width, bold = F, italic = F)
+column_spec(kable_input, column, width = NULL, bold = F, italic = F)
 }
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
