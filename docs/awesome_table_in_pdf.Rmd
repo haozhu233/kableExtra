@@ -164,22 +164,10 @@ kable(dt, caption = "Demo Table[note]", booktabs = T) %>%
                notation = "symbol")
 ```
 
----
-The following features are introduced in `kableExtra` 0.2.0.
 
-# Table on a Landscape Page
-Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
-```{r}
-kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
-  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
-  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
-  add_footnote(c("This table is from mtcars", 
-                 "Group 1 contains mpg, cyl and disp", 
-                 "Group 2 contains hp, drat and wt"), 
-               notation = "symbol") %>%
-  group_rows("Group 1", 4, 5) %>%
-  landscape()
-```
+***
+
+The following features are introduced in `kableExtra` 0.2.0.
 
 # Group Rows
 Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
@@ -202,4 +190,40 @@ For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kable(dt, booktabs = T) %>%
   add_indent(c(1, 3, 5))
+```
+
+# Table on a Landscape Page
+Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
+```{r}
+kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
+  kable_styling(latex_options = c("hold_position")) %>%
+  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
+  add_footnote(c("This table is from mtcars", 
+                 "Group 1 contains mpg, cyl and disp", 
+                 "Group 2 contains hp, drat and wt"), 
+               notation = "symbol") %>%
+  group_rows("Group 1", 4, 5) %>%
+  landscape()
+```
+
+***
+
+The following feature is introduced in `kableExtra` 0.2.1.
+
+# Column Style Specification
+When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
+```{r}
+text_tbl <- data.frame(
+  Items = c("Item 1", "Item 2", "Item 3"),
+  Features = c(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
+    "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
+    "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
+  )
+)
+
+kable(text_tbl) %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  column_spec(2, width = "30em")
 ```

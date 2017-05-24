@@ -3211,8 +3211,8 @@ Hornet Sportabout
 <h1>Column Style Specification</h1>
 <p>When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a “Total” column) by making it bold. In these scenario, you can use <code>column_spec()</code>. You can find an example below.</p>
 <pre class="r"><code>text_tbl &lt;- data.frame(
-  Item = c(&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;),
-  FeatureA = c(
+  Items = c(&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;),
+  Features = c(
     &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. &quot;,
     &quot;In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. &quot;, 
     &quot;Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. &quot;
@@ -3228,10 +3228,10 @@ kable(text_tbl) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;">
-Item
+Items
 </th>
 <th style="text-align:left;">
-FeatureA
+Features
 </th>
 </tr>
 </thead>
@@ -3253,10 +3253,10 @@ In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere 
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;">
 Item 3
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;width: 30em; ">
 Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis.
 </td>
 </tr>

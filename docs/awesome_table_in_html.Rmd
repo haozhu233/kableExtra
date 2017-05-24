@@ -161,7 +161,7 @@ kable(dt, caption = "Demo Table[note]") %>%
                notation = "symbol")
 ```
 
----
+***
 
 The following features are introduced in `kableExtra` 0.2.0.
 
@@ -190,7 +190,7 @@ kable(dt) %>%
   add_indent(c(1, 3, 5))
 ```
 
----
+***
 
 The following feature is introduced in `kableExtra` 0.2.1.
 
@@ -198,15 +198,15 @@ The following feature is introduced in `kableExtra` 0.2.1.
 When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
 ```{r}
 text_tbl <- data.frame(
-  Item = c("Item 1", "Item 2", "Item 3"),
-  FeatureA = c(
+  Items = c("Item 1", "Item 2", "Item 3"),
+  Features = c(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
     "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
     "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
   )
 )
 
-kable(text_tbl, format = "html") %>%
+kable(text_tbl) %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T) %>%
   column_spec(2, width = "30em")
