@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-05-22" />
+<meta name="date" content="2017-05-24" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-05-22</em></h4>
+<h4 class="date"><em>2017-05-24</em></h4>
 
 </div>
 
@@ -2624,7 +2624,7 @@ Hornet Sportabout
 <div id="group-rows" class="section level1">
 <h1>Group Rows</h1>
 <p>Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age &lt; 40, age &gt; 40). With the new function <code>group_rows()</code> in <code>kableExtra</code>, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don’t need to count for the header rows nor other group label rows. You only need to think about the row numbers in the “original R dataframe”.</p>
-<pre class="r"><code>kable(mtcars[1:10, 1:6], format = &quot;html&quot;, caption = &quot;Group Rows&quot;) %&gt;%
+<pre class="r"><code>kable(mtcars[1:10, 1:6], caption = &quot;Group Rows&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   group_rows(&quot;Group 1&quot;, 4, 7) %&gt;%
   group_rows(&quot;Group 2&quot;, 8, 10)</code></pre>
@@ -2901,7 +2901,7 @@ Merc 280
 </tbody>
 </table>
 <p>For advanced users, you can even define your own css for the group labeling.</p>
-<pre class="r"><code>kable(dt, format = &quot;html&quot;) %&gt;%
+<pre class="r"><code>kable(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   group_rows(&quot;Group 1&quot;, 3, 5, label_row_css = &quot;background-color: #666; color: #fff;&quot;)</code></pre>
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -3057,7 +3057,7 @@ Hornet Sportabout
 <div id="add-indentation" class="section level1">
 <h1>Add indentation</h1>
 <p>Unlike <code>group_rows()</code>, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, <code>add_indent()</code> is probably more apporiate. For advanced users, you can even define your own css for the group labeling.</p>
-<pre class="r"><code>kable(dt, format = &quot;html&quot;) %&gt;%
+<pre class="r"><code>kable(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   add_indent(c(1, 3, 5))</code></pre>
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -3200,6 +3200,64 @@ Hornet Sportabout
 </td>
 <td style="text-align:right;">
 3.440
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>The following feature is introduced in <code>kableExtra</code> 0.2.1.</p>
+</div>
+<div id="column-style-specification" class="section level1">
+<h1>Column Style Specification</h1>
+<p>When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a “Total” column) by making it bold. In these scenario, you can use <code>column_spec()</code>. You can find an example below.</p>
+<pre class="r"><code>text_tbl &lt;- data.frame(
+  Item = c(&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;),
+  FeatureA = c(
+    &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. &quot;,
+    &quot;In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. &quot;, 
+    &quot;Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. &quot;
+  )
+)
+
+kable(text_tbl) %&gt;%
+  kable_styling(full_width = F) %&gt;%
+  column_spec(1, bold = T) %&gt;%
+  column_spec(2, width = &quot;30em&quot;)</code></pre>
+<?xml version="1.0" encoding="UTF-8" ?>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Item
+</th>
+<th style="text-align:left;">
+FeatureA
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Item 1
+</td>
+<td style="text-align:left;width: 30em; ">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Item 2
+</td>
+<td style="text-align:left;width: 30em; ">
+In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Item 3
+</td>
+<td style="text-align:left;">
+Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis.
 </td>
 </tr>
 </tbody>

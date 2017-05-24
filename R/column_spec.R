@@ -13,7 +13,8 @@
 #' @param italic A T/F value to control whether the text of the selected column
 #' need to be emphasized.
 #' @export
-column_spec <- function(kable_input, column, width, bold = F, italic = F) {
+column_spec <- function(kable_input, column,
+                        width = NULL, bold = F, italic = F) {
   if (!is.numeric(column)) {
     stop("column must be a numeric value")
   }
@@ -36,7 +37,7 @@ column_spec_html <- function(kable_input, column, width, bold, italic) {
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")
-  all_contents_rows <- seq(1, length(kable_tbody))
+  all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
   if (!is.null(group_header_rows)) {
     all_contents_rows <- all_contents_rows[!all_contents_rows %in%
                                              group_header_rows]
