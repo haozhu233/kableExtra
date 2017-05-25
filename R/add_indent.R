@@ -4,6 +4,10 @@
 #' @param positions A vector of numeric row numbers for the rows that need to
 #' be indented.
 #'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' # Add indentations to the 2nd & 4th row
+#' add_indent(x, c(2, 4))
+#'
 #' @export
 add_indent <- function(kable_input, positions) {
   if (!is.numeric(positions)) {

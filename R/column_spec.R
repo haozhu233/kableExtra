@@ -12,9 +12,13 @@
 #' need to be bolded.
 #' @param italic A T/F value to control whether the text of the selected column
 #' need to be emphasized.
+#'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
+#'
 #' @export
 column_spec <- function(kable_input, column,
-                        width = NULL, bold = F, italic = F) {
+                        width = NULL, bold = FALSE, italic = FALSE) {
   if (!is.numeric(column)) {
     stop("column must be a numeric value")
   }

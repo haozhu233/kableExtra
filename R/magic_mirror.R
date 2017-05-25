@@ -3,6 +3,8 @@
 #' @description Mirror mirror tell me, how does this kable look like?
 #'
 #' @param kable_input The output of kable
+#'
+#' @examples magic_mirror(knitr::kable(head(mtcars), "html"))
 #' @export
 
 magic_mirror <- function(kable_input){

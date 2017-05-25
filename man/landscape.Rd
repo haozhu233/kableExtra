@@ -16,3 +16,7 @@ landscape(kable_input, margin = NULL)
 This function will put the table on an single landscape page.
 It's useful for wide tables that cann't be printed on a portrait page.
 }
+\examples{
+landscape(knitr::kable(head(mtcars), "latex"))
+
+}

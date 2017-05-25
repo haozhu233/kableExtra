@@ -4,7 +4,8 @@
 \alias{column_spec}
 \title{Specify the look of the selected column}
 \usage{
-column_spec(kable_input, column, width = NULL, bold = F, italic = F)
+column_spec(kable_input, column, width = NULL, bold = FALSE,
+  italic = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
@@ -24,4 +25,9 @@ need to be emphasized.}
 This function allows users to select a column and then specify
 its look. Right now it supports the following three properties: column width,
 bold text and italic text.
+}
+\examples{
+x <- knitr::kable(head(mtcars), "html")
+column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
+
 }

@@ -16,6 +16,10 @@
 #' between the previous row and the group labeling row. Only useful for LaTeX
 #' documents.
 #'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' # Put Row 2 to Row 5 into a Group and label it as "Group A"
+#' group_rows(x, "Group A", 2, 5)
+#'
 #' @export
 group_rows <- function(kable_input, group_label, start_row, end_row,
                        label_row_css = "border-bottom: 1px solid;",

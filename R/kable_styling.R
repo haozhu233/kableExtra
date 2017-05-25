@@ -32,6 +32,12 @@
 #' imported.
 #' @param font_size A numeric input for table font size
 #'
+#' @examples x_html <- knitr::kable(head(mtcars), "html")
+#' kable_styling(x_html, "striped", position = "left", font_size = 7)
+#'
+#' x_latex <- knitr::kable(head(mtcars), "latex")
+#' kable_styling(x_latex, latex_options = "striped", position = "float_left")
+#'
 #' @export
 kable_styling <- function(kable_input,
                           bootstrap_options = "basic",

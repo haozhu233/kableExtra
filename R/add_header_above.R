@@ -12,6 +12,11 @@
 #' convenience, when `colspan` equals to 1, users can drop the ` = 1` part.
 #' As a result, `c(" ", "title" = 2)` is the same as `c(" " = 1, "title" = 2)`.
 #'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' # Add a row of header with 3 columns on the top of the table. The column
+#' # span for the 2nd and 3rd one are 5 & 6.
+#' add_header_above(x, c(" ", "Group 1" = 5, "Group 2" = 6))
+#'
 #' @export
 add_header_above <- function(kable_input, header = NULL) {
   kable_format <- attr(kable_input, "format")

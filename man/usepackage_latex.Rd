@@ -15,3 +15,6 @@ usepackage_latex(name, options = NULL)
 Load a LaTeX package using R code. Just like `\\usepackage{}`
 in LaTeX
 }
+\examples{
+usepackage_latex("xcolor")
+}

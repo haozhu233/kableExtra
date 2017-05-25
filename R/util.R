@@ -26,6 +26,8 @@ rmd_format <- function(){
 #'
 #' @param name The LaTeX package name
 #' @param options The LaTeX options for the package
+#'
+#' @examples usepackage_latex("xcolor")
 #' @export
 usepackage_latex <- function(name, options = NULL) {
   invisible(knit_meta_add(list(latex_dependency(name, options))))

@@ -30,3 +30,9 @@ documents.}
 \description{
 Group a few rows in a table together under a label.
 }
+\examples{
+x <- knitr::kable(head(mtcars), "html")
+# Put Row 2 to Row 5 into a Group and label it as "Group A"
+group_rows(x, "Group A", 2, 5)
+
+}

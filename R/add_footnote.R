@@ -13,7 +13,11 @@
 #' @param notation You can select the format of your footnote notation from
 #' `number`, `alphabet` and `symbol`.
 #' @param threeparttable Boolean value indicating if a
-#' \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should be used.
+#' \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should
+#' be used.
+#'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' add_footnote(x, c("footnote 1", "footnote 2"), notation = "symbol")
 #'
 #' @export
 add_footnote <- function(input, label = NULL,

@@ -47,3 +47,11 @@ This function provides a cleaner approach to modify the style
 of HTML tables other than using the `table.attr` option in `knitr::kable()`.
 Currenly, it assumes the HTML document has boot
 }
+\examples{
+x_html <- knitr::kable(head(mtcars), "html")
+kable_styling(x_html, "striped", position = "left", font_size = 7)
+
+x_latex <- knitr::kable(head(mtcars), "latex")
+kable_styling(x_latex, latex_options = "striped", position = "float_left")
+
+}

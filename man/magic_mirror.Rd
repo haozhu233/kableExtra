@@ -12,3 +12,6 @@ magic_mirror(kable_input)
 \description{
 Mirror mirror tell me, how does this kable look like?
 }
+\examples{
+magic_mirror(knitr::kable(head(mtcars), "html"))
+}
