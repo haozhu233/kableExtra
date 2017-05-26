@@ -74,11 +74,13 @@ standardize_header_input <- function(header) {
 
 htmlTable_new_header_generator <- function(header_df) {
   header_items <- apply(header_df, 1, function(x) {
-    if (x[2] == 1 | trimws(x[1]) == "") {
+    if (trimws(x[1]) == "") {
       paste0('<th style="border-bottom:hidden"></th>')
     } else {
-      paste0('<th style="text-align:center;" colspan="', x[2], '">',
-             x[1], '</th>')
+      paste0('<th style="text-align:center; border-bottom:hidden; ',
+             'padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="',
+             x[2], '"><div style="border-bottom: 1px solid #ddd;">',
+             x[1], '</div></th>')
     }
   })
   header_text <- paste(c("<tr>", header_items, "</tr>"), collapse = "")
