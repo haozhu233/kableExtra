@@ -3,7 +3,7 @@ title: "add_header_above"
 output: html_document
 ---
 
-# Plain LaTeX 
+# Test table 1
 ```{r}
 library(knitr)
 library(kableExtra)
@@ -18,7 +18,7 @@ kable(dt, booktabs = T, caption = "Demo Table") %>%
   add_footnote(c("table footnote"))
 ```
 
-# Basic Bootstrap Table
+# Test table 2
 ```{r}
 kable(dt, format = "html") %>%
   kable_styling(full_width = F, 
