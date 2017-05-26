@@ -24,5 +24,6 @@ kable(dt, format = "html") %>%
   kable_styling(full_width = F, 
                 bootstrap_options = c("striped", "bordered")) %>%
   add_header_above(c(" ", "a" = 2, "b" = 2)) %>%
-  add_header_above(c(" ", "c" = 3, "d" = 1))
+  add_header_above(c(" ", "c" = 3, "d" = 1)) %>%
+  column_spec(1, "1in")
 ```
