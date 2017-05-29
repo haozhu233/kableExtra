@@ -55,7 +55,7 @@ kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
   
 ```
 ### Results
-<img src="http://i.imgur.com/0e2b4P3.png" style="height: 200px;"/>
+<img src="http://i.imgur.com/0e2b4P3.png" style="height: 200px;" height="200px"/>
 <img src="http://i.imgur.com/q46hzORm.png" style="height: 200px;"/>
 
 ## More Information
