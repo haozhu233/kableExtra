@@ -55,9 +55,8 @@ kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
   
 ```
 ### Results
-![](http://i.imgur.com/0e2b4P3.png | height=200)
+<img src="http://i.imgur.com/0e2b4P3.png" height="200" />
 <img src="http://i.imgur.com/q46hzORm.png" height="200" />
-<img src="http://i.imgur.com/q46hzORm.png" style="height: 200px;"/>
 
 ## More Information
 For more information, please check the package vignette.
