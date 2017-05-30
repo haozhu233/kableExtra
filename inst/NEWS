@@ -1,3 +1,11 @@
+kableExtra 0.2.1.9000 (not released)
+--------------------------------------------------------------------------------
+* Improved the look of HTML grouped header row (again) by adding spaces between
+groups
+
+* Fixed a bug in grouped header row.
+
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 
@@ -6,6 +14,7 @@ kableExtra 0.2.1
 * Improved the look of HTML grouped header row.
 
 * Fixed an error in a documentation.
+
 
 kableExtra 0.2.0
 --------------------------------------------------------------------------------
