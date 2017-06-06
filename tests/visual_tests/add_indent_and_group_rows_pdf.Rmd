@@ -26,3 +26,12 @@ kable(dt, format = "latex", booktabs = T) %>%
   group_rows("Group 2", 8, 10)
 ```
 
+```{r}
+dt %>%
+  dplyr::mutate(wt = paste0("%", mpg)) %>%
+kable(format = "latex", booktabs = T) %>%
+  kable_styling() %>%
+  group_rows("Group 1", 4, 7) %>%
+  group_rows("Group 2", 8, 10)
+```
+

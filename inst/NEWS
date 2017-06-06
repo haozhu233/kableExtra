@@ -5,6 +5,8 @@ groups
 
 * Fixed a bug in grouped header row.
 
+* Fixed a bug in grouped rows: https://stackoverflow.com/questions/44360040/group-rows-function-in-kableextra-package-not-grouping-rows
+
 
 kableExtra 0.2.1
 --------------------------------------------------------------------------------

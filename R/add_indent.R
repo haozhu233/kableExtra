@@ -38,7 +38,7 @@ add_indent_latex <- function(kable_input, positions) {
   out <- kable_input
   for (i in positions) {
     rowtext <- table_info$contents[i + 1]
-    out <- sub(rowtext, latex_indent_unit(rowtext), out)
+    out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
   }
   return(out)
 }
