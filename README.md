@@ -71,8 +71,10 @@ For more information, please check the package vignette.
 - If you are using the CRAN version, when you run rmarkdown from console using RScript, you need to include `library(methods)` at the begining due to a `rvest` issue. By default, `library(methods)` is loaded in R GUI and RStudio. I eliminated the step requires `rvest` in current github version since it doesn't provide a very useful feature. See [this SO post for details](http://stackoverflow.com/questions/35351443/rvest-html-nodes-error-cannot-coerce-type-environment-to-vector-of-type-l). Thanks twitter user @Gimperion for reporting. 
 
 ## To-do
-[x] A function to insert a gap row (or group title row in the middle of a table)
-[x] A function to easily add title column indent
-[ ] Some ways to change text/background color of cells
-[ ] Find a way to let align table caption.
-[ ] Add `column_spec`
+- [x] A function to insert a gap row (or group title row in the middle of a table)
+- [x] A function to easily add title column indent
+- [ ] Some ways to change text/background color of cells
+- [ ] Find a way to let align table caption.
+- [x] Add `column_spec`
+- [ ] Add `row_spec` (worth it?)
+- [ ] Add a clickable js module for shiny app integration
