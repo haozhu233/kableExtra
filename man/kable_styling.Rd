@@ -19,14 +19,16 @@ for more information. Possible options include `basic`, `striped`,
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
-`basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
-alternative row colors to the table. It will imports `LaTeX` package `xcolor`
-if enabled. `hold_position` will "hold" the floating table to the exact
-position. It is useful when the `LaTeX` table is contained in a `table`
-environment after you specified captions in `kable()`. It will force the
-table to stay in the position where it was created in the document.
+`basic`, `striped`, `hold_position`, `scale_down` & `repeat_header`.
+`striped` will add alternative row colors to the table. It will imports
+`LaTeX` package `xcolor` if enabled. `hold_position` will "hold" the floating
+table to the exact position. It is useful when the `LaTeX` table is contained
+ in a `table` environment after you specified captions in `kable()`. It will
+ force the table to stay in the position where it was created in the document.
 `scale_down` is useful for super wide table. It will automatically adjust
-the table to page width.}
+the table to page width. `repeat_header` in only meaningful in a longtable
+environment. It will let the header row repeat on every page in that long
+table.}
 
 \item{full_width}{A `TRUE` or `FALSE` variable controlling whether the HTML
 table should have 100\% width. Since HTML and pdf have different flavors on

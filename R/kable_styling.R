@@ -12,14 +12,16 @@
 #' `bordered`, `hover`, `condensed` and `responsive`.
 #' @param latex_options A character vector for LaTeX table options. Please see
 #' package vignette for more information. Possible options include
-#' `basic`, `striped`, `hold_position`, `scale_down`. `striped` will add
-#' alternative row colors to the table. It will imports `LaTeX` package `xcolor`
-#' if enabled. `hold_position` will "hold" the floating table to the exact
-#' position. It is useful when the `LaTeX` table is contained in a `table`
-#' environment after you specified captions in `kable()`. It will force the
-#' table to stay in the position where it was created in the document.
+#' `basic`, `striped`, `hold_position`, `scale_down` & `repeat_header`.
+#' `striped` will add alternative row colors to the table. It will imports
+#' `LaTeX` package `xcolor` if enabled. `hold_position` will "hold" the floating
+#' table to the exact position. It is useful when the `LaTeX` table is contained
+#'  in a `table` environment after you specified captions in `kable()`. It will
+#'  force the table to stay in the position where it was created in the document.
 #' `scale_down` is useful for super wide table. It will automatically adjust
-#' the table to page width.
+#' the table to page width. `repeat_header` in only meaningful in a longtable
+#' environment. It will let the header row repeat on every page in that long
+#' table.
 #' @param full_width A `TRUE` or `FALSE` variable controlling whether the HTML
 #' table should have 100\% width. Since HTML and pdf have different flavors on
 #' the preferable format for `full_width`. If not specified, a HTML table will
@@ -168,7 +170,7 @@ pdfTable_styling <- function(kable_input,
 
   latex_options <- match.arg(
     latex_options,
-    c("basic", "striped", "hold_position", "scale_down"),
+    c("basic", "striped", "hold_position", "scale_down", "repeat_header"),
     several.ok = T
   )
 
@@ -187,6 +189,10 @@ pdfTable_styling <- function(kable_input,
 
   if ("scale_down" %in% latex_options) {
     out <- styling_latex_scale_down(out, table_info)
+  }
+
+  if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
+    out <- styling_latex_repeat_header(out, table_info)
   }
 
   if (full_width) {
@@ -228,6 +234,12 @@ styling_latex_scale_down <- function(x, table_info) {
                   table_info$begin_tabular),
            x)
   sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
+}
+
+styling_latex_repeat_header <- function(x, table_info) {
+  row_one <- table_info$contents[2]
+  new_row_one <- paste0("\\\\endhead\n", row_one)
+  return(sub(row_one, new_row_one, x))
 }
 
 styling_latex_full_width <- function(x, table_info) {

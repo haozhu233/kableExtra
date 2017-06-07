@@ -9,6 +9,9 @@ groups
 
 * Fixed a bug in grouped rows with ()[].
 
+* Add a new LaTeX option `repeat_header` in `kable_styling` for repeating
+header rows in a longtable environment.
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 
