@@ -7,6 +7,7 @@ groups
 
 * Fixed a bug in grouped rows: https://stackoverflow.com/questions/44360040/group-rows-function-in-kableextra-package-not-grouping-rows
 
+* Fixed a bug in grouped rows with ()[].
 
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
