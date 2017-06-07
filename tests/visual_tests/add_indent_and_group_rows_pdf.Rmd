@@ -35,3 +35,21 @@ kable(format = "latex", booktabs = T) %>%
   group_rows("Group 2", 8, 10)
 ```
 
+```{r}
+rbind(dt, dt, dt) %>%
+kable(format = "latex", booktabs = T) %>%
+  kable_styling() %>%
+  group_rows("Group 1", 4, 7) %>%
+  group_rows("Group 2", 8, 10) %>%
+  group_rows("Group 2", 20, 22)
+
+aa <- mtcars
+for (i in 1:nrow(aa)) {
+  aa$hp[i] <- paste0(aa$hp[i], " (", 1, ")")
+}
+kable(head(aa, n = 20), caption = "test", booktabs = T, format = "latex") %>%
+  kable_styling() %>%
+  group_rows("these rows", 4, 16) %>%
+  group_rows("Those rows", 17,20)
+```
+
