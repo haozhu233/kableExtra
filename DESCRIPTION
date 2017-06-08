@@ -27,7 +27,8 @@ Imports:
     stringr (>= 1.0),
     xml2,
     rvest,
-    rmarkdown (>= 1.4.0)
+    rmarkdown (>= 1.4.0),
+    readr
 Suggests:
     testthat
 VignetteBuilder: knitr

@@ -6,7 +6,7 @@
 \usage{
 kable_styling(kable_input, bootstrap_options = "basic",
   latex_options = "basic", full_width = NULL, position = "center",
-  font_size = NULL)
+  font_size = NULL, ...)
 }
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
@@ -43,6 +43,8 @@ a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
 imported.}
 
 \item{font_size}{A numeric input for table font size}
+
+\item{...}{extra options for HTML or LaTeX}
 }
 \description{
 This function provides a cleaner approach to modify the style

@@ -1,6 +1,8 @@
 ---
 title: "Untitled"
-output: pdf_document
+output: 
+  pdf_document:
+    keep_tex: true
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +16,13 @@ library(kableExtra)
 
 dt <- rbind(mtcars, mtcars) 
 
-kable(dt, "latex", longtable = T, booktabs = T) %>%
+kable(dt, "latex", longtable = T, caption="test table") %>%
   add_header_above(c(" ", "a" = 6, "b" = 5)) %>%
   kable_styling(latex_options = "repeat_header")
+```
+
+```{r}
+kable(dt, "latex", longtable = T, caption="test table", booktabs = T) %>%
+  add_header_above(c(" ", "a" = 6, "b" = 5)) %>%
+  kable_styling(latex_options = "repeat_header", repeat_header_text = "Table 2 cont.")
 ```

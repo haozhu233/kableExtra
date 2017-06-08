@@ -10,6 +10,7 @@
 #' @importFrom rmarkdown latex_dependency
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
+#' @importFrom readr read_lines
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package

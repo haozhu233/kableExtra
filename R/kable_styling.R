@@ -33,6 +33,7 @@
 #' a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
 #' imported.
 #' @param font_size A numeric input for table font size
+#' @param ... extra options for HTML or LaTeX
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -46,7 +47,8 @@ kable_styling <- function(kable_input,
                           latex_options = "basic",
                           full_width = NULL,
                           position = "center",
-                          font_size = NULL) {
+                          font_size = NULL,
+                          ...) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -77,7 +79,7 @@ kable_styling <- function(kable_input,
                              bootstrap_options = bootstrap_options,
                              full_width = full_width,
                              position = position,
-                             font_size = font_size))
+                             font_size = font_size, ...))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -87,7 +89,7 @@ kable_styling <- function(kable_input,
                             latex_options = latex_options,
                             full_width = full_width,
                             position = position,
-                            font_size = font_size))
+                            font_size = font_size, ...))
   }
 }
 
@@ -166,7 +168,8 @@ pdfTable_styling <- function(kable_input,
                              full_width = F,
                              position = c("center", "left", "right",
                                           "float_left", "float_right"),
-                             font_size = NULL) {
+                             font_size = NULL,
+                             repeat_header_text = "\\ldots continued") {
 
   latex_options <- match.arg(
     latex_options,
@@ -192,7 +195,7 @@ pdfTable_styling <- function(kable_input,
   }
 
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
-    out <- styling_latex_repeat_header(out, table_info)
+    out <- styling_latex_repeat_header(out, table_info, repeat_header_text)
   }
 
   if (full_width) {
@@ -236,10 +239,29 @@ styling_latex_scale_down <- function(x, table_info) {
   sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
 }
 
-styling_latex_repeat_header <- function(x, table_info) {
-  row_one <- table_info$contents[2]
-  new_row_one <- paste0("\\\\endhead\n", row_one)
-  return(sub(row_one, new_row_one, x))
+styling_latex_repeat_header <- function(x, table_info, repeat_header_text) {
+  x <- read_lines(x)
+  if (table_info$booktabs) {
+    header_rows_start <- which(x == "\\toprule")[1]
+    header_rows_end <- which(x == "\\midrule")[1]
+  } else {
+    header_rows_start <- which(x == "\\hline")[1]
+    header_rows_end <- which(x == "\\hline")[2]
+  }
+  continue_line <- paste0(
+    "\\multicolumn{", table_info$ncol, "}{@{}l}{", repeat_header_text,
+    "}\\\\"
+  )
+  x <- c(
+    x[1:header_rows_end],
+    "\\endfirsthead",
+    continue_line,
+    x[header_rows_start:header_rows_end],
+    "\\endhead",
+    x[(header_rows_end + 1):length(x)]
+  )
+  x <- paste0(x, collapse = "\n")
+  return(x)
 }
 
 styling_latex_full_width <- function(x, table_info) {
