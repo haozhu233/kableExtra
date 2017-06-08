@@ -89,6 +89,7 @@ magic_mirror_latex <- function(kable_input){
 
 latex_contents_escape <- function(x) {
   x <- gsub("\\\\", "\\\\\\\\", x)
+  x <- gsub("\\$", "\\\\\\$", x)
   x <- gsub("\\(", "\\\\(", x)
   x <- gsub("\\)", "\\\\)", x)
   x <- gsub("\\[", "\\\\]", x)
