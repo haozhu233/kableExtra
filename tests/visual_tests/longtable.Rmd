@@ -22,7 +22,7 @@ kable(dt, "latex", longtable = T, caption="test table") %>%
 ```
 
 ```{r}
-aaa <- kable(dt, "latex", longtable = T, caption="table2", booktabs = T) %>%
+kable(dt, "latex", longtable = T, caption="table2", booktabs = T) %>%
   add_header_above(c(" ", "a" = 6, "b" = 5)) %>%
   kable_styling(latex_options = "repeat_header", repeat_header_text = "(...)")
 ```

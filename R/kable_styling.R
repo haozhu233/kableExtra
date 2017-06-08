@@ -169,7 +169,7 @@ pdfTable_styling <- function(kable_input,
                              position = c("center", "left", "right",
                                           "float_left", "float_right"),
                              font_size = NULL,
-                             repeat_header_text = "(continued)") {
+                             repeat_header_text = "\\textit{(continued)}") {
 
   latex_options <- match.arg(
     latex_options,
