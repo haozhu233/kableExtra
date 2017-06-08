@@ -67,7 +67,7 @@ For more information, please check the package vignette.
 - [Create Awesome LaTeX Table with knitr::kable and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
 ## Limitations/Known bug
-- <div sytle="color:red;"><strong>If you find using `kableExtra` will "unload" LaTeX packages you defined in the yaml header, you need to install the latest dev version of `rmarkdown`. Please see [#5](https://github.com/haozhu233/kableExtra/issues/5) & [#11](https://github.com/haozhu233/kableExtra/issues/11) for details.</strong></div>
+- **If you find using `kableExtra` will "unload" LaTeX packages you defined in the yaml header, you need to install the latest dev version of `rmarkdown`. Please see [issue 5](https://github.com/haozhu233/kableExtra/issues/5) & [issue 11](https://github.com/haozhu233/kableExtra/issues/11) for details.**
 - `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky. 
 - In HTML, `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning. 
 - In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. 
