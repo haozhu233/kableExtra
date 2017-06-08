@@ -169,7 +169,7 @@ pdfTable_styling <- function(kable_input,
                              position = c("center", "left", "right",
                                           "float_left", "float_right"),
                              font_size = NULL,
-                             repeat_header_text = "\\ldots continued") {
+                             repeat_header_text = "(continued)") {
 
   latex_options <- match.arg(
     latex_options,
@@ -248,10 +248,19 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text) {
     header_rows_start <- which(x == "\\hline")[1]
     header_rows_end <- which(x == "\\hline")[2]
   }
-  continue_line <- paste0(
-    "\\multicolumn{", table_info$ncol, "}{@{}l}{", repeat_header_text,
-    "}\\\\"
-  )
+
+  if (is.na(table_info$caption)) {
+    continue_line <- paste0(
+      "\\multicolumn{", table_info$ncol, "}{@{}l}{", repeat_header_text,
+      "}\\\\"
+    )
+  } else {
+    continue_line <- paste0(
+      "\\caption{", table_info$caption, " ", repeat_header_text,
+      "}\\\\"
+    )
+  }
+
   x <- c(
     x[1:header_rows_end],
     "\\endfirsthead",
