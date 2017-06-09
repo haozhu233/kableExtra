@@ -182,7 +182,7 @@ pdfTable_styling <- function(kable_input,
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {
-    out <- styling_latex_striped(out)
+    out <- styling_latex_striped(out, table_info)
   }
 
   # hold_position is only meaningful in a table environment
@@ -214,11 +214,15 @@ pdfTable_styling <- function(kable_input,
   return(out)
 }
 
-styling_latex_striped <- function(x) {
+styling_latex_striped <- function(x, table_info) {
   usepackage_latex("xcolor", "table")
-  paste0(
-    # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
-    "\\rowcolors{2}{gray!6}{white}\n", x, "\n\\rowcolors{2}{white}{white}")
+  # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
+  if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
+    row_color <- "\\rowcolors{2}{white}{gray!6}\n"
+  } else {
+    row_color <- "\\rowcolors{2}{gray!6}{white}\n"
+  }
+  return(paste0(row_color, x, "\n\\rowcolors{2}{white}{white}"))
 }
 
 styling_latex_hold_position <- function(x) {
