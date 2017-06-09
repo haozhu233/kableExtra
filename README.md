@@ -76,7 +76,7 @@ For more information, please check the package vignette.
 ## To-do
 - [x] A function to insert a gap row (or group title row in the middle of a table)
 - [x] A function to easily add title column indent
-- [ ] Some ways to change text/background color of cells
+- ~~[ ] Some ways to change text/background color of cells~~
 - [ ] Find a way to let align table caption.
 - [x] Add `column_spec`
 - [ ] Add `row_spec` (worth it?)
