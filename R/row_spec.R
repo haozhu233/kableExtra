@@ -29,8 +29,7 @@ row_spec <- function(kable_input, row,
     return(row_spec_html(kable_input, row, bold, italic))
   }
   if (kable_format == "latex") {
-    message("The LaTeX version of row_spec has not yet been implemented. ")
-    return(kable_input)
+    return(row_spec_latex(kable_input, row, bold, italic))
   }
 }
 
@@ -64,26 +63,20 @@ row_spec_html <- function(kable_input, row, bold, italic) {
   return(out)
 }
 
-# row_spec_latex <- function(kable_input, row, bold, italic) {
-#   table_info <- magic_mirror(kable_input)
-#   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
-#   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
-#
-#   if (bold | italic) {
-#     usepackage_latex("array")
-#     latex_array_options <- c("\\\\bfseries", "\\\\em")[c(bold, italic)]
-#     latex_array_options <- paste0(
-#       "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
-#     )
-#     table_info$align_vector[row] <- paste0(latex_array_options,
-#                                               table_info$align_vector[row])
-#   }
-#
-#   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
-#
-#   out <- sub(kable_align_old, kable_align_new, as.character(kable_input),
-#              perl = T)
-#   out <- structure(out, format = "latex", class = "knitr_kable")
-#   attr(out, "original_kable_meta") <- table_info
-#   return(out)
-# }
+row_spec_latex <- function(kable_input, row, bold, italic) {
+  table_info <- magic_mirror(kable_input)
+  target_row <- table_info$contents[row + 1]
+  new_row <- latex_row_cells(target_row)
+  if (bold) {
+    new_row <- paste0("\\{bfseries", new_row, "}")
+  }
+  if (italic) {
+    new_row <- paste0("\\{em", new_row, "}")
+  }
+  new_row <- paste(new_row, collapse = " & ")
+
+  out <- sub(target_row, new_row, as.character(kable_input), perl = T)
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
+  return(out)
+}

@@ -51,3 +51,7 @@ positions_corrector <- function(positions, group_header_rows, n_row) {
   adjust_numbers <- pc_matrix$adj[pc_matrix$old_id %in% positions]
   return(adjust_numbers + positions)
 }
+
+latex_row_cells <- function(x) {
+  strsplit(x, " \\& ")
+}
