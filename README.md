@@ -79,5 +79,5 @@ For more information, please check the package vignette.
 - ~~[ ] Some ways to change text/background color of cells~~
 - [ ] Find a way to let align table caption.
 - [x] Add `column_spec`
-- [ ] Add `row_spec` (worth it?)
+- [x] Add `row_spec`
 - [ ] Add a clickable js module for shiny app integration

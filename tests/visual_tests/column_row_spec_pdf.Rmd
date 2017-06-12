@@ -47,9 +47,12 @@ kable(dt, "latex", booktabs = T) %>%
 
 ```{r}
 dt <- mtcars[1:5, 1:6]
+dt$wt <- paste(dt$wt, "%")
+dt$mpg <- paste(dt$mpg, "&")
+dt$cyl <- paste(dt$cyl, "$")
 
 kable(dt, "latex", booktabs = T) %>%
   column_spec(7, bold = T) %>%
-  row_spec(5, bold = T)
+  row_spec(5, bold = T, italic = T)
 ```
 
