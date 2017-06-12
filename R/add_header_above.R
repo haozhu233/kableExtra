@@ -35,7 +35,7 @@ add_header_above <- function(kable_input, header = NULL) {
 # HTML
 htmlTable_add_header_above <- function(kable_input, header = NULL) {
   if (is.null(header)) return(kable_input)
-  table_info <- magic_mirror(kable_input)
+  kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
 
@@ -53,7 +53,7 @@ htmlTable_add_header_above <- function(kable_input, header = NULL) {
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attributes(out) <- kable_attrs
   return(out)
 }
 

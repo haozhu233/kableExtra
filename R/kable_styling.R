@@ -100,7 +100,7 @@ htmlTable_styling <- function(kable_input,
                               position = c("center", "left", "right",
                                            "float_left", "float_right"),
                               font_size = NULL) {
-  table_info <- magic_mirror(kable_input)
+  kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
 
   # Modify class
@@ -158,7 +158,7 @@ htmlTable_styling <- function(kable_input,
 
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attributes(out) <- kable_attrs
   return(out)
 }
 

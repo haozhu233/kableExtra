@@ -5,7 +5,8 @@
 #' italic text.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
-#' @param row A numeric value indicating which row to be selected
+#' @param row A numeric value indicating which row to be selected. You don't
+#' need to count in header rows or group labeling rows.
 #' @param bold A T/F value to control whether the text of the selected row
 #' need to be bolded.
 #' @param italic A T/F value to control whether the text of the selected row
