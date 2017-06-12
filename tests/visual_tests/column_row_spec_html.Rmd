@@ -38,8 +38,9 @@ dt <- data.frame(
 )
 
 kable(dt, "html") %>%
-  kable_styling() %>%
+  kable_styling(full_width = F) %>%
   column_spec(2, "5cm", bold = T) %>%
-  column_spec(4, "3cm", italic = T)
+  column_spec(4, "3cm", italic = T)  %>%
+  row_spec(1, italic = T)
 ```
 
