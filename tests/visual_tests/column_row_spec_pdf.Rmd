@@ -1,6 +1,8 @@
 ---
 title: "Untitled"
-output: pdf_document
+output: 
+  pdf_document:
+    keep_tex: true
 ---
 
 ```{r setup, include=FALSE}
@@ -40,7 +42,14 @@ dt <- data.frame(
 kable(dt, "latex", booktabs = T) %>%
   kable_styling(latex_options = "scale_down") %>%
   column_spec(2, "30em", bold = T) %>%
-  column_spec(4, "3cm", italic = T) %>%
-    group_rows("Group1", 1, 2)
+  column_spec(4, "3cm", italic = T)
+```
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+
+kable(dt, "latex", booktabs = T) %>%
+  column_spec(7, bold = T) %>%
+  row_spec(5, bold = T)
 ```
 

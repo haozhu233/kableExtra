@@ -68,12 +68,16 @@ row_spec_latex <- function(kable_input, row, bold, italic) {
   target_row <- table_info$contents[row + 1]
   new_row <- latex_row_cells(target_row)
   if (bold) {
-    new_row <- paste0("\\{bfseries", new_row, "}")
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\bfseries{", x, "}")
+    })
   }
   if (italic) {
-    new_row <- paste0("\\{em", new_row, "}")
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\em{", x, "}")
+    })
   }
-  new_row <- paste(new_row, collapse = " & ")
+  new_row <- paste(unlist(new_row), collapse = " & ")
 
   out <- sub(target_row, new_row, as.character(kable_input), perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")
