@@ -196,6 +196,8 @@ The following feature is introduced in `kableExtra` 0.2.1.
 
 # Column Style Specification
 When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
+
+Warning: If you have a super long table, you should be cautious when you use `column_spec` as the xml node modification takes time.
 ```{r}
 text_tbl <- data.frame(
   Items = c("Item 1", "Item 2", "Item 3"),
@@ -210,4 +212,18 @@ kable(text_tbl) %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T) %>%
   column_spec(2, width = "30em")
+```
+
+***
+
+The following features are introduced in `kableExtra` 0.3.0
+
+# Row Style Specification
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+
+```{r}
+kable(dt) %>%
+  kable_styling("striped", full_width = F) %>%
+  column_spec(7, bold = T) %>%
+  row_spec(5, bold = T)
 ```

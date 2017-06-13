@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-05-26" />
+<meta name="date" content="2017-06-13" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-05-26</em></h4>
+<h4 class="date"><em>2017-06-13</em></h4>
 
 </div>
 
@@ -3227,6 +3227,7 @@ Hornet Sportabout
 <div id="column-style-specification" class="section level1">
 <h1>Column Style Specification</h1>
 <p>When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a “Total” column) by making it bold. In these scenario, you can use <code>column_spec()</code>. You can find an example below.</p>
+<p>Warning: If you have a super long table, you should be cautious when you use <code>column_spec</code> as the xml node modification takes time.</p>
 <pre class="r"><code>text_tbl &lt;- data.frame(
   Items = c(&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;),
   Features = c(
@@ -3275,6 +3276,160 @@ Item 3
 </td>
 <td style="text-align:left;width: 30em; ">
 Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis.
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>The following features are introduced in <code>kableExtra</code> 0.3.0</p>
+</div>
+<div id="row-style-specification" class="section level1">
+<h1>Row Style Specification</h1>
+<p>Similar with <code>column_spec</code>, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in <code>kableExtra</code>, for the position of the target row, you don’t need to count in header rows or the group labelling rows.</p>
+<pre class="r"><code>kable(dt) %&gt;%
+  kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
+  column_spec(7, bold = T) %&gt;%
+  row_spec(5, bold = T)</code></pre>
+<?xml version="1.0" encoding="UTF-8" ?>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;font-weight: bold;">
+2.620
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;font-weight: bold;">
+2.875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;font-weight: bold;">
+2.320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;font-weight: bold;">
+3.215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Hornet Sportabout
+</td>
+<td style="text-align:right;font-weight: bold;">
+18.7
+</td>
+<td style="text-align:right;font-weight: bold;">
+8
+</td>
+<td style="text-align:right;font-weight: bold;">
+360
+</td>
+<td style="text-align:right;font-weight: bold;">
+175
+</td>
+<td style="text-align:right;font-weight: bold;">
+3.15
+</td>
+<td style="text-align:right;font-weight: bold;font-weight: bold;">
+3.440
 </td>
 </tr>
 </tbody>

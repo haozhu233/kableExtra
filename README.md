@@ -4,7 +4,7 @@
 
 ***
 
-**If you find using `kableExtra` will "unload" LaTeX packages you defined in the yaml header, you need to install the latest dev version of `rmarkdown` from github. Please see [issue 5](https://github.com/haozhu233/kableExtra/issues/5) & [issue 11](https://github.com/haozhu233/kableExtra/issues/11) for details.**
+**If you find using `kableExtra` will "unload" LaTeX packages or settings you defined in the yaml header, you need to install the latest dev version of `rmarkdown` from github. Please see [issue 5](https://github.com/haozhu233/kableExtra/issues/5) & [issue 11](https://github.com/haozhu233/kableExtra/issues/11) for details.**
 
 ***
 

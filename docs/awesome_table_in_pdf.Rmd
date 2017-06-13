@@ -79,6 +79,16 @@ kable(cbind(dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
+### Repeat Header in longtable (only available in kableExtra 0.3.0)
+In this `kableExtra` 0.3.0, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`.
+```{r}
+long_dt <- rbind(mtcars, mtcars) 
+
+kable(long_dt, longtable = T, booktabs = T, caption = "Longtable") %>%
+  add_header_above(c(" ", "Group 1" = 5, "Group 2" = 6)) %>%
+  kable_styling(latex_options = c("repeat_header"))
+```
+
 
 ## Full Width
 If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. Note that, if you use `full_width` in LaTeX, you will loss your in-cell text alignment settings and everything will be left-aligned. 
@@ -222,7 +232,7 @@ text_tbl <- data.frame(
   )
 )
 
-kable(text_tbl) %>%
+kable(text_tbl, booktabs = T) %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T) %>%
   column_spec(2, width = "30em")
@@ -230,14 +240,14 @@ kable(text_tbl) %>%
 
 ***
 
-The following feature is introduced in `kableExtra` 0.3.0.
+The following features are introduced in `kableExtra` 0.3.0
 
-# Repeat Header in longtable
-In this release, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`.
+# Row Style Specification
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+
 ```{r}
-long_dt <- rbind(mtcars, mtcars) 
-
-kable(long_dt, longtable = T, booktabs = T, caption = "Longtable") %>%
-  add_header_above(c(" ", "Group 1" = 5, "Group 2" = 6)) %>%
-  kable_styling(latex_options = c("repeat_header"))
+kable(dt, booktabs = T) %>%
+  kable_styling("striped", full_width = F) %>%
+  column_spec(7, bold = T) %>%
+  row_spec(5, bold = T)
 ```
