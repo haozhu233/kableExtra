@@ -1,0 +1,15 @@
+---
+title: "add_header_left"
+output: html_document
+---
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+mtcars[1:10, 1:6] %>%
+  kable("html") %>%
+  kable_styling() %>%
+  add_header_above(c(" ", "a" = 3, "b" = 3)) %>%
+  add_header_left(c("a" = 2, "b" = 3)) 
+```

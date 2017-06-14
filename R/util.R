@@ -67,3 +67,5 @@ collapse_row_matrix <- function(kable_dt, columns)  {
   mapping_matrix <- data.frame(mapping_matrix)
   return(mapping_matrix)
 }
+
+
