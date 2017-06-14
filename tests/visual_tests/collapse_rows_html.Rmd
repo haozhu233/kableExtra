@@ -1,0 +1,16 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r}
+library(knitr)
+library(kableExtra)
+collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
+                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
+                 C3 = 1:15,
+                 C4 = sample(c(0,1), 15, replace = TRUE))
+kable(collapse_rows_dt, "html", align = "c") %>%
+  kable_styling() %>%
+  collapse_rows(1:2)
+```
