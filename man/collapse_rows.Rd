@@ -7,5 +7,5 @@
 collapse_rows(kable_input, columns)
 }
 \description{
-Collapse repeat rows to multirow cell
+Experimenting. Don't use it in production.
 }

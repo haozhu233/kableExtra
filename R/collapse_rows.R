@@ -1,5 +1,6 @@
 #' Collapse repeat rows to multirow cell
 #'
+#' @description Experimenting. Don't use it in production.
 #' @export
 collapse_rows <- function(kable_input, columns) {
   if (is.null(columns)) {
