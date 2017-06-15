@@ -227,3 +227,14 @@ kable(dt) %>%
   column_spec(7, bold = T) %>%
   row_spec(5, bold = T)
 ```
+
+# Add header column to the left
+An alternative way of grouping rows is being added to `kableExtra` 0.3.0. Unlike `group_rows`, the new function `add_header_left` adopts a similar syntax with `add_header_above`. It allows users to add multiple layers of row groups, which is a limitation of `group_rows`. Currently, `add_header_left` in HTML is in good shape with exception that it doesn't work with `group_rows`. 
+```{r}
+mtcars[1:10, 1:6] %>%
+  kable("html") %>%
+  kable_styling() %>%
+  add_header_above(c(" ", "Data 1" = 3, "Data 2" = 3)) %>%
+  add_header_left(c("Group A" = 3, "Group B" = 7), "Group") %>%
+  add_header_left(c("Team X" = 4, "Team Y" = 2, "Team Z" = 4), "Team") 
+```

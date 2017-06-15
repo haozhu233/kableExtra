@@ -1,0 +1,20 @@
+---
+title: "add_header_left"
+output: 
+  pdf_document:
+    keep_tex: true
+---
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+mtcars[1:10, 1:6] %>%
+  kable("latex", booktabs= T) %>%
+  # kable_styling(latex_options = "striped") %>%
+  add_header_above(c(" ", "a%" = 3, "b" = 3)) %>%
+  add_header_left(c("a%" = 3, "b" = 7), "new") %>%
+  add_header_left(c("a" = 4, "b" = 6), "new2") %>%
+  group_rows("aasd", 4, 6)
+  
+```

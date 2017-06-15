@@ -31,3 +31,15 @@ kable(dt, "latex", longtable = T, booktabs = T) %>%
   add_header_above(c(" ", "a" = 6, "b" = 5)) %>%
   kable_styling(latex_options = "repeat_header", repeat_header_text = "(cont.)")
 ```
+
+```{r}
+df <- data.frame(replicate(13, sample(1000000:9000000, 60,replace=TRUE)))
+df$Sum <- rowSums(df)
+totals <- colSums(df)
+df <- rbind(df, totals)
+names(df) <- c("Jan 2014", "Feb 2014", "Mar 2014", "Apr 2014", "May  2014", "Jun 2014", "Jul 2014",
+            "Aug 2014", "Sep 2014", "Oct 2014", "Nov 2014", "Dec 2014", "Jan 2015", "Sum")
+kable(df, "latex", longtable = T, booktabs = T) %>%
+  kable_styling(latex_options = c("repeat_header"), font_size = 7) %>%
+  landscape()
+```

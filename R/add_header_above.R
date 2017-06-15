@@ -92,12 +92,23 @@ htmlTable_new_header_generator <- function(header_df) {
 pdfTable_add_header_above <- function(kable_input, header = NULL) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
+  header$header <- escape_latex(header$header)
+  header$header <- gsub("\\\\", "\\\\\\\\", header$header)
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
+  new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs)
+  new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   out <- sub(hline_type,
-             paste0(hline_type, "\n",
-                    pdfTable_new_header_generator(header, table_info$booktabs)),
+             paste0(hline_type, "\n", new_header),
              as.character(kable_input))
   out <- structure(out, format = "latex", class = "knitr_kable")
+  # new_header_row <- latex_contents_escape(new_header_split[1])
+  if (is.null(table_info$new_header_row)) {
+    table_info$new_header_row <- new_header_split[1]
+    table_info$header_df <- list(header)
+  } else {
+    table_info$new_header_row <- c(table_info$new_header_row, new_header_split[1])
+    table_info$header_df[[length(table_info$header_df) + 1]] <- header
+  }
   attr(out, "original_kable_meta") <- table_info
   return(out)
 }
@@ -115,6 +126,11 @@ pdfTable_new_header_generator <- function(header_df, booktabs = F) {
     paste0('\\\\multicolumn{', x[2], '}{', x[3], '}{', x[1], "}")
   })
   header_text <- paste(paste(header_items, collapse = " & "), "\\\\\\\\")
+  cline <- cline_gen(header_df, booktabs)
+  return(c(header_text, cline))
+}
+
+cline_gen <- function(header_df, booktabs) {
   cline_end <- cumsum(header_df$colspan)
   cline_start <- c(0, cline_end) + 1
   cline_start <- cline_start[-length(cline_start)]
@@ -124,6 +140,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = F) {
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")
-  header_text <- paste(header_text, cline)
-  return(header_text)
+  return(cline)
 }
+
+

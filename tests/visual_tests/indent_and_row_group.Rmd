@@ -18,3 +18,19 @@ kable(dt, format = "latex", booktabs = T) %>%
   add_indent(c(3, 5)) %>%
   add_indent(5)
 ```
+
+```{r}
+library(knitr)
+library(kableExtra)
+for (i in 1:nrow(mtcars)) {
+  mtcars$hp[i] <- paste0(mtcars$hp[i], " (", 1, ")")
+  mtcars$wt[i] <- paste0(mtcars$wt[i], " &")
+  mtcars$mpg[i] <- paste0(mtcars$mpg[i], "%")
+}
+kable(head(mtcars, n = 20), "latex", caption = "test", booktabs = T) %>%
+  kable_styling() %>%
+  # group_rows("these rows", 4, 16) %>%
+  # group_rows("Those rows", 17,20) %>%
+  # add_header_above(c(" ", "aaa$" = 5, "bbb%" = 6)) %>%
+  add_header_left(c("jj", "aaa" = 5, "bbb" = 6)) 
+```

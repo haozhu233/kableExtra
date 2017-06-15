@@ -71,7 +71,7 @@ magic_mirror_latex <- function(kable_input){
     )
   # Contents
   kable_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
-  kable_info$contents <- latex_contents_escape(kable_info$contents)
+  kable_info$contents <- regex_escape(kable_info$contents, T)
   if (kable_info$tabular == "longtable" & !is.na(kable_info$caption)) {
     kable_info$contents <- kable_info$contents[-1]
   }
@@ -85,15 +85,6 @@ magic_mirror_latex <- function(kable_input){
   kable_info$table_env <- (!is.na(kable_info$caption) &
                              kable_info$tabular != "longtable")
   return(kable_info)
-}
-
-latex_contents_escape <- function(x) {
-  x <- gsub("\\\\", "\\\\\\\\", x)
-  x <- gsub("\\$", "\\\\\\$", x)
-  x <- gsub("\\(", "\\\\(", x)
-  x <- gsub("\\)", "\\\\)", x)
-  x <- gsub("\\[", "\\\\]", x)
-  x <- gsub("\\[", "\\\\]", x)
 }
 
 #' Magic Mirror for html table --------

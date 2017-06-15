@@ -12,6 +12,8 @@ groups
 * Add a new LaTeX option `repeat_header` in `kable_styling` for repeating
 header rows in a longtable environment.
 
+* Fixed a bug in add_header_above to allow special symbol in extra header rows.
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 

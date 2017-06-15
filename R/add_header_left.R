@@ -3,7 +3,8 @@
 #' @description Experimenting. Please don't use it in production
 #'
 #' @export
-add_header_left <- function(kable_input, header = NULL, header_name = "") {
+add_header_left <- function(kable_input, header = NULL, header_name = "",
+                            align = "c") {
   if (is.null(header)) return(kable_input)
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -11,31 +12,33 @@ add_header_left <- function(kable_input, header = NULL, header_name = "") {
          "generic markdown table using pandoc is not supported.")
   }
   if (kable_format == "html") {
-    return(add_header_left_html(kable_input, header, header_name))
+    return(add_header_left_html(kable_input, header, header_name, align))
   }
   if (kable_format == "latex") {
-    return(add_header_left_latex(kable_input, header, header_name))
+    return(add_header_left_latex(kable_input, header, header_name, align))
   }
 }
 
 # HTML
-add_header_left_html <- function(kable_input, header, header_name) {
+add_header_left_html <- function(kable_input, header, header_name, align) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = "COMPACT")
   kable_thead <- xml_tpart(kable_xml, "thead")
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
+  align <- switch(align, "c" = "center", "l" = "left", "r" = "right")
+
   new_header <- paste0(
-    '<th style="text-align:center;" rowspan="',
+    '<th style="text-align:', align, '; vertical-align: bottom;" rowspan="',
     length(xml_children(kable_thead)), '">', header_name, '</th>'
   )
   new_header <- read_xml(new_header, options = c("COMPACT"))
   xml_add_child(xml_child(kable_thead, 1), new_header, .where = 0)
 
-  header <- standardize_rowheader_input(header, length(xml_children(kable_tbody)))
+  header <- standardize_header(header, length(xml_children(kable_tbody)))
   for (i in 1:nrow(header)) {
     new_row_item <- paste0(
-      '<td style="text-align:center; vertical-align: middle;" rowspan="',
+      '<td style="text-align:', align, '; vertical-align: middle;" rowspan="',
       header$rowspan[i], '">', header$header[i], '</td>')
     new_row_item <- read_xml(new_row_item, options = "COMPACT")
     target_row <- xml_child(kable_tbody, header$row[i])
@@ -48,7 +51,7 @@ add_header_left_html <- function(kable_input, header, header_name) {
   return(out)
 }
 
-standardize_rowheader_input <- function(header, n_row) {
+standardize_header <- function(header, n_row) {
   header_names <- names(header)
 
   if (is.null(header_names)) {
@@ -71,6 +74,100 @@ standardize_rowheader_input <- function(header, n_row) {
     ))
 }
 
-add_header_left_latex <- function(kable_input, header, header_name) {
-  return(kable_input)
+add_header_left_latex <- function(kable_input, header, header_name, align) {
+  table_info <- magic_mirror(kable_input)
+  usepackage_latex("multirow")
+  if (!table_info$booktabs) {
+    warning("add_header_left only supports LaTeX table with booktabs. Please",
+            " use kable(..., booktabs = T) in your kable function.")
+  }
+  out <- as.character(kable_input)
+  contents <- table_info$contents
+  header_name <- escape_latex(header_name)
+  header <- standardize_header(header, length(contents) - 1)
+  header$header <- escape_latex(header$header)
+  header$header <- gsub("\\\\", "\\\\\\\\", header$header)
+  header$row <- header$row + 1
+  header$row_end <- header$row + header$rowspan - 1
+
+  # Align
+  out <- sub(paste0(table_info$begin_tabular, "\\{"),
+             paste0(table_info$begin_tabular, "{", align,
+                    ifelse(table_info$booktabs, "", "|")),
+             out, perl = T)
+
+  # Header
+  if (!is.null(table_info$new_header_row)) {
+    new_header_row <- table_info$new_header_row
+    for (i in 1:length(new_header_row)) {
+      out <- sub(regex_escape(new_header_row[i]),
+                 paste0(" & ", new_header_row[i]), out)
+      cline_old <- cline_gen(table_info$header_df[[i]], table_info$booktabs)
+      cline_old <- regex_escape(cline_old)
+      table_info$header_df[[i]] <- rbind(
+        data.frame(header = " ", colspan = 1),
+        table_info$header_df[[i]]
+      )
+      cline_new <- cline_gen(table_info$header_df[[i]], table_info$booktabs)
+      out <- sub(cline_old, cline_new, out)
+    }
+  }
+  out <- sub(contents[1], paste0(header_name, " & ", contents[1]), out)
+  table_info$contents[1] <- paste0(header_name, " & ", contents[1])
+
+  # move existing midrules if exists
+  out_lines <- read_lines(out)
+  tbody_start_row <- which(out_lines == "\\midrule")
+  tbody_end_row <- which(out_lines == "\\bottomrule")
+  before_tbody <- out_lines[seq(1, tbody_start_row)]
+  tbody <- out_lines[seq(tbody_start_row + 1, tbody_end_row - 1)]
+  after_tbody <- out_lines[seq(tbody_end_row, length(out_lines))]
+
+  # Remove addlinespace in this case
+  tbody <- tbody[tbody != "\\addlinespace"]
+
+  midrule_exist <- str_sub(tbody, 1, 9) == "\\cmidrule"
+  if (sum(midrule_exist) > 0) {
+    existing_midrules <- which(midrule_exist)
+    tbody[existing_midrules] <- unlist(lapply(
+      tbody[existing_midrules], cmidrule_plus_one
+    ))
+    out <- paste0(c(before_tbody, tbody, after_tbody), collapse = "\n")
+  }
+
+  for (j in 1:nrow(header)) {
+    new_row_pre <- paste0(
+      "\\\\multirow\\{", -header$rowspan[j], "\\}\\{\\*\\}\\{", header$header[j], "\\} & "
+    )
+    new_row_text <- paste0(new_row_pre, contents[header$row_end[j]])
+    out <- sub(contents[header$row_end[j]], new_row_text, out)
+    table_info$contents[header$row_end[j]] <- new_row_text
+    if (j != nrow(header)) {
+      out <- sub(
+        paste0(contents[header$row_end[j]], "\\\\\\\\\n"),
+        paste0(contents[header$row_end[j]],
+               "\\\\\\\\\n\\\\cmidrule[0.5pt](l{2pt}r{2pt}){1-1}\n"),
+        out
+      )
+    }
+  }
+
+  for (k in setdiff(seq(2, length(contents)), header$row_end)) {
+    out <- sub(contents[k],
+               paste0("  & ", contents[k]),
+               out)
+    table_info$contents[k] <- paste0("  & ", contents[k])
+  }
+
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
+  return(out)
+}
+
+cmidrule_plus_one <- function(x) {
+  start_pos <- as.numeric(str_match(x, "\\)\\{(.*)-")[2]) + 1
+  stop_pos <- as.numeric(str_match(x, "-(.*)\\}")[2]) + 1
+  return(
+    paste0("\\cmidrule[0.5pt](l{2pt}r{2pt}){", start_pos, "-", stop_pos, "}")
+  )
 }

@@ -68,4 +68,18 @@ collapse_row_matrix <- function(kable_dt, columns)  {
   return(mapping_matrix)
 }
 
+regex_escape <- function(x, double_backslash = FALSE) {
+  if (double_backslash) {
+    x <- gsub("\\\\", "\\\\\\\\", x)
+  }
+  x <- gsub("\\$", "\\\\\\$", x)
+  x <- gsub("\\(", "\\\\(", x)
+  x <- gsub("\\)", "\\\\)", x)
+  x <- gsub("\\[", "\\\\]", x)
+  x <- gsub("\\[", "\\\\]", x)
+  x <- gsub("\\{", "\\\\{", x)
+  x <- gsub("\\}", "\\\\}", x)
+  x <- gsub("\\*", "\\\\*", x)
+  return(x)
+}
 

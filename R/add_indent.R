@@ -39,12 +39,15 @@ add_indent_latex <- function(kable_input, positions) {
   for (i in positions) {
     rowtext <- table_info$contents[i + 1]
     out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
+    table_info$contents[i + 1] <- latex_indent_unit(rowtext)
   }
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "original_kable_meta") <- table_info
   return(out)
 }
 
 latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace{1em}", rowtext)
+  paste0("\\\\hspace\\{1em\\}", rowtext)
 }
 
 # Add indentation for HTML
