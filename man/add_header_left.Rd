@@ -2,10 +2,33 @@
 % Please edit documentation in R/add_header_left.R
 \name{add_header_left}
 \alias{add_header_left}
-\title{Add a header column}
+\title{Add a heading column to the left side of the table}
 \usage{
-add_header_left(kable_input, header = NULL, header_name = "")
+add_header_left(kable_input, header = NULL, header_name = "", align = "c",
+  ...)
+}
+\arguments{
+\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+
+\item{header}{A (named) character vector with `rowspan` as values. For
+example, `c("xxx" = 1, "title" = 2)` can be used to create a new header column
+for a 3-row table with "xxx" spanning row 1 and "title" spanning row 2 & 3 (
+two rows). For convenience, when `rowspan` equals to 1, users can drop the
+` = 1` part. As a result, `c("xxx", "title" = 2)` is the same as
+`c("xxx" = 1, "title" = 2)`.}
+
+\item{header_name}{Column name that that extra column}
+
+\item{align}{Column alignment. you can choose from "c", "l" or "r"}
+
+\item{...}{extra variables for latex or html. For LaTeX table, you can have
+a TRUE/FALSE option `full_midline` to control if the mid line needs to be
+extended to the end of row.}
 }
 \description{
-Experimenting. Please don't use it in production
+This function uses the same syntax as add_header_above. It will
+add a heading column with grouped rows to the left side of the table. It can
+act as an alternative way to `group_rows` to show grouped information. As
+`add_header_above`, users can use this function to add multiple layers of
+heading columns one by one.
 }
