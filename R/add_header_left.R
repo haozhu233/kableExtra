@@ -4,7 +4,7 @@
 #'
 #' @export
 add_header_left <- function(kable_input, header = NULL, header_name = "",
-                            align = "c") {
+                            align = "c", ...) {
   if (is.null(header)) return(kable_input)
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -15,7 +15,7 @@ add_header_left <- function(kable_input, header = NULL, header_name = "",
     return(add_header_left_html(kable_input, header, header_name, align))
   }
   if (kable_format == "latex") {
-    return(add_header_left_latex(kable_input, header, header_name, align))
+    return(add_header_left_latex(kable_input, header, header_name, align, ...))
   }
 }
 
@@ -74,7 +74,8 @@ standardize_header <- function(header, n_row) {
     ))
 }
 
-add_header_left_latex <- function(kable_input, header, header_name, align) {
+add_header_left_latex <- function(kable_input, header, header_name, align,
+                                  full_midline = F) {
   table_info <- magic_mirror(kable_input)
   usepackage_latex("multirow")
   if (!table_info$booktabs) {
@@ -95,6 +96,7 @@ add_header_left_latex <- function(kable_input, header, header_name, align) {
              paste0(table_info$begin_tabular, "{", align,
                     ifelse(table_info$booktabs, "", "|")),
              out, perl = T)
+  table_info$align_vector <- c(align, table_info$align_vector)
 
   # Header
   if (!is.null(table_info$new_header_row)) {
@@ -146,7 +148,9 @@ add_header_left_latex <- function(kable_input, header, header_name, align) {
       out <- sub(
         paste0(contents[header$row_end[j]], "\\\\\\\\\n"),
         paste0(contents[header$row_end[j]],
-               "\\\\\\\\\n\\\\cmidrule[0.5pt](l{2pt}r{2pt}){1-1}\n"),
+               "\\\\\\\\\n\\\\cmidrule[0.5pt](l{2pt}r{2pt}){1-",
+               ifelse(full_midline, str_count(tbody[1], " & ") + 2, 1),
+               "}\n"),
         out
       )
     }
