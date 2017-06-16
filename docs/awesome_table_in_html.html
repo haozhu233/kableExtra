@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-06-15" />
+<meta name="date" content="2017-06-16" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-06-15</em></h4>
+<h4 class="date"><em>2017-06-16</em></h4>
 
 </div>
 
@@ -3440,14 +3440,18 @@ Hornet Sportabout
 <p>An alternative way of grouping rows is being added to <code>kableExtra</code> 0.3.0. Unlike <code>group_rows</code>, the new function <code>add_header_left</code> adopts a similar syntax with <code>add_header_above</code>. It allows users to add multiple layers of row groups, which is a limitation of <code>group_rows</code>. Currently, <code>add_header_left</code> in HTML is in good shape with exception that it doesn’t work with <code>group_rows</code>.</p>
 <pre class="r"><code>mtcars[1:10, 1:6] %&gt;%
   kable(&quot;html&quot;) %&gt;%
-  kable_styling() %&gt;%
+  kable_styling()  %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Data 1&quot; = 3, &quot;Data 2&quot; = 3)) %&gt;%
-  add_header_left(c(&quot;Group A&quot; = 3, &quot;Group B&quot; = 7), &quot;Group&quot;) %&gt;%
-  add_header_left(c(&quot;Team X&quot; = 4, &quot;Team Y&quot; = 2, &quot;Team Z&quot; = 4), &quot;Team&quot;) </code></pre>
+  add_header_left(c(&quot;Group A&quot; = 3, &quot;Group B&quot; = 2, &quot;Group C&quot; = 4, &quot;Group D&quot; = 1), &quot;Group&quot;) %&gt;%
+  add_header_left(c(&quot;Team X&quot; = 5, &quot;Team Y&quot; = 5), &quot;Team&quot;) %&gt;%
+  add_header_left(c(&quot;League Alpha&quot; = 10), &quot;League&quot;)</code></pre>
 <?xml version="1.0" encoding="UTF-8" ?>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
+<th style="text-align:center; vertical-align: bottom;" rowspan="2">
+League
+</th>
 <th style="text-align:center; vertical-align: bottom;" rowspan="2">
 Team
 </th>
@@ -3491,7 +3495,10 @@ wt
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center; vertical-align: middle;" rowspan="4">
+<td style="text-align:center; vertical-align: middle;" rowspan="10">
+League Alpha
+</td>
+<td style="text-align:center; vertical-align: middle;" rowspan="5">
 Team X
 </td>
 <td style="text-align:center; vertical-align: middle;" rowspan="3">
@@ -3566,7 +3573,7 @@ Datsun 710
 </td>
 </tr>
 <tr>
-<td style="text-align:center; vertical-align: middle;" rowspan="7">
+<td style="text-align:center; vertical-align: middle;" rowspan="2">
 Group B
 </td>
 <td style="text-align:left;">
@@ -3592,9 +3599,6 @@ Hornet 4 Drive
 </td>
 </tr>
 <tr>
-<td style="text-align:center; vertical-align: middle;" rowspan="2">
-Team Y
-</td>
 <td style="text-align:left;">
 Hornet Sportabout
 </td>
@@ -3618,6 +3622,12 @@ Hornet Sportabout
 </td>
 </tr>
 <tr>
+<td style="text-align:center; vertical-align: middle;" rowspan="5">
+Team Y
+</td>
+<td style="text-align:center; vertical-align: middle;" rowspan="4">
+Group C
+</td>
 <td style="text-align:left;">
 Valiant
 </td>
@@ -3641,9 +3651,6 @@ Valiant
 </td>
 </tr>
 <tr>
-<td style="text-align:center; vertical-align: middle;" rowspan="4">
-Team Z
-</td>
 <td style="text-align:left;">
 Duster 360
 </td>
@@ -3713,6 +3720,9 @@ Merc 230
 </td>
 </tr>
 <tr>
+<td style="text-align:center; vertical-align: middle;" rowspan="1">
+Group D
+</td>
 <td style="text-align:left;">
 Merc 280
 </td>
