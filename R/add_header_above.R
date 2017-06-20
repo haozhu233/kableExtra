@@ -11,6 +11,8 @@
 #' for a 3-column table with "title" spanning across column 2 and 3. For
 #' convenience, when `colspan` equals to 1, users can drop the ` = 1` part.
 #' As a result, `c(" ", "title" = 2)` is the same as `c(" " = 1, "title" = 2)`.
+#' @param bold A T/F value to control whether the text should be bolded.
+#' @param italic A T/F value to control whether the text should to be emphasized.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -18,22 +20,22 @@
 #' add_header_above(x, c(" ", "Group 1" = 5, "Group 2" = 6))
 #'
 #' @export
-add_header_above <- function(kable_input, header = NULL) {
+add_header_above <- function(kable_input, header = NULL, bold = F, italic = F) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     stop("Please specify output format in your kable function. Currently ",
          "generic markdown table using pandoc is not supported.")
   }
   if (kable_format == "html") {
-    return(htmlTable_add_header_above(kable_input, header))
+    return(htmlTable_add_header_above(kable_input, header, bold, italic))
   }
   if (kable_format == "latex") {
-    return(pdfTable_add_header_above(kable_input, header))
+    return(pdfTable_add_header_above(kable_input, header, bold, italic))
   }
 }
 
 # HTML
-htmlTable_add_header_above <- function(kable_input, header = NULL) {
+htmlTable_add_header_above <- function(kable_input, header, bold, italic) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
@@ -49,7 +51,7 @@ htmlTable_add_header_above <- function(kable_input, header = NULL) {
          "columns with the original kable output.")
   }
 
-  new_header_row <- htmlTable_new_header_generator(header)
+  new_header_row <- htmlTable_new_header_generator(header, bold, italic)
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
@@ -72,13 +74,19 @@ standardize_header_input <- function(header) {
   return(data.frame(header = names(header), colspan = header, row.names = NULL))
 }
 
-htmlTable_new_header_generator <- function(header_df) {
+htmlTable_new_header_generator <- function(header_df, bold, italic) {
+  row_style <- paste0(
+    ifelse(bold, "font-weight: bold; ", ""),
+    ifelse(italic, "font-style: italic; ", "")
+  )
   header_items <- apply(header_df, 1, function(x) {
     if (trimws(x[1]) == "") {
       paste0('<th style="border-bottom:hidden"></th>')
     } else {
       paste0('<th style="text-align:center; border-bottom:hidden; ',
-             'padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="',
+             'padding-bottom:0; padding-left:3px;padding-right:3px;',
+             row_style,
+             '" colspan="',
              x[2], '"><div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">',
              x[1], '</div></th>')
     }
@@ -89,13 +97,14 @@ htmlTable_new_header_generator <- function(header_df) {
 }
 
 # Add an extra header row above the current header in a LaTeX table ------
-pdfTable_add_header_above <- function(kable_input, header = NULL) {
+pdfTable_add_header_above <- function(kable_input, header, bold, italic) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
   header$header <- escape_latex(header$header)
   header$header <- gsub("\\\\", "\\\\\\\\", header$header)
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
-  new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs)
+  new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs,
+                                                    bold, italic)
   new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   out <- sub(hline_type,
              paste0(hline_type, "\n", new_header),
@@ -109,11 +118,12 @@ pdfTable_add_header_above <- function(kable_input, header = NULL) {
     table_info$new_header_row <- c(table_info$new_header_row, new_header_split[1])
     table_info$header_df[[length(table_info$header_df) + 1]] <- header
   }
-  attr(out, "original_kable_meta") <- table_info
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
 
-pdfTable_new_header_generator <- function(header_df, booktabs = F) {
+pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
+                                          bold, italic) {
   if (booktabs) {
     header_df$align <- "c"
   } else {
@@ -123,7 +133,10 @@ pdfTable_new_header_generator <- function(header_df, booktabs = F) {
   }
   header_items <- apply(header_df, 1, function(x) {
     # if(x[2] == 1) return(x[1])
-    paste0('\\\\multicolumn{', x[2], '}{', x[3], '}{', x[1], "}")
+    paste0('\\\\multicolumn{', x[2], '}{', x[3], '}{',
+           ifelse(bold, "\\\\bfseries ", ""),
+           ifelse(italic, "\\\\em ", ""),
+           x[1], "}")
   })
   header_text <- paste(paste(header_items, collapse = " & "), "\\\\\\\\")
   cline <- cline_gen(header_df, booktabs)

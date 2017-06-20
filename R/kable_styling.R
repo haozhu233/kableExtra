@@ -210,7 +210,7 @@ pdfTable_styling <- function(kable_input,
   out <- styling_latex_position(out, table_info, position, latex_options)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
 

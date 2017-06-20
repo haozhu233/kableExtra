@@ -57,3 +57,17 @@ kable(dt, "latex", booktabs = T) %>%
   row_spec(5, bold = T, italic = T)
 ```
 
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+dt$wt <- paste(dt$wt, "%")
+dt$mpg <- paste(dt$mpg, "&")
+dt$cyl <- paste(dt$cyl, "$")
+
+kable(dt, "latex", booktabs = T) %>%
+  add_header_left(c("aaa aaa aaa aaa aaa" = 2, "bbb" = 3), "A") %>%
+  column_spec(8, bold = T) %>%
+  column_spec(1, bold = T, width = "1em") %>%
+  row_spec(5, bold = T, italic = T)
+```
+

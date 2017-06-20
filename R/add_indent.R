@@ -42,7 +42,7 @@ add_indent_latex <- function(kable_input, positions) {
     table_info$contents[i + 1] <- latex_indent_unit(rowtext)
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
 

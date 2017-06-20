@@ -239,6 +239,6 @@ add_footnote <- function(input, label = NULL,
     # Paste footer to the table
     export[1] <- gsub("</tbody>\n", paste0("</tbody>\n", footer), export[1])
   }
-  attr(export, "original_kable_meta") <- table_info
+  attr(export, "kable_meta") <- table_info
   return(export)
 }

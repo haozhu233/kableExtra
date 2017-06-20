@@ -76,7 +76,7 @@ collapse_rows_latex <- function(kable_input, columns) {
   #
   # out <- sub(target_row, new_row, as.character(kable_input), perl = T)
   # out <- structure(out, format = "latex", class = "knitr_kable")
-  # attr(out, "original_kable_meta") <- table_info
+  # attr(out, "kable_meta") <- table_info
   # return(out)
   kable_input
 }

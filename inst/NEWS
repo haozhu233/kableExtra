@@ -17,6 +17,8 @@ header rows in a longtable environment.
 * Added add_header_left() feature so people can insert heading columns as they
 do for heading rows.
 
+* Added alignment feature to column_spec when width is specified.
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 

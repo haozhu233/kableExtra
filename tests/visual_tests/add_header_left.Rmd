@@ -14,7 +14,6 @@ mtcars[1:10, 1:6] %>%
   # kable_styling(latex_options = "striped") %>%
   add_header_above(c(" ", "a%" = 3, "b" = 3)) %>%
   add_header_left(c("a%" = 3, "b" = 7), "new") %>%
-  add_header_left(c("a" = 4, "b" = 6), "new2") %>%
-  group_rows("aasd", 4, 6)
-  
+  add_header_left(c("aadjfoi adlfsjs adsa" = 4, "b" = 6), "new2",  width = "1.5cm") %>%
+  add_header_left(c("a" = 5, "b" = 5), "xx", width = "1cm", align = "r")
 ```

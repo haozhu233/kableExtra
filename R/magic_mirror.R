@@ -12,8 +12,8 @@ magic_mirror <- function(kable_input){
     warning("magic_mirror may not be able to produce correct result if the",
             " input table is not rendered by knitr::kable. ")
   }
-  if ("original_kable_meta" %in% names(attributes(kable_input))) {
-    return(attr(kable_input, "original_kable_meta"))
+  if ("kable_meta" %in% names(attributes(kable_input))) {
+    return(attr(kable_input, "kable_meta"))
   }
   kable_format <- attr(kable_input, "format")
   if (kable_format == "latex") {

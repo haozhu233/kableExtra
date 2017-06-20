@@ -98,7 +98,8 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
     )
   }
   out <- sub(rowtext, new_rowtext, out)
-  attr(out, "original_kable_meta") <- table_info
+  table_info$group_rows_used <- TRUE
+  attr(out, "kable_meta") <- table_info
   out <- add_indent(out, seq(start_row, end_row))
   return(out)
 }

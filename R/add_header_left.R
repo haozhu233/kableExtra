@@ -14,14 +14,19 @@
 #' ` = 1` part. As a result, `c("xxx", "title" = 2)` is the same as
 #' `c("xxx" = 1, "title" = 2)`.
 #' @param header_name Column name that that extra column
+#' @param width A character string for the width of the new column. Values
+#' could be "10cm", "3in" or "30em", etc..
 #' @param align Column alignment. you can choose from "c", "l" or "r"
-#' @param ... extra variables for latex or html. For LaTeX table, you can have
-#' a TRUE/FALSE option `full_midline` to control if the mid line needs to be
-#' extended to the end of row.
+#' @param bold A T/F value to control whether the text should be bolded.
+#' @param italic A T/F value to control whether the text should to be emphasized.
+#' @param full_midline This option currently only work in LaTeX. It's a
+#' TRUE/FALSE option to control if the mid line needs to be extended to the end
+#' of row.
 #'
 #' @export
 add_header_left <- function(kable_input, header = NULL, header_name = "",
-                            align = "c", ...) {
+                            align = "c", width = NULL, bold = F, italic = F,
+                            full_midline) {
   if (is.null(header)) return(kable_input)
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -29,25 +34,35 @@ add_header_left <- function(kable_input, header = NULL, header_name = "",
          "generic markdown table using pandoc is not supported.")
   }
   if (kable_format == "html") {
-    return(add_header_left_html(kable_input, header, header_name, align))
+    return(add_header_left_html(kable_input, header, header_name, align,
+                                width, bold, italic))
   }
   if (kable_format == "latex") {
-    return(add_header_left_latex(kable_input, header, header_name, align, ...))
+    return(add_header_left_latex(kable_input, header, header_name, align,
+                                 width, bold, italic, full_midline))
   }
 }
 
 # HTML
-add_header_left_html <- function(kable_input, header, header_name, align) {
+add_header_left_html <- function(kable_input, header, header_name, align,
+                                 width, bold, italic) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = "COMPACT")
   kable_thead <- xml_tpart(kable_xml, "thead")
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
+  align <- match.arg(align, c("c", "l", "r"))
   align <- switch(align, "c" = "center", "l" = "left", "r" = "right")
 
+  column_style <- paste0(
+    ifelse(!is.null(width), paste0("width: ", width, "; "), ""),
+    ifelse(bold, "font-weight: bold; ", ""),
+    ifelse(italic, "font-style: italic; ", "")
+  )
+
   new_header <- paste0(
-    '<th style="text-align:', align, '; vertical-align: bottom;" rowspan="',
-    length(xml_children(kable_thead)), '">', header_name, '</th>'
+    '<th style="text-align:', align, '; vertical-align: bottom;', column_style,
+    '" rowspan="', length(xml_children(kable_thead)), '">', header_name, '</th>'
   )
   new_header <- read_xml(new_header, options = c("COMPACT"))
   xml_add_child(xml_child(kable_thead, 1), new_header, .where = 0)
@@ -55,7 +70,8 @@ add_header_left_html <- function(kable_input, header, header_name, align) {
   header <- standardize_header(header, length(xml_children(kable_tbody)))
   for (i in 1:nrow(header)) {
     new_row_item <- paste0(
-      '<td style="text-align:', align, '; vertical-align: middle;" rowspan="',
+      '<td style="text-align:', align, '; vertical-align: middle;',
+      column_style, '" rowspan="',
       header$rowspan[i], '">', header$header[i], '</td>')
     new_row_item <- read_xml(new_row_item, options = "COMPACT")
     target_row <- xml_child(kable_tbody, header$row[i])
@@ -64,7 +80,30 @@ add_header_left_html <- function(kable_input, header, header_name, align) {
 
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
+
+  # Adjust for column_spec
+  if (is.null(kable_attrs$column_adjust)) {
+    table_nrow <- length(xml_children(kable_tbody))
+    # if (!is.null(kable_attrs$group_header_rows)) {
+    #   table_nrow <- table_nrow - length(kable_attrs$group_header_rows)
+    # }
+    table_ncol <- length(xml_children(
+      xml_child(kable_thead, length(xml_children(kable_thead)))
+    ))
+    kable_attrs$column_adjust$matrix <- matrix(
+      rep(TRUE, table_nrow * table_ncol), ncol = table_nrow)
+    kable_attrs$column_adjust$count <- 1
+    new_row_index <- rep(FALSE, table_nrow)
+  } else {
+    new_row_index <- rep(FALSE, ncol(kable_attrs$column_adjust$matrix))
+    kable_attrs$column_adjust$count <- 1 + kable_attrs$column_adjust$count
+  }
+  new_row_index[header$row] <- TRUE
+  kable_attrs$column_adjust$matrix <- rbind(
+    new_row_index, kable_attrs$column_adjust$matrix
+  )
   attributes(out) <- kable_attrs
+
   return(out)
 }
 
@@ -92,7 +131,7 @@ standardize_header <- function(header, n_row) {
 }
 
 add_header_left_latex <- function(kable_input, header, header_name, align,
-                                  full_midline = F) {
+                                  width, bold, italic, full_midline = F) {
   table_info <- magic_mirror(kable_input)
   usepackage_latex("multirow")
   if (!table_info$booktabs) {
@@ -109,13 +148,16 @@ add_header_left_latex <- function(kable_input, header, header_name, align,
   header$row_end <- header$row + header$rowspan - 1
 
   # Align
+  align_row <- latex_column_align_builder(align, width, bold, italic)
+
   out <- sub(paste0(table_info$begin_tabular, "\\{"),
-             paste0(table_info$begin_tabular, "{", align,
+             paste0(table_info$begin_tabular, "{", align_row,
                     ifelse(table_info$booktabs, "", "|")),
              out, perl = T)
-  table_info$align_vector <- c(align, table_info$align_vector)
+  # table_info$align_vector <- c(align, table_info$align_vector)
 
   # Header
+  ## Extra header rows introduced by add_header_above
   if (!is.null(table_info$new_header_row)) {
     new_header_row <- table_info$new_header_row
     for (i in 1:length(new_header_row)) {
@@ -131,6 +173,7 @@ add_header_left_latex <- function(kable_input, header, header_name, align,
       out <- sub(cline_old, cline_new, out)
     }
   }
+  ## Base Header row
   out <- sub(contents[1], paste0(header_name, " & ", contents[1]), out)
   table_info$contents[1] <- paste0(header_name, " & ", contents[1])
 
@@ -156,7 +199,14 @@ add_header_left_latex <- function(kable_input, header, header_name, align,
 
   for (j in 1:nrow(header)) {
     new_row_pre <- paste0(
-      "\\\\multirow\\{", -header$rowspan[j], "\\}\\{\\*\\}\\{", header$header[j], "\\} & "
+      "\\\\multirow\\{", -header$rowspan[j], "\\}\\{",
+      ifelse(is.null(width), "\\*", width),
+      "\\}\\{",
+      switch(align,
+             "l" = "\\\\raggedright",
+             "c" = "\\\\centering ",
+             "r" = "\\\\raggedleft "),
+      header$header[j], "\\} & "
     )
     new_row_text <- paste0(new_row_pre, contents[header$row_end[j]])
     out <- sub(contents[header$row_end[j]], new_row_text, out)
@@ -181,7 +231,8 @@ add_header_left_latex <- function(kable_input, header, header_name, align,
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
 

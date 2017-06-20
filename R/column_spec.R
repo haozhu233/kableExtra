@@ -41,14 +41,23 @@ column_spec_html <- function(kable_input, column, width, bold, italic) {
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")
-  all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
+  if (is.null(kable_attrs$column_adjust)) {
+    all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
+    all_contents_array <- rep(column, length(all_contents_rows))
+  } else {
+    column <- column + kable_attrs$column_adjust$count
+    all_contents_array <- colSums(kable_attrs$column_adjust$matrix[1:column, ])
+    all_contents_rows <- which(all_contents_array != 0 &
+                                 kable_attrs$column_adjust$matrix[column, ])
+  }
+
   if (!is.null(group_header_rows)) {
     all_contents_rows <- all_contents_rows[!all_contents_rows %in%
                                              group_header_rows]
   }
 
   for (i in all_contents_rows) {
-    target_cell <- xml_child(xml_child(kable_tbody, i), column)
+    target_cell <- xml_child(xml_child(kable_tbody, i), all_contents_array[i])
     if (!is.null(width)) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                               "width: ", width, "; ")
@@ -73,25 +82,36 @@ column_spec_latex <- function(kable_input, column, width, bold, italic) {
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
-  if (!is.null(width)) {
-    table_info$align_vector[column] <- paste0("p\\{", width, "\\}")
-  }
-
-  if (bold | italic) {
-    usepackage_latex("array")
-    latex_array_options <- c("\\\\bfseries", "\\\\em")[c(bold, italic)]
-    latex_array_options <- paste0(
-      "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
-    )
-    table_info$align_vector[column] <- paste0(latex_array_options,
-                                       table_info$align_vector[column])
-  }
+  table_info$align_vector[column] <- latex_column_align_builder(
+    table_info$align_vector[column], width, bold, italic)
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
   out <- sub(kable_align_old, kable_align_new, as.character(kable_input),
              perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attr(out, "kable_meta") <- table_info
   return(out)
+}
+
+latex_column_align_builder <- function(x, width, bold, italic) {
+  extra_align <- ""
+  if (!is.null(width)) {
+    extra_align <- switch(x,
+                          "l" = "\\\\raggedright",
+                          "c" = "\\\\centering",
+                          "r" = "\\\\raggedleft")
+    x <- paste0("p\\{", width, "\\}")
+  }
+
+  if (bold | italic | extra_align != "") {
+    latex_array_options <- c("\\\\bfseries", "\\\\em")[c(bold, italic)]
+    latex_array_options <- c(latex_array_options, extra_align)
+    latex_array_options <- paste0(
+      "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
+    )
+    x <- paste0(latex_array_options, x)
+  }
+
+  return(x)
 }

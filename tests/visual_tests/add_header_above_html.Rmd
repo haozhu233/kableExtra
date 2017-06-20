@@ -14,7 +14,7 @@ kable(dt, booktabs = T, caption = "Demo Table") %>%
   kable_styling(bootstrap_options = c("striped", "condensed"), 
                 latex_options = c("striped", "hold_position"),
                 full_width = F) %>%
-  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2)) %>%
+  add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2), italic = T) %>%
   add_footnote(c("table footnote"))
 ```
 

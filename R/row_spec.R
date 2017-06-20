@@ -82,6 +82,6 @@ row_spec_latex <- function(kable_input, row, bold, italic) {
 
   out <- sub(target_row, new_row, as.character(kable_input), perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "original_kable_meta") <- table_info
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
