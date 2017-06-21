@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-06-16" />
+<meta name="date" content="2017-06-21" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-06-16</em></h4>
+<h4 class="date"><em>2017-06-21</em></h4>
 
 </div>
 
@@ -3740,6 +3740,178 @@ Merc 280
 </td>
 <td style="text-align:right;">
 3.92
+</td>
+<td style="text-align:right;">
+3.440
+</td>
+</tr>
+</tbody>
+</table>
+<p>Also, since <code>col_spec</code> won’t work on these “added” header rows &amp; columns, if you want to bold, italic or specify width for these appended columns, you can define them here.</p>
+<pre class="r"><code>mtcars[1:5, 1:6] %&gt;%
+  kable(&quot;html&quot;) %&gt;%
+  kable_styling()  %&gt;%
+  add_header_above(c(&quot; &quot;, &quot;Data 1&quot; = 3, &quot;Data 2&quot; = 3)) %&gt;%
+  add_header_left(c(&quot;Group A&quot; = 3, &quot;Group B&quot; = 2), &quot;Group&quot;, bold = T, width = &quot;10cm&quot;)</code></pre>
+<?xml version="1.0" encoding="UTF-8" ?>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center; vertical-align: bottom;width: 10cm; font-weight: bold; " rowspan="2">
+Group
+</th>
+<th style="border-bottom:hidden"></th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
+Data 1
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
+Data 2
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center; vertical-align: middle;width: 10cm; font-weight: bold; " rowspan="3">
+Group A
+</td>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.620
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+2.320
+</td>
+</tr>
+<tr>
+<td style="text-align:center; vertical-align: middle;width: 10cm; font-weight: bold; " rowspan="2">
+Group B
+</td>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;">
+3.215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet Sportabout
+</td>
+<td style="text-align:right;">
+18.7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+3.15
 </td>
 <td style="text-align:right;">
 3.440

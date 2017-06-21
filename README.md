@@ -4,10 +4,6 @@
 
 ***
 
-**If you find using `kableExtra` will "unload" LaTeX packages or settings you defined in the yaml header, you need to install the latest dev version of `rmarkdown` from github. Please see [issue 5](https://github.com/haozhu233/kableExtra/issues/5) & [issue 11](https://github.com/haozhu233/kableExtra/issues/11) for details.**
-
-***
-
 When we are talking about table generators in R, knitr::kable wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as `xtable`, the philosophy behind kable is to make it easy for programmers to use. Just as it claimed in its function description, 
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui

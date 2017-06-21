@@ -5,7 +5,9 @@
 #' bold text and italic text.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
-#' @param column A numeric value indicating which column to be selected
+#' @param column A numeric value indicating which column to be selected. When
+#' you do the counting, ignore the extra header columns you added through
+#' add_header_left.
 #' @param width A character string telling HTML & LaTeX how wide the column
 #' needs to be, e.g. "10cm", "3in" or "30em".
 #' @param bold A T/F value to control whether the text of the selected column
@@ -98,9 +100,9 @@ latex_column_align_builder <- function(x, width, bold, italic) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
-                          "l" = "\\\\raggedright",
-                          "c" = "\\\\centering",
-                          "r" = "\\\\raggedleft")
+                          "l" = "\\\\raggedright\\\\arraybackslash",
+                          "c" = "\\\\centering\\\\arraybackslash",
+                          "r" = "\\\\raggedleft\\\\arraybackslash")
     x <- paste0("p\\{", width, "\\}")
   }
 

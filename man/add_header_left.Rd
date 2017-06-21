@@ -5,7 +5,7 @@
 \title{Add a heading column to the left side of the table}
 \usage{
 add_header_left(kable_input, header = NULL, header_name = "", align = "c",
-  width = NULL, bold = F, italic = F, full_midline)
+  width = NULL, bold = F, italic = F, ...)
 }
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
@@ -28,9 +28,9 @@ could be "10cm", "3in" or "30em", etc..}
 
 \item{italic}{A T/F value to control whether the text should to be emphasized.}
 
-\item{full_midline}{This option currently only work in LaTeX. It's a
-TRUE/FALSE option to control if the mid line needs to be extended to the end
-of row.}
+\item{...}{Extra options to be passed into HTML or LaTeX. Right now there is
+only one for LaTeX. Option full_midline is a TRUE/FALSE option to control
+if the mid line needs to be extended to the end of row.}
 }
 \description{
 This function uses the same syntax as add_header_above. It will

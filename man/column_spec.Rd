@@ -10,7 +10,9 @@ column_spec(kable_input, column, width = NULL, bold = FALSE,
 \arguments{
 \item{kable_input}{Output of `knitr::kable()` with `format` specified}
 
-\item{column}{A numeric value indicating which column to be selected}
+\item{column}{A numeric value indicating which column to be selected. When
+you do the counting, ignore the extra header columns you added through
+add_header_left.}
 
 \item{width}{A character string telling HTML & LaTeX how wide the column
 needs to be, e.g. "10cm", "3in" or "30em".}

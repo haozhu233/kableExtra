@@ -65,3 +65,8 @@ kable(dt, format = "latex", booktabs = F, longtable = T, caption = "sss") %>%
 ```
 
 
+```{r}
+usepackage_latex("caption", "singlelinecheck=false")
+kable(dt, format = "latex", booktabs = T, caption = "long caption long caption long caption long caption long caption long caption long caption") %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```

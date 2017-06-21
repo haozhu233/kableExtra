@@ -19,14 +19,14 @@
 #' @param align Column alignment. you can choose from "c", "l" or "r"
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
-#' @param full_midline This option currently only work in LaTeX. It's a
-#' TRUE/FALSE option to control if the mid line needs to be extended to the end
-#' of row.
+#' @param ... Extra options to be passed into HTML or LaTeX. Right now there is
+#' only one for LaTeX. Option full_midline is a TRUE/FALSE option to control
+#' if the mid line needs to be extended to the end of row.
 #'
 #' @export
 add_header_left <- function(kable_input, header = NULL, header_name = "",
                             align = "c", width = NULL, bold = F, italic = F,
-                            full_midline) {
+                            ...) {
   if (is.null(header)) return(kable_input)
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -39,7 +39,7 @@ add_header_left <- function(kable_input, header = NULL, header_name = "",
   }
   if (kable_format == "latex") {
     return(add_header_left_latex(kable_input, header, header_name, align,
-                                 width, bold, italic, full_midline))
+                                 width, bold, italic, ...))
   }
 }
 
@@ -203,9 +203,9 @@ add_header_left_latex <- function(kable_input, header, header_name, align,
       ifelse(is.null(width), "\\*", width),
       "\\}\\{",
       switch(align,
-             "l" = "\\\\raggedright",
-             "c" = "\\\\centering ",
-             "r" = "\\\\raggedleft "),
+             "l" = "\\\\raggedright\\\\arraybackslash ",
+             "c" = "\\\\centering\\\\arraybackslash ",
+             "r" = "\\\\raggedleft\\\\arraybackslash "),
       header$header[j], "\\} & "
     )
     new_row_text <- paste0(new_row_pre, contents[header$row_end[j]])
