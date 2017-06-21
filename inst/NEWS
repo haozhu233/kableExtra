@@ -19,6 +19,8 @@ do for heading rows.
 
 * Added alignment feature to column_spec when width is specified.
 
+* Added bold/italic options to add_header_above.
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 

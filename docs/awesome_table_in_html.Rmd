@@ -115,7 +115,7 @@ kable(dt) %>%
   add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
 ```
 
-In fact, if you want to add another row of header on top, please feel free to do so. 
+In fact, if you want to add another row of header on top, please feel free to do so.
 ```{r}
 kable(dt) %>%
   kable_styling(c("striped", "bordered")) %>%
@@ -228,23 +228,3 @@ kable(dt) %>%
   row_spec(5, bold = T)
 ```
 
-# Add header column to the left
-An alternative way of grouping rows is being added to `kableExtra` 0.3.0. Unlike `group_rows`, the new function `add_header_left` adopts a similar syntax with `add_header_above`. It allows users to add multiple layers of row groups, which is a limitation of `group_rows`. Currently, `add_header_left` in HTML is in good shape with exception that it doesn't work with `group_rows`. 
-```{r}
-mtcars[1:10, 1:6] %>%
-  kable("html") %>%
-  kable_styling()  %>%
-  add_header_above(c(" ", "Data 1" = 3, "Data 2" = 3)) %>%
-  add_header_left(c("Group A" = 3, "Group B" = 2, "Group C" = 4, "Group D" = 1), "Group") %>%
-  add_header_left(c("Team X" = 5, "Team Y" = 5), "Team") %>%
-  add_header_left(c("League Alpha" = 10), "League")
-```
-
-Also, since `col_spec` won't work on these "added" header rows & columns, if you want to bold, italic or specify width for these appended columns, you can define them here. 
-```{r}
-mtcars[1:5, 1:6] %>%
-  kable("html") %>%
-  kable_styling()  %>%
-  add_header_above(c(" ", "Data 1" = 3, "Data 2" = 3)) %>%
-  add_header_left(c("Group A" = 3, "Group B" = 2), "Group", bold = T, width = "10cm")
-```
