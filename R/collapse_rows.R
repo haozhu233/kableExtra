@@ -1,6 +1,6 @@
-#' Collapse repeat rows to multirow cell
+#' Collapse repeated rows to multirow cell
 #'
-#' @description Experimenting. Don't use it in production.
+#' @description
 #' @export
 collapse_rows <- function(kable_input, columns = NULL) {
   # if (is.null(columns)) {
@@ -33,24 +33,20 @@ collapse_rows_html <- function(kable_input, columns) {
 
   for (i in 1:nrow(collapse_matrix)) {
     matrix_row <- collapse_matrix[i, ]
-    if (sum(matrix_row) != length(matrix_row)) {
-      target_row <- xml_child(kable_tbody, i)
-      row_node_rm_count <- 0
-      for (j in 1:length(matrix_row)) {
-        if (matrix_row[j] != 1) {
-          collapsing_col <- as.numeric(sub("x", "", names(matrix_row)[j])) -
-            row_node_rm_count
-          target_cell <- xml_child(target_row, collapsing_col)
-          if (matrix_row[j] == 0) {
-            xml_remove(target_cell)
-            row_node_rm_count <- row_node_rm_count + 1
-          } else {
-            xml_attr(target_cell, "rowspan") <- matrix_row[j]
-            xml_attr(target_cell, "style") <- paste0(
-              xml_attr(target_cell, "style"),
-              "vertical-align: middle !important;")
-          }
-        }
+    target_row <- xml_child(kable_tbody, i)
+    row_node_rm_count <- 0
+    for (j in 1:length(matrix_row)) {
+      collapsing_col <- as.numeric(sub("x", "", names(matrix_row)[j])) -
+        row_node_rm_count
+      target_cell <- xml_child(target_row, collapsing_col)
+      if (matrix_row[j] == 0) {
+        xml_remove(target_cell)
+        row_node_rm_count <- row_node_rm_count + 1
+      } else if (matrix_row[j] != 1) {
+        xml_attr(target_cell, "rowspan") <- matrix_row[j]
+        xml_attr(target_cell, "style") <- paste0(
+          xml_attr(target_cell, "style"),
+          "vertical-align: middle !important;")
       }
     }
   }

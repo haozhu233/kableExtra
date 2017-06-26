@@ -6,6 +6,7 @@ output: html_document
 ```{r}
 library(knitr)
 library(kableExtra)
+set.seed(100)
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
                  C3 = 1:15,
