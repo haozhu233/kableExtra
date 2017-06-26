@@ -44,6 +44,7 @@ magic_mirror_latex <- function(kable_input){
     kable_input, paste0("\\\\begin\\{",
                         kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
   kable_info$align_vector <- unlist(strsplit(kable_info$align, ""))
+  kable_info$align_vector_origin <- kable_info$align_vector
   # valign
   kable_info$valign <- gsub("\\|", "", str_match(
     kable_input, paste0("\\\\begin\\{", kable_info$tabular,"\\}(.*)\\{.*?\\}"))[2])

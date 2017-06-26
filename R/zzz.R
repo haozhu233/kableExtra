@@ -2,4 +2,8 @@
   usepackage_latex("booktabs")
   usepackage_latex("longtable")
   usepackage_latex("array")
+  usepackage_latex("multirow")
+  usepackage_latex("xcolor", "table")
+  usepackage_latex("wrapfig")
+
 }

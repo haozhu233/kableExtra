@@ -215,7 +215,6 @@ pdfTable_styling <- function(kable_input,
 }
 
 styling_latex_striped <- function(x, table_info) {
-  usepackage_latex("xcolor", "table")
   # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
   if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
     row_color <- "\\rowcolors{2}{white}{gray!6}\n"
@@ -328,7 +327,6 @@ styling_latex_position_float <- function(x, table_info, option) {
     if (option == "l") return(styling_latex_position_left(x, table_info))
     if (option == "r") return(styling_latex_position_right(x, table_info, F))
   }
-  usepackage_latex("wrapfig")
   size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
   col_max_length <- apply(size_matrix, 1, max) + 4
   if (table_info$table_env) {

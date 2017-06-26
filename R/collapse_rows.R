@@ -1,10 +1,11 @@
 #' Collapse repeat rows to multirow cell
 #'
 #' @description Experimenting. Don't use it in production.
-collapse_rows <- function(kable_input, columns) {
-  if (is.null(columns)) {
-    stop("Please specify numeric positions of columns you want to collapse.")
-  }
+#' @export
+collapse_rows <- function(kable_input, columns = NULL) {
+  # if (is.null(columns)) {
+  #   stop("Please specify numeric positions of columns you want to collapse.")
+  # }
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     message("Currently generic markdown table using pandoc is not supported.")
@@ -24,6 +25,9 @@ collapse_rows_html <- function(kable_input, columns) {
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   kable_dt <- rvest::html_table(xml2::read_html(as.character(kable_input)))[[1]]
+  if (is.null(columns)) {
+    columns <- seq(1, ncol(kable_dt))
+  }
   kable_dt$row_id <- rownames(kable_dt)
   collapse_matrix <- collapse_row_matrix(kable_dt, columns)
 
@@ -57,25 +61,75 @@ collapse_rows_html <- function(kable_input, columns) {
   return(out)
 }
 
+collapse_row_matrix <- function(kable_dt, columns, html = T)  {
+  if (html) {
+    column_block <- function(x) c(x, rep(0, x - 1))
+  } else {
+    column_block <- function(x) c(rep(0, x - 1), x)
+  }
+  mapping_matrix <- list()
+  for (i in columns) {
+    mapping_matrix[[paste0("x", i)]] <- unlist(lapply(
+      rle(kable_dt[, i])$length, column_block))
+  }
+  mapping_matrix <- data.frame(mapping_matrix)
+  return(mapping_matrix)
+}
+
 collapse_rows_latex <- function(kable_input, columns) {
-  # table_info <- magic_mirror(kable_input)
-  # target_row <- table_info$contents[row + 1]
-  # new_row <- latex_row_cells(target_row)
-  # if (bold) {
-  #   new_row <- lapply(new_row, function(x) {
-  #     paste0("\\\\bfseries{", x, "}")
-  #   })
-  # }
-  # if (italic) {
-  #   new_row <- lapply(new_row, function(x) {
-  #     paste0("\\\\em{", x, "}")
-  #   })
-  # }
-  # new_row <- paste(unlist(new_row), collapse = " & ")
-  #
-  # out <- sub(target_row, new_row, as.character(kable_input), perl = T)
-  # out <- structure(out, format = "latex", class = "knitr_kable")
-  # attr(out, "kable_meta") <- table_info
-  # return(out)
-  kable_input
+  table_info <- magic_mirror(kable_input)
+  if (is.null(columns)) {
+    columns <- seq(1, table_info$ncol)
+  }
+  if (!table_info$booktabs) {
+    warning("add_header_left only supports LaTeX table with booktabs. Please",
+            " use kable(..., booktabs = T) in your kable function.")
+  }
+  out <- as.character(kable_input)
+  contents <- table_info$contents
+  kable_dt <- kable_dt_latex(contents)
+  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = F)
+
+  new_kable_dt <- kable_dt
+  new_contents <- c()
+  for (j in seq(1:ncol(collapse_matrix))) {
+    column_align <- table_info$align_vector_origin[columns[j]]
+    column_width <- ifelse(
+      is.null(table_info$column_width[[paste0("column_", columns[j])]]),
+      "*", table_info$column_width[paste0("column_", columns[j])])
+    for (i in seq(1:nrow(collapse_matrix))) {
+      new_kable_dt[i, j] <- collapse_new_dt_item(
+        kable_dt[i, j], collapse_matrix[i, j], column_width, align = column_align
+      )
+    }
+  }
+  for (i in seq(1:nrow(collapse_matrix))) {
+    new_contents[i] <- paste0(new_kable_dt[i, ], collapse = " & ")
+    out <- sub(contents[i + 1], new_contents[i], out)
+  }
+
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  table_info$collapse_rows <- TRUE
+  attr(out, "kable_meta") <- table_info
+  return(out)
+}
+
+kable_dt_latex <- function(x) {
+  data.frame(do.call(rbind, str_split(x[-1], " & ")), stringsAsFactors = FALSE)
+}
+
+collapse_new_dt_item <- function(x, span, width = NULL, align) {
+  if (span == 0) return("")
+  if (span == 1) return(x)
+  out <- paste0(
+    "\\\\multirow\\{", -span, "\\}\\{",
+    ifelse(is.null(width), "\\*", width),
+    "\\}\\{",
+    switch(align,
+           "l" = "\\\\raggedright\\\\arraybackslash ",
+           "c" = "\\\\centering\\\\arraybackslash ",
+           "r" = "\\\\raggedleft\\\\arraybackslash "),
+    x, "\\}"
+  )
+  return(out)
 }

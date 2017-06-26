@@ -81,6 +81,10 @@ column_spec_html <- function(kable_input, column, width, bold, italic) {
 
 column_spec_latex <- function(kable_input, column, width, bold, italic) {
   table_info <- magic_mirror(kable_input)
+  if (!is.null(table_info$collapse_rows)) {
+    message("Usually it is recommended to use column_spec before collapse_rows,",
+            " especially in LaTeX, to get a desired result. ")
+  }
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
@@ -92,6 +96,12 @@ column_spec_latex <- function(kable_input, column, width, bold, italic) {
   out <- sub(kable_align_old, kable_align_new, as.character(kable_input),
              perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")
+  if (!is.null(width)) {
+    if (is.null(table_info$column_width)) {
+      table_info$column_width <- list()
+    }
+    table_info$column_width[[paste0("column_", column)]] <- width
+  }
   attr(out, "kable_meta") <- table_info
   return(out)
 }

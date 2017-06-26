@@ -56,18 +56,6 @@ latex_row_cells <- function(x) {
   strsplit(x, " \\& ")
 }
 
-collapse_row_matrix <- function(kable_dt, columns)  {
-  mapping_matrix <- list()
-  for (i in columns) {
-    mapping_matrix[[paste0("x", i)]] <- unlist(lapply(
-      rle(kable_dt[, i])$length, function(x) {
-      c(x, rep(0, x - 1))
-      }))
-  }
-  mapping_matrix <- data.frame(mapping_matrix)
-  return(mapping_matrix)
-}
-
 regex_escape <- function(x, double_backslash = FALSE) {
   if (double_backslash) {
     x <- gsub("\\\\", "\\\\\\\\", x)
