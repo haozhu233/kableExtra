@@ -2,10 +2,19 @@
 % Please edit documentation in R/collapse_rows.R
 \name{collapse_rows}
 \alias{collapse_rows}
-\title{Collapse repeat rows to multirow cell}
+\title{Collapse repeated rows to multirow cell}
 \usage{
-collapse_rows(kable_input, columns)
+collapse_rows(kable_input, columns = NULL)
+}
+\arguments{
+\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+
+\item{columns}{Numeric column positions where rows need to be collapsed.}
 }
 \description{
-Experimenting. Don't use it in production.
+Collapse same values in columns into multirow cells. This
+feature does similar things with `group_rows`. However, unlike `group_rows`,
+it analyzes existing columns, finds out rows that can be grouped together,
+and make them multirow cells. Note that if you want to use `column_spec` to
+specify column styles, you should use `column_spec` before `collapse_rows`.
 }

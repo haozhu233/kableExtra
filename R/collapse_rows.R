@@ -1,6 +1,14 @@
 #' Collapse repeated rows to multirow cell
 #'
-#' @description
+#' @description Collapse same values in columns into multirow cells. This
+#' feature does similar things with `group_rows`. However, unlike `group_rows`,
+#' it analyzes existing columns, finds out rows that can be grouped together,
+#' and make them multirow cells. Note that if you want to use `column_spec` to
+#' specify column styles, you should use `column_spec` before `collapse_rows`.
+#'
+#' @param kable_input Output of `knitr::kable()` with `format` specified
+#' @param columns Numeric column positions where rows need to be collapsed.
+#'
 #' @export
 collapse_rows <- function(kable_input, columns = NULL) {
   # if (is.null(columns)) {
