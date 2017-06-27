@@ -14,5 +14,5 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
 kable(collapse_rows_dt, "html", align = "c") %>%
   kable_styling() %>%
   column_spec(1, bold=T) %>%
-  collapse_rows(1:2)
+  collapse_rows()
 ```

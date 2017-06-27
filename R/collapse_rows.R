@@ -45,6 +45,7 @@ collapse_rows_html <- function(kable_input, columns) {
 
   for (i in 1:nrow(collapse_matrix)) {
     matrix_row <- collapse_matrix[i, ]
+    names(matrix_row) <- names(collapse_matrix)
     target_row <- xml_child(kable_tbody, i)
     row_node_rm_count <- 0
     for (j in 1:length(matrix_row)) {

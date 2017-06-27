@@ -13,5 +13,5 @@ collapse_rows_dt <- data.frame(C1 = c(rep("aaaaaa aaaaaa", 10), rep("bbbbb bbbbb
 kable(collapse_rows_dt, "latex", align = "c", booktabs = T) %>%
   kable_styling() %>%
   column_spec(1, bold=T, width = "2em") %>%
-  collapse_rows(1:2)
+  collapse_rows(1)
 ```
