@@ -9,6 +9,10 @@
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param columns Numeric column positions where rows need to be collapsed.
 #'
+#' @examples dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
+#' x <- knitr::kable(dt, "html")
+#' collapse_rows(x)
+#'
 #' @export
 collapse_rows <- function(kable_input, columns = NULL) {
   # if (is.null(columns)) {

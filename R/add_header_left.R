@@ -23,6 +23,9 @@
 #' only one for LaTeX. Option full_midline is a TRUE/FALSE option to control
 #' if the mid line needs to be extended to the end of row.
 #'
+#' @examples x <- knitr::kable(head(mtcars), "html")
+#' add_header_left(x, c("A" = 2, "B" = 2, "C" = 2))
+#'
 #' @export
 add_header_left <- function(kable_input, header = NULL, header_name = "",
                             align = "c", width = NULL, bold = F, italic = F,

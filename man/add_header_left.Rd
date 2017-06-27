@@ -39,3 +39,8 @@ act as an alternative way to `group_rows` to show grouped information. As
 `add_header_above`, users can use this function to add multiple layers of
 heading columns one by one.
 }
+\examples{
+x <- knitr::kable(head(mtcars), "html")
+add_header_left(x, c("A" = 2, "B" = 2, "C" = 2))
+
+}

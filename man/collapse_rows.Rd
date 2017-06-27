@@ -18,3 +18,9 @@ it analyzes existing columns, finds out rows that can be grouped together,
 and make them multirow cells. Note that if you want to use `column_spec` to
 specify column styles, you should use `column_spec` before `collapse_rows`.
 }
+\examples{
+dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
+x <- knitr::kable(dt, "html")
+collapse_rows(x)
+
+}
