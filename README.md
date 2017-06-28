@@ -4,7 +4,7 @@
 
 ***
 
-When we are talking about table generators in R, [knitr](https://yihui.name/knitr/)'s `kable()` function wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as [`xtable`](https://CRAN.R-project.org/package=xtable), the philosophy behind [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) is to make it easy for programmers to use. Just as it claimed in its function description, 
+When we are talking about table generators in R, [knitr](https://yihui.name/knitr/)'s `kable()` function wins lots of flavor by its ultimate simplicity. Unlike those powerful table rendering engines such as [`xtable`](https://CRAN.R-project.org/package=xtable), the philosophy behind [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) is to make it easy for programmers to use. Just as it claimed in its function description,
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
@@ -23,8 +23,8 @@ This package can load required LaTeX package automatically in vanilla rmarkdown.
 ***
 
 ## Features
-### Pipable syntax
-`kableExtra` is NOT a table generating package. It is a package that can **"add features"** to a `kable()` output using a syntax that every useR loves - the pipes `%>%`. We see similar approaches to deal with plots in packages like `ggvis` and `plotly`. There is no reason why we cannot use it with tables.
+### Pipeable syntax
+`kableExtra` is NOT a table generating package. It is a package that can **"add features"** to a `kable()` output using a syntax that every useR loves - the [pipes `%>%`](http://r4ds.had.co.nz/pipes.html). We see similar approaches to deal with plots in packages like `ggvis` and `plotly`. There is no reason why we cannot use it with tables.
 
 ### Unified functions for both HTML and PDF
 Most functionalities in `kableExtra` can work in both HTML and PDF. In fact, as long as you specifies format in `kable()` (which can be set globally through option `knitr.table.format`), functions in this package will pick the right way to manipulate the table be themselves. As a result, if users want to left align the table, `kable(...) %>% kable_styling(position = "left")` will work in both HTML and PDF.
