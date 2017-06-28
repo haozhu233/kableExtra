@@ -23,7 +23,7 @@ This package can load required LaTeX package automatically in vanilla rmarkdown.
 ***
 
 ## Features
-### Pipeable syntax
+### Pipable syntax
 `kableExtra` is NOT a table generating package. It is a package that can **"add features"** to a `kable()` output using a syntax that every useR loves - the [pipes `%>%`](http://r4ds.had.co.nz/pipes.html). We see similar approaches to deal with plots in packages like `ggvis` and `plotly`. There is no reason why we cannot use it with tables.
 
 ### Unified functions for both HTML and PDF
