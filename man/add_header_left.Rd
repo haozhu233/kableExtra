@@ -42,5 +42,4 @@ heading columns one by one.
 \examples{
 x <- knitr::kable(head(mtcars), "html")
 add_header_left(x, c("A" = 2, "B" = 2, "C" = 2))
-
 }

@@ -90,10 +90,6 @@ collapse_rows_latex <- function(kable_input, columns) {
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
   }
-  if (!table_info$booktabs) {
-    warning("add_header_left only supports LaTeX table with booktabs. Please",
-            " use kable(..., booktabs = T) in your kable function.")
-  }
   out <- as.character(kable_input)
   contents <- table_info$contents
   kable_dt <- kable_dt_latex(contents)
@@ -112,10 +108,26 @@ collapse_rows_latex <- function(kable_input, columns) {
       )
     }
   }
+
+  midrule_matrix <- collapse_row_matrix(kable_dt, seq(1, table_info$ncol),
+                                        html = F)
+  midrule_matrix[setdiff(seq(1, table_info$ncol), columns)] <- 1
+
+  ex_bottom <- length(contents) - 1
+  contents[2:ex_bottom] <- paste0(contents[2:ex_bottom], "\\\\\\\\")
+  if (!table_info$booktabs) {
+    contents[2:ex_bottom] <- paste0(contents[2:ex_bottom], "\n\\\\hline")
+  }
   for (i in seq(1:nrow(collapse_matrix))) {
     new_contents[i] <- paste0(new_kable_dt[i, ], collapse = " & ")
+    if (i != nrow(collapse_matrix)) {
+      row_midrule <- midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                                    table_info$booktabs)
+      new_contents[i] <- paste0(new_contents[i], "\\\\\\\\\n", row_midrule)
+    }
     out <- sub(contents[i + 1], new_contents[i], out)
   }
+  out <- sub("\\\\addlinespace\n", "", out)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE
@@ -140,5 +152,19 @@ collapse_new_dt_item <- function(x, span, width = NULL, align) {
            "r" = "\\\\raggedleft\\\\arraybackslash "),
     x, "\\}"
   )
+  return(out)
+}
+
+midline_groups <- function(x, booktabs = T) {
+  diffs <- c(1, diff(x))
+  start_indexes <- c(1, which(diffs > 1))
+  end_indexes <- c(start_indexes-1, length(x))
+  ranges <- paste0(x[start_indexes], "-", x[end_indexes])
+  if (booktabs) {
+    out <- paste0("\\\\cmidrule{", ranges, "}")
+  } else {
+    out <- paste0("\\\\cline{", ranges, "}")
+  }
+  out <- paste0(out, collapse = "\n")
   return(out)
 }

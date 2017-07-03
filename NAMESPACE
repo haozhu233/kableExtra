@@ -3,7 +3,6 @@
 export("%>%")
 export(add_footnote)
 export(add_header_above)
-export(add_header_left)
 export(add_indent)
 export(collapse_rows)
 export(column_spec)
