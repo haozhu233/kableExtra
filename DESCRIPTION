@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 0.2.1.9000
+Version: 0.3.0
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre')),
     person('Will', 'Beasley', email = 'wibeasley@hotmail.com', role = 'ctb'),
@@ -20,7 +20,7 @@ LazyData: TRUE
 URL: http://haozhu233.github.io/kableExtra/, https://github.com/haozhu233/kableExtra
 BugReports: https://github.com/haozhu233/kableExtra/issues
 Depends:
-    R (>= 3.1.2)
+    R (>= 3.2.3)
 Imports:
     knitr (>= 1.13),
     magrittr,
