@@ -268,7 +268,7 @@ kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
 
 ```{r}
 kable(collapse_rows_dt, "latex", align = "c") %>%
-  column_spec(1, bold=T) %>%
-  collapse_rows()
+  column_spec(1, bold = T, width = "5em") %>%
+  collapse_rows(1:2)
 ```
 
