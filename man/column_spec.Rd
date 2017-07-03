@@ -8,7 +8,7 @@ column_spec(kable_input, column, width = NULL, bold = FALSE,
   italic = FALSE)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{column}{A numeric value indicating which column to be selected. When
 you do the counting, ignore the extra header columns you added through

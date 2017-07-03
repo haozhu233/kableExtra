@@ -7,7 +7,7 @@
 row_spec(kable_input, row, bold = FALSE, italic = FALSE)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{row}{A numeric value indicating which row to be selected. You don't
 need to count in header rows or group labeling rows.}

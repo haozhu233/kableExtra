@@ -9,37 +9,37 @@ kable_styling(kable_input, bootstrap_options = "basic",
   font_size = NULL, ...)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{bootstrap_options}{A character vector for bootstrap table options.
 Please see package vignette or visit the w3schools'
 \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
-for more information. Possible options include `basic`, `striped`,
-`bordered`, `hover`, `condensed` and `responsive`.}
+for more information. Possible options include \code{basic}, \code{striped},
+\code{bordered}, \code{hover}, \code{condensed} and \code{responsive}.}
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
-`basic`, `striped`, `hold_position`, `scale_down` & `repeat_header`.
-`striped` will add alternative row colors to the table. It will imports
-`LaTeX` package `xcolor` if enabled. `hold_position` will "hold" the floating
-table to the exact position. It is useful when the `LaTeX` table is contained
- in a `table` environment after you specified captions in `kable()`. It will
- force the table to stay in the position where it was created in the document.
-`scale_down` is useful for super wide table. It will automatically adjust
-the table to page width. `repeat_header` in only meaningful in a longtable
+\code{basic}, \code{striped}, \code{hold_position}, \code{scale_down} & \code{repeat_header}.
+\code{striped} will add alternative row colors to the table. It will imports
+\code{LaTeX} package \code{xcolor} if enabled. \code{hold_position} will "hold" the floating
+table to the exact position. It is useful when the \code{LaTeX} table is contained
+in a \code{table} environment after you specified captions in \code{kable()}. It will
+force the table to stay in the position where it was created in the document.
+\code{scale_down} is useful for super wide table. It will automatically adjust
+the table to page width. \code{repeat_header} in only meaningful in a longtable
 environment. It will let the header row repeat on every page in that long
 table.}
 
-\item{full_width}{A `TRUE` or `FALSE` variable controlling whether the HTML
+\item{full_width}{A \code{TRUE} or \code{FALSE} variable controlling whether the HTML
 table should have 100\% width. Since HTML and pdf have different flavors on
-the preferable format for `full_width`. If not specified, a HTML table will
-have full width by default but this option will be set to `FALSE` for a
+the preferable format for \code{full_width}. If not specified, a HTML table will
+have full width by default but this option will be set to \code{FALSE} for a
 LaTeX table}
 
 \item{position}{A character string determining how to position the table
-on a page. Possible values include `left`, `center`, `right`, `float_left`
-and `float_right`. Please see the package doc site for demonstrations. For
-a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
+on a page. Possible values include \code{left}, \code{center}, \code{right}, \code{float_left}
+and \code{float_right}. Please see the package doc site for demonstrations. For
+a \code{LaTeX} table, if \code{float_*} is selected, \code{LaTeX} package \code{wrapfig} will be
 imported.}
 
 \item{font_size}{A numeric input for table font size}
@@ -48,7 +48,7 @@ imported.}
 }
 \description{
 This function provides a cleaner approach to modify the style
-of HTML tables other than using the `table.attr` option in `knitr::kable()`.
+of HTML tables other than using the \code{table.attr} option in \code{knitr::kable()}.
 Currenly, it assumes the HTML document has boot
 }
 \examples{

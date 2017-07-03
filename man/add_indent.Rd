@@ -7,7 +7,7 @@
 add_indent(kable_input, positions)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{positions}{A vector of numeric row numbers for the rows that need to
 be indented.}

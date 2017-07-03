@@ -7,16 +7,16 @@
 collapse_rows(kable_input, columns = NULL)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{columns}{Numeric column positions where rows need to be collapsed.}
 }
 \description{
 Collapse same values in columns into multirow cells. This
-feature does similar things with `group_rows`. However, unlike `group_rows`,
+feature does similar things with \code{group_rows}. However, unlike \code{group_rows},
 it analyzes existing columns, finds out rows that can be grouped together,
-and make them multirow cells. Note that if you want to use `column_spec` to
-specify column styles, you should use `column_spec` before `collapse_rows`.
+and make them multirow cells. Note that if you want to use \code{column_spec} to
+specify column styles, you should use \code{column_spec} before \code{collapse_rows}.
 }
 \examples{
 dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))

@@ -7,7 +7,7 @@
 landscape(kable_input, margin = NULL)
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{margin}{Customizable page margin for special needs. Values can be
 "1cm", "1in" or similar.}

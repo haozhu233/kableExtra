@@ -8,7 +8,7 @@ group_rows(kable_input, group_label, start_row, end_row,
   label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.5em")
 }
 \arguments{
-\item{kable_input}{Output of `knitr::kable()` with `format` specified}
+\item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{group_label}{A character string for the name of the group}
 

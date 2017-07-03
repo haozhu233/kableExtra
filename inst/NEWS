@@ -14,12 +14,13 @@ header rows in a longtable environment.
 
 * Fixed a bug in add_header_above to allow special symbol in extra header rows.
 
-* Added add_header_left() feature so people can insert heading columns as they
-do for heading rows.
-
-* Added alignment feature to column_spec when width is specified.
+* Allow column_spec automatically align when width is specified.
 
 * Added bold/italic options to add_header_above.
+
+* Added `collapse_rows` to collapse repeated rows to multirow cell
+
+* Improve package-level documentation based on @wibeasley's suggestion
 
 kableExtra 0.2.1
 --------------------------------------------------------------------------------

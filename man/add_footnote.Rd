@@ -15,7 +15,7 @@ add_footnote(input, label = NULL, notation = "alphabet",
 notations in your notes.}
 
 \item{notation}{You can select the format of your footnote notation from
-`number`, `alphabet` and `symbol`.}
+\code{number}, \code{alphabet} and \code{symbol}.}
 
 \item{threeparttable}{Boolean value indicating if a
 \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should

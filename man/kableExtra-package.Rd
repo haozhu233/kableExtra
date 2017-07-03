@@ -6,6 +6,60 @@
 \alias{kableExtra}
 \title{kableExtra}
 \description{
-kableExtra
+When we are talking about table generators in R,
+\href{https://yihui.name/knitr/}{knitr}'s \code{kable()} function wins lots of flavor
+by its ultimate simplicity. Unlike those powerful table rendering engines
+such as \href{https://CRAN.R-project.org/package=xtable}{xtable}, the philosophy
+behind \href{https://rdrr.io/cran/knitr/man/kable.html}{knitr::kable()} is to
+make it easy for programmers to use. Just as it claimed in its
+function description, "this is a very simple table generator. It is simple
+by design. It is not intended to replace any other R packages for making
+tables. - Yihui".
+
+However, the ultimate simplicity of \code{kable()} also brought troubles to some
+of us, especially for new R users, who may not have a lot of experience on
+generating tables in R. It is not rare to see people including experienced
+users asking questions like how to center/left-align a table on Stack
+Overflow. Also, for me personally, I found myself repeatedly parsing CSS
+into \code{kable()} for some very simple features like striped lines. For LaTeX,
+it's even worse since I'm almost Stack Overflow dependent for LaTeX...
+That's why this package \code{kableExtra} was created.
+
+I hope with \code{kableExtra}, you can
+\itemize{
+\item Use default base \code{kable()} (Or a good alternative for markdown tables is
+\code{pander::pander()}) for all simple tables
+\item Use \code{kable()} with \code{kableExtra} to generate 90 % of complex/advanced
+tables in either HTML or LaTeX
+\item Only have to mess with raw HTML/LaTeX in the last 10% cases where
+\code{kableExtra} cannot solve the problem
 }
+}
+\note{
+If you found a feature on the documentation site that is not available
+in the version of \code{kableExtra} you are using, try to install the pre-release
+version from github. You can do so by running
+\code{devtools::install_github("haozhu233/kableExtra")}.
+
+Also, note that This package can load required LaTeX package automatically in
+vanilla rmarkdown. For customized rmarkdown templates, it is recommended to
+load related LaTeX packages manually.
+}
+\section{Features}{
+
+\strong{Pipable syntax:} \code{kableExtra} is NOT a table generating package. It is a
+package that can "add features" to a \code{kable} output using a syntax
+that every useR loves - the \href{http://r4ds.had.co.nz/pipes.html}{pipe}.
+We see similar approaches to deal with plots in packages like \code{ggvis} and
+\code{plotly}. There is no reason why we cannot use it with tables.
+
+\strong{Unified functions for both HTML and PDF:} Most functionalities in
+\code{kableExtra} can work in both HTML and PDF. In fact, as long as you
+specifies format in \code{kable} (which can be set globally through option
+\code{knitr.table.format}), functions in this package will pick the right way
+to manipulate the table be themselves. As a result, if users want to left
+align the table, \code{kable_styling(kable(...), position = "left")} will work
+in both HTML and PDF.
+}
+
 \keyword{package}
