@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-06-26" />
+<meta name="date" content="2017-07-03" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-06-26</em></h4>
+<h4 class="date"><em>2017-07-03</em></h4>
 
 </div>
 
@@ -3442,15 +3442,7 @@ Hornet Sportabout
                  C2 = c(rep(&quot;c&quot;, 7), rep(&quot;d&quot;, 3), rep(&quot;c&quot;, 2), rep(&quot;d&quot;, 3)),
                  C3 = 1:15,
                  C4 = sample(c(0,1), 15, replace = TRUE))
-head(collapse_rows_dt)</code></pre>
-<pre><code>##   C1 C2 C3 C4
-## 1  a  c  1  0
-## 2  a  c  2  0
-## 3  a  c  3  1
-## 4  a  c  4  1
-## 5  a  c  5  1
-## 6  a  c  6  1</code></pre>
-<pre class="r"><code>kable(collapse_rows_dt, &quot;html&quot;, align = &quot;c&quot;) %&gt;%
+kable(collapse_rows_dt, &quot;html&quot;, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   column_spec(1, bold=T) %&gt;%
   collapse_rows(columns = 1:2)</code></pre>
@@ -3500,7 +3492,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3508,7 +3500,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3516,7 +3508,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3524,7 +3516,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3543,7 +3535,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3551,7 +3543,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3581,7 +3573,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3608,7 +3600,7 @@ d
 15
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 </tbody>
