@@ -1,0 +1,23 @@
+---
+title: "test_doc"
+author: "Jake Thompson"
+date: "6/30/2017"
+output:
+  bookdown::pdf_document2:
+    toc: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, collapse = TRUE)
+library(tidyverse)
+```
+
+# Test heading
+
+Let make a data frame and print it in Table \@ref(tab:test-table)
+
+```{r test-table}
+data_frame(col_a = seq_len(5), col_b = rnorm(5), col_c = runif(5)) %>%
+  knitr::kable(caption = "This is a test") %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
+```
