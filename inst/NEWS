@@ -1,4 +1,4 @@
-kableExtra 0.2.1.9000 (not released)
+kableExtra 0.3.0
 --------------------------------------------------------------------------------
 * Improved the look of HTML grouped header row (again) by adding spaces between
 groups

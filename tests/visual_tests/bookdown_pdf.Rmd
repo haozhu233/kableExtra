@@ -10,6 +10,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, collapse = TRUE)
 library(tidyverse)
+library(knitr)
+library(kableExtra)
 ```
 
 # Test heading
@@ -19,5 +21,17 @@ Let make a data frame and print it in Table \@ref(tab:test-table)
 ```{r test-table}
 data_frame(col_a = seq_len(5), col_b = rnorm(5), col_c = runif(5)) %>%
   knitr::kable(caption = "This is a test") %>%
-  kableExtra::kable_styling(latex_options = "hold_position")
+  kableExtra::kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = T) %>%
+  collapse_rows()
+```
+
+```{r}
+collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
+                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
+                 C3 = 1:15,
+                 C4 = sample(c(0,1), 15, replace = TRUE))
+kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
+  column_spec(1, bold=T) %>%
+  collapse_rows(columns = 1:2)
 ```
