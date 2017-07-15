@@ -98,6 +98,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
     )
   }
   out <- sub(rowtext, new_rowtext, out)
+  out <- gsub("\\\\addlinespace\n", "", out)
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
   out <- add_indent(out, seq(start_row, end_row))

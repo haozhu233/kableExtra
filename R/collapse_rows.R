@@ -127,7 +127,7 @@ collapse_rows_latex <- function(kable_input, columns) {
     }
     out <- sub(contents[i + 1], new_contents[i], out)
   }
-  out <- sub("\\\\addlinespace\n", "", out)
+  out <- gsub("\\\\addlinespace\n", "", out)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE

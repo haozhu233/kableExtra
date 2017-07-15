@@ -14,13 +14,16 @@
 #' need to be bolded.
 #' @param italic A T/F value to control whether the text of the selected column
 #' need to be emphasized.
+#' @param monospace A T/F value to control whether the text of the selected column
+#' need to be monospaced (verbatim)
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
 #'
 #' @export
 column_spec <- function(kable_input, column,
-                        width = NULL, bold = FALSE, italic = FALSE) {
+                        width = NULL, bold = FALSE, italic = FALSE,
+                        monospace = FALSE) {
   if (!is.numeric(column)) {
     stop("column must be a numeric value")
   }
@@ -30,14 +33,14 @@ column_spec <- function(kable_input, column,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(column_spec_html(kable_input, column, width, bold, italic))
+    return(column_spec_html(kable_input, column, width, bold, italic, monospace))
   }
   if (kable_format == "latex") {
-    return(column_spec_latex(kable_input, column, width, bold, italic))
+    return(column_spec_latex(kable_input, column, width, bold, italic, monospace))
   }
 }
 
-column_spec_html <- function(kable_input, column, width, bold, italic) {
+column_spec_html <- function(kable_input, column, width, bold, italic, monospace) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_xml(as.character(kable_input), options = "COMPACT")
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -72,6 +75,10 @@ column_spec_html <- function(kable_input, column, width, bold, italic) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                "font-style: italic;")
     }
+    if (monospace) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "font-family: monospace;")
+    }
   }
   out <- structure(as.character(kable_xml), format = "html",
                    class = "knitr_kable")
@@ -79,7 +86,7 @@ column_spec_html <- function(kable_input, column, width, bold, italic) {
   return(out)
 }
 
-column_spec_latex <- function(kable_input, column, width, bold, italic) {
+column_spec_latex <- function(kable_input, column, width, bold, italic, monospace) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -89,7 +96,7 @@ column_spec_latex <- function(kable_input, column, width, bold, italic) {
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- latex_column_align_builder(
-    table_info$align_vector[column], width, bold, italic)
+    table_info$align_vector[column], width, bold, italic, monospace)
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
@@ -106,7 +113,7 @@ column_spec_latex <- function(kable_input, column, width, bold, italic) {
   return(out)
 }
 
-latex_column_align_builder <- function(x, width, bold, italic) {
+latex_column_align_builder <- function(x, width, bold, italic, monospace) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
@@ -116,8 +123,9 @@ latex_column_align_builder <- function(x, width, bold, italic) {
     x <- paste0("p\\{", width, "\\}")
   }
 
-  if (bold | italic | extra_align != "") {
-    latex_array_options <- c("\\\\bfseries", "\\\\em")[c(bold, italic)]
+  if (bold | italic | monospace | extra_align != "") {
+    latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
+      c(bold, italic, monospace)]
     latex_array_options <- c(latex_array_options, extra_align)
     latex_array_options <- paste0(
       "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"

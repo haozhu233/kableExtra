@@ -41,6 +41,7 @@ kable(dt, "html") %>%
   kable_styling(full_width = F)   %>%
   row_spec(1, bold = T) %>%
   column_spec(2, "5cm", bold = T) %>%
+  column_spec(3, monospace = T) %>%
   column_spec(4, "3cm", italic = T)
 ```
 
@@ -54,18 +55,4 @@ kable(dt, "html") %>%
   kable_styling(full_width = F) %>%
   column_spec(7, bold = T) %>%
   row_spec(5, bold = T, italic = T)
-```
-
-```{r}
-dt <- mtcars[1:5, 1:6]
-dt$wt <- paste(dt$wt, "%")
-dt$mpg <- paste(dt$mpg, "&")
-dt$cyl <- paste(dt$cyl, "$")
-
-kable(dt, "html") %>%
-  kable_styling(full_width = F) %>%
-  add_header_left(c("aaa" = 4, "bbb"), "A") %>%
-  add_header_left(c("cccasjof jsafjiosadjfxclxz cjoiwdjosfns daflasfj asiofjsdfio" = 2, "ddd" = 3), "B") %>%
-  column_spec(1, bold = T, width = "2cm") %>%
-  column_spec(2, italic = T)
 ```

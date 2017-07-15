@@ -28,7 +28,7 @@ dt <- data.frame(
     "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. "
   ),
   contents2 = c(
-    "Lorem ipsum dolor",
+    "Lorem {ipsum} dolor",
     "In eu urna ", 
     "Vivamus venenatis"
   ),
@@ -41,6 +41,7 @@ dt <- data.frame(
 
 kable(dt, "latex", booktabs = T, align = "r") %>%
   column_spec(2, "3cm", bold = T) %>%
-  column_spec(4, "3cm", italic = T)
+  column_spec(3, monospace = T)%>%
+  column_spec(4, "3cm", italic = T) 
 ```
 
