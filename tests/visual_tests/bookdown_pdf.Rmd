@@ -7,31 +7,19 @@ output:
     toc: false
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, collapse = TRUE)
+```{r}
 library(tidyverse)
 library(knitr)
 library(kableExtra)
-```
 
-# Test heading
+table1 <- tribble(~Term, ~Definition,
+                         "Adverse event (AE)", " Any untoward medical occurrence in a subject to whom a medicinal product has been administered including occurrences which are not necessarily caused by or related to that product.",
+                         "Adverse reaction (AR)", "Any untoward and unintended response in a subject to an investigational medicinal product, which is related to any dose administered to that subject.",
+                         "Unexpected adverse reaction (UAR)", " An adverse reaction the nature and severity of which is not consistent with the information about the medicinal product in question set out in: The SPC for that product (for products with a marketing authorisation); The Investigator's Brochure (IB) relating to the trial in question (for any other investigational product)",
+                         "Serious adverse event (SAE); Serious adverse reaction (SAR); Suspected unexpected serious adverse reaction (SUSAR)", "Respectively, any adverse event, adverse reaction or unexpected adverse reaction that: results in death; is life-threatening; requires hospitalisation or prolongation of existing hospitalisation; results in persistent or significant disability or incapacity; consists of a congenital anomaly or birth defect; other important medical event(s)"
+)
 
-Let make a data frame and print it in Table \@ref(tab:test-table)
-
-```{r test-table}
-data_frame(col_a = seq_len(5), col_b = rnorm(5), col_c = runif(5)) %>%
-  knitr::kable(caption = "This is a test") %>%
-  kableExtra::kable_styling(latex_options = "hold_position") %>%
-  column_spec(1, bold = T) %>%
-  collapse_rows()
-```
-
-```{r}
-collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
-                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
-  column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2)
+knitr::kable(table1, caption = "Terms and definitions for adverse events", booktabs=TRUE) %>%
+  kable_styling(full_width=F, latex_options = "scale_down") %>%
+  column_spec(column = 2, width = "30em")
 ```
