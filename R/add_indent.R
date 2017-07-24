@@ -79,8 +79,7 @@ add_indent_html <- function(kable_input, positions) {
       xml_attr(node_to_edit, "indentLevel") <- indentLevel + 1
     }
   }
-  out <- structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable")
+  out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
 }

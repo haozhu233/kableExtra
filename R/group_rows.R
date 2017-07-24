@@ -68,8 +68,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   xml_add_sibling(starting_node, group_header_row, .where = "before")
 
   # add indentations to items
-  out <- structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable")
+  out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
   out <- add_indent(out, positions = seq(start_row, end_row))

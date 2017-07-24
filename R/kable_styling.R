@@ -156,8 +156,7 @@ htmlTable_styling <- function(kable_input,
     xml_attr(kable_xml, "style") <- paste(kable_xml_style, collapse = " ")
   }
 
-  out <- structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable")
+  out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
 }
@@ -358,3 +357,5 @@ styling_latex_font_size <- function(x, table_info, font_size) {
     "\\endgroup"
   ))
 }
+
+

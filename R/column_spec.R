@@ -80,8 +80,7 @@ column_spec_html <- function(kable_input, column, width, bold, italic, monospace
                                                "font-family: monospace;")
     }
   }
-  out <- structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable")
+  out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
 }

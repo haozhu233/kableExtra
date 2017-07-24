@@ -64,8 +64,7 @@ collapse_rows_html <- function(kable_input, columns) {
     }
   }
 
-  out <- structure(as.character(kable_xml), format = "html",
-                   class = "knitr_kable")
+  out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
 }
