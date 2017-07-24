@@ -1,3 +1,25 @@
+kableExtra 0.3.0.9000
+--------------------------------------------------------------------------------
+* Add scroll_box for HTML table for extremely long/wide tables
+
+* Fixed a bug in collapse_row on removing addlinespace
+
+* Removed addlinespace from group_rows
+
+* Added monospace to column_spec
+
+* Lowered R version requirement to R 3.1.0
+
+* Added testthat
+
+* For all HTML table functions, changed reading method from `xml2::read_xml` to
+`xml2::read_html` plus some extra steps to avoid errors when HTML contents
+don't fulfill XHTML requirements
+
+* For all HTML table functions, improved exportation method to remove the XML
+declaration.
+
+
 kableExtra 0.3.0
 --------------------------------------------------------------------------------
 * Improved the look of HTML grouped header row (again) by adding spaces between
