@@ -54,7 +54,7 @@ latex_indent_unit <- function(rowtext) {
 add_indent_html <- function(kable_input, positions) {
   kable_attrs <- attributes(kable_input)
 
-  kable_xml <- read_xml(as.character(kable_input), options = "COMPACT")
+  kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")

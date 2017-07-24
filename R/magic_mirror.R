@@ -93,7 +93,7 @@ magic_mirror_latex <- function(kable_input){
 #' @param kable_input The output of kable
 magic_mirror_html <- function(kable_input){
   kable_info <- list()
-  kable_xml <- read_xml(as.character(kable_input))
+  kable_xml <- read_kable_as_xml(kable_input)
   # Caption
   kable_info$caption <- xml_text(xml_child(kable_xml, "caption"))
   # Contents

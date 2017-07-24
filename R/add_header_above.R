@@ -38,7 +38,7 @@ add_header_above <- function(kable_input, header = NULL, bold = F, italic = F) {
 htmlTable_add_header_above <- function(kable_input, header, bold, italic) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
+  kable_xml <- read_kable_as_xml(kable_input)
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
 
   header <- standardize_header_input(header)

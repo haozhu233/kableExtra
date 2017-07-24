@@ -46,7 +46,7 @@ group_rows <- function(kable_input, group_label, start_row, end_row,
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
                             label_row_css) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_xml(as.character(kable_input), options = "COMPACT")
+  kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")
