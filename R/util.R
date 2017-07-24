@@ -74,8 +74,13 @@ regex_escape <- function(x, double_backslash = FALSE) {
 as_kable_xml <- function(x) {
   tmp <- tempfile(fileext = ".xml")
   write_xml(x, tmp, options = "no_declaration")
-  out <- readLines(tmp)
-  out <- paste(out, collapse = "\n ")
+  out <- readLines(tmp, warn = FALSE)
+  out <- paste(out, collapse = "\n")
   out <- structure(out, format = "html", class = "knitr_kable")
   return(out)
+}
+
+read_kable_as_xml <- function(x) {
+  kable_html <- read_html(as.character(x))
+  xml_child(xml_child(kable_html, 1), 1)
 }

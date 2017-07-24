@@ -101,7 +101,7 @@ htmlTable_styling <- function(kable_input,
                                            "float_left", "float_right"),
                               font_size = NULL) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_xml(as.character(kable_input), options = c("COMPACT"))
+  kable_xml <- read_kable_as_xml(kable_input)
 
   # Modify class
   bootstrap_options <- match.arg(
