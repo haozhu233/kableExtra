@@ -44,7 +44,10 @@ imported.}
 
 \item{font_size}{A numeric input for table font size}
 
-\item{...}{extra options for HTML or LaTeX}
+\item{...}{extra options for HTML or LaTeX. For LaTeX, extra options includes
+\code{repeat_header_method} and \code{repeat_header_text}. \code{repeat_header_method} can
+either be \code{append}(default) or \code{replace} while \code{repeat_header_text} is just a
+text string you want to append on or replace the caption.}
 }
 \description{
 This function provides a cleaner approach to modify the style

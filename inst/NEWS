@@ -17,7 +17,9 @@ kableExtra 0.3.0.9000
 don't fulfill XHTML requirements
 
 * For all HTML table functions, improved exportation method to remove the XML
-declaration.
+declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2wp-adds-text-with-kableextra)
+
+* Add `repeat_header_method` in kable_styling (#25)
 
 
 kableExtra 0.3.0
