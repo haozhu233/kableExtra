@@ -5,6 +5,8 @@ output:
     keep_tex: true
 ---
 
+\listoftables
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -22,7 +24,7 @@ dt <- rbind(mtcars, mtcars)
 ```
 
 ```{r}
-kable_input <- kable(dt, "latex", longtable = T, caption = "test", booktabs = T) %>%
+kable(dt, "latex", longtable = T, caption = "test", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "repeat_header"), repeat_header_text = "(...)")
 ```
 
