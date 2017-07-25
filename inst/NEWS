@@ -10,11 +10,11 @@ kableExtra 0.3.0.9000
 
 * Lowered R version requirement to R 3.1.0
 
-* Added testthat
+* Added testthat (#28, thank you @wibe)
 
 * For all HTML table functions, changed reading method from `xml2::read_xml` to
 `xml2::read_html` plus some extra steps to avoid errors when HTML contents
-don't fulfill XHTML requirements
+don't fulfill XHTML requirements (#24)
 
 * For all HTML table functions, improved exportation method to remove the XML
 declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2wp-adds-text-with-kableextra)
