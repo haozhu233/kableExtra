@@ -266,7 +266,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
     )
   } else {
     if (repeat_header_method == "append") {
-      caption_without_lab <- sub("\\\\label\\{.*?\\}", "", table_info$caption)
+      caption_without_lab <- sub("\\\\label\\{[^\\}]*\\}", "", table_info$caption)
       repeat_header_text <- paste(caption_without_lab, repeat_header_text)
     }
     continue_line <- paste0("\\caption{", repeat_header_text, "}\\\\")
