@@ -4,7 +4,8 @@
 \alias{row_spec}
 \title{Specify the look of the selected row}
 \usage{
-row_spec(kable_input, row, bold = FALSE, italic = FALSE)
+row_spec(kable_input, row, bold = FALSE, italic = FALSE,
+  monospace = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -17,6 +18,9 @@ need to be bolded.}
 
 \item{italic}{A T/F value to control whether the text of the selected row
 need to be emphasized.}
+
+\item{monospace}{A T/F value to control whether the text of the selected column
+need to be monospaced (verbatim)}
 }
 \description{
 This function allows users to select a row and then specify

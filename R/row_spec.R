@@ -11,13 +11,15 @@
 #' need to be bolded.
 #' @param italic A T/F value to control whether the text of the selected row
 #' need to be emphasized.
+#' @param monospace A T/F value to control whether the text of the selected column
+#' need to be monospaced (verbatim)
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1, bold = TRUE, italic = TRUE)
 #'
 #' @export
 row_spec <- function(kable_input, row,
-                     bold = FALSE, italic = FALSE) {
+                     bold = FALSE, italic = FALSE, monospace = FALSE) {
   if (!is.numeric(row)) {
     stop("row must be a numeric value")
   }
@@ -27,14 +29,14 @@ row_spec <- function(kable_input, row,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(row_spec_html(kable_input, row, bold, italic))
+    return(row_spec_html(kable_input, row, bold, italic, monospace))
   }
   if (kable_format == "latex") {
-    return(row_spec_latex(kable_input, row, bold, italic))
+    return(row_spec_latex(kable_input, row, bold, italic, monospace))
   }
 }
 
-row_spec_html <- function(kable_input, row, bold, italic) {
+row_spec_html <- function(kable_input, row, bold, italic, monospace) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -57,13 +59,17 @@ row_spec_html <- function(kable_input, row, bold, italic) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                "font-style: italic;")
     }
+    if (monospace) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "font-family: monospace;")
+    }
   }
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
 }
 
-row_spec_latex <- function(kable_input, row, bold, italic) {
+row_spec_latex <- function(kable_input, row, bold, italic, monospace) {
   table_info <- magic_mirror(kable_input)
   target_row <- table_info$contents[row + 1]
   new_row <- latex_row_cells(target_row)
@@ -75,6 +81,11 @@ row_spec_latex <- function(kable_input, row, bold, italic) {
   if (italic) {
     new_row <- lapply(new_row, function(x) {
       paste0("\\\\em{", x, "}")
+    })
+  }
+  if (monospace) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\ttfamily{", x, "}")
     })
   }
   new_row <- paste(unlist(new_row), collapse = " & ")
