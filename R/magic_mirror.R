@@ -25,8 +25,7 @@ magic_mirror <- function(kable_input){
   return(kable_info)
 }
 
-#' Magic mirror for latex tables --------------
-#' @param kable_input The output of kable
+# Magic mirror for latex tables --------------
 magic_mirror_latex <- function(kable_input){
   kable_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
                      valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
@@ -88,9 +87,7 @@ magic_mirror_latex <- function(kable_input){
   return(kable_info)
 }
 
-#' Magic Mirror for html table --------
-#'
-#' @param kable_input The output of kable
+# Magic Mirror for html table --------
 magic_mirror_html <- function(kable_input){
   kable_info <- list()
   kable_xml <- read_kable_as_xml(kable_input)
