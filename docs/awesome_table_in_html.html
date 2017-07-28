@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-07-24" />
+<meta name="date" content="2017-07-28" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-07-24</em></h4>
+<h4 class="date"><em>2017-07-28</em></h4>
 
 </div>
 
@@ -1143,7 +1143,7 @@ Hornet Sportabout
 <p>Table Position only matters when the table doesn’t have <code>full_width</code>. You can choose to align the table to <code>center</code>, <code>left</code> or <code>right</code> side of the page</p>
 <pre class="r"><code>kable(dt) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F, position = &quot;left&quot;)</code></pre>
-<table class="table table-striped" style="width: auto !important; text-align: right;">
+<table class="table table-striped" style="width: auto !important; ">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1593,7 +1593,8 @@ Hornet Sportabout
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden"></th>
+<th style="border-bottom:hidden">
+</th>
 <th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
 <div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
 Group 1
@@ -1760,7 +1761,8 @@ Hornet Sportabout
 <table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden"></th>
+<th style="border-bottom:hidden">
+</th>
 <th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="6">
 <div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
 Group 6
@@ -1768,7 +1770,8 @@ Group 6
 </th>
 </tr>
 <tr>
-<th style="border-bottom:hidden"></th>
+<th style="border-bottom:hidden">
+</th>
 <th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="4">
 <div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
 Group 4
@@ -1781,7 +1784,8 @@ Group 5
 </th>
 </tr>
 <tr>
-<th style="border-bottom:hidden"></th>
+<th style="border-bottom:hidden">
+</th>
 <th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
 <div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
 Group 1
@@ -2409,7 +2413,8 @@ Demo Table<sup>*</sup>
 </caption>
 <thead>
 <tr>
-<th style="border-bottom:hidden"></th>
+<th style="border-bottom:hidden">
+</th>
 <th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
 <div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
 Group 1<sup>†</sup>
@@ -2671,13 +2676,13 @@ Datsun 710
 2.320
 </td>
 </tr>
-<tr groupLength="4">
+<tr grouplength="4">
 <td colspan="7" style="border-bottom: 1px solid;">
 <strong>Group 1</strong>
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Hornet 4 Drive
 </td>
 <td style="text-align:right;">
@@ -2700,7 +2705,7 @@ Hornet 4 Drive
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Hornet Sportabout
 </td>
 <td style="text-align:right;">
@@ -2723,7 +2728,7 @@ Hornet Sportabout
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Valiant
 </td>
 <td style="text-align:right;">
@@ -2746,7 +2751,7 @@ Valiant
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Duster 360
 </td>
 <td style="text-align:right;">
@@ -2768,7 +2773,7 @@ Duster 360
 3.570
 </td>
 </tr>
-<tr groupLength="3">
+<tr grouplength="3">
 <td colspan="7" style="border-bottom: 1px solid;">
 <strong>Group 2</strong>
 </td>
@@ -2920,7 +2925,7 @@ Mazda RX4 Wag
 2.875
 </td>
 </tr>
-<tr groupLength="3">
+<tr grouplength="3">
 <td colspan="7" style="background-color: #666; color: #fff;">
 <strong>Group 1</strong>
 </td>
@@ -3414,7 +3419,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3457,7 +3462,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3465,7 +3470,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3487,7 +3492,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3506,7 +3511,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3514,7 +3519,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3522,7 +3527,7 @@ d
 15
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 </tbody>

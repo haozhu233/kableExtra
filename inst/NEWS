@@ -10,7 +10,7 @@ kableExtra 0.3.0.9000
 
 * Lowered R version requirement to R 3.1.0
 
-* Added testthat (#28, thank you @wibe)
+* Added testthat (#28, thank you @wibeasley)
 
 * For all HTML table functions, changed reading method from `xml2::read_xml` to
 `xml2::read_html` plus some extra steps to avoid errors when HTML contents
@@ -20,6 +20,8 @@ don't fulfill XHTML requirements (#24)
 declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2wp-adds-text-with-kableextra)
 
 * Add `repeat_header_method` in kable_styling (#25)
+
+* Fixed a bug in `position` in `kable_styling()` (https://stackoverflow.com/questions/45378664/kableextra-rmarkdown-tables-aligning-grouping-row-labels-and-footnotes)
 
 
 kableExtra 0.3.0

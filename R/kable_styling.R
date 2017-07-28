@@ -148,7 +148,7 @@ htmlTable_styling <- function(kable_input,
   position_style <- switch(
     position,
     center = "margin-left: auto; margin-right: auto;",
-    left = "text-align: right;",
+    left = "",
     right = "margin-right: 0; margin-left: auto",
     float_left = "float: left; margin-right: 10px;",
     float_right = "float: right; margin-left: 10px;"
