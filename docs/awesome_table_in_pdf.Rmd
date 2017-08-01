@@ -131,7 +131,7 @@ kable(dt, booktabs = T) %>%
 In fact, if you want to add another row of header on top, please feel free to do so. Also, in kableExtra 0.3.0, you can specify `bold` & `italic` as you do in `row_spec()`.
 ```{r}
 kable(dt, booktabs = T) %>%
-  kable_styling() %>%
+  kable_styling(latex_options = "striped") %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)) %>%
   add_header_above(c(" ", "Group 4" = 4, "Group 5" = 2)) %>%
   add_header_above(c(" ", "Group 6" = 6), bold = T, italic = T)

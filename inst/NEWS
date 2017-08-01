@@ -48,6 +48,8 @@ header rows in a longtable environment.
 
 * Improve package-level documentation based on @wibeasley's suggestion
 
+* Improve striped line look on tables with multiple layers of header rows. (#31)
+
 kableExtra 0.2.1
 --------------------------------------------------------------------------------
 

@@ -223,11 +223,31 @@ pdfTable_styling <- function(kable_input,
 styling_latex_striped <- function(x, table_info) {
   # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
   if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
-    row_color <- "\\rowcolors{2}{white}{gray!6}\n"
+    row_color <- "\\rowcolors{2}{white}{gray!6}"
   } else {
-    row_color <- "\\rowcolors{2}{gray!6}{white}\n"
+    row_color <- "\\rowcolors{2}{gray!6}{white}"
   }
-  return(paste0(row_color, x, "\n\\rowcolors{2}{white}{white}"))
+
+  x <- read_lines(x)
+  if (table_info$booktabs) {
+    header_rows_start <- which(x == "\\toprule")[1]
+    header_rows_end <- which(x == "\\midrule")[1]
+  } else {
+    header_rows_start <- which(x == "\\hline")[1]
+    header_rows_end <- which(x == "\\hline")[2]
+  }
+
+  x <- c(
+    row_color,
+    x[1:(header_rows_start - 1)],
+    "\\hiderowcolors",
+    x[header_rows_start:header_rows_end],
+    "\\showrowcolors",
+    x[(header_rows_end + 1):length(x)],
+    "\\rowcolors{2}{white}{white}"
+  )
+  x <- paste0(x, collapse = "\n")
+  return(x)
 }
 
 styling_latex_hold_position <- function(x) {
