@@ -1,4 +1,4 @@
-kableExtra 0.3.0.9000
+kableExtra 0.4.0
 --------------------------------------------------------------------------------
 * Add scroll_box for HTML table for extremely long/wide tables
 
@@ -6,7 +6,7 @@ kableExtra 0.3.0.9000
 
 * Removed addlinespace from group_rows
 
-* Added monospace to column_spec
+* Added monospace to column_spec & row_spec
 
 * Lowered R version requirement to R 3.1.0
 
@@ -23,6 +23,7 @@ declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2w
 
 * Fixed a bug in `position` in `kable_styling()` (https://stackoverflow.com/questions/45378664/kableextra-rmarkdown-tables-aligning-grouping-row-labels-and-footnotes)
 
+* Improve striped line look on tables with multiple layers of header rows. (#31)
 
 kableExtra 0.3.0
 --------------------------------------------------------------------------------
@@ -47,8 +48,6 @@ header rows in a longtable environment.
 * Added `collapse_rows` to collapse repeated rows to multirow cell
 
 * Improve package-level documentation based on @wibeasley's suggestion
-
-* Improve striped line look on tables with multiple layers of header rows. (#31)
 
 kableExtra 0.2.1
 --------------------------------------------------------------------------------

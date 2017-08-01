@@ -5,5 +5,4 @@
   usepackage_latex("multirow")
   usepackage_latex("xcolor", "table")
   usepackage_latex("wrapfig")
-
 }

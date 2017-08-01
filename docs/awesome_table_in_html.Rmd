@@ -14,10 +14,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-> Please see the package documentation site for how to use it in LaTeX.
+> Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use it in LaTeX.
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+
+To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
 # Installation
 ```r
@@ -42,13 +44,13 @@ options(knitr.table.format = "html")
 ## If you don't define format here, you'll need put `format = "html"` in every kable function.
 ```
 
-## Basic HTML Table
+## Basic HTML table
 Basic HTML output of `kable` looks very crude. To the end, it's just a plain HTML table without any love from css.
 ```{r}
 kable(dt)
 ```
 
-## Apply Bootstrap
+## Bootstrap theme
 When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
 ```{r}
 kable(dt) %>%
@@ -58,7 +60,7 @@ kable(dt) %>%
 # Table Styles
 `kable_styling` offers server other ways to customize the look of a HTML table. 
 
-## Bootstrap Options
+## Bootstrap table classes
 If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
 
 For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
@@ -79,7 +81,7 @@ kable(dt) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## Full Width or Not?
+## Full width?
 By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
 ```{r}
 kable(dt) %>%
@@ -100,14 +102,48 @@ kable(dt) %>%
 ```
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
 
-## Font Size
+## Font size
 If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
 ```{r}
 kable(dt) %>%
   kable_styling(bootstrap_options = "striped", font_size = 7)
 ```
 
-# Add Extra Header Rows
+# Column / Row Specification
+## Column spec
+When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below.
+
+Warning: If you have a super long table, you should be cautious when you use `column_spec` as the xml node modification takes time.
+
+```{r}
+text_tbl <- data.frame(
+  Items = c("Item 1", "Item 2", "Item 3"),
+  Features = c(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
+    "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
+    "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
+  )
+)
+
+kable(text_tbl) %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  column_spec(2, width = "30em")
+```
+
+
+## Row specification
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+
+```{r}
+kable(dt) %>%
+  kable_styling("striped", full_width = F) %>%
+  column_spec(7, bold = T) %>%
+  row_spec(5, bold = T)
+```
+
+# Grouped Columns / Rows
+## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
 ```{r}
 kable(dt) %>%
@@ -124,8 +160,47 @@ kable(dt) %>%
   add_header_above(c(" ", "Group 6" = 6))
 ```
 
-# Add footnote
-## Notation System
+## Group rows via labeling
+Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
+```{r}
+kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
+  kable_styling("striped", full_width = F) %>%
+  group_rows("Group 1", 4, 7) %>%
+  group_rows("Group 2", 8, 10)
+```
+
+For advanced users, you can even define your own css for the group labeling.
+```{r}
+kable(dt) %>%
+  kable_styling("striped", full_width = F) %>%
+  group_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
+```
+
+## Row indentation
+Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
+For advanced users, you can even define your own css for the group labeling.
+```{r}
+kable(dt) %>%
+  kable_styling("striped", full_width = F) %>%
+  add_indent(c(1, 3, 5))
+```
+
+## Group rows via multi-row cell
+Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+
+```{r}
+collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
+                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
+                 C3 = 1:15,
+                 C4 = sample(c(0,1), 15, replace = TRUE))
+kable(collapse_rows_dt, "html", align = "c") %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  collapse_rows(columns = 1:2)
+```
+
+# Table Footnote
+## Notation systems
 You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
 
 ### Alphabet
@@ -151,6 +226,7 @@ kable(dt) %>%
 
 ## In-table markers
 By design, `add_footnote()` will transform any `[note]` to in-table footnote markers. 
+
 ```{r}
 kable(dt, caption = "Demo Table[note]") %>%
   kable_styling("striped") %>%
@@ -161,83 +237,15 @@ kable(dt, caption = "Demo Table[note]") %>%
                notation = "symbol")
 ```
 
-***
+# HTML Only Features
+## Scroll box
+If you have a huge table and you don't want to reduce the font size to unreadable, you may want to put your HTML table in a scroll box, of which users can pick the part they like to read. Note that scroll box isn't printer friendly, so be aware of that when you use this feature. 
 
-The following features are introduced in `kableExtra` 0.2.0.
-
-# Group Rows
-Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
-```{r}
-kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
-  kable_styling("striped", full_width = F) %>%
-  group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10)
-```
-
-For advanced users, you can even define your own css for the group labeling.
-```{r}
-kable(dt) %>%
-  kable_styling("striped", full_width = F) %>%
-  group_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
-```
-
-# Add indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
-For advanced users, you can even define your own css for the group labeling.
-```{r}
-kable(dt) %>%
-  kable_styling("striped", full_width = F) %>%
-  add_indent(c(1, 3, 5))
-```
-
-***
-
-The following feature is introduced in `kableExtra` 0.2.1.
-
-# Column Style Specification
-When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
-
-Warning: If you have a super long table, you should be cautious when you use `column_spec` as the xml node modification takes time.
-```{r}
-text_tbl <- data.frame(
-  Items = c("Item 1", "Item 2", "Item 3"),
-  Features = c(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
-    "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
-    "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
-  )
-)
-
-kable(text_tbl) %>%
-  kable_styling(full_width = F) %>%
-  column_spec(1, bold = T) %>%
-  column_spec(2, width = "30em")
-```
-
-***
-
-The following features are introduced in `kableExtra` 0.3.0
-
-# Row Style Specification
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+When you use `scroll_box`, you can specify either `height` or `width`. When you specify `height`, you will get a vertically scrollable box and vice versa. If you specify both, you will get a two-way scrollable box. 
 
 ```{r}
-kable(dt) %>%
-  kable_styling("striped", full_width = F) %>%
-  column_spec(7, bold = T) %>%
-  row_spec(5, bold = T)
+kable(cbind(mtcars, mtcars)) %>%
+  kable_styling() %>%
+  scroll_box(width = "500px", height = "200px")
 ```
 
-# Collapse Rows in Selected Columns
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
-
-```{r}
-collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
-                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, "html", align = "c") %>%
-  kable_styling(full_width = F) %>%
-  column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2)
-```

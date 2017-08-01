@@ -34,6 +34,10 @@ tables in either HTML or LaTeX
 \item Only have to mess with raw HTML/LaTeX in the last 10% cases where
 \code{kableExtra} cannot solve the problem
 }
+
+For a full package documentation, please visit the
+\href{http://haozhu233.github.io/kableExtra/}{package documentation site}
+for more information
 }
 \note{
 If you found a feature on the documentation site that is not available

@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 0.3.0.9000
+Version: 0.4.0
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre')),
     person('Will', 'Beasley', email = 'wibeasley@hotmail.com', role = 'ctb'),
@@ -33,5 +33,6 @@ Imports:
 Suggests:
     testthat
 VignetteBuilder: knitr
+Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

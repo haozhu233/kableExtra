@@ -86,7 +86,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic) {
              'padding-bottom:0; padding-left:3px;padding-right:3px;',
              row_style,
              '" colspan="',
-             x[2], '"><div style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">',
+             x[2], '"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">',
              x[1], '</div></th>')
     }
   })

@@ -27,6 +27,10 @@
 #' - Only have to mess with raw HTML/LaTeX in the last 10% cases where
 #' `kableExtra` cannot solve the problem
 #'
+#' For a full package documentation, please visit the
+#' [package documentation site](http://haozhu233.github.io/kableExtra/)
+#' for more information
+#'
 #' @section Features:
 #' **Pipable syntax:** `kableExtra` is NOT a table generating package. It is a
 #' package that can "add features" to a `kable` output using a syntax
