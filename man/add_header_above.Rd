@@ -4,7 +4,8 @@
 \alias{add_header_above}
 \title{Add a header row on top of current header}
 \usage{
-add_header_above(kable_input, header = NULL, bold = F, italic = F)
+add_header_above(kable_input, header = NULL, bold = FALSE, italic = FALSE,
+  monospace = FALSE, escape = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -18,6 +19,12 @@ As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" 
 \item{bold}{A T/F value to control whether the text should be bolded.}
 
 \item{italic}{A T/F value to control whether the text should to be emphasized.}
+
+\item{monospace}{A T/F value to control whether the text of the selected column
+need to be monospaced (verbatim)}
+
+\item{escape}{A T/F value showing whether special characters should be
+escaped.}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful

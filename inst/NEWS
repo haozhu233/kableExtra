@@ -25,6 +25,8 @@ declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2w
 
 * Improve striped line look on tables with multiple layers of header rows. (#31)
 
+* Adding escape to `add_header_above` and `group_rows`
+
 kableExtra 0.3.0
 --------------------------------------------------------------------------------
 * Improved the look of HTML grouped header row (again) by adding spaces between

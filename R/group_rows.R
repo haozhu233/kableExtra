@@ -15,6 +15,8 @@
 #' @param latex_gap_space A character value telling LaTeX how large the gap
 #' between the previous row and the group labeling row. Only useful for LaTeX
 #' documents.
+#' @param escape A T/F value showing whether special characters should be
+#' escaped.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
@@ -23,7 +25,8 @@
 #' @export
 group_rows <- function(kable_input, group_label, start_row, end_row,
                        label_row_css = "border-bottom: 1px solid;",
-                       latex_gap_space = "0.5em") {
+                       latex_gap_space = "0.5em",
+                       escape = TRUE) {
   if (!is.numeric(c(start_row, end_row))) {
     stop("Start_row and end_row must be numeric position of rows (excluding",
          "header rows and other group-title rows). ")
@@ -35,19 +38,23 @@ group_rows <- function(kable_input, group_label, start_row, end_row,
   }
   if (kable_format == "html") {
     return(group_rows_html(kable_input, group_label, start_row, end_row,
-                           label_row_css))
+                           label_row_css, escape))
   }
   if (kable_format == "latex") {
     return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                            latex_gap_space))
+                            latex_gap_space, escape))
   }
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
-                            label_row_css) {
+                            label_row_css, escape) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
+
+  if (escape) {
+    group_label <- escape_html(group_label)
+  }
 
   group_header_rows <- attr(kable_input, "group_header_rows")
   group_seq <- seq(start_row, end_row)
@@ -76,9 +83,14 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 }
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
-                             gap_space) {
+                             gap_space, escape) {
   table_info <- magic_mirror(kable_input)
   out <- kable_input
+
+  if (escape) {
+    group_label <- escape_latex(group_label)
+    group_label <- gsub("\\\\", "\\\\\\\\", group_label)
+  }
 
   # Add group label
   rowtext <- table_info$contents[start_row + 1]

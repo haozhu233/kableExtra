@@ -5,7 +5,8 @@
 \title{Put a few rows of a table into one category}
 \usage{
 group_rows(kable_input, group_label, start_row, end_row,
-  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.5em")
+  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.5em",
+  escape = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -26,6 +27,9 @@ underneath. Only useful for HTML documents.}
 \item{latex_gap_space}{A character value telling LaTeX how large the gap
 between the previous row and the group labeling row. Only useful for LaTeX
 documents.}
+
+\item{escape}{A T/F value showing whether special characters should be
+escaped.}
 }
 \description{
 Group a few rows in a table together under a label.
