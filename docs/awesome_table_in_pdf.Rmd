@@ -8,8 +8,11 @@ output:
     toc_depth: 2
 ---
 
+> Please see the package [documentation site](http://haozhu233.github.io/kableExtra) for how to use this package in HTML and more. 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+
+To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
 # Installation
 ```r
@@ -28,7 +31,7 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
-When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.*
+When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "latex")` so you don't repeat the step everytime.*
 
 ```{r}
 options(knitr.table.format = "latex") 
@@ -42,7 +45,7 @@ Plain LaTeX table looks relatively ugly in 2017.
 kable(dt)
 ```
 
-## LaTeX Table with Booktabs
+## LaTeX table with booktabs
 Similar with Bootstrap in HTML, in LaTeX, you can also use a trick to make your table look prettier as well. The different part is that, this time you don't need to pipe kable outputs to another function. Instead, you should call `booktabs = T` directly in `kable()`
 ```{r}
 kable(dt, booktabs = T)
@@ -51,7 +54,7 @@ kable(dt, booktabs = T)
 # Table Styles
 `kable_styling` in LaTeX uses the same syntax and structure as `kable_styling` in HTML. However, instead of `bootstrap_options`, you should specify `latex_options` instead. 
 
-## LaTeX Options
+## LaTeX options
 Similar with `bootstap_options`, `latex_options` is also a charter vector with a bunch of options including `striped`, `hold_position` and `scale_down`.
 
 ### Striped
@@ -61,7 +64,7 @@ kable(dt, booktabs = T) %>%
   kable_styling(latex_options = "striped")
 ```
 
-### Hold Position
+### Hold position
 If you provide a table caption in `kable()`, it will put your LaTeX tabular in a `table` environment, unless you are using `longtable`. A `table` environment will automatically find the best place (it thinks) to put your table. However, in many cases, you do want your table to appear in a position you want it to be. In this case, you can use this `hold_position` options here.
 ```{r}
 kable(dt, caption = "Demo table", booktabs = T) %>%
@@ -79,8 +82,8 @@ kable(cbind(dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
-### Repeat Header in longtable (only available in kableExtra 0.3.0)
-In this `kableExtra` 0.3.0, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`.
+### Repeat header in longtable
+In `kableExtra` 0.3.0 or above, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`. If you want to complete replace the table caption instead of appending, you can specify it in the option `repeat_header_method`.
 ```{r}
 long_dt <- rbind(mtcars, mtcars) 
 
@@ -90,7 +93,7 @@ kable(long_dt, longtable = T, booktabs = T, caption = "Longtable") %>%
 ```
 
 
-## Full Width
+## Full width?
 If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. Note that, if you use `full_width` in LaTeX, you will loss your in-cell text alignment settings and everything will be left-aligned. 
 ```{r}
 kable(dt, booktabs = T) %>%
@@ -120,7 +123,37 @@ kable(dt, booktabs = T) %>%
   kable_styling(font_size = 7)
 ```
 
-# Add Extra Header Rows
+# Column / Row Specification
+## Column spec
+When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
+```{r}
+text_tbl <- data.frame(
+  Items = c("Item 1", "Item 2", "Item 3"),
+  Features = c(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
+    "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
+    "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
+  )
+)
+
+kable(text_tbl, booktabs = T) %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  column_spec(2, width = "30em")
+```
+
+## Row spec
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+
+```{r}
+kable(dt, booktabs = T) %>%
+  kable_styling("striped", full_width = F) %>%
+  column_spec(7, bold = T) %>%
+  row_spec(5, bold = T)
+```
+
+# Grouped Columns / Rows
+## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
 ```{r}
 kable(dt, booktabs = T) %>%
@@ -137,8 +170,50 @@ kable(dt, booktabs = T) %>%
   add_header_above(c(" ", "Group 6" = 6), bold = T, italic = T)
 ```
 
-# Add footnote
-## Notation System
+## Group rows via labeling
+Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
+```{r}
+kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
+  kable_styling() %>%
+  group_rows("Group 1", 4, 7) %>%
+  group_rows("Group 2", 8, 10)
+```
+
+In case some users need it, you can define your own gapping spaces between the group labeling row and previous rows. The default value is `0.5em`.
+```{r}
+kable(dt, booktabs = T) %>%
+  group_rows("Group 1", 4, 5, latex_gap_space = "2em")
+```
+
+## Row indentation
+Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
+For advanced users, you can even define your own css for the group labeling.
+```{r}
+kable(dt, booktabs = T) %>%
+  add_indent(c(1, 3, 5))
+```
+
+## Group rows via multi-row cell
+Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+
+```{r}
+collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
+                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
+                 C3 = 1:15,
+                 C4 = sample(c(0,1), 15, replace = TRUE))
+kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
+  column_spec(1, bold=T) %>%
+  collapse_rows(columns = 1:2)
+```
+
+```{r}
+kable(collapse_rows_dt, "latex", align = "c") %>%
+  column_spec(1, bold = T, width = "5em") %>%
+  collapse_rows(1:2)
+```
+
+# Table Footnote
+## Notation system
 You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
 
 ### Alphabet
@@ -174,35 +249,8 @@ kable(dt, caption = "Demo Table[note]", booktabs = T) %>%
                notation = "symbol")
 ```
 
-
-***
-
-The following features are introduced in `kableExtra` 0.2.0.
-
-# Group Rows
-Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
-```{r}
-kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
-  kable_styling() %>%
-  group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10)
-```
-
-In case some users need it, you can define your own gapping spaces between the group labeling row and previous rows. The default value is `0.5em`.
-```{r}
-kable(dt, booktabs = T) %>%
-  group_rows("Group 1", 4, 5, latex_gap_space = "2em")
-```
-
-# Add indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
-For advanced users, you can even define your own css for the group labeling.
-```{r}
-kable(dt, booktabs = T) %>%
-  add_indent(c(1, 3, 5))
-```
-
-# Table on a Landscape Page
+# LaTeX Only Features
+## Table on a Landscape Page
 Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
 ```{r}
 kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
@@ -215,59 +263,3 @@ kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
   group_rows("Group 1", 4, 5) %>%
   landscape()
 ```
-
-***
-
-The following feature is introduced in `kableExtra` 0.2.1.
-
-# Column Style Specification
-When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
-```{r}
-text_tbl <- data.frame(
-  Items = c("Item 1", "Item 2", "Item 3"),
-  Features = c(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ",
-    "In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", 
-    "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "
-  )
-)
-
-kable(text_tbl, booktabs = T) %>%
-  kable_styling(full_width = F) %>%
-  column_spec(1, bold = T) %>%
-  column_spec(2, width = "30em")
-```
-
-***
-
-The following features are introduced in `kableExtra` 0.3.0
-
-# Row Style Specification
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
-
-```{r}
-kable(dt, booktabs = T) %>%
-  kable_styling("striped", full_width = F) %>%
-  column_spec(7, bold = T) %>%
-  row_spec(5, bold = T)
-```
-
-# Collapse Rows in Selected Columns
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
-
-```{r}
-collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
-                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
-  column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2)
-```
-
-```{r}
-kable(collapse_rows_dt, "latex", align = "c") %>%
-  column_spec(1, bold = T, width = "5em") %>%
-  collapse_rows(1:2)
-```
-

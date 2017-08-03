@@ -14,7 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-> Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use it in LaTeX.
+> Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
@@ -132,7 +132,7 @@ kable(text_tbl) %>%
 ```
 
 
-## Row specification
+## Row spec
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
 
 ```{r}
