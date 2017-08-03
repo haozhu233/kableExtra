@@ -64,10 +64,11 @@ regex_escape <- function(x, double_backslash = FALSE) {
 }
 
 as_kable_xml <- function(x) {
-  tmp <- tempfile(fileext = ".xml")
-  write_xml(x, tmp, options = "no_declaration")
-  out <- read_file(tmp)
-  out <- structure(out, format = "html", class = "knitr_kable")
+  # tmp <- tempfile(fileext = ".xml")
+  # write_xml(x, tmp, options = c("no_declaration", "format_whitespace", "as_html"))
+  # out <- read_file(tmp)
+  # out <- structure(out, format = "html", class = "knitr_kable")
+  out <- structure(as.character(x), format = "html", class = "knitr_kable")
   return(out)
 }
 
