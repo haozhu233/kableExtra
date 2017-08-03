@@ -292,12 +292,14 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
     continue_line <- paste0("\\caption[]{", repeat_header_text, "}\\\\")
   }
 
+  x <- x[x != "\\bottomrule"]
   x <- c(
     x[1:header_rows_end],
     "\\endfirsthead",
     continue_line,
     x[header_rows_start:header_rows_end],
     "\\endhead",
+    "\\bottomrule\\endlastfoot",
     x[(header_rows_end + 1):length(x)]
   )
   x <- paste0(x, collapse = "\n")

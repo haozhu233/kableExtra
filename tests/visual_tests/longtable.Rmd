@@ -16,7 +16,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 
-dt <- rbind(mtcars, mtcars) 
+dt <- rbind(mtcars[1:30,], mtcars) 
 
 # kable(dt, "latex", longtable = T, caption="test table") %>%
 #   add_header_above(c(" ", "a" = 6, "b" = 5)) %>%
