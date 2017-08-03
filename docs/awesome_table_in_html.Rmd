@@ -58,7 +58,7 @@ kable(dt) %>%
 ```
 
 # Table Styles
-`kable_styling` offers server other ways to customize the look of a HTML table. 
+`kable_styling` offers a few other ways to customize the look of a HTML table. 
 
 ## Bootstrap table classes
 If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
