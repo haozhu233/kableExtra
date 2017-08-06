@@ -19,13 +19,15 @@ don't fulfill XHTML requirements (#24)
 * For all HTML table functions, improved exportation method to remove the XML
 declaration. (Stackoverflow: https://stackoverflow.com/questions/45262308/knit2wp-adds-text-with-kableextra)
 
-* Add `repeat_header_method` in kable_styling (#25)
+* Added `repeat_header_method` in kable_styling (#25)
 
 * Fixed a bug in `position` in `kable_styling()` (https://stackoverflow.com/questions/45378664/kableextra-rmarkdown-tables-aligning-grouping-row-labels-and-footnotes)
 
-* Improve striped line look on tables with multiple layers of header rows. (#31)
+* Improved striped line look on tables with multiple layers of header rows. (#31)
 
-* Adding escape to `add_header_above` and `group_rows`
+* Added escape to `add_header_above` and `group_rows`
+
+* Added PDF vignette to the CRAN vignette folder
 
 kableExtra 0.3.0
 --------------------------------------------------------------------------------
