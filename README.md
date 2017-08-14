@@ -1,6 +1,7 @@
 # kableExtra
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](https://cran.r-project.org/package=kableExtra)
+[![CRAN_download_total](http://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=kableExtra)
 
 ***
 
@@ -73,12 +74,3 @@ For more information, please check the package vignette.
 - In HTML, `bootstrap_options` in `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning.
 - `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky.
 - In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. You need to load required latex packages by yourself.
-
-## To-do
-- [x] A function to insert a gap row (or group title row in the middle of a table)
-- [x] A function to easily add title column indent
-- ~~[ ] Some ways to change text/background color of cells~~
-- [ ] Find a way to let align table caption.
-- [x] Add `column_spec`
-- [x] Add `row_spec`
-- [ ] Add a clickable js module for shiny app integration
