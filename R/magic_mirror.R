@@ -29,7 +29,8 @@ magic_mirror <- function(kable_input){
 magic_mirror_latex <- function(kable_input){
   kable_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
                      valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
-                     rownames = NULL, caption = NULL, contents = NULL,
+                     rownames = NULL, caption = NULL, caption.short = NULL,
+                     contents = NULL,
                      centering = FALSE, table_env = FALSE)
   # Tabular
   kable_info$tabular <- ifelse(
@@ -57,8 +58,17 @@ magic_mirror_latex <- function(kable_input){
   # N of columns
   kable_info$ncol <- nchar(kable_info$align)
   # Caption
-  kable_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
-  kable_info$caption <- str_sub(kable_info$caption, 1, -4)
+  if (str_detect(kable_input, "caption\\[")) {
+    kable_info$caption.short <- str_match(kable_input, "caption\\[(.*?)\\]")[2]
+    kable_info$caption <- str_match(kable_input, "caption.*?\\{(.*?)\\n")[2]
+  } else {
+    kable_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
+  }
+  if (kable_info$tabular == "longtable") {
+    kable_info$caption <- str_sub(kable_info$caption, 1, -4)
+  } else {
+    kable_info$caption <- str_sub(kable_info$caption, 1, -2)
+  }
   # N of rows
   kable_info$nrow <- str_count(kable_input, "\\\\\n") -
     # in the dev version (currently as of 11.2015) of knitr, when longtable is
