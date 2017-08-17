@@ -44,15 +44,21 @@ imported.}
 
 \item{font_size}{A numeric input for table font size}
 
-\item{...}{extra options for HTML or LaTeX. For LaTeX, extra options includes
-\code{repeat_header_method} and \code{repeat_header_text}. \code{repeat_header_method} can
-either be \code{append}(default) or \code{replace} while \code{repeat_header_text} is just a
-text string you want to append on or replace the caption.}
+\item{...}{extra options for HTML or LaTeX. See \code{details}.}
 }
 \description{
 This function provides a cleaner approach to modify the style
 of HTML tables other than using the \code{table.attr} option in \code{knitr::kable()}.
 Currenly, it assumes the HTML document has boot
+}
+\details{
+For LaTeX, extra options includes:
+\itemize{
+\item \code{repeat_header_method} can either be \code{append}(default) or \code{replace}
+\item \code{repeat_header_text} is just a text string you want to append on or
+replace the caption.
+\item \code{strip_color} allows users to pick a different color for their strip lines.
+}
 }
 \examples{
 x_html <- knitr::kable(head(mtcars), "html")

@@ -33,10 +33,13 @@
 #' a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
 #' imported.
 #' @param font_size A numeric input for table font size
-#' @param ... extra options for HTML or LaTeX. For LaTeX, extra options includes
-#' `repeat_header_method` and `repeat_header_text`. `repeat_header_method` can
-#' either be `append`(default) or `replace` while `repeat_header_text` is just a
-#' text string you want to append on or replace the caption.
+#' @param ... extra options for HTML or LaTeX. See `details`.
+#'
+#' @details For LaTeX, extra options includes:
+#' - `repeat_header_method` can either be `append`(default) or `replace`
+#' - `repeat_header_text` is just a text string you want to append on or
+#' replace the caption.
+#' - `strip_color` allows users to pick a different color for their strip lines.
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -172,7 +175,8 @@ pdfTable_styling <- function(kable_input,
                                           "float_left", "float_right"),
                              font_size = NULL,
                              repeat_header_text = "\\textit{(continued)}",
-                             repeat_header_method = c("append", "replace")) {
+                             repeat_header_method = c("append", "replace"),
+                             strip_color = "gray!6") {
 
   latex_options <- match.arg(
     latex_options,
@@ -187,7 +191,7 @@ pdfTable_styling <- function(kable_input,
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {
-    out <- styling_latex_striped(out, table_info)
+    out <- styling_latex_striped(out, table_info, strip_color)
   }
 
   # hold_position is only meaningful in a table environment
@@ -220,12 +224,12 @@ pdfTable_styling <- function(kable_input,
   return(out)
 }
 
-styling_latex_striped <- function(x, table_info) {
+styling_latex_striped <- function(x, table_info, color) {
   # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
   if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
-    row_color <- "\\rowcolors{2}{white}{gray!6}"
+    row_color <- sprintf("\\rowcolors{2}{white}{%s}", color)
   } else {
-    row_color <- "\\rowcolors{2}{gray!6}{white}"
+    row_color <- sprintf("\\rowcolors{2}{%s}{white}", color)
   }
 
   x <- read_lines(x)
