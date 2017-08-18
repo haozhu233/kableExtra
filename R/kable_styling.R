@@ -39,7 +39,7 @@
 #' - `repeat_header_method` can either be `append`(default) or `replace`
 #' - `repeat_header_text` is just a text string you want to append on or
 #' replace the caption.
-#' - `strip_color` allows users to pick a different color for their strip lines.
+#' - `stripe_color` allows users to pick a different color for their strip lines.
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -176,7 +176,7 @@ pdfTable_styling <- function(kable_input,
                              font_size = NULL,
                              repeat_header_text = "\\textit{(continued)}",
                              repeat_header_method = c("append", "replace"),
-                             strip_color = "gray!6") {
+                             stripe_color = "gray!6") {
 
   latex_options <- match.arg(
     latex_options,
@@ -191,7 +191,7 @@ pdfTable_styling <- function(kable_input,
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {
-    out <- styling_latex_striped(out, table_info, strip_color)
+    out <- styling_latex_striped(out, table_info, stripe_color)
   }
 
   # hold_position is only meaningful in a table environment
