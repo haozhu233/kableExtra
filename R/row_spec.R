@@ -82,7 +82,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-row_spec_latex <- function(kable_input, row, bold, italic, monospace) {
+row_spec_latex <- function(kable_input, row, bold, italic, monospace,
+                           color, background) {
   table_info <- magic_mirror(kable_input)
   target_row <- table_info$contents[row + 1]
   new_row <- latex_row_cells(target_row)
@@ -101,7 +102,17 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace) {
       paste0("\\\\ttfamily{", x, "}")
     })
   }
+
+  if (!is.null(color)) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\textcolor{", color, "}{", x, "}")
+    })
+  }
   new_row <- paste(unlist(new_row), collapse = " & ")
+
+  if (!is.null(background)) {
+    new_row <- paste0("\\\\rowcolor{", background, "}  ", new_row)
+  }
 
   out <- sub(target_row, new_row, as.character(kable_input), perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")

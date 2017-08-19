@@ -71,7 +71,7 @@ column_spec_html <- function(kable_input, column, width,
     target_cell <- xml_child(xml_child(kable_tbody, i), all_contents_array[i])
     if (!is.null(width)) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                              "width: ", width, "; ")
+                                               "width: ", width, "; ")
     }
     if (bold) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
@@ -100,17 +100,23 @@ column_spec_html <- function(kable_input, column, width,
   return(out)
 }
 
-column_spec_latex <- function(kable_input, column, width, bold, italic, monospace) {
+column_spec_latex <- function(kable_input, column, width,
+                              bold, italic, monospace,
+                              color, background) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
             " especially in LaTeX, to get a desired result. ")
   }
+  if (!is.null(background)) {
+    warning("Column background color for LaTeX has not yet been implemented.")
+  }
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- latex_column_align_builder(
-    table_info$align_vector[column], width, bold, italic, monospace)
+    table_info$align_vector[column], width, bold, italic, monospace,
+    color, background)
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
@@ -127,7 +133,8 @@ column_spec_latex <- function(kable_input, column, width, bold, italic, monospac
   return(out)
 }
 
-latex_column_align_builder <- function(x, width, bold, italic, monospace) {
+latex_column_align_builder <- function(x, width, bold, italic, monospace,
+                                       color, background) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
@@ -137,15 +144,17 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace) {
     x <- paste0("p\\{", width, "\\}")
   }
 
-  if (bold | italic | monospace | extra_align != "") {
-    latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
-      c(bold, italic, monospace)]
-    latex_array_options <- c(latex_array_options, extra_align)
-    latex_array_options <- paste0(
-      "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
-    )
-    x <- paste0(latex_array_options, x)
+  if (!is.null(color)) {
+    color <- sprintf("\\\\color{%s}", color)
   }
+
+  latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
+    c(bold, italic, monospace)]
+  latex_array_options <- c(latex_array_options, extra_align, color)
+  latex_array_options <- paste0(
+    "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
+  )
+  x <- paste0(latex_array_options, x)
 
   return(x)
 }
