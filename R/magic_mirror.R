@@ -59,8 +59,11 @@ magic_mirror_latex <- function(kable_input){
   kable_info$ncol <- nchar(kable_info$align)
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
-    kable_info$caption.short <- str_match(kable_input, "caption\\[(.*?)\\]")[2]
-    kable_info$caption <- str_match(kable_input, "caption.*?\\{(.*?)\\n")[2]
+    caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]
+    kable_info$caption.short <- str_match(caption_line, "\\[(.*?)\\]")[2]
+    kable_info$caption <- substr(caption_line,
+                                 nchar(kable_info$caption.short) + 4,
+                                 nchar(caption_line) - 1)
   } else {
     kable_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
   }
