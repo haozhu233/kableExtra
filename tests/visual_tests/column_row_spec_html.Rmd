@@ -40,7 +40,7 @@ dt <- data.frame(
 kable(dt, "html") %>%
   kable_styling(full_width = F)   %>%
   row_spec(1, bold = T) %>%
-  column_spec(2, "5cm", bold = T) %>%
+  column_spec(2, "5cm", bold = T, color = "white", background = "red") %>%
   column_spec(3, monospace = T) %>%
   column_spec(4, "3cm", italic = T)
 ```
@@ -54,5 +54,5 @@ dt$cyl <- paste(dt$cyl, "$")
 kable(dt, "html") %>%
   kable_styling(full_width = F) %>%
   column_spec(7, bold = T) %>%
-  row_spec(5, bold = T, italic = T)
+  row_spec(5, bold = T, italic = T, color = "white", background = "black")
 ```

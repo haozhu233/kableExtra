@@ -23,7 +23,7 @@
 #' @export
 column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
-                        monospace = FALSE) {
+                        monospace = FALSE, color = NULL, background = NULL) {
   if (!is.numeric(column)) {
     stop("column must be a numeric value")
   }
@@ -33,14 +33,20 @@ column_spec <- function(kable_input, column,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(column_spec_html(kable_input, column, width, bold, italic, monospace))
+    return(column_spec_html(kable_input, column, width,
+                            bold, italic, monospace,
+                            color, background))
   }
   if (kable_format == "latex") {
-    return(column_spec_latex(kable_input, column, width, bold, italic, monospace))
+    return(column_spec_latex(kable_input, column, width,
+                             bold, italic, monospace,
+                             color, background))
   }
 }
 
-column_spec_html <- function(kable_input, column, width, bold, italic, monospace) {
+column_spec_html <- function(kable_input, column, width,
+                             bold, italic, monospace,
+                             color, background) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -78,6 +84,15 @@ column_spec_html <- function(kable_input, column, width, bold, italic, monospace
     if (monospace) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                "font-family: monospace;")
+    }
+    if (!is.null(color)) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "color: ", color, ";")
+    }
+    if (!is.null(background)) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "background-color: ",
+                                               background, ";")
     }
   }
   out <- as_kable_xml(kable_xml)

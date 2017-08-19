@@ -19,7 +19,8 @@
 #'
 #' @export
 row_spec <- function(kable_input, row,
-                     bold = FALSE, italic = FALSE, monospace = FALSE) {
+                     bold = FALSE, italic = FALSE, monospace = FALSE,
+                     color = NULL, background = NULL) {
   if (!is.numeric(row)) {
     stop("row must be a numeric value")
   }
@@ -29,14 +30,17 @@ row_spec <- function(kable_input, row,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(row_spec_html(kable_input, row, bold, italic, monospace))
+    return(row_spec_html(kable_input, row, bold, italic, monospace,
+                         color, background))
   }
   if (kable_format == "latex") {
-    return(row_spec_latex(kable_input, row, bold, italic, monospace))
+    return(row_spec_latex(kable_input, row, bold, italic, monospace,
+                          color, background))
   }
 }
 
-row_spec_html <- function(kable_input, row, bold, italic, monospace) {
+row_spec_html <- function(kable_input, row, bold, italic, monospace,
+                          color, background) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -62,6 +66,15 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace) {
     if (monospace) {
       xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                "font-family: monospace;")
+    }
+    if (!is.null(color)) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "color: ", color, ";")
+    }
+    if (!is.null(background)) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "background-color: ",
+                                               background, ";")
     }
   }
   out <- as_kable_xml(kable_xml)
