@@ -16,6 +16,8 @@
 #' need to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
+#' @param color A character string for column text color.
+#' @param background A character string for column background color.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
@@ -23,7 +25,8 @@
 #' @export
 column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
-                        monospace = FALSE, color = NULL, background = NULL) {
+                        monospace = FALSE, color = NULL, background = NULL,
+                        border_left = FALSE, border_right = FALSE) {
   if (!is.numeric(column)) {
     stop("column must be a numeric value")
   }
@@ -35,18 +38,21 @@ column_spec <- function(kable_input, column,
   if (kable_format == "html") {
     return(column_spec_html(kable_input, column, width,
                             bold, italic, monospace,
-                            color, background))
+                            color, background,
+                            border_left, border_right))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
                              bold, italic, monospace,
-                             color, background))
+                             color, background,
+                             border_left, border_right))
   }
 }
 
 column_spec_html <- function(kable_input, column, width,
                              bold, italic, monospace,
-                             color, background) {
+                             color, background,
+                             border_left, border_right) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -65,6 +71,18 @@ column_spec_html <- function(kable_input, column, width,
   if (!is.null(group_header_rows)) {
     all_contents_rows <- all_contents_rows[!all_contents_rows %in%
                                              group_header_rows]
+  }
+
+  # Border css
+  border_l_css <- "1px solid"
+  border_r_css <- "1px solid"
+  if (is.character(border_left)) {
+    border_l_css <- border_left
+    border_left <- T
+  }
+  if (is.character(border_right)) {
+    border_r_css <- border_right
+    border_right <- T
   }
 
   for (i in all_contents_rows) {
@@ -94,6 +112,14 @@ column_spec_html <- function(kable_input, column, width,
                                                "background-color: ",
                                                background, ";")
     }
+    if (border_left) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "border-left:", border_l_css, ";")
+    }
+    if (border_right) {
+      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                               "border-right:", border_r_css, ";")
+    }
   }
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
@@ -102,7 +128,8 @@ column_spec_html <- function(kable_input, column, width,
 
 column_spec_latex <- function(kable_input, column, width,
                               bold, italic, monospace,
-                              color, background) {
+                              color, background,
+                              border_left, border_right) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -116,7 +143,7 @@ column_spec_latex <- function(kable_input, column, width,
 
   table_info$align_vector[column] <- latex_column_align_builder(
     table_info$align_vector[column], width, bold, italic, monospace,
-    color, background)
+    color, background, border_left, border_right)
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
@@ -134,7 +161,8 @@ column_spec_latex <- function(kable_input, column, width,
 }
 
 latex_column_align_builder <- function(x, width, bold, italic, monospace,
-                                       color, background) {
+                                       color, background,
+                                       border_left, border_right) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
@@ -148,13 +176,24 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
     color <- sprintf("\\\\color{%s}", color)
   }
 
+  if (!is.null(color)) {
+    background <- sprintf("\\\\columncolor{%s}", background)
+  }
+
   latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
     c(bold, italic, monospace)]
-  latex_array_options <- c(latex_array_options, extra_align, color)
+  latex_array_options <- c(latex_array_options, extra_align,
+                           color, background)
   latex_array_options <- paste0(
     "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
   )
   x <- paste0(latex_array_options, x)
+  if (border_left) {
+    x <- paste0("|", x)
+  }
+  if (border_right) {
+    x <- paste0(x, "|")
+  }
 
   return(x)
 }

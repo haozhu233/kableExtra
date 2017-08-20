@@ -5,7 +5,7 @@
 \title{Specify the look of the selected row}
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
-  monospace = FALSE)
+  monospace = FALSE, color = NULL, background = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}

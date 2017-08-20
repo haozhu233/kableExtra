@@ -57,7 +57,7 @@ For LaTeX, extra options includes:
 \item \code{repeat_header_method} can either be \code{append}(default) or \code{replace}
 \item \code{repeat_header_text} is just a text string you want to append on or
 replace the caption.
-\item \code{strip_color} allows users to pick a different color for their strip lines.
+\item \code{stripe_color} allows users to pick a different color for their strip lines.
 }
 }
 \examples{

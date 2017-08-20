@@ -40,9 +40,9 @@ dt <- data.frame(
 )
 
 kable(dt, "latex", booktabs = T, align = "r") %>%
-  column_spec(2, "3cm", bold = T) %>%
+  column_spec(2, "3cm", bold = T, border_right = T) %>%
   column_spec(3, monospace = T)%>%
-  column_spec(4, "3cm", italic = T, color = "red")  %>%
+  column_spec(4, "3cm", italic = T, color = "red", border_left = T, background = "blue")  %>%
   row_spec(3, monospace = T, color = "yellow", background = "black")
 ```
 

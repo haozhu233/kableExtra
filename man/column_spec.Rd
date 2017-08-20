@@ -5,7 +5,8 @@
 \title{Specify the look of the selected column}
 \usage{
 column_spec(kable_input, column, width = NULL, bold = FALSE,
-  italic = FALSE, monospace = FALSE)
+  italic = FALSE, monospace = FALSE, color = NULL, background = NULL,
+  border_left = FALSE, border_right = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -25,6 +26,10 @@ need to be emphasized.}
 
 \item{monospace}{A T/F value to control whether the text of the selected column
 need to be monospaced (verbatim)}
+
+\item{color}{A character string for column text color.}
+
+\item{background}{A character string for column background color.}
 }
 \description{
 This function allows users to select a column and then specify
