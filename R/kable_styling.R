@@ -12,12 +12,13 @@
 #' `bordered`, `hover`, `condensed` and `responsive`.
 #' @param latex_options A character vector for LaTeX table options. Please see
 #' package vignette for more information. Possible options include
-#' `basic`, `striped`, `hold_position`, `scale_down` & `repeat_header`.
+#' `basic`, `striped`, `hold_position`, `HOLD_position`, `scale_down` & `repeat_header`.
 #' `striped` will add alternative row colors to the table. It will imports
 #' `LaTeX` package `xcolor` if enabled. `hold_position` will "hold" the floating
 #' table to the exact position. It is useful when the `LaTeX` table is contained
 #'  in a `table` environment after you specified captions in `kable()`. It will
 #'  force the table to stay in the position where it was created in the document.
+#' A stronger version: `HOLD_position` requires the `float` package and specifies [H].
 #' `scale_down` is useful for super wide table. It will automatically adjust
 #' the table to page width. `repeat_header` in only meaningful in a longtable
 #' environment. It will let the header row repeat on every page in that long
@@ -180,7 +181,7 @@ pdfTable_styling <- function(kable_input,
 
   latex_options <- match.arg(
     latex_options,
-    c("basic", "striped", "hold_position", "scale_down", "repeat_header"),
+    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "repeat_header"),
     several.ok = T
   )
 
@@ -197,6 +198,11 @@ pdfTable_styling <- function(kable_input,
   # hold_position is only meaningful in a table environment
   if ("hold_position" %in% latex_options & table_info$table_env) {
     out <- styling_latex_hold_position(out)
+  }
+
+  # HOLD_position is only meaningful in a table environment
+  if ("HOLD_position" %in% latex_options & table_info$table_env) {
+    out <- styling_latex_HOLD_position(out)
   }
 
   if ("scale_down" %in% latex_options) {
@@ -256,6 +262,10 @@ styling_latex_striped <- function(x, table_info, color) {
 
 styling_latex_hold_position <- function(x) {
   sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]", x)
+}
+
+styling_latex_HOLD_position <- function(x) {
+  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]", x)
 }
 
 styling_latex_scale_down <- function(x, table_info) {
