@@ -28,7 +28,9 @@ landscape_latex <- function(kable_input, margin) {
   kable_attrs <- attributes(kable_input)
   usepackage_latex("pdflscape")
   out <- paste0(
-    "\n\\begin{landscape}", kable_input, "\n\\end{landscape}"
+    "\n\\begin{landscape}",
+    enc2utf8(as.character(kable_input)),
+    "\n\\end{landscape}"
   )
 
   if (!is.null(margin)) {

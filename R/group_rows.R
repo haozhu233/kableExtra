@@ -85,7 +85,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              gap_space, escape) {
   table_info <- magic_mirror(kable_input)
-  out <- kable_input
+  out <- enc2utf8(as.character(kable_input))
 
   if (escape) {
     group_label <- escape_latex(group_label)
@@ -110,6 +110,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
   out <- sub(rowtext, new_rowtext, out)
   out <- gsub("\\\\addlinespace\n", "", out)
+  out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
   out <- add_indent(out, seq(start_row, end_row))
