@@ -35,7 +35,7 @@ add_indent_latex <- function(kable_input, positions) {
          "add_indent_latex.")
   }
 
-  out <- kable_input
+  out <- enc2utf8(kable_input)
   for (i in positions) {
     rowtext <- table_info$contents[i + 1]
     out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)

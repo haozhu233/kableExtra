@@ -185,7 +185,7 @@ kable(dt, booktabs = T) %>%
 ## Group rows via labeling
 Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
-kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
+kable(mtcars[1:10, 1:6],"latex", caption = "Group Rows", booktabs = T) %>%
   kable_styling() %>%
   group_rows("Group 1", 4, 7) %>%
   group_rows("Group 2", 8, 10)

@@ -89,7 +89,7 @@ collapse_rows_latex <- function(kable_input, columns) {
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
   }
-  out <- as.character(kable_input)
+  out <- enc2utf8(as.character(kable_input))
   contents <- table_info$contents
   kable_dt <- kable_dt_latex(contents)
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = F)
