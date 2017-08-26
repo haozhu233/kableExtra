@@ -135,9 +135,6 @@ column_spec_latex <- function(kable_input, column, width,
     message("Usually it is recommended to use column_spec before collapse_rows,",
             " especially in LaTeX, to get a desired result. ")
   }
-  if (!is.null(background)) {
-    warning("Column background color for LaTeX has not yet been implemented.")
-  }
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 

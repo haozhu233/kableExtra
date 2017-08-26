@@ -61,11 +61,12 @@
 #' xml_child xml_children xml_name xml_add_sibling xml_add_child xml_text
 #' xml_remove write_xml xml_text<-
 #' @importFrom rvest html_table
-#' @importFrom knitr knit_meta_add
+#' @importFrom knitr knit_meta_add include_graphics
 #' @importFrom rmarkdown latex_dependency
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
-#' @importFrom readr read_lines read_file
+#' @importFrom readr read_lines read_file write_file
+#' @import magick
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package

@@ -1,0 +1,17 @@
+---
+title: "kable_as_image"
+author: "Hao"
+date: "8/22/2017"
+output:
+  word_document: default
+---
+
+```{r, fig.width=3}
+library(knitr)
+library(kableExtra)
+
+dt <- structure(list(unbeb = c("individuelle Bauweise", "Geschosswohnungsbau", "klassisches Gewerbe", "tertiäres Gewerbe", "Nichtbauland", "Summe unbebaute Grundstücke"
+), 2011 = c(" 87", " 29", " 10", " 25", "126", "277"), 2012 = c(" 77", " 26", " 18", " 12", "108", "241"), 2013 = c(" 95", " 49", " 22", " 4", " 91", "261"), 2014 = c("101", " 29", " 13", " 9", "122", "274"), 2015 = c(" 60", " 45", " 13", " 4", "103", "225"), 2016 = c("127", " 36", " 11", " 5", " 93", "272")), .Names = c("unbeb", "2011", "2012", "2013", "2014", "2015", "2016"), row.names = c(NA, -6L), class = c("tbl_df", "tbl", "data.frame"))
+
+kable(Daten_Tabelle_unbeb, format = "latex", booktabs=TRUE, caption="hallo") %>% kable_styling(latex_options=c("striped","scale_down", "hold_position"))
+```
