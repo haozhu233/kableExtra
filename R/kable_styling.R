@@ -265,6 +265,7 @@ styling_latex_hold_position <- function(x) {
 }
 
 styling_latex_HOLD_position <- function(x) {
+  usepackage_latex("float")
   sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]", x)
 }
 

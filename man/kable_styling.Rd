@@ -19,12 +19,13 @@ for more information. Possible options include \code{basic}, \code{striped},
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
-\code{basic}, \code{striped}, \code{hold_position}, \code{scale_down} & \code{repeat_header}.
+\code{basic}, \code{striped}, \code{hold_position}, \code{HOLD_position}, \code{scale_down} & \code{repeat_header}.
 \code{striped} will add alternative row colors to the table. It will imports
 \code{LaTeX} package \code{xcolor} if enabled. \code{hold_position} will "hold" the floating
 table to the exact position. It is useful when the \code{LaTeX} table is contained
 in a \code{table} environment after you specified captions in \code{kable()}. It will
 force the table to stay in the position where it was created in the document.
+A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \link{H}.
 \code{scale_down} is useful for super wide table. It will automatically adjust
 the table to page width. \code{repeat_header} in only meaningful in a longtable
 environment. It will let the header row repeat on every page in that long
