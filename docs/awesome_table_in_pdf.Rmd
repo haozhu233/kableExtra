@@ -13,6 +13,7 @@ header-includes:
   - \usepackage{multirow}
   - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
+  - \usepackage{float}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}

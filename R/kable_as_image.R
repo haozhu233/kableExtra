@@ -5,8 +5,8 @@
 #' `xtable`) to generate a table, convert it to an image and put it back to a
 #' rmarkdown environment. It is a "better than nothing" solution to print high
 #' quality tables in rmarkdown Word document. By using this, you need to take
-#' the responsibility of explaining to your collaborators why they can't edit
-#' the tables they see in the Word document they received. 😂
+#' the responsibility of explaining to your collaborators why they can't make
+#' edits to the tables in Word. 😂
 #'
 #' Also, if a filename is provided, user has the option to "save" the table to
 #' an image file like `ggplot2::ggsave()`.

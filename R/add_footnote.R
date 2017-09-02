@@ -15,6 +15,8 @@
 #' @param threeparttable Boolean value indicating if a
 #' \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should
 #' be used.
+#' @param escape Logical value controlling if the label needs to be escaped.
+#' Default is TRUE.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' add_footnote(x, c("footnote 1", "footnote 2"), notation = "symbol")
@@ -22,7 +24,8 @@
 #' @export
 add_footnote <- function(input, label = NULL,
                          notation = "alphabet",
-                         threeparttable = FALSE) {
+                         threeparttable = FALSE,
+                         escape = TRUE) {
   if (is.null(label)) return(input)
 
   if (notation == "alphabet") {
@@ -96,7 +99,9 @@ add_footnote <- function(input, label = NULL,
   # LaTeX Tables --------------------------------
   if (attr(input, "format") == "latex") {
     # Clean the entry for labels
-    label <- escape_latex(label)
+    if (escape) {
+      label <- escape_latex(label)
+    }
     label <- gsub("\\\\", "\\\\\\\\", label)
 
     export <- enc2utf8(export)
@@ -175,8 +180,9 @@ add_footnote <- function(input, label = NULL,
                         "\\\\begin{threeparttable}\n\\\\caption{",
                         export)
         } else {
-          export <- sub("\\\\begin\\{tabular\\}",
-                        "\\\\begin{threeparttable}\n\\\\begin{tabular}",
+          export <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
+                        paste0("\\\\begin{threeparttable}\n\\\\begin{",
+                               table_info$tabular, "}"),
                         export)
         }
         export <- gsub(
@@ -213,7 +219,9 @@ add_footnote <- function(input, label = NULL,
   if (attr(input, "format") == "html") {
     # Clean the entry for labels
     table_info <- magic_mirror(input)
-    label <- escape_html(label)
+    if (escape) {
+      label <- escape_html(label)
+    }
     # Replace in-table notation with appropriate symbol
     for (i in 1:count.intablenote) {
       export <- sub("\\[note\\]",

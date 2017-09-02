@@ -4,12 +4,14 @@ Title: Construct Complex Table with 'kable' and Pipe Syntax
 Version: 0.4.0.9001
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre')),
+    person('Timothy', 'Tsai', role = 'ctb'),
+    person('Thomas', 'Travison', role = 'ctb'),
     person('Will', 'Beasley', email = 'wibeasley@hotmail.com', role = 'ctb'),
     person('Yihui', 'Xie', email = 'xie@yihui.name', role = 'ctb'),
-    person('Thomas', 'Travison', email = 'tgt@hsl.harvard.edu', role = 'ctb'),
     person('GuangChuang', 'Yu', email = 'guangchuangyu@gmail.com', role = 'ctb'),
     person('Stéphane', 'Laurent', role = 'ctb'),
-    person('Rob', 'Shepherd', role = 'ctb')
+    person('Rob', 'Shepherd', role = 'ctb'),
+    person('Yoni', 'Sidi', role = 'ctb')
     )
 Description: A collection of functions to help build complex HTML or 'LaTeX' 
     tables using 'kable()' from 'knitr' and the piping syntax from 'magrittr'. 

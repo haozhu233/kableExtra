@@ -6,4 +6,7 @@
   usepackage_latex("xcolor", "table")
   usepackage_latex("wrapfig")
   usepackage_latex("colortbl")
+  usepackage_latex("pdflscape")
+  usepackage_latex("tabu")
+  usepackage_latex("threeparttable")
 }

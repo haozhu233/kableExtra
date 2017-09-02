@@ -1,3 +1,15 @@
+kableExtra 0.5.0 
+--------------------------------------------------------------------------------
+* Now column_spec & row_spec can customize font & cell background color with 
+2 new options `color` & `background`. Also, you can draw border lines using 
+`border_left` or `border_right` when you are using `column_spec`.
+
+* Now you can change strip color for LaTeX tables. 
+
+* Added escape option for add_footnote
+
+* Fixed a bug in LaTeX for the processing of the + sign
+
 kableExtra 0.4.0
 --------------------------------------------------------------------------------
 * Add scroll_box for HTML table for extremely long/wide tables

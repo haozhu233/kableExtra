@@ -24,7 +24,7 @@ dt <- rbind(mtcars[1:30,], mtcars)
 ```
 
 ```{r}
-kable(dt, "latex", longtable = T, caption = "test", booktabs = T) %>%
+kable(dt, "latex", longtable = T, caption = "test", booktabs = T, caption.short = "sss") %>%
   kable_styling(latex_options = c("striped", "repeat_header"), repeat_header_text = "(...)")
 ```
 

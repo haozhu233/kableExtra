@@ -41,6 +41,9 @@
 #' - `repeat_header_text` is just a text string you want to append on or
 #' replace the caption.
 #' - `stripe_color` allows users to pick a different color for their strip lines.
+#' - `latex_table_env` character string to define customized table environment
+#' such as tabu or tabularx.You shouldn't expect all features could be
+#' supported in self-defined environments.
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -177,7 +180,8 @@ pdfTable_styling <- function(kable_input,
                              font_size = NULL,
                              repeat_header_text = "\\textit{(continued)}",
                              repeat_header_method = c("append", "replace"),
-                             stripe_color = "gray!6") {
+                             stripe_color = "gray!6",
+                             latex_table_env = NULL) {
 
   latex_options <- match.arg(
     latex_options,
@@ -215,11 +219,24 @@ pdfTable_styling <- function(kable_input,
   }
 
   if (full_width) {
-    out <- styling_latex_full_width(out, table_info)
+    latex_table_env <- ifelse(table_info$tabular == "longtable",
+                              "longtabu", "tabu")
+    full_width_return <- styling_latex_full_width(out, table_info)
+    out <- full_width_return[[1]]
+    table_info$align_vector <- full_width_return[[2]]
   }
 
   if (!is.null(font_size)) {
     out <- styling_latex_font_size(out, table_info, font_size)
+  }
+
+  if (!is.null(latex_table_env)) {
+    out <- styling_latex_table_env(out, table_info$tabular, latex_table_env)
+    table_info$tabular <- latex_table_env
+    table_info$begin_tabular <- sub("tabular", latex_table_env,
+                                    table_info$begin_tabular)
+    table_info$end_tabular <- sub("tabular", latex_table_env,
+                                  table_info$end_tabular)
   }
 
   position <- match.arg(position)
@@ -323,16 +340,18 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 }
 
 styling_latex_full_width <- function(x, table_info) {
-  size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
-  col_max_length <- apply(size_matrix, 1, max) + 4
-  col_ratio <- round(col_max_length / sum(col_max_length), 2)
-  col_align <- paste0("p{\\\\dimexpr", col_ratio,
-                      "\\\\columnwidth-2\\\\tabcolsep}")
-  col_align <- paste0("{", paste(col_align, collapse = ""), "}")
+  col_align <- as.character(factor(
+    table_info$align_vector, c("c", "l", "r"),
+    c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")
+  ))
+  col_align[is.na(col_align)] <- table_info$align_vector[is.na(col_align)]
+  col_align_vector <- col_align
+  col_align <- paste0(" to \\\\linewidth {", paste(col_align, collapse = ""), "}")
   x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
            table_info$begin_tabular, x)
-  sub(table_info$begin_tabular,
+  x <- sub(table_info$begin_tabular,
       paste0(table_info$begin_tabular, col_align), x)
+  return(list(x, col_align_vector))
 }
 
 styling_latex_position <- function(x, table_info, position, latex_options) {
@@ -391,7 +410,7 @@ styling_latex_position_float <- function(x, table_info, option) {
 
 styling_latex_font_size <- function(x, table_info, font_size) {
   row_height <- font_size + 2
-  if (table_info$tabular == "tabular" & table_info$table_env) {
+  if (table_info$tabular != "longtable" & table_info$table_env) {
     return(sub(table_info$begin_tabular,
                paste0("\\\\fontsize\\{", font_size, "\\}\\{", row_height,
                       "\\}\\\\selectfont\n", table_info$begin_tabular),
@@ -405,4 +424,8 @@ styling_latex_font_size <- function(x, table_info, font_size) {
   ))
 }
 
+styling_latex_table_env <- function(x, current_env, latex_table_env) {
+  return(gsub(paste0("\\{", current_env, "\\}"),
+              paste0("\\{", latex_table_env, "\\}"), x))
+}
 
