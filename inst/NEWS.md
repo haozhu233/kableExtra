@@ -1,8 +1,13 @@
-kableExtra 0.5.0 
+kableExtra 0.5.0 (a big LaTeX update)
 --------------------------------------------------------------------------------
 * Now column_spec & row_spec can customize font & cell background color with 
 2 new options `color` & `background`. Also, you can draw border lines using 
 `border_left` or `border_right` when you are using `column_spec`.
+
+* Making it optional to pre-load LaTeX package on package startup
+
+* Adding documentations about the package loading behaviors and LaTeX packages 
+used in this package
 
 * Now you can change strip color for LaTeX tables. 
 
