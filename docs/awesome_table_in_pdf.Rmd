@@ -59,13 +59,13 @@ options(knitr.table.format = "latex")
 ## LaTeX packages used in this package
 If you are using a recent version of rmarkdown, you are recommended to load this package entirely via `library(kableExtra)` or `require(kableExtra)` because this package will load all necessary LaTeX packages, such as `booktabs` or `multirow`, for you automatically. Note that, if you are calling functions from `kableExtra` via `kableExtra::kable_styling()` or if you put `library(kableExtra)` in a separate R file that is **sourced** by the rmarkdown document, these packages won't be loaded. Furthermore, you can suppress this auto-loading behavior by setting a global option `kableExtra.latex.load_packages` to be `FALSE` before you load `kableExtra`.
 
-```
+```{r, eval = FALSE}
 options(kableExtra.latex.load_package = FALSE)
 ```
 
 If you are using R Sweave or some customized rmarkdown templates or you just want to load these LaTeX libraries by yourself, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
-```
+```{yaml}
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}
