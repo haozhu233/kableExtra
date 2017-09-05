@@ -28,7 +28,8 @@
 #' @param keep_pdf A T/F option to control if the mid-way standalone pdf should
 #' be kept. Default is `FALSE`.
 #'
-#' @examples kable_as_image(kanitr::kble(mtcars, "latex"), "mtcars")
+#' @examples kable_as_image(knitr::kable(mtcars, "latex", booktabs = TRUE), "mtcars")
+#'
 #' @export
 kable_as_image <- function(kable_input, filename = NULL,
                            file_format = "png",
