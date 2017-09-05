@@ -25,7 +25,7 @@ package vignette for more information. Possible options include
 table to the exact position. It is useful when the \code{LaTeX} table is contained
 in a \code{table} environment after you specified captions in \code{kable()}. It will
 force the table to stay in the position where it was created in the document.
-A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \link{H}.
+A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \code{[H]}.
 \code{scale_down} is useful for super wide table. It will automatically adjust
 the table to page width. \code{repeat_header} in only meaningful in a longtable
 environment. It will let the header row repeat on every page in that long
@@ -59,6 +59,9 @@ For LaTeX, extra options includes:
 \item \code{repeat_header_text} is just a text string you want to append on or
 replace the caption.
 \item \code{stripe_color} allows users to pick a different color for their strip lines.
+\item \code{latex_table_env} character string to define customized table environment
+such as tabu or tabularx.You shouldn't expect all features could be
+supported in self-defined environments.
 }
 }
 \examples{

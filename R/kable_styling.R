@@ -18,7 +18,7 @@
 #' table to the exact position. It is useful when the `LaTeX` table is contained
 #'  in a `table` environment after you specified captions in `kable()`. It will
 #'  force the table to stay in the position where it was created in the document.
-#' A stronger version: `HOLD_position` requires the `float` package and specifies [H].
+#' A stronger version: `HOLD_position` requires the `float` package and specifies `[H]`.
 #' `scale_down` is useful for super wide table. It will automatically adjust
 #' the table to page width. `repeat_header` in only meaningful in a longtable
 #' environment. It will let the header row repeat on every page in that long

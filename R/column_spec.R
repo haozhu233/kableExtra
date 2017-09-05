@@ -16,8 +16,16 @@
 #' need to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
-#' @param color A character string for column text color.
-#' @param background A character string for column background color.
+#' @param color A character string for column text color. Here please pay
+#' attention to the differences in color codes between HTML and LaTeX.
+#' @param background A character string for column background color. Here please
+#' pay attention to the differences in color codes between HTML and LaTeX.
+#' @param border_left A logical variable indicating whether there should be a
+#' border line on the left of the selected column. In HTML, you can also pass
+#' in a character string for the CSS of the border line
+#' @param border_right A logical variable indicating whether there should be a
+#' border line on the right of the selected column. In HTML, you can also pass
+#' in a character string for the CSS of the border line
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)

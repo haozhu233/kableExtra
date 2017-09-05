@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-08-03" />
+<meta name="date" content="2017-09-04" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-08-03</em></h4>
+<h4 class="date"><em>2017-09-04</em></h4>
 
 </div>
 
@@ -241,8 +241,9 @@ devtools::install_github(&quot;haozhu233/kableExtra&quot;)</code></pre>
 <div id="getting-started" class="section level1">
 <h1>Getting Started</h1>
 <p>Here we are using the first few columns and rows from dataset <code>mtcars</code></p>
-<pre class="r"><code>library(knitr)
-library(kableExtra)
+<pre class="r"><code>library(knitr)</code></pre>
+<pre><code>## Warning: package 'knitr' was built under R version 3.4.1</code></pre>
+<pre class="r"><code>library(kableExtra)
 dt &lt;- mtcars[1:5, 1:6]</code></pre>
 <p>When you are using <code>kable()</code>, if you don’t specify <code>format</code>, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don’t need to change anything in your code. However, markdown doesn’t support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should <strong>define <code>format</code> in <code>kable()</code></strong> as either “html” or “latex”. <em>You can also define a global option at the beginning using <code>options(knitr.table.format = &quot;html&quot;)</code> so you don’t repeat the step everytime.</em></p>
 <pre class="r"><code>options(knitr.table.format = &quot;html&quot;) 
@@ -2778,7 +2779,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2802,7 +2803,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2810,7 +2811,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2818,7 +2819,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2826,7 +2827,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2853,7 +2854,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2875,7 +2876,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>

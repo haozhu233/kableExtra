@@ -42,5 +42,5 @@ The approach was learned and adopted from the \href{https://github.com/metrumres
 package, which allows you to preview the results of TeX code in the Viewer panel.
 }
 \examples{
-kable_as_image(kable(mtcars, "latex"), "mtcars")
+kable_as_image(kanitr::kble(mtcars, "latex"), "mtcars")
 }

@@ -5,7 +5,7 @@
 \title{Add footnote}
 \usage{
 add_footnote(input, label = NULL, notation = "alphabet",
-  threeparttable = FALSE)
+  threeparttable = FALSE, escape = TRUE)
 }
 \arguments{
 \item{input}{The direct output of your \code{kable} function or your last
@@ -20,6 +20,9 @@ notations in your notes.}
 \item{threeparttable}{Boolean value indicating if a
 \href{https://www.ctan.org/pkg/threeparttable}{threeparttable} scheme should
 be used.}
+
+\item{escape}{Logical value controlling if the label needs to be escaped.
+Default is TRUE.}
 }
 \description{
 Add footnote to your favorite kable output. So far this function

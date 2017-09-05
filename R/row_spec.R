@@ -13,6 +13,10 @@
 #' need to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
+#' @param color A character string for column text color. Here please pay
+#' attention to the differences in color codes between HTML and LaTeX.
+#' @param background A character string for column background color. Here please
+#' pay attention to the differences in color codes between HTML and LaTeX.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1, bold = TRUE, italic = TRUE)
