@@ -77,3 +77,32 @@ read_kable_as_xml <- function(x) {
   kable_html <- read_html(as.character(x))
   xml_child(xml_child(kable_html, 1), 1)
 }
+
+#' LaTeX Packages
+#' @description This function shows all LaTeX packages that is supposed to be
+#' loaded for this package in a rmarkdown yaml format.
+#'
+#' @export
+kableExtra_latex_packages <- function() {
+
+  pkg_list <- c(
+    "  - \\usepackage{booktabs}",
+    "  - \\usepackage{longtable}",
+    "  - \\usepackage{array}",
+    "  - \\usepackage{multirow}",
+    "  - \\usepackage[table]{xcolor}",
+    "  - \\usepackage{wrapfig}",
+    "  - \\usepackage{float}",
+    "  - \\usepackage{colortbl}",
+    "  - \\usepackage{pdflscape}",
+    "  - \\usepackage{tabu}",
+    "  - \\usepackage{threeparttable}"
+  )
+
+  pkg_text <- paste0(
+    "header-includes:\n",
+    paste0(pkg_list, collapse = "\n")
+  )
+
+  cat(pkg_text)
+}
