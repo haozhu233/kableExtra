@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-09-04" />
+<meta name="date" content="2017-09-05" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-09-04</em></h4>
+<h4 class="date"><em>2017-09-05</em></h4>
 
 </div>
 
@@ -1603,8 +1603,8 @@ Hornet Sportabout
 
 kable(text_tbl) %&gt;%
   kable_styling(full_width = F) %&gt;%
-  column_spec(1, bold = T) %&gt;%
-  column_spec(2, width = &quot;30em&quot;)</code></pre>
+  column_spec(1, bold = T, border_right = T) %&gt;%
+  column_spec(2, width = &quot;30em&quot;, background = &quot;yellow&quot;)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1618,26 +1618,26 @@ Features
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;font-weight: bold;">
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 1
 </td>
-<td style="text-align:left;width: 30em; ">
+<td style="text-align:left;width: 30em; background-color: yellow;">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a.
 </td>
 </tr>
 <tr>
-<td style="text-align:left;font-weight: bold;">
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 2
 </td>
-<td style="text-align:left;width: 30em; ">
+<td style="text-align:left;width: 30em; background-color: yellow;">
 In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in.
 </td>
 </tr>
 <tr>
-<td style="text-align:left;font-weight: bold;">
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 3
 </td>
-<td style="text-align:left;width: 30em; ">
+<td style="text-align:left;width: 30em; background-color: yellow;">
 Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis.
 </td>
 </tr>
@@ -1650,7 +1650,7 @@ Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie 
 <pre class="r"><code>kable(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   column_spec(7, bold = T) %&gt;%
-  row_spec(5, bold = T)</code></pre>
+  row_spec(5, bold = T, color = &quot;white&quot;, background = &quot;#D7261E&quot;)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1770,25 +1770,25 @@ Hornet 4 Drive
 </td>
 </tr>
 <tr>
-<td style="text-align:left;font-weight: bold;">
+<td style="text-align:left;font-weight: bold;color: white;background-color: #D7261E;">
 Hornet Sportabout
 </td>
-<td style="text-align:right;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;color: white;background-color: #D7261E;">
 18.7
 </td>
-<td style="text-align:right;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;color: white;background-color: #D7261E;">
 8
 </td>
-<td style="text-align:right;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;color: white;background-color: #D7261E;">
 360
 </td>
-<td style="text-align:right;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;color: white;background-color: #D7261E;">
 175
 </td>
-<td style="text-align:right;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;color: white;background-color: #D7261E;">
 3.15
 </td>
-<td style="text-align:right;font-weight: bold;font-weight: bold;">
+<td style="text-align:right;font-weight: bold;font-weight: bold;color: white;background-color: #D7261E;">
 3.440
 </td>
 </tr>
@@ -2779,7 +2779,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2787,7 +2787,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2811,7 +2811,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2827,7 +2827,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2838,7 +2838,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2846,7 +2846,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2854,7 +2854,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2876,7 +2876,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2895,7 +2895,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
