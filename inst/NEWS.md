@@ -1,3 +1,11 @@
+kableExtra 0.5.0.9000
+--------------------------------------------------------------------------------
+* Added documentations about those color/background color options in column_spec 
+and row_spec
+
+* Added the kableExtra_latex_packages function to quickly print all necessary 
+LaTeX packages on the screen. 
+
 kableExtra 0.5.0 (a big LaTeX update)
 --------------------------------------------------------------------------------
 * Now column_spec & row_spec can customize font & cell background color with 
