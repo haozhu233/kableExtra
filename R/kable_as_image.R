@@ -6,7 +6,7 @@
 #' rmarkdown environment. It is a "better than nothing" solution to print high
 #' quality tables in rmarkdown Word document. By using this, you need to take
 #' the responsibility of explaining to your collaborators why they can't make
-#' edits to the tables in Word. 😂
+#' edits to the tables in Word.
 #'
 #' Also, if a filename is provided, user has the option to "save" the table to
 #' an image file like `ggplot2::ggsave()`.
@@ -28,8 +28,6 @@
 #' @param keep_pdf A T/F option to control if the mid-way standalone pdf should
 #' be kept. Default is `FALSE`.
 #'
-#' @examples kable_as_image(knitr::kable(mtcars, "latex", booktabs = TRUE), "mtcars")
-#'
 #' @export
 kable_as_image <- function(kable_input, filename = NULL,
                            file_format = "png",
@@ -39,7 +37,7 @@ kable_as_image <- function(kable_input, filename = NULL,
     "\\documentclass[border=1mm, preview]{standalone}",
     "\\usepackage[active,tightpage]{preview}",
     "\\usepackage{varwidth}",
-    "\\usepackage{amssymb,amsmath}",
+    "\\usepackage{amssymb, amsmath}",
     "\\usepackage{ifxetex,ifluatex}",
     "\\usepackage{fixltx2e}",
     "\\usepackage{polyglossia}",
