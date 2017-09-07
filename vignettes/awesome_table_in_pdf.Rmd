@@ -191,7 +191,7 @@ Similar with `column_spec`, you can define specifications for rows. Currently, y
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling("striped", full_width = F) %>%
-  column_spec(7, border_left = T) %>%
+  column_spec(7, border_left = T, bold = T) %>%
   row_spec(5, bold = T, color = "white", background = "black")
 ```
 
