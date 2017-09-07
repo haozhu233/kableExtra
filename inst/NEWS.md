@@ -1,10 +1,12 @@
-kableExtra 0.5.0.9000
+kableExtra 0.5.1
 --------------------------------------------------------------------------------
 * Added documentations about those color/background color options in column_spec 
 and row_spec
 
 * Added the kableExtra_latex_packages function to quickly print all necessary 
 LaTeX packages on the screen. 
+
+* Hot fix a bug in full_width in LaTeX
 
 kableExtra 0.5.0 (a big LaTeX update)
 --------------------------------------------------------------------------------
