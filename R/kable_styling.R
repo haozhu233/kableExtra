@@ -424,7 +424,18 @@ styling_latex_font_size <- function(x, table_info, font_size) {
 }
 
 styling_latex_table_env <- function(x, current_env, latex_table_env) {
-  return(gsub(paste0("\\{", current_env, "\\}"),
-              paste0("\\{", latex_table_env, "\\}"), x))
+  x <- sub(
+    paste0("begin\\{", current_env, "\\}\\[t\\]"),
+    paste0("begin\\{", latex_table_env, "\\}"), x
+  )
+  x <- sub(
+    paste0("begin\\{", current_env, "\\}"),
+    paste0("begin\\{", latex_table_env, "\\}"), x
+  )
+  x <- sub(
+    paste0("end\\{", current_env, "\\}"),
+    paste0("end\\{", latex_table_env, "\\}"), x
+  )
+  return(x)
 }
 
