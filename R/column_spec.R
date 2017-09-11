@@ -5,7 +5,7 @@
 #' bold text and italic text.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
-#' @param columns A numeric value or vector indicating which column(s) to be selected.
+#' @param column A numeric value or vector indicating which column(s) to be selected.
 #' @param width A character string telling HTML & LaTeX how wide the column
 #' needs to be, e.g. "10cm", "3in" or "30em".
 #' @param bold A T/F value to control whether the text of the selected column
@@ -24,22 +24,18 @@
 #' @param border_right A logical variable indicating whether there should be a
 #' border line on the right of the selected column. In HTML, you can also pass
 #' in a character string for the CSS of the border line
-#' @param column Deprecating. Same with columns
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
 #'
 #' @export
-column_spec <- function(kable_input, columns = NULL,
+column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
                         monospace = FALSE, color = NULL, background = NULL,
                         border_left = FALSE, border_right = FALSE,
-                        column, ...) {
-  if (is.null(columns)) {
-    columns <- column
-  }
-  if (!is.numeric(columns)) {
-    stop("columns/column must be numeric. Note that column is deprecating.")
+                        ...) {
+  if (!is.numeric(column)) {
+    stop("column must be numeric. ")
   }
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -47,20 +43,20 @@ column_spec <- function(kable_input, columns = NULL,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(column_spec_html(kable_input, columns, width,
+    return(column_spec_html(kable_input, column, width,
                             bold, italic, monospace,
                             color, background,
                             border_left, border_right))
   }
   if (kable_format == "latex") {
-    return(column_spec_latex(kable_input, columns, width,
+    return(column_spec_latex(kable_input, column, width,
                              bold, italic, monospace,
                              color, background,
                              border_left, border_right, ...))
   }
 }
 
-column_spec_html <- function(kable_input, columns, width,
+column_spec_html <- function(kable_input, column, width,
                              bold, italic, monospace,
                              color, background,
                              border_left, border_right) {
@@ -89,7 +85,7 @@ column_spec_html <- function(kable_input, columns, width,
   }
 
   for (i in all_contents_rows) {
-    for (j in columns) {
+    for (j in column) {
       target_cell <- xml_child(xml_child(kable_tbody, i), j)
       if (!is.null(width)) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
@@ -131,7 +127,7 @@ column_spec_html <- function(kable_input, columns, width,
   return(out)
 }
 
-column_spec_latex <- function(kable_input, columns, width,
+column_spec_latex <- function(kable_input, column, width,
                               bold, italic, monospace,
                               color, background,
                               border_left, border_right,
@@ -144,8 +140,8 @@ column_spec_latex <- function(kable_input, columns, width,
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
-  table_info$align_vector[columns] <- unlist(lapply(
-    table_info$align_vector_origin[columns],
+  table_info$align_vector[column] <- unlist(lapply(
+    table_info$align_vector_origin[column],
     function(x) {
       latex_column_align_builder(
         x, width, bold, italic, monospace,
@@ -163,7 +159,7 @@ column_spec_latex <- function(kable_input, columns, width,
     if (is.null(table_info$column_width)) {
       table_info$column_width <- list()
     }
-    for (i in columns) {
+    for (i in column) {
       table_info$column_width[[paste0("column_", i)]] <- width
     }
   }

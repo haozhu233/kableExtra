@@ -6,14 +6,12 @@
 \usage{
 column_spec(kable_input, column, width = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, color = NULL, background = NULL,
-  border_left = FALSE, border_right = FALSE)
+  border_left = FALSE, border_right = FALSE, ...)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
-\item{column}{A numeric value indicating which column to be selected. When
-you do the counting, ignore the extra header columns you added through
-add_header_left.}
+\item{column}{A numeric value or vector indicating which column(s) to be selected.}
 
 \item{width}{A character string telling HTML & LaTeX how wide the column
 needs to be, e.g. "10cm", "3in" or "30em".}

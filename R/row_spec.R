@@ -5,7 +5,7 @@
 #' italic text.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
-#' @param row A numeric value indicating which row to be selected. You don't
+#' @param row A numeric value or vector indicating which row(s) to be selected. You don't
 #' need to count in header rows or group labeling rows.
 #' @param bold A T/F value to control whether the text of the selected row
 #' need to be bolded.
@@ -26,7 +26,7 @@ row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
                      color = NULL, background = NULL) {
   if (!is.numeric(row)) {
-    stop("row must be a numeric value")
+    stop("row must be numeric. ")
   }
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -51,36 +51,38 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 
   group_header_rows <- attr(kable_input, "group_header_rows")
   if (!is.null(group_header_rows)) {
-    row <- positions_corrector(row, group_header_rows,
-                               length(xml_children(kable_tbody)))
+      row <- positions_corrector(row, group_header_rows,
+                                 length(xml_children(kable_tbody)))
   }
 
-  target_row <- xml_child(kable_tbody, row)
-
-  for (i in 1:length(xml_children(target_row))) {
-    target_cell <- xml_child(target_row, i)
-    if (bold) {
-      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                               "font-weight: bold;")
-    }
-    if (italic) {
-      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                               "font-style: italic;")
-    }
-    if (monospace) {
-      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                               "font-family: monospace;")
-    }
-    if (!is.null(color)) {
-      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                               "color: ", color, ";")
-    }
-    if (!is.null(background)) {
-      xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                               "background-color: ",
-                                               background, ";")
+  for (j in row) {
+    target_row <- xml_child(kable_tbody, j)
+    for (i in 1:length(xml_children(target_row))) {
+      target_cell <- xml_child(target_row, i)
+      if (bold) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "font-weight: bold;")
+      }
+      if (italic) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "font-style: italic;")
+      }
+      if (monospace) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "font-family: monospace;")
+      }
+      if (!is.null(color)) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "color: ", color, ";")
+      }
+      if (!is.null(background)) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "background-color: ",
+                                                 background, ";")
+      }
     }
   }
+
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
@@ -89,7 +91,22 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            color, background) {
   table_info <- magic_mirror(kable_input)
-  target_row <- table_info$contents[row + 1]
+  out <- enc2utf8(as.character(kable_input))
+  row <- row + 1
+  for (i in row) {
+    target_row <- table_info$contents[i]
+    new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
+                                     color, background)
+    out <- sub(target_row, new_row, out, perl = T)
+  }
+
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "kable_meta") <- table_info
+  return(out)
+}
+
+latex_new_row_builder <- function(target_row, bold, italic, monospace,
+                                  color, background) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
@@ -118,9 +135,5 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     new_row <- paste0("\\\\rowcolor{", background, "}  ", new_row)
   }
 
-  out <- sub(target_row, new_row, enc2utf8(as.character(kable_input)),
-             perl = T)
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-  return(out)
+  return(new_row)
 }
