@@ -146,9 +146,14 @@ column_spec_latex <- function(kable_input, column, width,
   align_collapse <- ifelse(table_info$booktabs, "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
-  table_info$align_vector[column] <- latex_column_align_builder(
-    table_info$align_vector_origin[column], width, bold, italic, monospace,
-    color, background, border_left, border_right)
+  table_info$align_vector[column] <- unlist(lapply(
+    table_info$align_vector_origin[column],
+    function(x) {
+      latex_column_align_builder(
+        x, width, bold, italic, monospace,
+        color, background, border_left, border_right)
+    }
+  ))
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
