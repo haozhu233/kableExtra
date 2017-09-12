@@ -22,8 +22,7 @@ kable(dt[1:5,], format = "latex", booktabs = T) %>%
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling() %>%
-  group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10)
+  group_rows(index = c(" ", "Group A" = 4, "Group B" = 5))
 ```
 
 ```{r}

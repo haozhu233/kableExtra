@@ -9,6 +9,8 @@
 #' labeling rows
 #' @param end_row A numeric value that tells the function in which row the group
 #' ends.
+#' @param index A named vector providing the index for robust row-grouping tasks.
+#' Basically, you can use it in the same way as `add_header_above()`.
 #' @param label_row_css A character string for any customized css used for the
 #' labeling row. By default, the labeling row will have a solid black line
 #' underneath. Only useful for HTML documents.
@@ -23,27 +25,55 @@
 #' group_rows(x, "Group A", 2, 5)
 #'
 #' @export
-group_rows <- function(kable_input, group_label, start_row, end_row,
+group_rows <- function(kable_input, group_label = NULL,
+                       start_row = NULL, end_row = NULL,
+                       index = NULL,
                        label_row_css = "border-bottom: 1px solid;",
-                       latex_gap_space = "0.5em",
+                       latex_gap_space = "0.3em",
                        escape = TRUE) {
-  if (!is.numeric(c(start_row, end_row))) {
-    stop("Start_row and end_row must be numeric position of rows (excluding",
-         "header rows and other group-title rows). ")
-  }
+
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     message("Currently generic markdown table using pandoc is not supported.")
     return(kable_input)
   }
-  if (kable_format == "html") {
-    return(group_rows_html(kable_input, group_label, start_row, end_row,
-                           label_row_css, escape))
+  if (is.null(index)) {
+    if (kable_format == "html") {
+      return(group_rows_html(kable_input, group_label, start_row, end_row,
+                             label_row_css, escape))
+    }
+    if (kable_format == "latex") {
+      return(group_rows_latex(kable_input, group_label, start_row, end_row,
+                              latex_gap_space, escape))
+    }
+  } else {
+    index <- group_row_index_translator(index)
+    out <- kable_input
+    if (kable_format == "html") {
+      for (i in 1:nrow(index)) {
+        out <- group_rows_html(out, index$header[i],
+                               index$start[i], index$end[i],
+                               label_row_css, escape)
+      }
+    }
+    if (kable_format == "latex") {
+      for (i in 1:nrow(index)) {
+        out <- group_rows_latex(out, index$header[i],
+                               index$start[i], index$end[i],
+                               latex_gap_space, escape)
+      }
+    }
+    return(out)
   }
-  if (kable_format == "latex") {
-    return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                            latex_gap_space, escape))
-  }
+}
+
+group_row_index_translator <- function(index) {
+  index <- standardize_header_input(index)
+  index$start <- cumsum(c(1, index$colspan))[1:length(index$colspan)]
+  index$end <- cumsum(index$colspan)
+  index$header <- trimws(index$header)
+  index <- index[index$header != "", ]
+  return(index)
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
@@ -78,7 +108,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
-  out <- add_indent(out, positions = seq(start_row, end_row))
+  out <- add_indent_html(out, positions = seq(start_row, end_row))
   return(out)
 }
 
@@ -113,6 +143,6 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
-  out <- add_indent(out, seq(start_row, end_row))
+  out <- add_indent_latex(out, seq(start_row, end_row))
   return(out)
 }

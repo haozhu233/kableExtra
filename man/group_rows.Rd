@@ -4,8 +4,9 @@
 \alias{group_rows}
 \title{Put a few rows of a table into one category}
 \usage{
-group_rows(kable_input, group_label, start_row, end_row,
-  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.5em",
+group_rows(kable_input, group_label = NULL, start_row = NULL,
+  end_row = NULL, index = NULL,
+  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.3em",
   escape = TRUE)
 }
 \arguments{
@@ -19,6 +20,9 @@ labeling rows}
 
 \item{end_row}{A numeric value that tells the function in which row the group
 ends.}
+
+\item{index}{A named vector providing the index for robust row-grouping tasks.
+Basically, you can use it in the same way as \code{add_header_above()}.}
 
 \item{label_row_css}{A character string for any customized css used for the
 labeling row. By default, the labeling row will have a solid black line
