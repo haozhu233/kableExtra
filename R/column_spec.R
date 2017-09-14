@@ -183,7 +183,7 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
     color <- sprintf("\\\\color{%s}", color)
   }
 
-  if (!is.null(color)) {
+  if (!is.null(background)) {
     background <- sprintf("\\\\columncolor{%s}", background)
   }
 
