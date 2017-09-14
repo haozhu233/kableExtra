@@ -58,8 +58,7 @@ kable_as_image <- function(kable_input, filename = NULL,
     "\\end{document}"
   )
   temp_tex <- paste(temp_tex, collapse = "\n")
-  temp_file <- paste0("table_", format(Sys.time(), "%Y-%m-%d_%H:%M:%S"))
-  file.create(paste0(temp_file, ".tex"))
+  temp_file <- paste0("table_", format(Sys.time(), "%Y-%m-%d_%H%M%S"))
   write_file(temp_tex, paste0(temp_file, ".tex"))
   system(paste0("xelatex -interaction=batchmode ", temp_file, ".tex"))
   temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
