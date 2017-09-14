@@ -46,13 +46,7 @@ kable_as_image <- function(kable_input, filename = NULL,
     "\\usepackage{fixltx2e}",
     "\\usepackage{polyglossia}",
     "\\setmainlanguage{$mainlang$}",
-    "\\usepackage{booktabs}",
-    "\\usepackage{longtable}",
-    "\\usepackage{array}",
-    "\\usepackage{multirow}",
-    "\\usepackage[table]{xcolor}",
-    "\\usepackage{wrapfig}",
-    "\\usepackage{colortbl}",
+    latex_pkg_list(),
     "\\usepackage{graphicx}",
     "\\usepackage{mathspec}",
     "\\usepackage{xltxtra,xunicode}",
@@ -86,4 +80,5 @@ kable_as_image <- function(kable_input, filename = NULL,
   image_write(table_img, temp_img)
 
   include_graphics(temp_img)
+  return(kable_input)
 }

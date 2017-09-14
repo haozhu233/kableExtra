@@ -85,19 +85,7 @@ read_kable_as_xml <- function(x) {
 #' @export
 kableExtra_latex_packages <- function() {
 
-  pkg_list <- c(
-    "  - \\usepackage{booktabs}",
-    "  - \\usepackage{longtable}",
-    "  - \\usepackage{array}",
-    "  - \\usepackage{multirow}",
-    "  - \\usepackage[table]{xcolor}",
-    "  - \\usepackage{wrapfig}",
-    "  - \\usepackage{float}",
-    "  - \\usepackage{colortbl}",
-    "  - \\usepackage{pdflscape}",
-    "  - \\usepackage{tabu}",
-    "  - \\usepackage{threeparttable}"
-  )
+  pkg_list <- paste0("  - ", latex_pkg_list())
 
   pkg_text <- paste0(
     "header-includes:\n",
@@ -105,4 +93,20 @@ kableExtra_latex_packages <- function() {
   )
 
   cat(pkg_text)
+}
+
+latex_pkg_list <- function() {
+  return(c(
+    "\\usepackage{booktabs}",
+    "\\usepackage{longtable}",
+    "\\usepackage{array}",
+    "\\usepackage{multirow}",
+    "\\usepackage[table]{xcolor}",
+    "\\usepackage{wrapfig}",
+    "\\usepackage{float}",
+    "\\usepackage{colortbl}",
+    "\\usepackage{pdflscape}",
+    "\\usepackage{tabu}",
+    "\\usepackage{threeparttable}"
+  ))
 }
