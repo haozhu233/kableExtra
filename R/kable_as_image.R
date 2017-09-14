@@ -11,6 +11,10 @@
 #' Also, if a filename is provided, user has the option to "save" the table to
 #' an image file like `ggplot2::ggsave()`.
 #'
+#' Note that, if you are using this function on a Windows computer, you need
+#' to install Ghostscript before you can use this feature. It is essential for
+#' magick to read PDFs on Windows. Website for Ghostscript: https://ghostscript.com/
+#'
 #' The idea of this function was coming from [this StackOverflow question](https://stackoverflow.com/questions/44711313/save-rmarkdowns-report-tables-and-figures-to-file).
 #' The approach was learned and adopted from the [texpreview](https://github.com/metrumresearchgroup/texPreview)
 #' package, which allows you to preview the results of TeX code in the Viewer panel.
@@ -64,7 +68,12 @@ kable_as_image <- function(kable_input, filename = NULL,
   temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
   unlink(temp_file_delete)
 
-  table_img_pdf <- image_read(paste0(temp_file, ".pdf"), density = 300)
+  table_img_pdf <- try(image_read(paste0(temp_file, ".pdf"), density = 300),
+                       silent = T)
+  if (class(table_img_pdf) == "try-error") {
+    stop("Ghostscript is required to read PDF on windows. ",
+         "Please download it here: https://ghostscript.com/")
+  }
   if (!keep_pdf) {
     unlink(paste0(temp_file, ".pdf"))
   }

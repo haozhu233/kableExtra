@@ -37,6 +37,10 @@ edits to the tables in Word.
 Also, if a filename is provided, user has the option to "save" the table to
 an image file like \code{ggplot2::ggsave()}.
 
+Note that, if you are using this function on a Windows computer, you need
+to install Ghostscript before you can use this feature. It is essential for
+magick to read PDFs on Windows. Website for Ghostscript: https://ghostscript.com/
+
 The idea of this function was coming from \href{https://stackoverflow.com/questions/44711313/save-rmarkdowns-report-tables-and-figures-to-file}{this StackOverflow question}.
 The approach was learned and adopted from the \href{https://github.com/metrumresearchgroup/texPreview}{texpreview}
 package, which allows you to preview the results of TeX code in the Viewer panel.
