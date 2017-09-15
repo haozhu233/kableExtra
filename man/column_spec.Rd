@@ -6,7 +6,7 @@
 \usage{
 column_spec(kable_input, column, width = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, color = NULL, background = NULL,
-  border_left = FALSE, border_right = FALSE, ...)
+  border_left = FALSE, border_right = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -46,6 +46,6 @@ bold text and italic text.
 }
 \examples{
 x <- knitr::kable(head(mtcars), "html")
-column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
+column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
 
 }

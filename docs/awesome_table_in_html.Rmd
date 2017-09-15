@@ -112,7 +112,7 @@ kable(dt, "html") %>%
 
 # Column / Row Specification
 ## Column spec
-When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below.
+When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
 
 Warning: If you have a super long table, you should be cautious when you use `column_spec` as the xml node modification takes time.
 
@@ -139,8 +139,8 @@ Similar with `column_spec`, you can define specifications for rows. Currently, y
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped", full_width = F) %>%
-  column_spec(7, bold = T) %>%
-  row_spec(5, bold = T, color = "white", background = "#D7261E")
+  column_spec(5:7, bold = T) %>%
+  row_spec(3:5, bold = T, color = "white", background = "#D7261E")
 ```
 
 # Grouped Columns / Rows
@@ -168,6 +168,14 @@ kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
   group_rows("Group 1", 4, 7) %>%
   group_rows("Group 2", 8, 10)
+```
+
+Another way to use `group_rows` is to provide an grouping index, similar with `add_header_above()`. This feature is only available in kableExtra > 0.5.2.
+```{r, eval = F}
+# Not evaluated. This example generates the same table as above.
+kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
+  kable_styling("striped", full_width = F) %>%
+  group_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 ```
 
 For advanced users, you can even define your own css for the group labeling.
@@ -249,4 +257,3 @@ kable(cbind(mtcars, mtcars), "html") %>%
   kable_styling() %>%
   scroll_box(width = "500px", height = "200px")
 ```
-

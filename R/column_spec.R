@@ -26,14 +26,13 @@
 #' in a character string for the CSS of the border line
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
-#' column_spec(x, 1, width = "20em", bold = TRUE, italic = TRUE)
+#' column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
 #'
 #' @export
 column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
                         monospace = FALSE, color = NULL, background = NULL,
-                        border_left = FALSE, border_right = FALSE,
-                        ...) {
+                        border_left = FALSE, border_right = FALSE) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -52,7 +51,7 @@ column_spec <- function(kable_input, column,
     return(column_spec_latex(kable_input, column, width,
                              bold, italic, monospace,
                              color, background,
-                             border_left, border_right, ...))
+                             border_left, border_right))
   }
 }
 
@@ -130,8 +129,7 @@ column_spec_html <- function(kable_input, column, width,
 column_spec_latex <- function(kable_input, column, width,
                               bold, italic, monospace,
                               color, background,
-                              border_left, border_right,
-                              decimal_align = F) {
+                              border_left, border_right) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",

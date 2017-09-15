@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 0.5.1.9000
+Version: 0.5.2
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre')),
     person('Timothy', 'Tsai', role = 'ctb'),
@@ -32,10 +32,10 @@ Imports:
     xml2,
     rvest,
     rmarkdown (>= 1.6.0),
-    readr,
-    magick
+    readr
 Suggests:
-    testthat
+    testthat,
+    magick
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

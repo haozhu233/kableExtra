@@ -66,7 +66,6 @@
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
 #' @importFrom readr read_lines read_file write_file
-#' @import magick
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package

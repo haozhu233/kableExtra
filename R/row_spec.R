@@ -19,7 +19,7 @@
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
-#' row_spec(x, 1, bold = TRUE, italic = TRUE)
+#' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
 #'
 #' @export
 row_spec <- function(kable_input, row,

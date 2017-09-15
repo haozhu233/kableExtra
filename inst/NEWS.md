@@ -1,3 +1,17 @@
+kableExtra 0.5.2
+--------------------------------------------------------------------------------
+* Request from CRAN: Changed dependency on `magick` from Imports to Suggest. 
+Added error message when users don't have magick installed. 
+
+* Added argument `index` to `group_rows` so users can build multiple row groups
+in one step. The syntax is the same with `add_header_above`
+
+* Now `row_spec` and `column_spec` can take vectors so users can customized 
+multiple row/columns at the same time. 
+
+* Fixed a bug for `kable_as_image` on Windows. Improved documentations and 
+error messages. 
+
 kableExtra 0.5.1
 --------------------------------------------------------------------------------
 * Added documentations about those color/background color options in column_spec 

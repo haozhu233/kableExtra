@@ -65,7 +65,7 @@ options(kableExtra.latex.load_package = FALSE)
 library(kableExtra)
 ```
 
-If you are using R Sweave or some customized rmarkdown templates or you just want to load these LaTeX libraries by yourself, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
+If you are using R Sweave, beamer, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
 ```{yaml}
 header-includes:
@@ -316,4 +316,21 @@ kable(dt, format = "latex", caption = "Demo Table (Landscape)[note]", booktabs =
                notation = "symbol") %>%
   group_rows("Group 1", 4, 5) %>%
   landscape()
+```
+
+## Use LaTeX table in HTML or Word
+If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). 
+
+```{r, eval = F}
+# Not evaluated. 
+
+# The code below will automatically include the image in the rmarkdown document
+kable(dt, "latex", booktabs = T) %>%
+  column_spec(1, bold = T) %>%
+  kable_as_image()
+
+# If you want to save the image locally, just provide a name
+kable(dt, "latex", booktabs = T) %>%
+  column_spec(1, bold = T) %>%
+  kable_as_image("my_latex_table")
 ```

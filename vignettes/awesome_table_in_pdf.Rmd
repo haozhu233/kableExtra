@@ -65,7 +65,7 @@ options(kableExtra.latex.load_package = FALSE)
 library(kableExtra)
 ```
 
-If you are using R Sweave or some customized rmarkdown templates or you just want to load these LaTeX libraries by yourself, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
+If you are using R Sweave, beamer, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
 ```{yaml}
 header-includes:
@@ -108,11 +108,13 @@ kable(dt, format = "latex", booktabs = T) %>%
 ```
 
 ### Hold position
-If you provide a table caption in `kable()`, it will put your LaTeX tabular in a `table` environment, unless you are using `longtable`. A `table` environment will automatically find the best place (it thinks) to put your table. However, in many cases, you do want your table to appear in a position you want it to be. In this case, you can use this `hold_position` options here.
+If you provide a table caption in `kable()`, it will put your LaTeX tabular in a `table` environment, unless you are using `longtable`. A `table` environment will automatically find the best place (it thinks) to put your table. However, in many cases, you do want your table to appear in a position you want it to be. In this case, you can use this `hold_position` options here. 
 ```{r}
 kable(dt, format = "latex", caption = "Demo table", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
+
+If you find `hold_position` is not powerful enough to literally PIN your table in the exact position, you may want to use `HOLD_position`, which is a more powerful version of this feature. For those who are familar with LaTeX, `hold_position` uses `[!h]` and `HOLD_position` uses `[H]` and the `float` package.
 
 ### Scale down
 When you have a wide table that will normally go out of the page and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, if your table is too small, it will also scale up your table. It was named in this way only because scaling up isn't very useful in most cases. 
@@ -137,10 +139,11 @@ kable(long_dt, format = "latex", longtable = T, booktabs = T, caption = "Longtab
 
 
 ## Full width?
-If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. Note that, if you use `full_width` in LaTeX, you will loss your in-cell text alignment settings and everything will be left-aligned. 
+If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. You can use `column_spec`, which will be explained later, together with `full_width` to achieve the best result.
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
-  kable_styling(full_width = T)
+  kable_styling(full_width = T) %>%
+  column_spec(1, width = "8cm")
 ```
 
 ## Position
@@ -192,7 +195,7 @@ Similar with `column_spec`, you can define specifications for rows. Currently, y
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling("striped", full_width = F) %>%
   column_spec(7, border_left = T, bold = T) %>%
-  row_spec(5, bold = T, color = "white", background = "black")
+  row_spec(3:5, bold = T, color = "white", background = "black")
 ```
 
 # Grouped Columns / Rows
@@ -228,6 +231,14 @@ kable(dt, format = "latex", booktabs = T) %>%
   group_rows("Group 1", 4, 5, latex_gap_space = "2em")
 ```
 
+If you prefer to build multiple groups in one step, you can use the short-hand `index` option. Basically, you can use it in the same way as you use `add_header_above`. However, since `group_row` only support one layer of grouping, you can't add multiple layers of grouping header as you can do in `add_header_above`. 
+```{r, eval=FALSE}
+kable(mtcars[1:10, 1:6], format = "latex", caption = "Group Rows", booktabs = T) %>%
+  kable_styling() %>%
+  group_rows(index=c(" " = 3, "Group 1" = 4, "Group 2" = 3))
+# Not evaluated. The code above should have the same result as the first example in this section.
+```
+
 ## Row indentation
 Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
 For advanced users, you can even define your own css for the group labeling.
@@ -237,7 +248,7 @@ kable(dt, format = "latex", booktabs = T) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. If you even need to specify column/row format, use `column_spec` & `row_spec` before you pipe it into `collapse_rows`.
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -305,4 +316,21 @@ kable(dt, format = "latex", caption = "Demo Table (Landscape)[note]", booktabs =
                notation = "symbol") %>%
   group_rows("Group 1", 4, 5) %>%
   landscape()
+```
+
+## Use LaTeX table in HTML or Word
+If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). 
+
+```{r, eval = F}
+# Not evaluated. 
+
+# The code below will automatically include the image in the rmarkdown document
+kable(dt, "latex", booktabs = T) %>%
+  column_spec(1, bold = T) %>%
+  kable_as_image()
+
+# If you want to save the image locally, just provide a name
+kable(dt, "latex", booktabs = T) %>%
+  column_spec(1, bold = T) %>%
+  kable_as_image("my_latex_table")
 ```

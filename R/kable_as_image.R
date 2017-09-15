@@ -31,54 +31,65 @@
 #' `c("\\usepackage{threeparttable}", "\\usepackage{icons}")`
 #' @param keep_pdf A T/F option to control if the mid-way standalone pdf should
 #' be kept. Default is `FALSE`.
+#' @param density Resolution to read the PDF file. Default value is 300, which
+#' should be sufficient in most cases.
 #'
 #' @export
 kable_as_image <- function(kable_input, filename = NULL,
                            file_format = "png",
                            latex_header_includes = NULL,
-                           keep_pdf = FALSE) {
-  temp_tex <- c(
-    "\\documentclass[border=1mm, preview]{standalone}",
-    "\\usepackage[active,tightpage]{preview}",
-    "\\usepackage{varwidth}",
-    "\\usepackage{amssymb, amsmath}",
-    "\\usepackage{ifxetex,ifluatex}",
-    "\\usepackage{fixltx2e}",
-    "\\usepackage{polyglossia}",
-    "\\setmainlanguage{$mainlang$}",
-    latex_pkg_list(),
-    "\\usepackage{graphicx}",
-    "\\usepackage{mathspec}",
-    "\\usepackage{xltxtra,xunicode}",
-    latex_header_includes,
-    "\\begin{document}",
-    enc2utf8(as.character(kable_input)),
-    "\\end{document}"
-  )
-  temp_tex <- paste(temp_tex, collapse = "\n")
-  temp_file <- paste0("table_", format(Sys.time(), "%Y-%m-%d_%H%M%S"))
-  write_file(temp_tex, paste0(temp_file, ".tex"))
-  system(paste0("xelatex -interaction=batchmode ", temp_file, ".tex"))
-  temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
-  unlink(temp_file_delete)
-
-  table_img_pdf <- try(image_read(paste0(temp_file, ".pdf"), density = 300),
-                       silent = T)
-  if (class(table_img_pdf) == "try-error") {
-    stop("Ghostscript is required to read PDF on windows. ",
-         "Please download it here: https://ghostscript.com/")
-  }
-  if (!keep_pdf) {
-    unlink(paste0(temp_file, ".pdf"))
-  }
-  table_img <- image_convert(table_img_pdf, file_format)
-  if (!is.null(filename)) {
-    temp_img <- paste0(filename, ".", file_format)
+                           keep_pdf = FALSE,
+                           density = 300) {
+  if (!requireNamespace("magick", quietly = TRUE)) {
+    stop('kable_as_image requires the magick package, which is not available ',
+         'on all platforms. Please get it installed ',
+         'via install.packages("magick"). If you are running on Windows, you ',
+         'also need to install Ghostscript. Please download it here:',
+         'https://ghostscript.com/')
   } else {
-    temp_img <- tempfile(fileext = paste0(".", file_format))
-  }
-  image_write(table_img, temp_img)
+    temp_tex <- c(
+      "\\documentclass[border=1mm, preview]{standalone}",
+      "\\usepackage[active,tightpage]{preview}",
+      "\\usepackage{varwidth}",
+      "\\usepackage{amssymb, amsmath}",
+      "\\usepackage{ifxetex,ifluatex}",
+      "\\usepackage{fixltx2e}",
+      "\\usepackage{polyglossia}",
+      "\\setmainlanguage{$mainlang$}",
+      latex_pkg_list(),
+      "\\usepackage{graphicx}",
+      "\\usepackage{mathspec}",
+      "\\usepackage{xltxtra,xunicode}",
+      latex_header_includes,
+      "\\begin{document}",
+      enc2utf8(as.character(kable_input)),
+      "\\end{document}"
+    )
+    temp_tex <- paste(temp_tex, collapse = "\n")
+    temp_file <- paste0("table_", format(Sys.time(), "%Y-%m-%d_%H%M%S"))
+    write_file(temp_tex, paste0(temp_file, ".tex"))
+    system(paste0("xelatex -interaction=batchmode ", temp_file, ".tex"))
+    temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
+    unlink(temp_file_delete)
 
-  include_graphics(temp_img)
-  return(kable_input)
+    table_img_pdf <- try(magick::image_read(paste0(temp_file, ".pdf"),
+                                            density = density),
+                         silent = T)
+    if (class(table_img_pdf) == "try-error") {
+      stop("Ghostscript is required to read PDF on windows. ",
+           "Please download it here: https://ghostscript.com/")
+    }
+    if (!keep_pdf) {
+      unlink(paste0(temp_file, ".pdf"))
+    }
+    table_img <- magick::image_convert(table_img_pdf, file_format)
+    if (!is.null(filename)) {
+      temp_img <- paste0(filename, ".", file_format)
+    } else {
+      temp_img <- tempfile(fileext = paste0(".", file_format))
+    }
+    magick::image_write(table_img, temp_img)
+
+    include_graphics(temp_img)
+  }
 }
