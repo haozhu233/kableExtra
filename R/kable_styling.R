@@ -354,7 +354,7 @@ styling_latex_full_width <- function(x, table_info) {
 }
 
 styling_latex_position <- function(x, table_info, position, latex_options) {
-  hold_position <- "hold_position" %in% latex_options
+  hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
   switch(
     position,
     center = styling_latex_position_center(x, table_info, hold_position),
@@ -367,7 +367,12 @@ styling_latex_position <- function(x, table_info, position, latex_options) {
 
 styling_latex_position_center <- function(x, table_info, hold_position) {
   if (!table_info$table_env & table_info$tabular == "tabular") {
-    return(paste0("\\begin{table}[!h]\n\\centering", x, "\n\\end{table}"))
+    x <- paste0("\\begin{table}\n\\centering", x, "\n\\end{table}")
+    if (hold_position == "hold_position") {
+      x <- styling_latex_hold_position(x)
+    } else {
+      x <- styling_latex_HOLD_position(x)
+    }
   }
   return(x)
 }
