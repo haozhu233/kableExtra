@@ -180,6 +180,7 @@ pdfTable_styling <- function(kable_input,
                              font_size = NULL,
                              repeat_header_text = "\\textit{(continued)}",
                              repeat_header_method = c("append", "replace"),
+                             repeat_header_continued = FALSE,
                              stripe_color = "gray!6",
                              latex_table_env = NULL) {
 
@@ -215,7 +216,7 @@ pdfTable_styling <- function(kable_input,
 
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
     out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
-                                       repeat_header_method)
+                                       repeat_header_method, repeat_header_continued)
   }
 
   if (full_width) {
@@ -300,7 +301,8 @@ styling_latex_scale_down <- function(x, table_info) {
 }
 
 styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
-                                        repeat_header_method) {
+                                        repeat_header_method,
+                                        repeat_header_continued) {
   x <- read_lines(x)
   if (table_info$booktabs) {
     header_rows_start <- which(x == "\\toprule")[1]
@@ -323,15 +325,38 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
     continue_line <- paste0("\\caption[]{", repeat_header_text, "}\\\\")
   }
 
-  index_bottomrule <- which(x == "\\bottomrule")
-  x <- x[-index_bottomrule]
-  x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*\\bottomrule")
+  if (!table_info$booktabs) {
+    bottom_part <- NULL
+  } else {
+    index_bottomrule <- which(x == "\\bottomrule")
+    x <- x[-index_bottomrule]
+
+    if (repeat_header_continued == FALSE) {
+      bottom_part <- "\\endfoot\n\\bottomrule\n\\endlastfoot"
+    } else {
+      if (repeat_header_continued == TRUE) {
+        bottom_text <- "continued"
+      } else {
+        bottom_text <- repeat_header_continued
+      }
+      bottom_part <- paste0(
+        "\\bottomrule\n",
+        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, " \\ldots}\\\n",
+        "\\endfoot\n",
+        "\\bottomrule\n",
+        "\\endlastfoot"
+      )
+    }
+  }
+
+  # x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*\\bottomrule")
   x <- c(
     x[1:header_rows_end],
     "\\endfirsthead",
     continue_line,
     x[header_rows_start:header_rows_end],
     "\\endhead",
+    bottom_part,
     x[(header_rows_end + 1):length(x)]
   )
   x <- paste0(x, collapse = "\n")

@@ -5,3 +5,4 @@ figure
 *.log
 *.tex
 *.synctex.gz
+*.lot
