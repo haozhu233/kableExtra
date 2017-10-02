@@ -335,13 +335,13 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
       bottom_part <- "\\endfoot\n\\bottomrule\n\\endlastfoot"
     } else {
       if (repeat_header_continued == TRUE) {
-        bottom_text <- "continued"
+        bottom_text <- "\\textit{(continued \\ldots)}"
       } else {
         bottom_text <- repeat_header_continued
       }
       bottom_part <- paste0(
         "\\bottomrule\n",
-        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, " \\ldots}\\\n",
+        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\n",
         "\\endfoot\n",
         "\\bottomrule\n",
         "\\endlastfoot"
