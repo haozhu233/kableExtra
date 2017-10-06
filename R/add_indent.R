@@ -9,7 +9,7 @@
 #' add_indent(x, c(2, 4))
 #'
 #' @export
-add_indent <- function(kable_input, positions) {
+add_indent <- function(kable_input, positions, indent) {
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
@@ -22,12 +22,12 @@ add_indent <- function(kable_input, positions) {
     return(add_indent_html(kable_input, positions))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions))
+    return(add_indent_latex(kable_input, positions, indent))
   }
 }
 
 # Add indentation for LaTeX
-add_indent_latex <- function(kable_input, positions) {
+add_indent_latex <- function(kable_input, positions, indent) {
   table_info <- magic_mirror(kable_input)
 
   if (max(positions) > table_info$nrow - 1) {
@@ -38,16 +38,16 @@ add_indent_latex <- function(kable_input, positions) {
   out <- enc2utf8(kable_input)
   for (i in positions) {
     rowtext <- table_info$contents[i + 1]
-    out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
-    table_info$contents[i + 1] <- latex_indent_unit(rowtext)
+    out <- sub(rowtext, latex_indent_unit(rowtext, indent), out, perl = TRUE)
+    table_info$contents[i + 1] <- latex_indent_unit(rowtext, indent)
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
 }
 
-latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace\\{1em\\}", rowtext)
+latex_indent_unit <- function(rowtext, indent) {
+  paste0("\\\\hspace\\{", indent, "}", rowtext)
 }
 
 # Add indentation for HTML

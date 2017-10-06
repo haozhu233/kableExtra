@@ -29,7 +29,7 @@ group_rows <- function(kable_input, group_label = NULL,
                        start_row = NULL, end_row = NULL,
                        index = NULL,
                        label_row_css = "border-bottom: 1px solid;",
-                       latex_gap_space = "0.3em",
+                       latex_gap_space = "0.3em", latex_indent = "1em",
                        escape = TRUE) {
 
   kable_format <- attr(kable_input, "format")
@@ -44,7 +44,7 @@ group_rows <- function(kable_input, group_label = NULL,
     }
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                              latex_gap_space, escape))
+                              latex_gap_space, latex_indent, escape))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -60,7 +60,7 @@ group_rows <- function(kable_input, group_label = NULL,
       for (i in 1:nrow(index)) {
         out <- group_rows_latex(out, index$header[i],
                                index$start[i], index$end[i],
-                               latex_gap_space, escape)
+                               latex_gap_space, latex_indent, escape)
       }
     }
     return(out)
@@ -113,7 +113,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 }
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
-                             gap_space, escape) {
+                             gap_space, indent, escape) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
@@ -143,6 +143,6 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
-  out <- add_indent_latex(out, seq(start_row, end_row))
+  out <- add_indent_latex(out, seq(start_row, end_row), indent)
   return(out)
 }
