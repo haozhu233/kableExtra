@@ -115,7 +115,11 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              gap_space, indent, escape) {
   table_info <- magic_mirror(kable_input)
-  out <- enc2utf8(as.character(kable_input))
+  # out <- enc2utf8(as.character(kable_input)) # I am not sure whether encoding
+  # is neccessary before or also after (where it would be simpler) the
+  # operations here, so I leave it commented out instead of changing it.
+  contents <- table_info$contents
+  contents <- add_indent_latex(contents, seq(start_row, end_row), indent)
 
   if (escape) {
     group_label <- escape_latex(group_label)
@@ -123,7 +127,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   # Add group label
-  rowtext <- table_info$contents[start_row + 1]
+  rowtext <- contents[start_row + 1]
   if (table_info$booktabs) {
     new_rowtext <- paste0(
       "\\\\addlinespace[", gap_space, "]\n",
@@ -138,11 +142,36 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
       group_label, "}}\\\\\\\\\n", rowtext
     )
   }
-  out <- sub(rowtext, new_rowtext, out)
-  out <- gsub("\\\\addlinespace\n", "", out)
+  contents[start_row+1] <- new_rowtext
+  table_info$contents <- contents
+  out <- reassemble_kable(magic_mirror = table_info)
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
-  out <- add_indent_latex(out, seq(start_row, end_row), indent)
+  return(out)
+}
+
+reassemble_kable <- function(magic_mirror){
+
+  contents <- magic_mirror$contents
+
+  contents <- gsub("\\\\", "\\", contents, fixed = TRUE)
+  contents <- gsub("\\$", "$", contents, fixed = TRUE)
+  contents <- gsub("\\{", "{", contents, fixed = TRUE)
+  contents <- gsub("\\}", "}", contents, fixed = TRUE)
+  contents <- gsub("\\(", "(", contents, fixed = TRUE)
+  contents <- gsub("\\)", ")", contents, fixed = TRUE)
+  # probably others as well?
+
+  magic_mirror$contents <- contents
+
+  begin <- paste0("\n\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
+  caption <- paste0("\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\\\\\n")
+  header <- paste0("\\toprule\n", magic_mirror$contents[1], "\\\\\n\\midrule\n")
+  body <- paste0(magic_mirror$contents[-1], collapse = "\\\\\n")
+  end <- paste0("\\\\\n\\bottomrule\n", "\\end{", magic_mirror$tabular, "}")
+
+  out <- paste0(begin, caption, header, body, end)
+
   return(out)
 }
