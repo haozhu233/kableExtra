@@ -165,13 +165,27 @@ reassemble_kable <- function(magic_mirror){
 
   magic_mirror$contents <- contents
 
-  begin <- paste0("\n\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
-  caption <- paste0("\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\\\\\n")
   header <- paste0("\\toprule\n", magic_mirror$contents[1], "\\\\\n\\midrule\n")
   body <- paste0(magic_mirror$contents[-1], collapse = "\\\\\n")
-  end <- paste0("\\\\\n\\bottomrule\n", "\\end{", magic_mirror$tabular, "}")
 
-  out <- paste0(begin, caption, header, body, end)
+  if(magic_mirror$table_env){
+    if(magic_mirror$centering){
+      table <- paste0("\\begin{table}\n\n", "\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\n\\centering\n")
+    } else{
+      table <- paste0("\\begin{table}\n\n", "\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\n")
+    }
+    begin <- paste0("\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
+    end <- paste0("\\\\\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+
+    out <- paste0(table, begin, header, body, end)
+  } else{
+    begin <- paste0("\n\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
+    caption <- paste0("\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\\\\\n")
+    end <- paste0("\\\\\n\\bottomrule\n", "\\end{", magic_mirror$tabular, "}")
+
+    out <- paste0(begin, caption, header, body, end)
+  }
+
 
   return(out)
 }
