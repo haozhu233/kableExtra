@@ -144,48 +144,9 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
   contents[start_row+1] <- new_rowtext
   table_info$contents <- contents
-  out <- reassemble_kable(magic_mirror = table_info)
+  out <- reassemble_kable(mirror = table_info)
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
-  return(out)
-}
-
-reassemble_kable <- function(magic_mirror){
-
-  contents <- magic_mirror$contents
-
-  contents <- gsub("\\\\", "\\", contents, fixed = TRUE)
-  contents <- gsub("\\$", "$", contents, fixed = TRUE)
-  contents <- gsub("\\{", "{", contents, fixed = TRUE)
-  contents <- gsub("\\}", "}", contents, fixed = TRUE)
-  contents <- gsub("\\(", "(", contents, fixed = TRUE)
-  contents <- gsub("\\)", ")", contents, fixed = TRUE)
-  # probably others as well?
-
-  magic_mirror$contents <- contents
-
-  header <- paste0("\\toprule\n", magic_mirror$contents[1], "\\\\\n\\midrule\n")
-  body <- paste0(magic_mirror$contents[-1], collapse = "\\\\\n")
-
-  if(magic_mirror$table_env){
-    if(magic_mirror$centering){
-      table <- paste0("\\begin{table}\n\n", "\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\n\\centering\n")
-    } else{
-      table <- paste0("\\begin{table}\n\n", "\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\n")
-    }
-    begin <- paste0("\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
-    end <- paste0("\\\\\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
-
-    out <- paste0(table, begin, header, body, end)
-  } else{
-    begin <- paste0("\n\\begin{", magic_mirror$tabular, "}[", magic_mirror$valign3, "]{", magic_mirror$align, "}\n")
-    caption <- paste0("\\caption[", magic_mirror$caption.short, "]{", magic_mirror$caption, "}\\\\\n")
-    end <- paste0("\\\\\n\\bottomrule\n", "\\end{", magic_mirror$tabular, "}")
-
-    out <- paste0(begin, caption, header, body, end)
-  }
-
-
   return(out)
 }
