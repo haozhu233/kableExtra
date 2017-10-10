@@ -344,7 +344,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
         "\\bottomrule\n",
         "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\n",
         "\\endfoot\n",
-        "*\\bottomrule\n",
+        "\\bottomrule\n",
         "\\endlastfoot"
       )
     }
