@@ -331,6 +331,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
   } else {
     index_bottomrule <- which(x == "\\bottomrule")
     x <- x[-index_bottomrule]
+    x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*")
 
     if (repeat_header_continued == FALSE) {
       bottom_part <- "\\endfoot\n\\bottomrule\n\\endlastfoot"
