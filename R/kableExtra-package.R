@@ -65,7 +65,7 @@
 #' @importFrom rmarkdown latex_dependency
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
-#' @importFrom readr read_lines read_file write_file
+#' @importFrom readr read_lines read_file
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package
