@@ -54,5 +54,6 @@ dt$cyl <- paste(dt$cyl, "$")
 kable(dt, "html") %>%
   kable_styling(full_width = F) %>%
   column_spec(7, bold = T) %>%
+  row_spec(0, color = "black", align = "right") %>%
   row_spec(5, bold = T, italic = T, color = "white", background = "black")
 ```
