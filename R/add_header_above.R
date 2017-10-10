@@ -2,8 +2,7 @@
 #'
 #' @description Tables with multiple rows of header rows are extremely useful
 #' to demonstrate grouped data. This function takes the output of a `kable()`
-#' function and adds an header row on top of it. This function can work with
-#' both `HTML` and `LaTeX` outputs
+#' function and adds an header row on top of it.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param header A (named) character vector with `colspan` as values. For

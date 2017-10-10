@@ -41,8 +41,7 @@ in a character string for the CSS of the border line}
 }
 \description{
 This function allows users to select a column and then specify
-its look. Right now it supports the following three properties: column width,
-bold text and italic text.
+its look.
 }
 \examples{
 x <- knitr::kable(head(mtcars), "html")

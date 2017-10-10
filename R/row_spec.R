@@ -19,6 +19,8 @@
 #' @param align A character string for cell alignment. For HTML, possible values could
 #' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
+#' @param font_size Only if you want to specify font size locally in HTML. This feature
+#' is not available in LaTeX
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
@@ -26,7 +28,7 @@
 #' @export
 row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
-                     color = NULL, background = NULL, align = NULL) {
+                     color = NULL, background = NULL, align = NULL, font_size = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -37,7 +39,7 @@ row_spec <- function(kable_input, row,
   }
   if (kable_format == "html") {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
-                         color, background, align))
+                         color, background, align, font_size))
   }
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
@@ -46,7 +48,7 @@ row_spec <- function(kable_input, row,
 }
 
 row_spec_html <- function(kable_input, row, bold, italic, monospace,
-                          color, background, align) {
+                          color, background, align, font_size) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
@@ -61,7 +63,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
     for (theader_i in 1:length(xml_children(original_header_row))) {
       target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_cell_style(target_header_cell, bold, italic, monospace, color, background, align)
+      xml_cell_style(target_header_cell, bold, italic, monospace, color, background,
+                     align, font_size)
     }
     row <- row[row != 0]
   }
@@ -79,7 +82,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
       target_row <- xml_child(kable_tbody, j)
       for (i in 1:length(xml_children(target_row))) {
         target_cell <- xml_child(target_row, i)
-        xml_cell_style(target_cell, bold, italic, monospace, color, background, align)
+        xml_cell_style(target_cell, bold, italic, monospace, color, background,
+                       align, font_size)
       }
     }
   }
@@ -89,7 +93,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-xml_cell_style <- function(x, bold, italic, monospace, color, background, align) {
+xml_cell_style <- function(x, bold, italic, monospace, color, background, align, font_size) {
   if (bold) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                              "font-weight: bold;")
@@ -114,6 +118,10 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background, align)
   if (!is.null(align)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "text-align: ", align, ";")
+  }
+  if (!is.null(font_size)) {
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
+                                   "font-size: ", font_size, "px;")
   }
   return(x)
 }

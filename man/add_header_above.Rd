@@ -29,8 +29,7 @@ escaped.}
 \description{
 Tables with multiple rows of header rows are extremely useful
 to demonstrate grouped data. This function takes the output of a \code{kable()}
-function and adds an header row on top of it. This function can work with
-both \code{HTML} and \code{LaTeX} outputs
+function and adds an header row on top of it.
 }
 \examples{
 x <- knitr::kable(head(mtcars), "html")

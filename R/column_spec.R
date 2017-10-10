@@ -1,8 +1,7 @@
 #' Specify the look of the selected column
 #'
 #' @description This function allows users to select a column and then specify
-#' its look. Right now it supports the following three properties: column width,
-#' bold text and italic text.
+#' its look.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param column A numeric value or vector indicating which column(s) to be selected.

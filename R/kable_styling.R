@@ -1,8 +1,9 @@
 #' HTML table attributes
 #'
 #' @description This function provides a cleaner approach to modify the style
-#' of HTML tables other than using the `table.attr` option in `knitr::kable()`.
-#' Currenly, it assumes the HTML document has boot
+#' of HTML tables other than using the `table.attr` option in `knitr::kable()`. Note
+#' that those bootstrap options requires Twitter bootstrap theme, which is not avaiable
+#' in some customized template being loaded.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param bootstrap_options A character vector for bootstrap table options.

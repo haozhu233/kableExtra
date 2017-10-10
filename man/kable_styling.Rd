@@ -49,8 +49,9 @@ imported.}
 }
 \description{
 This function provides a cleaner approach to modify the style
-of HTML tables other than using the \code{table.attr} option in \code{knitr::kable()}.
-Currenly, it assumes the HTML document has boot
+of HTML tables other than using the \code{table.attr} option in \code{knitr::kable()}. Note
+that those bootstrap options requires Twitter bootstrap theme, which is not avaiable
+in some customized template being loaded.
 }
 \details{
 For LaTeX, extra options includes:

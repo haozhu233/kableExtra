@@ -25,11 +25,7 @@ be used.}
 Default is TRUE.}
 }
 \description{
-Add footnote to your favorite kable output. So far this function
-only works when you define \code{format} in your kable function or in the
-global knitr option \code{knitr.table.format}. In latex, we are using the
-\code{threeparttable} package so you need to import this package in your
-\code{YAML} header.
+Add footnote to your favorite kable output.
 }
 \examples{
 x <- knitr::kable(head(mtcars), "html")

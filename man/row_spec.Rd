@@ -5,7 +5,8 @@
 \title{Specify the look of the selected row}
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
-  monospace = FALSE, color = NULL, background = NULL)
+  monospace = FALSE, color = NULL, background = NULL, align = NULL,
+  font_size = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -22,16 +23,22 @@ need to be emphasized.}
 \item{monospace}{A T/F value to control whether the text of the selected column
 need to be monospaced (verbatim)}
 
-\item{color}{A character string for column text color. Here please pay
+\item{color}{A character string for row text color. Here please pay
 attention to the differences in color codes between HTML and LaTeX.}
 
-\item{background}{A character string for column background color. Here please
+\item{background}{A character string for row background color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}
+
+\item{align}{A character string for cell alignment. For HTML, possible values could
+be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
+while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
+
+\item{font_size}{Only if you want to specify font size locally in HTML. This feature
+is not available in LaTeX}
 }
 \description{
 This function allows users to select a row and then specify
-its look. Right now it supports the following two properties: bold text and
-italic text.
+its look. It can also specify the format of the header row when \code{row} = 0.
 }
 \examples{
 x <- knitr::kable(head(mtcars), "html")
