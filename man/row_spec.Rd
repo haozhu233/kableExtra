@@ -6,7 +6,7 @@
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
   monospace = FALSE, color = NULL, background = NULL, align = NULL,
-  font_size = NULL)
+  font_size = NULL, angle = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -33,8 +33,10 @@ pay attention to the differences in color codes between HTML and LaTeX.}
 be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
 while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
 
-\item{font_size}{Only if you want to specify font size locally in HTML. This feature
-is not available in LaTeX}
+\item{font_size}{Only if you want to specify font size locally in HTML.
+This feature is not available in LaTeX}
+
+\item{angle}{0-360, degree that the text will rotate.}
 }
 \description{
 This function allows users to select a row and then specify

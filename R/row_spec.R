@@ -19,8 +19,9 @@
 #' @param align A character string for cell alignment. For HTML, possible values could
 #' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
-#' @param font_size Only if you want to specify font size locally in HTML. This feature
-#' is not available in LaTeX
+#' @param font_size Only if you want to specify font size locally in HTML.
+#' This feature is not available in LaTeX
+#' @param angle 0-360, degree that the text will rotate.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
@@ -28,7 +29,8 @@
 #' @export
 row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
-                     color = NULL, background = NULL, align = NULL, font_size = NULL) {
+                     color = NULL, background = NULL, align = NULL,
+                     font_size = NULL, angle = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -39,16 +41,16 @@ row_spec <- function(kable_input, row,
   }
   if (kable_format == "html") {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
-                         color, background, align, font_size))
+                         color, background, align, font_size, angle))
   }
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
-                          color, background, align))
+                          color, background, align, angle))
   }
 }
 
 row_spec_html <- function(kable_input, row, bold, italic, monospace,
-                          color, background, align, font_size) {
+                          color, background, align, font_size, angle) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
@@ -64,7 +66,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     for (theader_i in 1:length(xml_children(original_header_row))) {
       target_header_cell <- xml_child(original_header_row, theader_i)
       xml_cell_style(target_header_cell, bold, italic, monospace, color, background,
-                     align, font_size)
+                     align, font_size, angle)
     }
     row <- row[row != 0]
   }
@@ -83,7 +85,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
       for (i in 1:length(xml_children(target_row))) {
         target_cell <- xml_child(target_row, i)
         xml_cell_style(target_cell, bold, italic, monospace, color, background,
-                       align, font_size)
+                       align, font_size, angle)
       }
     }
   }
@@ -93,27 +95,28 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-xml_cell_style <- function(x, bold, italic, monospace, color, background, align, font_size) {
+xml_cell_style <- function(x, bold, italic, monospace, color, background,
+                           align, font_size, angle) {
   if (bold) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                             "font-weight: bold;")
+                                   "font-weight: bold;")
   }
   if (italic) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                             "font-style: italic;")
+                                   "font-style: italic;")
   }
   if (monospace) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                             "font-family: monospace;")
+                                   "font-family: monospace;")
   }
   if (!is.null(color)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                             "color: ", color, ";")
+                                   "color: ", color, ";")
   }
   if (!is.null(background)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                             "background-color: ",
-                                             background, ";")
+                                   "background-color: ",
+                                   background, ";")
   }
   if (!is.null(align)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -123,18 +126,26 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background, align,
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "font-size: ", font_size, "px;")
   }
+  if (!is.null(angle)) {
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
+                                   "-webkit-transform: rotate(", angle,
+                                   "deg); -moz-transform: rotate(", angle,
+                                   "deg); -ms-transform: rotate(", angle,
+                                   "deg); -o-transform: rotate(", angle,
+                                   "deg);")
+  }
   return(x)
 }
 
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
-                           color, background, align) {
+                           color, background, align, angle) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
   row <- row + 1
   for (i in row) {
     target_row <- table_info$contents[i]
     new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
-                                     color, background, align)
+                                     color, background, align, angle)
     out <- sub(target_row, new_row, out, perl = T)
   }
 
@@ -144,7 +155,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
 }
 
 latex_new_row_builder <- function(target_row, bold, italic, monospace,
-                                  color, background, align) {
+                                  color, background, align, angle) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
@@ -173,13 +184,18 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
       paste0("\\\\multicolumn{1}{", align, "}{", x, "}")
     })
   }
+
+  if (!is.null(angle)) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\rotatebox{", angle, "}{", x, "}")
+    })
+  }
+
   new_row <- paste(unlist(new_row), collapse = " & ")
 
   if (!is.null(background)) {
     new_row <- paste0("\\\\rowcolor{", background, "}  ", new_row)
   }
-
-
 
   return(new_row)
 }

@@ -1,0 +1,25 @@
+---
+title: "cell_formatter_pdf"
+author: "Hao"
+date: "10/11/2017"
+output: pdf_document
+---
+
+```{r, include=F}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+```
+
+```{r}
+mtcars[1:5, 1:5] %>%
+  mutate(
+    mpg = ifelse(mpg > 21, 
+                 cell_spec(mpg, "latex", color = "green", bold = T),
+                 cell_spec(mpg, "latex", color = "red", italic = T)),
+    rotate = c(60, 120, 180, 240, 300),
+    rotate = cell_spec(rotate, "latex", angle = rotate)
+  ) %>%
+  kable("latex", escape = F, booktabs = T) %>%
+  row_spec(0, angle = 90)
+```
