@@ -20,25 +20,27 @@
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
 #' @param font_size Only if you want to specify font size locally in HTML.
 #' This feature is not available in LaTeX
-#' @param angle 0-360, degree that the text will rotate.
+#' @param angle 0-360, degree that the text will rotate. Can be a vector.
+#' @param hover_message A vector of strings to be displayed as hover message.
+#' Of course, this feature is nly available in HTML.
 #'
 #' @export
 cell_spec <- function(x, format,
                       bold = F, italic = F, monospace = F,
                       color = NULL, background = NULL,
-                      align = NULL, font_size = NULL, angle = NULL) {
+                      align = NULL, font_size = NULL, angle = NULL,
+                      hover_message = NULL) {
 
   if (missing(format) || is.null(format)) format = getOption('knitr.table.format')
   if (is.null(format)) {
-    warning("Output format for cell_formatter was not specified. Using ",
-            "html as default. You may consider to set it up via option knitr.table.format.",
-            "See ?cell_formatter for details. ")
-    return(x)
+    message("Setting cell_spec format as html")
+    format <- "html"
   }
 
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace,
-                          color, background, align, font_size, angle))
+                          color, background, align, font_size, angle,
+                          hover_message))
   }
   if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace,
@@ -47,31 +49,37 @@ cell_spec <- function(x, format,
 }
 
 cell_spec_html <- function(x, bold, italic, monospace,
-                           color, background, align, font_size, angle) {
+                           color, background, align, font_size, angle,
+                           hover_message) {
   cell_style <- NULL
   if (bold) cell_style <- paste(cell_style,"font-weight: bold;")
   if (italic) cell_style <- paste(cell_style, "font-style: italic;")
   if (monospace) cell_style <- paste(cell_style, "font-family: monospace;")
-  if (!is.null(color)) cell_style <- paste0(cell_style, " color: ", color, ";")
+  if (!is.null(color)) cell_style <- paste0(cell_style, "color: ", color, ";")
   if (!is.null(background)) {
-    cell_style <- paste0(cell_style, " border-radius: 4px; padding-right: 2px",
-                         "; background-color: ", background, ";")
+    cell_style <- paste0(cell_style, "border-radius: 4px; padding-right: 4px",
+                         ";padding-left: 4px; background-color: ", background, ";")
   }
   if (!is.null(align)) {
-    cell_style <- paste0(cell_style, " text-align: ", align, ";")
+    cell_style <- paste0(cell_style, "text-align: ", align, ";")
   }
   if (!is.null(font_size)) {
-    cell_style <- paste0(cell_style, " font-size: ", font_size, "px;")
+    cell_style <- paste0(cell_style, "font-size: ", font_size, "px;")
   }
   if (!is.null(angle)) {
     cell_style <- paste0(cell_style,
-                         " -webkit-transform: rotate(", angle,
+                         "-webkit-transform: rotate(", angle,
                          "deg); -moz-transform: rotate(", angle,
                          "deg); -ms-transform: rotate(", angle,
                          "deg); -o-transform: rotate(", angle, "deg);")
   }
+
+  if (!is.null(hover_message)) {
+    hover_message <- gsub("\n", "&#013;", hover_message)
+    hover_message <- paste0("data-toggle='tooltip' title='", hover_message, "'")
+  }
   out <- paste0(
-    '<div style="', cell_style, '">', x, '</div>'
+    '<div style="', cell_style, '"', hover_message, '>', x, '</div>'
   )
   return(out)
 }
@@ -81,8 +89,14 @@ cell_spec_latex <- function(x, bold, italic, monospace,
   if (bold) x <- paste0("\\bfseries{", x, "}")
   if (italic) x <-paste0("\\em{", x, "}")
   if (monospace) x <- paste0("\\ttfamily{", x, "}")
-  if (!is.null(color)) x <- paste0("\\textcolor{", color, "}{", x, "}")
-  if (!is.null(background)) x <- paste0("\\cellcolor{", background, "}{", x, "}")
+  if (!is.null(color)) {
+    color <- latex_color(color)
+    x <- paste0("\\textcolor", color, "{", x, "}")
+  }
+  if (!is.null(background)) {
+    background <- latex_color(background)
+    x <- paste0("\\cellcolor", background, "{", x, "}")
+    }
   if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
   if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
   return(x)

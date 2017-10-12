@@ -5,7 +5,8 @@
 \title{Specify Cell format}
 \usage{
 cell_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
-  background = NULL, align = NULL, font_size = NULL, angle = NULL)
+  background = NULL, align = NULL, font_size = NULL, angle = NULL,
+  hover_message = NULL)
 }
 \arguments{
 \item{x}{Things to be formated. It could be a vector of numbers or strings.}
@@ -35,7 +36,10 @@ while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
 \item{font_size}{Only if you want to specify font size locally in HTML.
 This feature is not available in LaTeX}
 
-\item{angle}{0-360, degree that the text will rotate.}
+\item{angle}{0-360, degree that the text will rotate. Can be a vector.}
+
+\item{hover_message}{A vector of strings to be displayed as hover message.
+Of course, this feature is nly available in HTML.}
 }
 \description{
 Specify Cell format before it gets into kable

@@ -12,13 +12,13 @@ library(dplyr)
 ```
 
 ```{r}
-mtcars[1:5, 1:5] %>%
+mtcars[1:25, 1:5] %>%
   mutate(
     mpg = ifelse(mpg > 21, 
                  cell_spec(mpg, "latex", color = "green", bold = T),
                  cell_spec(mpg, "latex", color = "red", italic = T)),
-    rotate = c(60, 120, 180, 240, 300),
-    rotate = cell_spec(rotate, "latex", angle = rotate)
+    disp = cell_spec(disp, "latex", background = spec_color(disp), 
+                     color = "white", bold = T)
   ) %>%
   kable("latex", escape = F, booktabs = T) %>%
   row_spec(0, angle = 90)

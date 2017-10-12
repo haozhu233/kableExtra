@@ -143,6 +143,35 @@ kable(dt, "html") %>%
   row_spec(3:5, bold = T, color = "white", background = "#D7261E")
 ```
 
+# Cell Specification
+`cell_spec` is different from the rest. You should use it before you pipe the table into the `kable` function. It is designed in such a way that you can easily use it inside a `dplyr::mutate()` together with conditional logic like `ifelse`. Since everything happens before `kable`, you have to tell this function which format you want to go to, `html` or `latex`. To reduce unnecessary finger typing, I linked the `format` argument here with `knitr::kable`'s global format option `knitr.table.format`. If you have defined this option to be `html` at the beginning of your document (as suggested earlier), it is not necessary for you to define format again for every `cell_spec`. 
+
+```{r, message=FALSE}
+library(dplyr)
+mtcars[1:5, 1:3] %>%
+  mutate(
+    car = row.names(.),
+    mpg = ifelse(mpg > 20, 
+                 cell_spec(mpg, "html", font_size = 18), mpg),
+    cyl = cell_spec(cyl, "html", angle = (1:5)*60, hover_message = mpg,
+                    background = "red", color = "white", align = "center"),
+    disp = ifelse(disp > 200,
+                  cell_spec(disp, "html", color = "red", bold = T),
+                  cell_spec(disp, "html", color = "green", italic = T)),
+    fancy = c(12, 14, 16, 18, 20),
+    fancy = cell_spec(fancy, "html", font_size = fancy, 
+                      color = viridisLite::inferno(length(fancy), end = 0.8)),
+    car = cell_spec(car, "html", bold = T,
+                    color = viridisLite::inferno(length(fancy), end = 0.8))
+  ) %>%
+  select(car, everything()) %>%
+  kable("html", escape = F) %>%
+  kable_styling("hover", full_width = F) %>%
+  add_header_above(c(" ", "Hello" = 2, "World" = 2)) 
+```
+
+## 
+
 # Grouped Columns / Rows
 ## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).

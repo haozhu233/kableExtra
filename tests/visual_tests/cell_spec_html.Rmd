@@ -1,0 +1,24 @@
+---
+title: "cell_formatter_pdf"
+author: "Hao"
+date: "10/11/2017"
+output: html_document
+---
+
+```{r, include=F}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+```
+
+```{r}
+mtcars[1:15, 1:5] %>%
+  mutate(
+    mpg = cell_spec(mpg, "html", color = "white", background = spec_color(mpg)),
+    disp = cell_spec(disp, "html", color = spec_color(disp, option = "B"), 
+                     bold = T, font_size = spec_font_size(disp)),
+    hp = cell_spec(hp, "html", hover_message = paste0("cyl:\n", cyl))
+  ) %>%
+  kable("html", escape = F) %>%
+  kable_styling("condensed", full_width = F)
+```

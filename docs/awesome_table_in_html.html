@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-09-15" />
+<meta name="date" content="2017-10-12" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -217,11 +217,16 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-09-15</em></h4>
+<h4 class="date"><em>2017-10-12</em></h4>
 
 </div>
 
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
 <blockquote>
 <p>Please see the package <a href="http://haozhu233.github.io/kableExtra/">documentation site</a> for how to use this package in LaTeX.</p>
 </blockquote>
@@ -1622,7 +1627,7 @@ Features
 <td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 1
 </td>
-<td style="text-align:left;width: 30em; background-color: yellow;">
+<td style="text-align:left;width: 30em; display: inline-block; background-color: yellow;">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a.
 </td>
 </tr>
@@ -1630,7 +1635,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor e
 <td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 2
 </td>
-<td style="text-align:left;width: 30em; background-color: yellow;">
+<td style="text-align:left;width: 30em; display: inline-block; background-color: yellow;">
 In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in.
 </td>
 </tr>
@@ -1638,7 +1643,7 @@ In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere 
 <td style="text-align:left;font-weight: bold;border-right:1px solid;">
 Item 3
 </td>
-<td style="text-align:left;width: 30em; background-color: yellow;">
+<td style="text-align:left;width: 30em; display: inline-block; background-color: yellow;">
 Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis.
 </td>
 </tr>
@@ -1795,6 +1800,205 @@ Hornet Sportabout
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div id="cell-specification" class="section level1">
+<h1>Cell Specification</h1>
+<p><code>cell_spec</code> is different from the rest. You should use it before you pipe the table into the <code>kable</code> function. It is designed in such a way that you can easily use it inside a <code>dplyr::mutate()</code> together with conditional logic like <code>ifelse</code>. Since everything happens before <code>kable</code>, you have to tell this function which format you want to go to, <code>html</code> or <code>latex</code>. To reduce unnecessary finger typing, I linked the <code>format</code> argument here with <code>knitr::kable</code>’s global format option <code>knitr.table.format</code>. If you have defined this option to be <code>html</code> at the beginning of your document (as suggested earlier), it is not necessary for you to define format again for every <code>cell_spec</code>.</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## Warning: package 'dplyr' was built under R version 3.4.2</code></pre>
+<pre class="r"><code>mtcars[1:5, 1:3] %&gt;%
+  mutate(
+    car = row.names(.),
+    mpg = ifelse(mpg &gt; 20, 
+                 cell_spec(mpg, &quot;html&quot;, font_size = 18), mpg),
+    cyl = cell_spec(cyl, &quot;html&quot;, angle = (1:5)*60, hover_message = mpg,
+                    background = &quot;red&quot;, color = &quot;white&quot;, align = &quot;center&quot;),
+    disp = ifelse(disp &gt; 200,
+                  cell_spec(disp, &quot;html&quot;, color = &quot;red&quot;, bold = T),
+                  cell_spec(disp, &quot;html&quot;, color = &quot;green&quot;, italic = T)),
+    fancy = c(12, 14, 16, 18, 20),
+    fancy = cell_spec(fancy, &quot;html&quot;, font_size = fancy, 
+                      color = viridisLite::inferno(length(fancy), end = 0.8)),
+    car = cell_spec(car, &quot;html&quot;, bold = T,
+                    color = viridisLite::inferno(length(fancy), end = 0.8))
+  ) %&gt;%
+  select(car, everything()) %&gt;%
+  kable(&quot;html&quot;, escape = F) %&gt;%
+  kable_styling(&quot;hover&quot;, full_width = F) %&gt;%
+  add_header_above(c(&quot; &quot;, &quot;Hello&quot; = 2, &quot;World&quot; = 2)) </code></pre>
+<table class="table table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="border-bottom:hidden">
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Hello
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+World
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+car
+</th>
+<th style="text-align:left;">
+mpg
+</th>
+<th style="text-align:left;">
+cyl
+</th>
+<th style="text-align:left;">
+disp
+</th>
+<th style="text-align:left;">
+fancy
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: #000004FF;">
+Mazda RX4
+</div>
+</td>
+<td style="text-align:left;">
+<div style="font-size: 18px;">
+21
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: white;border-radius: 4px; padding-right: 2px; background-color: red;text-align: center;-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg);" data-toggle="tooltip" title="&lt;div style=&quot;font-size: 18px;&quot;&gt;21&lt;/div&gt;">
+6
+</div>
+</td>
+<td style="text-align:left;">
+<div style=" font-style: italic;color: green;">
+160
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: #000004FF;font-size: 12px;">
+12
+</div>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: #420A68FF;">
+Mazda RX4 Wag
+</div>
+</td>
+<td style="text-align:left;">
+<div style="font-size: 18px;">
+21
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: white;border-radius: 4px; padding-right: 2px; background-color: red;text-align: center;-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg);" data-toggle="tooltip" title="&lt;div style=&quot;font-size: 18px;&quot;&gt;21&lt;/div&gt;">
+6
+</div>
+</td>
+<td style="text-align:left;">
+<div style=" font-style: italic;color: green;">
+160
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: #420A68FF;font-size: 14px;">
+14
+</div>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: #932667FF;">
+Datsun 710
+</div>
+</td>
+<td style="text-align:left;">
+<div style="font-size: 18px;">
+22.8
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: white;border-radius: 4px; padding-right: 2px; background-color: red;text-align: center;-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg);" data-toggle="tooltip" title="&lt;div style=&quot;font-size: 18px;&quot;&gt;22.8&lt;/div&gt;">
+4
+</div>
+</td>
+<td style="text-align:left;">
+<div style=" font-style: italic;color: green;">
+108
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: #932667FF;font-size: 16px;">
+16
+</div>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: #DD513AFF;">
+Hornet 4 Drive
+</div>
+</td>
+<td style="text-align:left;">
+<div style="font-size: 18px;">
+21.4
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: white;border-radius: 4px; padding-right: 2px; background-color: red;text-align: center;-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg);" data-toggle="tooltip" title="&lt;div style=&quot;font-size: 18px;&quot;&gt;21.4&lt;/div&gt;">
+6
+</div>
+</td>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: red;">
+258
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: #DD513AFF;font-size: 18px;">
+18
+</div>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: #FCA50AFF;">
+Hornet Sportabout
+</div>
+</td>
+<td style="text-align:left;">
+18.7
+</td>
+<td style="text-align:left;">
+<div style="color: white;border-radius: 4px; padding-right: 2px; background-color: red;text-align: center;-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg);" data-toggle="tooltip" title="18.7">
+8
+</div>
+</td>
+<td style="text-align:left;">
+<div style=" font-weight: bold;color: red;">
+360
+</div>
+</td>
+<td style="text-align:left;">
+<div style="color: #FCA50AFF;font-size: 20px;">
+20
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div id="section" class="section level2">
+<h2></h2>
 </div>
 </div>
 <div id="grouped-columns-rows" class="section level1">
@@ -2809,7 +3013,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2825,7 +3029,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2833,7 +3037,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2844,7 +3048,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -2852,7 +3056,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2874,7 +3078,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2893,7 +3097,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -2901,7 +3105,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>

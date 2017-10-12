@@ -32,7 +32,9 @@ Imports:
     xml2,
     rvest,
     rmarkdown (>= 1.6.0),
-    readr
+    readr,
+    scales, 
+    viridisLite
 Suggests:
     testthat,
     magick,

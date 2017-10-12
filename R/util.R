@@ -110,3 +110,13 @@ latex_pkg_list <- function() {
     "\\usepackage{threeparttable}"
   ))
 }
+
+latex_color <- function(color) {
+  if (substr(color, 1, 1) != "#") {
+    return(paste0("{", color, "}"))
+  } else {
+    color <- sub("#", "", color)
+    if (nchar(color) == 8) color <- substr(color, 1, 6)
+    return(paste0("[HTML]{", color, "}"))
+  }
+}
