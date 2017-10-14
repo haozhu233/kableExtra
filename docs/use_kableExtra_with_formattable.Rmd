@@ -38,3 +38,16 @@ Here is a little bit more explanation. Both `formattable::color_tile` and `forma
 Also, if you are using it in this way, make sure you put `escape = F` in `kable`. 
 
 On the other hand, `cell_spec()` is a new function in `kableExtra()` to format cells _**before you pipe the table into `kable`**_. Note that you can either specify format (`html` or `latex`) in function or do that via `options(knitr.table.format)` so you don't need to do it everytime. 
+
+***
+
+I also added a few helper functions to use together with cell_spec. One good example is `spec_color`, which gives you the ability to use viridis color map in your table. Others include `spec_font_size` and `spec_angle`. 
+
+```{r}
+iris[1:10, ] %>%
+  mutate_if(is.numeric, function(x){
+    cell_spec(x, "html", bold = T, color = spec_color(x), font_size = spec_font_size(x))
+  }) %>%
+  kable("html", escape = F, align = "c") %>%
+  kable_styling(full_width = F)
+```

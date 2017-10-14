@@ -22,3 +22,16 @@ mtcars[1:15, 1:5] %>%
   kable("html", escape = F) %>%
   kable_styling("condensed", full_width = F)
 ```
+
+```{r}
+iris[, 1:4] %>%
+  mutate_all(function(x){
+    cell_spec(x, "html", 
+              color = spec_color(x, option = "A"), 
+              font_size = spec_font_size(x),
+              bold = T)
+    }) %>%
+  kable("html", escape = F, booktabs = T, linesep = "", align = "c")%>%
+  row_spec(0, angle = 270, align = "right") %>%
+  kable_styling(full_width = F) 
+```

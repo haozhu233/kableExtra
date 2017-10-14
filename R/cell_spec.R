@@ -23,13 +23,15 @@
 #' @param angle 0-360, degree that the text will rotate. Can be a vector.
 #' @param hover_message A vector of strings to be displayed as hover message.
 #' Of course, this feature is nly available in HTML.
+#' @param background_as_tile T/F value indicating if you want to have round
+#' cornered tile as background.
 #'
 #' @export
 cell_spec <- function(x, format,
                       bold = F, italic = F, monospace = F,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
-                      hover_message = NULL) {
+                      hover_message = NULL, background_as_tile = TRUE) {
 
   if (missing(format) || is.null(format)) format = getOption('knitr.table.format')
   if (is.null(format)) {
@@ -40,7 +42,7 @@ cell_spec <- function(x, format,
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace,
                           color, background, align, font_size, angle,
-                          hover_message))
+                          hover_message, background_as_tile))
   }
   if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace,
@@ -50,15 +52,21 @@ cell_spec <- function(x, format,
 
 cell_spec_html <- function(x, bold, italic, monospace,
                            color, background, align, font_size, angle,
-                           hover_message) {
+                           hover_message, background_as_tile) {
   cell_style <- NULL
   if (bold) cell_style <- paste(cell_style,"font-weight: bold;")
   if (italic) cell_style <- paste(cell_style, "font-style: italic;")
   if (monospace) cell_style <- paste(cell_style, "font-family: monospace;")
-  if (!is.null(color)) cell_style <- paste0(cell_style, "color: ", color, ";")
+  if (!is.null(color)) {
+    cell_style <- paste0(cell_style, "color: ", html_color(color), ";")
+  }
   if (!is.null(background)) {
-    cell_style <- paste0(cell_style, "border-radius: 4px; padding-right: 4px",
-                         ";padding-left: 4px; background-color: ", background, ";")
+    cell_style <- paste0(
+      cell_style,
+      ifelse(background_as_tile, "border-radius: 4px; ", ""),
+      "padding-right: 4px; padding-left: 4px; ",
+      "background-color: ", html_color(background), ";"
+    )
   }
   if (!is.null(align)) {
     cell_style <- paste0(cell_style, "text-align: ", align, ";")
@@ -71,7 +79,9 @@ cell_spec_html <- function(x, bold, italic, monospace,
                          "-webkit-transform: rotate(", angle,
                          "deg); -moz-transform: rotate(", angle,
                          "deg); -ms-transform: rotate(", angle,
-                         "deg); -o-transform: rotate(", angle, "deg);")
+                         "deg); -o-transform: rotate(", angle,
+                         "deg); transform: rotate(", angle,
+                         "deg);")
   }
 
   if (!is.null(hover_message)) {
@@ -96,7 +106,7 @@ cell_spec_latex <- function(x, bold, italic, monospace,
   if (!is.null(background)) {
     background <- latex_color(background)
     x <- paste0("\\cellcolor", background, "{", x, "}")
-    }
+  }
   if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
   if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
   return(x)

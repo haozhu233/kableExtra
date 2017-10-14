@@ -23,8 +23,8 @@ need to be emphasized.}
 \item{monospace}{A T/F value to control whether the text of the selected column
 need to be monospaced (verbatim)}
 
-\item{color}{A character string for row text color. Here please pay
-attention to the differences in color codes between HTML and LaTeX.}
+\item{color}{A character string for row text color. For example, "red" or
+"#BBBBBB".}
 
 \item{background}{A character string for row background color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}

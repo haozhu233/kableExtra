@@ -6,7 +6,7 @@
 \usage{
 cell_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
   background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  hover_message = NULL)
+  hover_message = NULL, background_as_tile = TRUE)
 }
 \arguments{
 \item{x}{Things to be formated. It could be a vector of numbers or strings.}
@@ -40,6 +40,9 @@ This feature is not available in LaTeX}
 
 \item{hover_message}{A vector of strings to be displayed as hover message.
 Of course, this feature is nly available in HTML.}
+
+\item{background_as_tile}{T/F value indicating if you want to have round
+cornered tile as background.}
 }
 \description{
 Specify Cell format before it gets into kable

@@ -5,7 +5,7 @@
 \title{Generate viridis Color code for continuous values}
 \usage{
 spec_color(x, alpha = 1, begin = 0, end = 1, direction = 1,
-  option = "D", na_color = "#FFBBBBBB")
+  option = "D", na_color = "#BBBBBB")
 }
 \arguments{
 \item{x}{continuous vectors of values}

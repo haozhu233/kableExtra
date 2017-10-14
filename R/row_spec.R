@@ -12,8 +12,8 @@
 #' need to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
-#' @param color A character string for row text color. Here please pay
-#' attention to the differences in color codes between HTML and LaTeX.
+#' @param color A character string for row text color. For example, "red" or
+#' "#BBBBBB".
 #' @param background A character string for row background color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param align A character string for cell alignment. For HTML, possible values could
@@ -132,6 +132,7 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background,
                                    "deg); -moz-transform: rotate(", angle,
                                    "deg); -ms-transform: rotate(", angle,
                                    "deg); -o-transform: rotate(", angle,
+                                   "deg); transform: rotate(", angle,
                                    "deg);")
   }
   return(x)
@@ -175,7 +176,7 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
 
   if (!is.null(color)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\textcolor{", color, "}{", x, "}")
+      paste0("\\\\textcolor", latex_color(color), "{", x, "}")
     })
   }
 
