@@ -89,7 +89,7 @@ cell_spec_html <- function(x, bold, italic, monospace,
     hover_message <- paste0("data-toggle='tooltip' title='", hover_message, "'")
   }
   out <- paste0(
-    '<div style="', cell_style, '"', hover_message, '>', x, '</div>'
+    '<span style="', cell_style, '"', hover_message, '>', x, '</span>'
   )
   return(out)
 }

@@ -46,8 +46,8 @@ I also added a few helper functions to use together with cell_spec. One good exa
 ```{r}
 iris[1:10, ] %>%
   mutate_if(is.numeric, function(x){
-    cell_spec(x, "html", bold = T, color = spec_color(x), font_size = spec_font_size(x))
+    cell_spec(x, "html", color = spec_color(x), bold = T)
   }) %>%
   kable("html", escape = F, align = "c") %>%
-  kable_styling(full_width = F)
+  kable_styling("condensed", full_width = F)
 ```
