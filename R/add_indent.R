@@ -1,15 +1,16 @@
 #' Add indentations to row headers
 #'
-#' @param kable_input Output of `knitr::kable()` with `format` specified
+#' @param kable_input Output of `knitr::kable()` with `format` specified.
 #' @param positions A vector of numeric row numbers for the rows that need to
 #' be indented.
+#' @param indent The size of the indentation.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add indentations to the 2nd & 4th row
 #' add_indent(x, c(2, 4))
 #'
 #' @export
-add_indent <- function(kable_input, positions) {
+add_indent <- function(kable_input, positions, indent) {
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
@@ -22,32 +23,22 @@ add_indent <- function(kable_input, positions) {
     return(add_indent_html(kable_input, positions))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions))
+    return(add_indent_latex(kable_input, positions, indent))
   }
 }
 
 # Add indentation for LaTeX
-add_indent_latex <- function(kable_input, positions) {
-  table_info <- magic_mirror(kable_input)
+add_indent_latex <- function(contents, positions, indent) {
 
-  if (max(positions) > table_info$nrow - 1) {
+  if (max(positions) > length(contents) - 1) {
     stop("There aren't that many rows in the table. Check positions in ",
          "add_indent_latex.")
   }
 
-  out <- enc2utf8(kable_input)
   for (i in positions) {
-    rowtext <- table_info$contents[i + 1]
-    out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
-    table_info$contents[i + 1] <- latex_indent_unit(rowtext)
+    contents[i+1] <- paste0("\\\\hspace\\{", indent, "}", contents[i + 1])
   }
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-  return(out)
-}
-
-latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace\\{1em\\}", rowtext)
+  return(contents)
 }
 
 # Add indentation for HTML

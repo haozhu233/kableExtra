@@ -198,26 +198,30 @@ pdfTable_styling <- function(kable_input,
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {
+    table_info$striped <- TRUE
     out <- styling_latex_striped(out, table_info, stripe_color)
   }
 
   # hold_position is only meaningful in a table environment
   if ("hold_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_hold_position(out)
+    table_info$hold_position <- TRUE
+    out <- reassemble_kable(mirror = table_info)
   }
 
   # HOLD_position is only meaningful in a table environment
   if ("HOLD_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_HOLD_position(out)
+    table_info$HOLD_position <- TRUE
+    out <- reassemble_kable(mirror = table_info)
   }
 
   if ("scale_down" %in% latex_options) {
+    table_info$scale_down <- TRUE
     out <- styling_latex_scale_down(out, table_info)
   }
 
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
-    out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
-                                       repeat_header_method, repeat_header_continued)
+    table_info$repeat_header <- TRUE
+    out <- reassemble_kable(mirror = table_info)
   }
 
   if (full_width) {
@@ -277,14 +281,6 @@ styling_latex_striped <- function(x, table_info, color) {
   )
   x <- paste0(x, collapse = "\n")
   return(x)
-}
-
-styling_latex_hold_position <- function(x) {
-  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]", x)
-}
-
-styling_latex_HOLD_position <- function(x) {
-  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]", x)
 }
 
 styling_latex_scale_down <- function(x, table_info) {
