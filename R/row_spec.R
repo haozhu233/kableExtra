@@ -142,6 +142,13 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            color, background, align, angle) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
+
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
+
   row <- row + 1
   for (i in row) {
     target_row <- table_info$contents[i]

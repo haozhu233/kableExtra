@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+author: "Hao"
+date: "10/15/2017"
+output: html_document
+---
+
+```{r, include=FALSE}
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+```{r}
+htmlFun = function(content) {
+  x = htmltools::tags$div(content, class = 'error')
+  # you could also do this if you don't care about escaping HTML entities in 'content':
+  # x = htmltools::HTML(paste('<div class="error">', content, '</div>'))
+  d = htmltools::htmlDependency(
+    'knitr-css', '1.2.3', src = system.file('misc', package = 'knitr'),
+    stylesheet = 'knitr.css'
+  )
+  x = htmltools::attachDependencies(x, d)
+  x
+}
+
+htmlFun('Hello World!')
+```
+
+```{r}
+mtcars[1:5, 1:2] %>%
+  mutate(mpg = cell_spec(mpg, tooltip = cyl)) %>%
+  kable("html", escape = F) %>%
+  htmltools::HTML() 
+```

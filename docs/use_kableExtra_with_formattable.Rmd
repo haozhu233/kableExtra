@@ -51,3 +51,4 @@ iris[1:10, ] %>%
   kable("html", escape = F, align = "c") %>%
   kable_styling("condensed", full_width = F)
 ```
+

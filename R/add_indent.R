@@ -29,13 +29,19 @@ add_indent <- function(kable_input, positions) {
 # Add indentation for LaTeX
 add_indent_latex <- function(kable_input, positions) {
   table_info <- magic_mirror(kable_input)
+  out <- enc2utf8(as.character(kable_input))
+
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
 
   if (max(positions) > table_info$nrow - 1) {
     stop("There aren't that many rows in the table. Check positions in ",
          "add_indent_latex.")
   }
 
-  out <- enc2utf8(kable_input)
   for (i in positions) {
     rowtext <- table_info$contents[i + 1]
     out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)

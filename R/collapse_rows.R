@@ -86,10 +86,18 @@ collapse_row_matrix <- function(kable_dt, columns, html = T)  {
 
 collapse_rows_latex <- function(kable_input, columns) {
   table_info <- magic_mirror(kable_input)
+  out <- enc2utf8(as.character(kable_input))
+
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
+
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
   }
-  out <- enc2utf8(as.character(kable_input))
+
   contents <- table_info$contents
   kable_dt <- kable_dt_latex(contents)
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = F)

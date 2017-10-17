@@ -68,6 +68,7 @@
 #' @importFrom readr read_lines read_file
 #' @importFrom scales rescale
 #' @importFrom viridisLite viridis
+#' @importFrom stats ave
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package

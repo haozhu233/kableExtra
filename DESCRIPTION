@@ -34,7 +34,8 @@ Imports:
     rmarkdown (>= 1.6.0),
     readr,
     scales, 
-    viridisLite
+    viridisLite,
+    stats
 Suggests:
     testthat,
     magick,

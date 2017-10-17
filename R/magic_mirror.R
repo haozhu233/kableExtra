@@ -88,6 +88,7 @@ magic_mirror_latex <- function(kable_input){
   if (kable_info$tabular == "longtable" & !is.na(kable_info$caption)) {
     kable_info$contents <- kable_info$contents[-1]
   }
+  kable_info$duplicated_rows <- (sum(duplicated(kable_info$contents)) != 0)
   # Column names
   kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
   # Row names

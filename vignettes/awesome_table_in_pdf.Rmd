@@ -85,7 +85,7 @@ header-includes:
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.
 ```{r}
-kable(dt)
+kable(dt, format = "latex")
 ```
 
 ## LaTeX table with booktabs

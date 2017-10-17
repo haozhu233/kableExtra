@@ -21,8 +21,8 @@
 #' @param font_size Only if you want to specify font size locally in HTML.
 #' This feature is not available in LaTeX
 #' @param angle 0-360, degree that the text will rotate. Can be a vector.
-#' @param hover_message A vector of strings to be displayed as hover message.
-#' Of course, this feature is nly available in HTML.
+#' @param tooltip A vector of strings to be displayed as tooltip.
+#' Of course, this feature is only available in HTML.
 #' @param background_as_tile T/F value indicating if you want to have round
 #' cornered tile as background.
 #'
@@ -31,7 +31,7 @@ cell_spec <- function(x, format,
                       bold = F, italic = F, monospace = F,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
-                      hover_message = NULL, background_as_tile = TRUE) {
+                      tooltip = NULL, background_as_tile = TRUE) {
 
   if (missing(format) || is.null(format)) format = getOption('knitr.table.format')
   if (is.null(format)) {
@@ -42,7 +42,7 @@ cell_spec <- function(x, format,
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace,
                           color, background, align, font_size, angle,
-                          hover_message, background_as_tile))
+                          tooltip, background_as_tile))
   }
   if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace,
@@ -52,7 +52,7 @@ cell_spec <- function(x, format,
 
 cell_spec_html <- function(x, bold, italic, monospace,
                            color, background, align, font_size, angle,
-                           hover_message, background_as_tile) {
+                           tooltip, background_as_tile) {
   cell_style <- NULL
   if (bold) cell_style <- paste(cell_style,"font-weight: bold;")
   if (italic) cell_style <- paste(cell_style, "font-style: italic;")
@@ -84,12 +84,12 @@ cell_spec_html <- function(x, bold, italic, monospace,
                          "deg);")
   }
 
-  if (!is.null(hover_message)) {
-    hover_message <- gsub("\n", "&#013;", hover_message)
-    hover_message <- paste0("data-toggle='tooltip' title='", hover_message, "'")
+  if (!is.null(tooltip)) {
+    tooltip <- gsub("\n", "&#013;", tooltip)
+    tooltip <- paste0("data-toggle='tooltip' title='", tooltip, "'")
   }
   out <- paste0(
-    '<span style="', cell_style, '"', hover_message, '>', x, '</span>'
+    '<div style="', cell_style, '"', tooltip, '>', x, '</div>'
   )
   return(out)
 }

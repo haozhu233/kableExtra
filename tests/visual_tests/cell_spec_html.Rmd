@@ -5,6 +5,14 @@ date: "10/11/2017"
 output: html_document
 ---
 
+<script>
+  $( function() {
+    $( document ).tooltip();
+  } );
+</script>
+
+
+<div><div class = "tooltip">sss</div>ssa</div>
 ```{r, include=F}
 library(knitr)
 library(kableExtra)
@@ -17,7 +25,7 @@ mtcars[1:15, 1:5] %>%
     mpg = cell_spec(mpg, "html", color = "white", background = spec_color(mpg)),
     disp = cell_spec(disp, "html", color = spec_color(disp, option = "B"), 
                      bold = T, font_size = spec_font_size(disp)),
-    hp = cell_spec(hp, "html", hover_message = paste0("cyl:\n", cyl))
+    hp = cell_spec(hp, "html", tooltip = paste0("cyl:\n", cyl))
   ) %>%
   kable("html", escape = F) %>%
   kable_styling("condensed", full_width = F)
@@ -29,7 +37,7 @@ iris[, 1:4] %>%
     cell_spec(x, "html", 
               color = spec_color(x, option = "A"), 
               font_size = spec_font_size(x),
-              bold = T)
+              bold = T, tooltip = "1")
     }) %>%
   kable("html", escape = F, booktabs = T, linesep = "", align = "c")%>%
   row_spec(0, angle = 270, align = "right") %>%

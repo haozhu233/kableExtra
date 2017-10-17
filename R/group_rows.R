@@ -117,6 +117,12 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
+
   if (escape) {
     group_label <- escape_latex(group_label)
     group_label <- gsub("\\\\", "\\\\\\\\", group_label)
