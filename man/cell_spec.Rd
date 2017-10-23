@@ -2,11 +2,18 @@
 % Please edit documentation in R/cell_spec.R
 \name{cell_spec}
 \alias{cell_spec}
-\title{Specify Cell format}
+\alias{text_spec}
+\title{Specify Cell/Text format}
 \usage{
 cell_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
   background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  tooltip = NULL, background_as_tile = TRUE)
+  tooltip = NULL, background_as_tile = TRUE,
+  latex_background_in_cell = TRUE)
+
+text_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
+  background = NULL, align = NULL, font_size = NULL, angle = NULL,
+  tooltip = NULL, background_as_tile = TRUE,
+  latex_background_in_cell = FALSE)
 }
 \arguments{
 \item{x}{Things to be formated. It could be a vector of numbers or strings.}
@@ -14,35 +21,39 @@ cell_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
 \item{format}{Either "html" or "latex". It can also be set through
 \code{option(knitr.table.format)}, same as \code{knitr::kable()}.}
 
-\item{bold}{A T/F value to control whether the text of the selected column
-need to be bolded.}
+\item{bold}{T/F for font bold.}
 
-\item{italic}{A T/F value to control whether the text of the selected column
-need to be emphasized.}
+\item{italic}{T/F for font italic.}
 
-\item{monospace}{A T/F value to control whether the text of the selected column
-need to be monospaced (verbatim)}
+\item{monospace}{T/F for font monospaced (verbatim)}
 
-\item{color}{A character string for column text color. Here please pay
+\item{color}{A character string for text color. Here please pay
 attention to the differences in color codes between HTML and LaTeX.}
 
-\item{background}{A character string for column background color. Here please
-pay attention to the differences in color codes between HTML and LaTeX.}
+\item{background}{A character string for background color. Here please
+pay attention to the differences in color codes between HTML and LaTeX. Also
+note that in HTML, background defined in cell_spec won't cover the whole
+cell.}
 
-\item{align}{A character string for cell alignment. For HTML, possible values could
-be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
-while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
+\item{align}{A character string for cell alignment. For HTML, possible
+values could be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify},
+\code{initial} and \code{inherit} while for LaTeX, you can only choose
+from \code{l}, \code{c} & \code{r}.}
 
-\item{font_size}{Only if you want to specify font size locally in HTML.
-This feature is not available in LaTeX}
+\item{font_size}{j}
 
 \item{angle}{0-360, degree that the text will rotate. Can be a vector.}
 
 \item{tooltip}{A vector of strings to be displayed as tooltip.
-Of course, this feature is only available in HTML.}
+Obviously, this feature is only available in HTML.}
 
 \item{background_as_tile}{T/F value indicating if you want to have round
-cornered tile as background.}
+cornered tile as background in HTML.}
+
+\item{latex_background_in_cell}{T/F value. It only takes effect in LaTeX
+when \code{background} provided, Default value is \code{TRUE}. If it's \code{TRUE}, the
+background only works in a table cell. If it's \code{FALSE}, it works outside of a
+table environment.}
 }
 \description{
 Specify Cell format before it gets into kable

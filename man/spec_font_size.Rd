@@ -4,7 +4,7 @@
 \alias{spec_font_size}
 \title{Generate common font size for continuous values}
 \usage{
-spec_font_size(x, begin = 10, end = 20, na_font_size = "inherit")
+spec_font_size(x, begin = 8, end = 16, na_font_size = 12)
 }
 \arguments{
 \item{x}{continuous vectors of values}

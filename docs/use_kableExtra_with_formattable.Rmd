@@ -48,7 +48,8 @@ iris[1:10, ] %>%
   mutate_if(is.numeric, function(x){
     cell_spec(x, "html", color = spec_color(x), bold = T)
   }) %>%
-  kable("html", escape = F, align = "c") %>%
+  mutate(Species = cell_spec(Species, background = "red")) %>%
+  kable("html", col.names = c("A", "B", "C", "D", "DDDDDDDDDDD"), escape = F, align = "c") %>%
   kable_styling("condensed", full_width = F)
 ```
 

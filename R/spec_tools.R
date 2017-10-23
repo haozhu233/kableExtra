@@ -44,7 +44,7 @@ latex_color <- function(colors) {
 #' @param end Largest font size. Default is 20.
 #' @param na_font_size font size for NA values
 #' @export
-spec_font_size <- function(x, begin = 10, end = 20, na_font_size = "inherit") {
+spec_font_size <- function(x, begin = 8, end = 16, na_font_size = 12) {
   x <- round(rescale(x, c(begin, end)))
   x[is.na(x)] <- na_font_size
   return(x)
