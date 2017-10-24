@@ -58,8 +58,8 @@ spec_font_size <- function(x, begin = 8, end = 16, na_font_size = 12) {
 #' @param begin Smallest degree to rotate. Default is 0
 #' @param end Largest degree to rotate. Default is 359.
 #' @export
-spec_angle <- function(x) {
-  x <- round(rescale(x, c(0, 359)))
+spec_angle <- function(x, begin, end) {
+  x <- round(rescale(x, c(begin, end)))
   x[is.na(x)] <- 0
   return(x)
 }

@@ -204,7 +204,7 @@ An aliased function `text_spec` is also provided for a more literal writing expe
 
 ```{r}
 sometext <- strsplit(paste0(
-  "You can even try do do some crazy things like this paragraph. ", 
+  "You can even try to make some crazy things like this paragraph. ", 
   "It seems to be a useless feature at this moment but who cares. ", 
   "It is so fun to play with color that I can't stop. ;D"
 ), " ")[[1]]

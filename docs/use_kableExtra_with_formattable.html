@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-10-21" />
+<meta name="date" content="2017-10-24" />
 
 <title>Use kableExtra with formattable</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Use kableExtra with formattable</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-10-21</em></h4>
+<h4 class="date"><em>2017-10-24</em></h4>
 
 </div>
 
@@ -188,9 +188,7 @@ Mazda RX4
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
 </td>
 <td style="text-align:left;">
-<div style="-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg); transform: rotate(60deg);">
-<span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span>
-</div>
+<span style="-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg); transform: rotate(60deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
 <span style=" font-style: italic;color: green;">160</span>
@@ -207,9 +205,7 @@ Mazda RX4 Wag
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
 </td>
 <td style="text-align:left;">
-<div style="-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg); transform: rotate(120deg);">
-<span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span>
-</div>
+<span style="-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg); transform: rotate(120deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
 <span style=" font-style: italic;color: green;">160</span>
@@ -226,9 +222,7 @@ Datsun 710
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffa500">22.8</span>
 </td>
 <td style="text-align:left;">
-<div style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg);">
-<span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">4</span>
-</div>
+<span style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">4</span></span>
 </td>
 <td style="text-align:left;">
 <span style=" font-style: italic;color: green;">108</span>
@@ -245,9 +239,7 @@ Hornet 4 Drive
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffc357">21.4</span>
 </td>
 <td style="text-align:left;">
-<div style="-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg); transform: rotate(240deg);">
-<span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span>
-</div>
+<span style="-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg); transform: rotate(240deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
 <span style=" font-weight: bold;color: red;">258</span>
@@ -264,9 +256,7 @@ Hornet Sportabout
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">18.7</span>
 </td>
 <td style="text-align:left;">
-<div style="-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg); transform: rotate(300deg);">
-<span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">8</span>
-</div>
+<span style="-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg); transform: rotate(300deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">8</span></span>
 </td>
 <td style="text-align:left;">
 <span style=" font-weight: bold;color: red;">360</span>
@@ -279,206 +269,212 @@ Hornet Sportabout
 </table>
 <p>Here is a little bit more explanation. Both <code>formattable::color_tile</code> and <code>formattable::color_bar</code> returns a function object which can take a numeric vector. That’s why you can put things like <code>(mpg)</code> after <code>color_tile(&quot;white&quot;, &quot;orange&quot;)</code> as you can see in the <code>mutate</code> function. This way of using the function may look a little odd but is totally valid (, I think :P).</p>
 <p>Also, if you are using it in this way, make sure you put <code>escape = F</code> in <code>kable</code>.</p>
-<p>On the other hand, <code>cell_spec()</code> is a new function in <code>kableExtra()</code> to format cells <em><strong>before you pipe the table into <code>kable</code></strong></em>. Note that you can either specify format (<code>html</code> or <code>latex</code>) in function or do that via <code>options(knitr.table.format)</code> so you don’t need to do it everytime.</p>
-<hr />
-<p>I also added a few helper functions to use together with cell_spec. One good example is <code>spec_color</code>, which gives you the ability to use viridis color map in your table. Others include <code>spec_font_size</code> and <code>spec_angle</code>.</p>
+<p>On the other hand, <code>cell_spec()</code> is a new function in <code>kableExtra()</code> to format cells <em><strong>before you pipe the table into <code>kable</code></strong></em>. Note that you can either specify format (<code>html</code> or <code>latex</code>) in function or do that via <code>options(knitr.table.format)</code> so you don’t need to do it everytime. Please refer to the package vignette for details.</p>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
 <pre class="r"><code>iris[1:10, ] %&gt;%
+  mutate(
+    Species = cell_spec(Species, color = spec_color(1:10, option = &quot;A&quot;), link = &quot;#&quot;,
+                        tooltip = paste0(&quot;Sepal Length: &quot;, Sepal.Length))
+  ) %&gt;%
   mutate_if(is.numeric, function(x){
-    cell_spec(x, &quot;html&quot;, color = spec_color(x), bold = T)
+    cell_spec(x, &quot;html&quot;, color = spec_color(x), font_size = spec_font_size(x), bold = T)
   }) %&gt;%
-  mutate(Species = cell_spec(Species, background = &quot;red&quot;)) %&gt;%
-  kable(&quot;html&quot;, col.names = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;DDDDDDDDDDD&quot;), escape = F, align = &quot;c&quot;) %&gt;%
+  kable(&quot;html&quot;, escape = F, align = &quot;c&quot;) %&gt;%
   kable_styling(&quot;condensed&quot;, full_width = F)</code></pre>
 <pre><code>## Setting cell_spec format as html</code></pre>
 <table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:center;">
-A
+Sepal.Length
 </th>
 <th style="text-align:center;">
-B
+Sepal.Width
 </th>
 <th style="text-align:center;">
-C
+Petal.Length
 </th>
 <th style="text-align:center;">
-D
+Petal.Width
 </th>
 <th style="text-align:center;">
-DDDDDDDDDDD
+Species
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(66, 190, 113, 1);">5.1</span>
+<span style=" font-weight: bold;color: rgba(66, 190, 113, 1);font-size: 14px;">5.1</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);">3.5</span>
+<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);font-size: 13px;">3.5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);">1.4</span>
+<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">4.9</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(72, 37, 118, 1);">3</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);">1.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(0, 0, 4, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 5.1">setosa</a>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 95, 141, 1);">4.7</span>
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">4.9</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(52, 96, 141, 1);">3.2</span>
+<span style=" font-weight: bold;color: rgba(72, 37, 118, 1);font-size: 9px;">3</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);">1.3</span>
+<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);">4.6</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);">3.1</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">1.5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(24, 15, 61, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.9">setosa</a>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);">5</span>
+<span style=" font-weight: bold;color: rgba(53, 95, 141, 1);font-size: 10px;">4.7</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 191, 112, 1);">3.6</span>
+<span style=" font-weight: bold;color: rgba(52, 96, 141, 1);font-size: 10px;">3.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);">1.4</span>
+<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">1.3</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);">5.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);">3.9</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);">1.7</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);">0.4</span>
-</td>
-<td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(69, 16, 119, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.7">setosa</a>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);">4.6</span>
+<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);font-size: 10px;">4.6</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">3.4</span>
+<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);font-size: 10px;">3.1</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);">1.4</span>
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">1.5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 183, 121, 1);">0.3</span>
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);">5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">3.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">1.5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(114, 31, 129, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.6">setosa</a>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);">4.4</span>
+<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);font-size: 13px;">5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);">2.9</span>
+<span style=" font-weight: bold;color: rgba(68, 191, 112, 1);font-size: 14px;">3.6</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);">1.4</span>
+<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);">0.2</span>
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(158, 47, 127, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 5">setosa</a>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">4.9</span>
+<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);font-size: 16px;">5.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);">3.1</span>
+<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);font-size: 16px;">3.9</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);">1.5</span>
+<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);font-size: 16px;">1.7</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);">0.1</span>
+<span style=" font-weight: bold;color: rgba(253, 231, 37, 1);font-size: 16px;">0.4</span>
 </td>
 <td style="text-align:center;">
-<span style="border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;">setosa</span>
+<a href="#" style="color: rgba(205, 64, 113, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 5.4">setosa</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);font-size: 10px;">4.6</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">3.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);font-size: 10px;">1.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(53, 183, 121, 1);font-size: 13px;">0.3</span>
+</td>
+<td style="text-align:center;">
+<a href="#" style="color: rgba(241, 96, 93, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.6">setosa</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);font-size: 13px;">5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">3.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">1.5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
+</td>
+<td style="text-align:center;">
+<a href="#" style="color: rgba(253, 148, 103, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 5">setosa</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">4.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">2.9</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(59, 82, 139, 1);font-size: 10px;">1.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(49, 104, 142, 1);font-size: 11px;">0.2</span>
+</td>
+<td style="text-align:center;">
+<a href="#" style="color: rgba(254, 202, 141, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.4">setosa</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">4.9</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(65, 68, 135, 1);font-size: 10px;">3.1</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(33, 144, 141, 1);font-size: 12px;">1.5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">0.1</span>
+</td>
+<td style="text-align:center;">
+<a href="#" style="color: rgba(252, 253, 191, 1);" data-toggle="tooltip" data-placement="right" title="Sepal Length: 4.9">setosa</a>
 </td>
 </tr>
 </tbody>

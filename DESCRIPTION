@@ -35,11 +35,13 @@ Imports:
     readr,
     scales, 
     viridisLite,
-    stats
+    stats,
+    grDevices
 Suggests:
     testthat,
     magick,
-    formattable
+    formattable,
+    dplyr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

@@ -65,9 +65,9 @@ options(kableExtra.latex.load_package = FALSE)
 library(kableExtra)
 ```
 
-If you are using R Sweave, beamer, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
+If you are using R Sweave, beamer, R package vignette template, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
-```{yaml}
+```
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}
@@ -85,7 +85,7 @@ header-includes:
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.
 ```{r}
-kable(dt, format = "latex")
+kable(dt)
 ```
 
 ## LaTeX table with booktabs
@@ -198,6 +198,78 @@ kable(dt, format = "latex", booktabs = T) %>%
   row_spec(3:5, bold = T, color = "white", background = "black")
 ```
 
+## Header Rows
+One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
+```{r}
+kable(dt, format = "latex", booktabs = T, align = "c") %>%
+  kable_styling(latex_options = "striped", full_width = F) %>%
+  row_spec(0, angle = 45)
+```
+
+
+
+# Cell/Text Specification
+Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
+* Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
+* `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
+
+Currently, `cell_spec` supports features including bold, italic, monospace, text color, background color, align, font size & rotation angle. More features may be added in the future. Please see function documentations as reference. 
+
+## Conditional logic
+It is very easy to use `cell_spec` with conditional logic. Here is an example.
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+mtcars[1:10, 1:2] %>%
+  mutate(
+    car = row.names(.),
+    # You don't need format = "latex" if you have ever defined options(knitr.table.format)
+    mpg = cell_spec(mpg, "latex", color = ifelse(mpg > 20, "red", "blue")),
+    cyl = cell_spec(cyl, "latex", color = "white", align = "c", angle = 45, 
+                    background = factor(cyl, c(4, 6, 8), 
+                                        c("#666666", "#999999", "#BBBBBB")))
+  ) %>%
+  select(car, mpg, cyl) %>%
+  kable("latex", escape = F, booktabs = T, linesep = "")
+```
+
+## Visualize data with Viridis Color
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html). It offers a very visually impactful representation in a tabular format. 
+
+```{r}
+iris[1:10, ] %>%
+  mutate_if(is.numeric, function(x) {
+    cell_spec(x, "latex", bold = T, color = spec_color(x, end = 0.9),
+              font_size = spec_font_size(x))
+  }) %>%
+  mutate(Species = cell_spec(
+    Species, "latex", color = "white", bold = T,
+    background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
+  )) %>%
+  kable("latex", escape = F, booktabs = T, linesep = "", align = "c")
+```
+
+In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 
+
+## Text Specification
+If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
+
+An aliased function `text_spec` is also provided for a more literal writing experience. The only difference is that in LaTeX, unless you specify `latex_background_in_cell = FALSE` (default is `TRUE`) in `cell_spec`, it will define cell background color as `\cellcolor{}`, which doesn't work outside of a table, while for `text_spec`, the default value for `latex_background_in_cell` is `FALSE`.
+
+```{r}
+sometext <- strsplit(paste0(
+  "You can even try to make some crazy things like this paragraph. ", 
+  "It seems to be a useless feature at this moment but who cares. ", 
+  "It is so fun to play with color that I can't stop. ;D"
+), " ")[[1]]
+text_formatted <- paste(
+  text_spec(sometext, "latex", color = spec_color(1:length(sometext), end = 0.9),
+            font_size = spec_font_size(1:length(sometext), begin = 5, end = 20)),
+  collapse = " ")
+
+# To display the text, type `r text_formatted` outside of the chunk
+```
+`r text_formatted`
+
 # Grouped Columns / Rows
 ## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
@@ -207,7 +279,7 @@ kable(dt, format = "latex", booktabs = T) %>%
   add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
 ```
 
-In fact, if you want to add another row of header on top, please feel free to do so. Also, in kableExtra 0.3.0, you can specify `bold` & `italic` as you do in `row_spec()`.
+In fact, if you want to add another row of header on top, please feel free to do so. Also, since kableExtra 0.3.0, you can specify `bold` & `italic` as you do in `row_spec()`.
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling(latex_options = "striped") %>%

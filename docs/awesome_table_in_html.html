@@ -2309,7 +2309,7 @@ Species
 <p>If you check the results of <code>cell_spec</code>, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a <code>rmarkdown</code> document or write some text in shiny apps, if you need extra markups other than <strong>bold</strong> or <em>italic</em>, you may use this function to <span style="color: red;">color</span>, <span style="font-size: 16px;">change font size </span> or <span style="-webkit-transform: rotate(30deg); -moz-transform: rotate(30deg); -ms-transform: rotate(30deg); -o-transform: rotate(30deg); transform: rotate(30deg); display: inline-block; "><span style>rotate</span></span> your text.</p>
 <p>An aliased function <code>text_spec</code> is also provided for a more literal writing experience. In HTML, there is no difference between these two functions.</p>
 <pre class="r"><code>sometext &lt;- strsplit(paste0(
-  &quot;You can even try do do some crazy things like this paragraph. &quot;, 
+  &quot;You can even try to make some crazy things like this paragraph. &quot;, 
   &quot;It seems to be a useless feature at this moment but who cares. &quot;, 
   &quot;It is so fun to play with color that I can't stop. ;D&quot;
 ), &quot; &quot;)[[1]]
@@ -2319,7 +2319,7 @@ text_formatted &lt;- paste(
   collapse = &quot; &quot;)
 
 # To display the text, type `r text_formatted` outside of the chunk</code></pre>
-<p><span style="color: rgba(68, 1, 84, 1);font-size: 5px;">You</span> <span style="color: rgba(70, 10, 93, 1);font-size: 5px;">can</span> <span style="color: rgba(72, 20, 102, 1);font-size: 6px;">even</span> <span style="color: rgba(72, 28, 110, 1);font-size: 6px;">try</span> <span style="color: rgba(72, 36, 117, 1);font-size: 7px;">do</span> <span style="color: rgba(71, 43, 122, 1);font-size: 7px;">do</span> <span style="color: rgba(70, 51, 127, 1);font-size: 7px;">some</span> <span style="color: rgba(68, 58, 131, 1);font-size: 8px;">crazy</span> <span style="color: rgba(65, 65, 134, 1);font-size: 8px;">things</span> <span style="color: rgba(62, 73, 137, 1);font-size: 9px;">like</span> <span style="color: rgba(60, 80, 139, 1);font-size: 9px;">this</span> <span style="color: rgba(57, 87, 140, 1);font-size: 9px;">paragraph.</span> <span style="color: rgba(53, 94, 141, 1);font-size: 10px;">It</span> <span style="color: rgba(50, 100, 142, 1);font-size: 10px;">seems</span> <span style="color: rgba(48, 105, 142, 1);font-size: 11px;">to</span> <span style="color: rgba(45, 112, 142, 1);font-size: 11px;">be</span> <span style="color: rgba(43, 117, 142, 1);font-size: 11px;">a</span> <span style="color: rgba(41, 123, 142, 1);font-size: 12px;">useless</span> <span style="color: rgba(38, 130, 142, 1);font-size: 12px;">feature</span> <span style="color: rgba(36, 135, 142, 1);font-size: 13px;">at</span> <span style="color: rgba(34, 141, 141, 1);font-size: 13px;">this</span> <span style="color: rgba(32, 146, 140, 1);font-size: 14px;">moment</span> <span style="color: rgba(31, 153, 138, 1);font-size: 14px;">but</span> <span style="color: rgba(31, 159, 136, 1);font-size: 14px;">who</span> <span style="color: rgba(32, 163, 134, 1);font-size: 15px;">cares.</span> <span style="color: rgba(36, 170, 131, 1);font-size: 15px;">It</span> <span style="color: rgba(41, 175, 127, 1);font-size: 16px;">is</span> <span style="color: rgba(49, 181, 123, 1);font-size: 16px;">so</span> <span style="color: rgba(59, 187, 117, 1);font-size: 16px;">fun</span> <span style="color: rgba(70, 192, 111, 1);font-size: 17px;">to</span> <span style="color: rgba(83, 197, 105, 1);font-size: 17px;">play</span> <span style="color: rgba(95, 202, 97, 1);font-size: 18px;">with</span> <span style="color: rgba(110, 206, 88, 1);font-size: 18px;">color</span> <span style="color: rgba(123, 209, 81, 1);font-size: 18px;">that</span> <span style="color: rgba(138, 214, 71, 1);font-size: 19px;">I</span> <span style="color: rgba(155, 217, 60, 1);font-size: 19px;">can’t</span> <span style="color: rgba(171, 220, 50, 1);font-size: 20px;">stop.</span> <span style="color: rgba(187, 223, 39, 1);font-size: 20px;">;D</span></p>
+<p><span style="color: rgba(68, 1, 84, 1);font-size: 5px;">You</span> <span style="color: rgba(70, 10, 93, 1);font-size: 5px;">can</span> <span style="color: rgba(72, 20, 102, 1);font-size: 6px;">even</span> <span style="color: rgba(72, 28, 110, 1);font-size: 6px;">try</span> <span style="color: rgba(72, 36, 117, 1);font-size: 7px;">to</span> <span style="color: rgba(71, 43, 122, 1);font-size: 7px;">make</span> <span style="color: rgba(70, 51, 127, 1);font-size: 7px;">some</span> <span style="color: rgba(68, 58, 131, 1);font-size: 8px;">crazy</span> <span style="color: rgba(65, 65, 134, 1);font-size: 8px;">things</span> <span style="color: rgba(62, 73, 137, 1);font-size: 9px;">like</span> <span style="color: rgba(60, 80, 139, 1);font-size: 9px;">this</span> <span style="color: rgba(57, 87, 140, 1);font-size: 9px;">paragraph.</span> <span style="color: rgba(53, 94, 141, 1);font-size: 10px;">It</span> <span style="color: rgba(50, 100, 142, 1);font-size: 10px;">seems</span> <span style="color: rgba(48, 105, 142, 1);font-size: 11px;">to</span> <span style="color: rgba(45, 112, 142, 1);font-size: 11px;">be</span> <span style="color: rgba(43, 117, 142, 1);font-size: 11px;">a</span> <span style="color: rgba(41, 123, 142, 1);font-size: 12px;">useless</span> <span style="color: rgba(38, 130, 142, 1);font-size: 12px;">feature</span> <span style="color: rgba(36, 135, 142, 1);font-size: 13px;">at</span> <span style="color: rgba(34, 141, 141, 1);font-size: 13px;">this</span> <span style="color: rgba(32, 146, 140, 1);font-size: 14px;">moment</span> <span style="color: rgba(31, 153, 138, 1);font-size: 14px;">but</span> <span style="color: rgba(31, 159, 136, 1);font-size: 14px;">who</span> <span style="color: rgba(32, 163, 134, 1);font-size: 15px;">cares.</span> <span style="color: rgba(36, 170, 131, 1);font-size: 15px;">It</span> <span style="color: rgba(41, 175, 127, 1);font-size: 16px;">is</span> <span style="color: rgba(49, 181, 123, 1);font-size: 16px;">so</span> <span style="color: rgba(59, 187, 117, 1);font-size: 16px;">fun</span> <span style="color: rgba(70, 192, 111, 1);font-size: 17px;">to</span> <span style="color: rgba(83, 197, 105, 1);font-size: 17px;">play</span> <span style="color: rgba(95, 202, 97, 1);font-size: 18px;">with</span> <span style="color: rgba(110, 206, 88, 1);font-size: 18px;">color</span> <span style="color: rgba(123, 209, 81, 1);font-size: 18px;">that</span> <span style="color: rgba(138, 214, 71, 1);font-size: 19px;">I</span> <span style="color: rgba(155, 217, 60, 1);font-size: 19px;">can’t</span> <span style="color: rgba(171, 220, 50, 1);font-size: 20px;">stop.</span> <span style="color: rgba(187, 223, 39, 1);font-size: 20px;">;D</span></p>
 </div>
 <div id="tooltip" class="section level2">
 <h2>Tooltip</h2>
@@ -3422,7 +3422,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3430,7 +3430,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3446,7 +3446,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3465,7 +3465,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3495,7 +3495,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3506,7 +3506,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>

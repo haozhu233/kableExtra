@@ -69,6 +69,7 @@
 #' @importFrom scales rescale
 #' @importFrom viridisLite viridis
 #' @importFrom stats ave
+#' @importFrom grDevices col2rgb
 #' @name kableExtra-package
 #' @aliases kableExtra
 #' @docType package
