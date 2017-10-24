@@ -267,9 +267,9 @@ kable(popover_dt, "html", escape = FALSE) %>%
 ```
 
 ## Links
-You can add links to text via `text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` in the `link` option.
-`text_spec("Hover on me", link = "#", popover = "Hello")`:
-`r text_spec("Hover on me", link = "#", popover = "Hello")`
+You can add links to text via `text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` (go back to the top of the page) or `javascript:void(0)` (literally do nothing) in the `link` option.
+`text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`:
+`r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
 
 
 # Grouped Columns / Rows
