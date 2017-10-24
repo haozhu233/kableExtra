@@ -205,8 +205,8 @@ An aliased function `text_spec` is also provided for a more literal writing expe
 ```{r}
 sometext <- strsplit(paste0(
   "You can even try to make some crazy things like this paragraph. ", 
-  "It seems to be a useless feature at this moment but it's so cool ",
-  "that nobody can resist. ;)"
+  "It may seem like a useless feature right now but it's so cool ",
+  "and nobody can resist. ;)"
 ), " ")[[1]]
 text_formatted <- paste(
   text_spec(sometext, "html", color = spec_color(1:length(sometext), end = 0.9),

@@ -2310,8 +2310,8 @@ Species
 <p>An aliased function <code>text_spec</code> is also provided for a more literal writing experience. In HTML, there is no difference between these two functions.</p>
 <pre class="r"><code>sometext &lt;- strsplit(paste0(
   &quot;You can even try to make some crazy things like this paragraph. &quot;, 
-  &quot;It seems to be a useless feature at this moment but it's so cool &quot;,
-  &quot;that nobody can resist. ;)&quot;
+  &quot;It may seem like a useless feature right now but it's so cool &quot;,
+  &quot;and nobody can resist. ;)&quot;
 ), &quot; &quot;)[[1]]
 text_formatted &lt;- paste(
   text_spec(sometext, &quot;html&quot;, color = spec_color(1:length(sometext), end = 0.9),
@@ -2319,7 +2319,7 @@ text_formatted &lt;- paste(
   collapse = &quot; &quot;)
 
 # To display the text, type `r text_formatted` outside of the chunk</code></pre>
-<p><span style="color: rgba(68, 1, 84, 1);font-size: 5px;">You</span> <span style="color: rgba(71, 13, 96, 1);font-size: 6px;">can</span> <span style="color: rgba(72, 23, 105, 1);font-size: 6px;">even</span> <span style="color: rgba(72, 32, 114, 1);font-size: 6px;">try</span> <span style="color: rgba(71, 43, 122, 1);font-size: 7px;">to</span> <span style="color: rgba(69, 53, 129, 1);font-size: 8px;">make</span> <span style="color: rgba(67, 62, 133, 1);font-size: 8px;">some</span> <span style="color: rgba(64, 70, 136, 1);font-size: 8px;">crazy</span> <span style="color: rgba(60, 79, 138, 1);font-size: 9px;">things</span> <span style="color: rgba(56, 88, 140, 1);font-size: 10px;">like</span> <span style="color: rgba(53, 96, 141, 1);font-size: 10px;">this</span> <span style="color: rgba(49, 103, 142, 1);font-size: 10px;">paragraph.</span> <span style="color: rgba(46, 111, 142, 1);font-size: 11px;">It</span> <span style="color: rgba(42, 118, 142, 1);font-size: 12px;">seems</span> <span style="color: rgba(40, 125, 142, 1);font-size: 12px;">to</span> <span style="color: rgba(37, 131, 142, 1);font-size: 12px;">be</span> <span style="color: rgba(34, 139, 141, 1);font-size: 13px;">a</span> <span style="color: rgba(32, 146, 140, 1);font-size: 14px;">useless</span> <span style="color: rgba(31, 154, 138, 1);font-size: 14px;">feature</span> <span style="color: rgba(31, 161, 136, 1);font-size: 14px;">at</span> <span style="color: rgba(34, 168, 132, 1);font-size: 15px;">this</span> <span style="color: rgba(41, 175, 127, 1);font-size: 16px;">moment</span> <span style="color: rgba(51, 182, 122, 1);font-size: 16px;">but</span> <span style="color: rgba(62, 188, 115, 1);font-size: 16px;">it’s</span> <span style="color: rgba(77, 195, 107, 1);font-size: 17px;">so</span> <span style="color: rgba(93, 201, 98, 1);font-size: 18px;">cool</span> <span style="color: rgba(110, 206, 88, 1);font-size: 18px;">that</span> <span style="color: rgba(127, 211, 78, 1);font-size: 18px;">nobody</span> <span style="color: rgba(147, 215, 65, 1);font-size: 19px;">can</span> <span style="color: rgba(169, 219, 51, 1);font-size: 20px;">resist.</span> <span style="color: rgba(187, 223, 39, 1);font-size: 20px;">;)</span></p>
+<p><span style="color: rgba(68, 1, 84, 1);font-size: 5px;">You</span> <span style="color: rgba(71, 13, 96, 1);font-size: 6px;">can</span> <span style="color: rgba(72, 24, 106, 1);font-size: 6px;">even</span> <span style="color: rgba(72, 34, 116, 1);font-size: 7px;">try</span> <span style="color: rgba(71, 45, 122, 1);font-size: 7px;">to</span> <span style="color: rgba(69, 54, 129, 1);font-size: 8px;">make</span> <span style="color: rgba(66, 64, 134, 1);font-size: 8px;">some</span> <span style="color: rgba(62, 73, 137, 1);font-size: 9px;">crazy</span> <span style="color: rgba(59, 81, 139, 1);font-size: 9px;">things</span> <span style="color: rgba(55, 90, 140, 1);font-size: 10px;">like</span> <span style="color: rgba(51, 98, 141, 1);font-size: 10px;">this</span> <span style="color: rgba(48, 106, 142, 1);font-size: 11px;">paragraph.</span> <span style="color: rgba(44, 113, 142, 1);font-size: 11px;">It</span> <span style="color: rgba(41, 121, 142, 1);font-size: 12px;">may</span> <span style="color: rgba(38, 129, 142, 1);font-size: 12px;">seem</span> <span style="color: rgba(35, 136, 142, 1);font-size: 13px;">like</span> <span style="color: rgba(33, 144, 141, 1);font-size: 13px;">a</span> <span style="color: rgba(31, 150, 139, 1);font-size: 14px;">useless</span> <span style="color: rgba(31, 158, 137, 1);font-size: 14px;">feature</span> <span style="color: rgba(33, 165, 133, 1);font-size: 15px;">right</span> <span style="color: rgba(38, 173, 129, 1);font-size: 15px;">now</span> <span style="color: rgba(48, 180, 124, 1);font-size: 16px;">but</span> <span style="color: rgba(59, 187, 117, 1);font-size: 16px;">it’s</span> <span style="color: rgba(74, 193, 109, 1);font-size: 17px;">so</span> <span style="color: rgba(90, 200, 100, 1);font-size: 17px;">cool</span> <span style="color: rgba(108, 205, 90, 1);font-size: 18px;">and</span> <span style="color: rgba(127, 211, 78, 1);font-size: 18px;">nobody</span> <span style="color: rgba(145, 215, 66, 1);font-size: 19px;">can</span> <span style="color: rgba(166, 219, 53, 1);font-size: 19px;">resist.</span> <span style="color: rgba(187, 223, 39, 1);font-size: 20px;">;)</span></p>
 </div>
 <div id="tooltip" class="section level2">
 <h2>Tooltip</h2>
@@ -3541,7 +3541,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3549,7 +3549,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3557,7 +3557,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3565,7 +3565,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3573,7 +3573,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3581,7 +3581,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3600,7 +3600,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3616,7 +3616,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3630,7 +3630,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3649,7 +3649,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3657,7 +3657,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
