@@ -19,7 +19,8 @@
 #' `initial` and `inherit` while for LaTeX, you can only choose
 #' from `l`, `c` & `r`.
 #' @param font_size A numeric input for font size. For HTML, you can also use
-#' options
+#' options including `xx-small`, `x-small`, `small`, `medium`, `large`,
+#' `x-large`, `xx-large`, `smaller`, `larger`, `initial` and `inherit`.
 #' @param angle 0-360, degree that the text will rotate. Can be a vector.
 #' @param tooltip A vector of strings to be displayed as tooltip.
 #' Obviously, this feature is only available in HTML. Read the package

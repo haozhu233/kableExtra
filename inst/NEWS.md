@@ -1,3 +1,29 @@
+kableExtra 0.6.0
+--------------------------------------------------------------------------------
+* Added cell_spec for HTML & LaTeX
+
+* Added helper functions including spec_color, spec_font_size, spec_angle, 
+spec_tooltip & spec_popover to facilitate the cell_spec function.
+
+* Added align/rotate/font_size to row_spec
+
+* Allowed row_spec to modify header row with row_spec(0, ...)
+
+* Improved `repeat_header` in LaTeX for longtables. Now you can write texts like
+"continued on next page"
+
+* Fixed a critical bug with latex group_rows (#68)
+
+* Escape question mark ? in regex_escape (thanks @nichtleiter)
+
+* Switched from readr::write_file to base::writeLines (for support in earlier 
+version of readr)
+
+* Switched from sub to str_replace in some places due to a bug in sub on 
+Windows.
+
+
+
 kableExtra 0.5.2
 --------------------------------------------------------------------------------
 * Request from CRAN: Changed dependency on `magick` from Imports to Suggest. 

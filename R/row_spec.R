@@ -19,8 +19,9 @@
 #' @param align A character string for cell alignment. For HTML, possible values could
 #' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
-#' @param font_size Only if you want to specify font size locally in HTML.
-#' This feature is not available in LaTeX
+#' @param font_size A numeric input for font size. For HTML, you can also use
+#' options including `xx-small`, `x-small`, `small`, `medium`, `large`,
+#' `x-large`, `xx-large`, `smaller`, `larger`, `initial` and `inherit`.
 #' @param angle 0-360, degree that the text will rotate.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
@@ -45,7 +46,7 @@ row_spec <- function(kable_input, row,
   }
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
-                          color, background, align, angle))
+                          color, background, align, font_size, angle))
   }
 }
 
@@ -139,7 +140,7 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background,
 }
 
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
-                           color, background, align, angle) {
+                           color, background, align, font_size, angle) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
@@ -153,7 +154,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   for (i in row) {
     target_row <- table_info$contents[i]
     new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
-                                     color, background, align, angle)
+                                     color, background, align, font_size, angle)
     out <- sub(target_row, new_row, out, perl = T)
   }
 
@@ -163,7 +164,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
 }
 
 latex_new_row_builder <- function(target_row, bold, italic, monospace,
-                                  color, background, align, angle) {
+                                  color, background, align, font_size, angle) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
@@ -186,7 +187,12 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
       paste0("\\\\textcolor", latex_color(color), "{", x, "}")
     })
   }
-
+  if (!is.null(font_size)) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\begingroup\\\\fontsize{", font_size, "}{",
+             as.numeric(font_size) + 2,
+             "}\\\\selectfont ", x, "\\\\endgroup")})
+  }
   if (!is.null(align)) {
     new_row <- lapply(new_row, function(x) {
       paste0("\\\\multicolumn{1}{", align, "}{", x, "}")

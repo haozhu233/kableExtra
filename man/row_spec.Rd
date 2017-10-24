@@ -33,8 +33,9 @@ pay attention to the differences in color codes between HTML and LaTeX.}
 be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
 while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
 
-\item{font_size}{Only if you want to specify font size locally in HTML.
-This feature is not available in LaTeX}
+\item{font_size}{A numeric input for font size. For HTML, you can also use
+options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, \code{large},
+\code{x-large}, \code{xx-large}, \code{smaller}, \code{larger}, \code{initial} and \code{inherit}.}
 
 \item{angle}{0-360, degree that the text will rotate.}
 }

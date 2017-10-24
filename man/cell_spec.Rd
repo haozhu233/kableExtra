@@ -43,7 +43,8 @@ values could be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \c
 from \code{l}, \code{c} & \code{r}.}
 
 \item{font_size}{A numeric input for font size. For HTML, you can also use
-options}
+options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, \code{large},
+\code{x-large}, \code{xx-large}, \code{smaller}, \code{larger}, \code{initial} and \code{inherit}.}
 
 \item{angle}{0-360, degree that the text will rotate. Can be a vector.}
 

@@ -2409,6 +2409,149 @@ left
 <h2>Links</h2>
 <p>You can add links to text via <code>text_spec(&quot;Google&quot;, link = &quot;https://google.com&quot;)</code>: <a href="https://google.com" style>Google</a>. If you want your hover message to be more obvious, it might be a good idea to put a <code>#</code> (go back to the top of the page) or <code>javascript:void(0)</code> (literally do nothing) in the <code>link</code> option. <code>text_spec(&quot;Hover on me&quot;, link = &quot;javascript:void(0)&quot;, popover = &quot;Hello&quot;)</code>: <a href="javascript:void(0)" style data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Hello">Hover on me</a></p>
 </div>
+<div id="integration-with-formattable" class="section level2">
+<h2>Integration with <code>formattable</code></h2>
+<p>You can combine the good parts from <code>kableExtra</code> &amp; <code>formattable</code> together into one piece. Read more at <a href="http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html" class="uri">http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html</a></p>
+<pre class="r"><code>library(formattable)
+mtcars[1:5, 1:4] %&gt;%
+  mutate(
+    car = row.names(.),
+    mpg = color_tile(&quot;white&quot;, &quot;orange&quot;)(mpg),
+    cyl = cell_spec(cyl, &quot;html&quot;, angle = (1:5)*60, 
+                    background = &quot;red&quot;, color = &quot;white&quot;, align = &quot;center&quot;),
+    disp = ifelse(disp &gt; 200,
+                  cell_spec(disp, &quot;html&quot;, color = &quot;red&quot;, bold = T),
+                  cell_spec(disp, &quot;html&quot;, color = &quot;green&quot;, italic = T)),
+    hp = color_bar(&quot;lightgreen&quot;)(hp)
+  ) %&gt;%
+  select(car, everything()) %&gt;%
+  kable(&quot;html&quot;, escape = F) %&gt;%
+  kable_styling(&quot;hover&quot;, full_width = F) %&gt;%
+  column_spec(5, width = &quot;3cm&quot;) %&gt;%
+  add_header_above(c(&quot; &quot;, &quot;Hello&quot; = 2, &quot;World&quot; = 2))</code></pre>
+<table class="table table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="border-bottom:hidden">
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Hello
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+World
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+car
+</th>
+<th style="text-align:left;">
+mpg
+</th>
+<th style="text-align:left;">
+cyl
+</th>
+<th style="text-align:left;">
+disp
+</th>
+<th style="text-align:left;">
+hp
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:left;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
+</td>
+<td style="text-align:left;">
+<span style="-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg); transform: rotate(60deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+</td>
+<td style="text-align:left;">
+<span style=" font-style: italic;color: green;">160</span>
+</td>
+<td style="text-align:left;width: 3cm; display: inline-block; ">
+<span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:left;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
+</td>
+<td style="text-align:left;">
+<span style="-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg); transform: rotate(120deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+</td>
+<td style="text-align:left;">
+<span style=" font-style: italic;color: green;">160</span>
+</td>
+<td style="text-align:left;width: 3cm; display: inline-block; ">
+<span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:left;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffa500">22.8</span>
+</td>
+<td style="text-align:left;">
+<span style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">4</span></span>
+</td>
+<td style="text-align:left;">
+<span style=" font-style: italic;color: green;">108</span>
+</td>
+<td style="text-align:left;width: 3cm; display: inline-block; ">
+<span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 53.14%">93</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:left;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffc357">21.4</span>
+</td>
+<td style="text-align:left;">
+<span style="-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg); transform: rotate(240deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+</td>
+<td style="text-align:left;">
+<span style=" font-weight: bold;color: red;">258</span>
+</td>
+<td style="text-align:left;width: 3cm; display: inline-block; ">
+<span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet Sportabout
+</td>
+<td style="text-align:left;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">18.7</span>
+</td>
+<td style="text-align:left;">
+<span style="-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg); transform: rotate(300deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">8</span></span>
+</td>
+<td style="text-align:left;">
+<span style=" font-weight: bold;color: red;">360</span>
+</td>
+<td style="text-align:left;width: 3cm; display: inline-block; ">
+<span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 100.00%">175</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="grouped-columns-rows" class="section level1">
 <h1>Grouped Columns / Rows</h1>
@@ -3398,7 +3541,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3406,7 +3549,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3414,7 +3557,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3438,7 +3581,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3446,7 +3589,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3473,7 +3616,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3514,7 +3657,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>

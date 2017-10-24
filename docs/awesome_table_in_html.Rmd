@@ -205,8 +205,8 @@ An aliased function `text_spec` is also provided for a more literal writing expe
 ```{r}
 sometext <- strsplit(paste0(
   "You can even try to make some crazy things like this paragraph. ", 
-  "It seems to be a useless feature at this moment but who cares. ", 
-  "It is so fun to play with color that I can't stop. ;D"
+  "It seems to be a useless feature at this moment but it's so cool ",
+  "that nobody can resist. ;)"
 ), " ")[[1]]
 text_formatted <- paste(
   text_spec(sometext, "html", color = spec_color(1:length(sometext), end = 0.9),
@@ -270,6 +270,28 @@ kable(popover_dt, "html", escape = FALSE) %>%
 You can add links to text via `text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` (go back to the top of the page) or `javascript:void(0)` (literally do nothing) in the `link` option.
 `text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`:
 `r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
+
+## Integration with `formattable` 
+You can combine the good parts from `kableExtra` & `formattable` together into one piece. Read more at http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html
+```{r, message = FALSE, warning=FALSE}
+library(formattable)
+mtcars[1:5, 1:4] %>%
+  mutate(
+    car = row.names(.),
+    mpg = color_tile("white", "orange")(mpg),
+    cyl = cell_spec(cyl, "html", angle = (1:5)*60, 
+                    background = "red", color = "white", align = "center"),
+    disp = ifelse(disp > 200,
+                  cell_spec(disp, "html", color = "red", bold = T),
+                  cell_spec(disp, "html", color = "green", italic = T)),
+    hp = color_bar("lightgreen")(hp)
+  ) %>%
+  select(car, everything()) %>%
+  kable("html", escape = F) %>%
+  kable_styling("hover", full_width = F) %>%
+  column_spec(5, width = "3cm") %>%
+  add_header_above(c(" ", "Hello" = 2, "World" = 2))
+```
 
 
 # Grouped Columns / Rows
