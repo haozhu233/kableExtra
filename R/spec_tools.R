@@ -21,6 +21,7 @@ html_color_ <- function(color) {
 }
 
 html_color <- function(colors) {
+  colors <- as.character(colors)
   sapply(colors, html_color_)
 }
 
@@ -34,6 +35,7 @@ latex_color_ <- function(color) {
   }
 }
 latex_color <- function(colors) {
+  colors <- as.character(colors)
   sapply(colors, latex_color_)
 }
 
@@ -60,4 +62,48 @@ spec_angle <- function(x) {
   x <- round(rescale(x, c(0, 359)))
   x[is.na(x)] <- 0
   return(x)
+}
+
+#' Setup bootstrap tooltip
+#'
+#' @param title text for hovering message
+#' @param position How the tooltip should be positioned. Possible values are
+#' `right`(default), `top`, `bottom`, `left` & `auto`.
+#'
+#' @export
+spec_tooltip <- function(title, position = "right") {
+  position <- match.arg(position, c("right", "bottom", "top", "left", "auto"))
+  tooltip_options <- paste(
+    'data-toggle="tooltip"',
+    paste0('data-placement="', position, '"'),
+    # ifelse(as_html, 'data-html="true"', NULL),
+    paste0('title="', title, '"'))
+  class(tooltip_options) <- "ke_tooltip"
+  return(tooltip_options)
+}
+
+#' Setup bootstrap popover
+#'
+#' @param content content for pop-over message
+#' @param title title for pop-over message.
+#' @param trigger Controls how the pop-over message should be triggered.
+#' Possible values include `hover` (default), `click`, `focus` and `manual`.
+#' @param position How the tooltip should be positioned. Possible values are
+#' `right`(default), `top`, `bottom`, `left` & `auto`.
+#'
+#' @export
+spec_popover <- function(content = NULL, title = NULL,
+                         trigger = "hover", position = "right") {
+  trigger <- match.arg(trigger, c("hover", "click", "focus", "manual"),
+                       several.ok = TRUE)
+  position <- match.arg(position, c("bottom", "top", "left", "right", "auto"),
+                        several.ok = TRUE)
+  popover_options <- paste(
+    'data-toggle="popover"',
+    paste0('data-trigger="', trigger, '"'),
+    paste0('data-placement="', position, '"'),
+    ifelse(!is.null(title), paste0('title="', title, '"'), ""),
+    paste0('data-content="', content, '"'))
+  class(popover_options) <- "ke_popover"
+  return(popover_options)
 }

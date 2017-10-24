@@ -198,6 +198,16 @@ kable(dt, format = "latex", booktabs = T) %>%
   row_spec(3:5, bold = T, color = "white", background = "black")
 ```
 
+## Header Rows
+One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
+```{r}
+kable(dt, format = "latex", booktabs = T, align = "c") %>%
+  kable_styling(latex_options = "striped", full_width = F) %>%
+  row_spec(0, angle = 45)
+```
+
+
+
 # Cell/Text Specification
 Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
@@ -207,15 +217,14 @@ Currently, `cell_spec` supports features including bold, italic, monospace, text
 
 ## Conditional logic
 It is very easy to use `cell_spec` with conditional logic. Here is an example.
-```{r}
-suppressMessages(library(dplyr))
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
 mtcars[1:10, 1:2] %>%
   mutate(
-    # Since we are using tibble, we need to get the rownames
     car = row.names(.),
-    # You don't need "latex" if you have ever defined options(knitr.table.format)
-    mpg = cell_spec(mpg, "latex", color = ifelse(mpg > 20, "green", "red")),
-    cyl = cell_spec(cyl, "latex", color = "white", align = "c", angle = 90, 
+    # You don't need format = "latex" if you have ever defined options(knitr.table.format)
+    mpg = cell_spec(mpg, "latex", color = ifelse(mpg > 20, "red", "blue")),
+    cyl = cell_spec(cyl, "latex", color = "white", align = "c", angle = 45, 
                     background = factor(cyl, c(4, 6, 8), 
                                         c("#666666", "#999999", "#BBBBBB")))
   ) %>%
@@ -229,11 +238,11 @@ This package also comes with a few helper functions, including `spec_color`, `sp
 ```{r}
 iris[1:10, ] %>%
   mutate_if(is.numeric, function(x) {
-    cell_spec(x, bold = T, color = spec_color(x, end = 0.9),
+    cell_spec(x, "latex", bold = T, color = spec_color(x, end = 0.9),
               font_size = spec_font_size(x))
   }) %>%
   mutate(Species = cell_spec(
-    Species, color = "white", bold = T,
+    Species, "latex", color = "white", bold = T,
     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
   )) %>%
   kable("latex", escape = F, booktabs = T, linesep = "", align = "c")
@@ -244,15 +253,17 @@ In the example above, I'm using the `mutate` functions from `dplyr`. You don't h
 ## Text Specification
 If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
 
-An alias function `text_spec` is also provided for a more literal writing experience. The only difference is that in LaTeX, unless you specify `latex_background_in_cell = FALSE` (default is `TRUE`) in `cell_spec`, it will define cell background color as `\cellcolor{}`, which doesn't work outside of a table, while for `text_spec`, the default value for `latex_background_in_cell` is `FALSE`.
+An aliased function `text_spec` is also provided for a more literal writing experience. The only difference is that in LaTeX, unless you specify `latex_background_in_cell = FALSE` (default is `TRUE`) in `cell_spec`, it will define cell background color as `\cellcolor{}`, which doesn't work outside of a table, while for `text_spec`, the default value for `latex_background_in_cell` is `FALSE`.
 
 ```{r}
 sometext <- strsplit(paste0(
   "You can even try do do some crazy things like this paragraph. Although ",
-  "it's probably a useless feature but you may find it's fun to play with. :)"
+  "it seems to be a useless feature at this moment, it is so fun to play ",
+  "with that I can't stop. :P"
 ), " ")[[1]]
 text_formatted <- paste(
-  text_spec(sometext, color = spec_color(1:length(sometext), end = 0.8, option = "A")),
+  text_spec(sometext, "latex", color = spec_color(1:length(sometext), end = 0.9),
+            font_size = spec_font_size(1:length(sometext), begin = 5, end = 20)),
   collapse = " ")
 
 # To display the text, type `r text_formatted` outside of the chunk

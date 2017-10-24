@@ -2,34 +2,23 @@
 title: "Untitled"
 author: "Hao"
 date: "10/15/2017"
-output: html_document
+output: 
+  html_document:
+    theme: simplex
 ---
 
-```{r, include=FALSE}
-library(knitr)
+<script>
+$(document).ready(function(){
+    $('[tooltip-toggle="tooltip"]').tooltip(); 
+});
+</script>
+
+
+
+
+
+```{r}
 library(kableExtra)
-library(tidyverse)
 ```
 
-```{r}
-htmlFun = function(content) {
-  x = htmltools::tags$div(content, class = 'error')
-  # you could also do this if you don't care about escaping HTML entities in 'content':
-  # x = htmltools::HTML(paste('<div class="error">', content, '</div>'))
-  d = htmltools::htmlDependency(
-    'knitr-css', '1.2.3', src = system.file('misc', package = 'knitr'),
-    stylesheet = 'knitr.css'
-  )
-  x = htmltools::attachDependencies(x, d)
-  x
-}
-
-htmlFun('Hello World!')
-```
-
-```{r}
-mtcars[1:5, 1:2] %>%
-  mutate(mpg = cell_spec(mpg, tooltip = cyl)) %>%
-  kable("html", escape = F) %>%
-  htmltools::HTML() 
-```
+`r cell_spec("hover over me", tooltip = spec_tooltip("Hello world", position = "right"))`

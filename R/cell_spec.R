@@ -18,10 +18,20 @@
 #' values could be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`,
 #' `initial` and `inherit` while for LaTeX, you can only choose
 #' from `l`, `c` & `r`.
-#' @param font_size j
+#' @param font_size A numeric input for font size. For HTML, you can also use
+#' options
 #' @param angle 0-360, degree that the text will rotate. Can be a vector.
 #' @param tooltip A vector of strings to be displayed as tooltip.
-#' Obviously, this feature is only available in HTML.
+#' Obviously, this feature is only available in HTML. Read the package
+#' vignette to see how to use bootstrap tooltip css to improve the loading
+#' speed and look.
+#' @param popover Similar with tooltip but can hold more contents. The best way
+#' to build a popover is through `spec_popover()`. If you only provide a text
+#' string, it will be used as content. Note that You have to enable this
+#' bootstrap module manually. Read the package vignette to see how.
+#' @param link A vector of strings for url links. Can be used together with
+#' tooltip and popover.
+#' @param escape T/F value showing whether special characters should be escaped.
 #' @param background_as_tile T/F value indicating if you want to have round
 #' cornered tile as background in HTML.
 #' @param latex_background_in_cell T/F value. It only takes effect in LaTeX
@@ -31,10 +41,12 @@
 #'
 #' @export
 cell_spec <- function(x, format,
-                      bold = F, italic = F, monospace = F,
+                      bold = FALSE, italic = FALSE, monospace = FALSE,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
-                      tooltip = NULL, background_as_tile = TRUE,
+                      tooltip = NULL, popover = NULL, link = NULL,
+                      escape = TRUE,
+                      background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
 
   if (missing(format) || is.null(format)) format = getOption('knitr.table.format')
@@ -46,18 +58,21 @@ cell_spec <- function(x, format,
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace,
                           color, background, align, font_size, angle,
-                          tooltip, background_as_tile))
+                          tooltip, popover, link,
+                          escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace,
-                           color, background, align, font_size, angle,
+                           color, background, align, font_size, angle, escape,
                            latex_background_in_cell))
   }
 }
 
 cell_spec_html <- function(x, bold, italic, monospace,
                            color, background, align, font_size, angle,
-                           tooltip, background_as_tile) {
+                           tooltip, popover, link,
+                           escape, background_as_tile) {
+  if (escape) x <- escape_html(x)
   cell_style <- NULL
   if (bold) cell_style <- paste(cell_style,"font-weight: bold;")
   if (italic) cell_style <- paste(cell_style, "font-style: italic;")
@@ -77,16 +92,39 @@ cell_spec_html <- function(x, bold, italic, monospace,
     cell_style <- paste0(cell_style, "text-align: ", align, ";")
   }
   if (!is.null(font_size)) {
-    if (is.numeric) font_size <- paste0(font_size, "px")
+    if (is.numeric(font_size)) font_size <- paste0(font_size, "px")
     cell_style <- paste0(cell_style, "font-size: ", font_size, ";")
   }
-  if (!is.null(tooltip)) {
-    tooltip <- gsub("\n", "&#013;", tooltip)
-    tooltip <- paste0("data-toggle='tooltip' title='", tooltip, "'")
+
+  # favor popover over tooltip
+  if (!is.null(popover)) {
+    if (class(popover) != "ke_popover") popover <- spec_popover(popover)
+    tooltip_n_popover <- popover
+  } else if (!is.null(tooltip)) {
+    if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
+    tooltip_n_popover <- tooltip
+  } else {
+    tooltip_n_popover <- NULL
   }
-  out <- paste0(
-    '<span style="', cell_style, '"', tooltip, '>', x, '</span>'
-  )
+
+  if (!is.null(link)) {
+    x <- paste0('<a href="', link, '" style="', cell_style, '" ',
+                tooltip_n_popover, '>', x, '</a>')
+  } else {
+    x <- paste0('<span style="', cell_style, '" ',
+                tooltip_n_popover, '>', x, '</span>')
+  }
+
+  # if (!is.null(link)) {
+  #   x <- paste0('<a href="', link, '" style="', cell_style, '" ',
+  #               tooltip_n_popover, '>', x, '</a>')
+  # } else if (!is.null(tooltip_n_popover)) {
+  #   x <- paste0('<span style="', cell_style, '" ',
+  #               tooltip_n_popover, '>', x, '</span>')
+  # } else {
+  #
+  # }
+
 
   if (!is.null(angle)) {
     rotate_css <- paste0("-webkit-transform: rotate(", angle,
@@ -94,15 +132,17 @@ cell_spec_html <- function(x, bold, italic, monospace,
                          "deg); -ms-transform: rotate(", angle,
                          "deg); -o-transform: rotate(", angle,
                          "deg); transform: rotate(", angle,
-                         "deg);")
-    out <- paste0('<div style="', rotate_css, '">', out, '</div>')
+                         "deg); display: inline-block; ")
+    x <- paste0('<span style="', rotate_css, '">', x, '</span>')
   }
-  return(out)
+
+  return(x)
 }
 
 cell_spec_latex <- function(x, bold, italic, monospace,
-                            color, background, align, font_size, angle,
+                            color, background, align, font_size, angle, escape,
                             latex_background_in_cell) {
+  if (escape) x <- escape_latex(x)
   if (bold) x <- paste0("\\bfseries{", x, "}")
   if (italic) x <- paste0("\\em{", x, "}")
   if (monospace) x <- paste0("\\ttfamily{", x, "}")
@@ -116,8 +156,8 @@ cell_spec_latex <- function(x, bold, italic, monospace,
     x <- paste0("\\", background_env, background, "{", x, "}")
   }
   if (!is.null(font_size)) {
-    x <- paste0("\\begingroup\\fontsize{", font_size, "}{", as.numeric(font_size) + 2,
-           "}\\selectfont ", x, "\\endgroup")
+    x <- paste0("\\bgroup\\fontsize{", font_size, "}{", as.numeric(font_size) + 2,
+           "}\\selectfont ", x, "\\egroup{}")
   }
   if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
   if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
@@ -127,12 +167,13 @@ cell_spec_latex <- function(x, bold, italic, monospace,
 #' @rdname cell_spec
 #' @export
 text_spec <- function(x, format,
-                      bold = F, italic = F, monospace = F,
+                      bold = FALSE, italic = FALSE, monospace = FALSE,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
-                      tooltip = NULL, background_as_tile = TRUE,
+                      tooltip = NULL, popover = NULL, link = NULL,
+                      escape = TRUE, background_as_tile = TRUE,
                       latex_background_in_cell = FALSE) {
   cell_spec(x, format, bold, italic, monospace, color, background, align,
-            font_size, angle, tooltip, background_as_tile,
+            font_size, angle, tooltip, popover, link, escape, background_as_tile,
             latex_background_in_cell)
 }

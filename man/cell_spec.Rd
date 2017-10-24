@@ -5,14 +5,16 @@
 \alias{text_spec}
 \title{Specify Cell/Text format}
 \usage{
-cell_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
-  background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  tooltip = NULL, background_as_tile = TRUE,
+cell_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
+  color = NULL, background = NULL, align = NULL, font_size = NULL,
+  angle = NULL, tooltip = NULL, popover = NULL, link = NULL,
+  escape = TRUE, background_as_tile = TRUE,
   latex_background_in_cell = TRUE)
 
-text_spec(x, format, bold = F, italic = F, monospace = F, color = NULL,
-  background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  tooltip = NULL, background_as_tile = TRUE,
+text_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
+  color = NULL, background = NULL, align = NULL, font_size = NULL,
+  angle = NULL, tooltip = NULL, popover = NULL, link = NULL,
+  escape = TRUE, background_as_tile = TRUE,
   latex_background_in_cell = FALSE)
 }
 \arguments{
@@ -40,12 +42,25 @@ values could be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \c
 \code{initial} and \code{inherit} while for LaTeX, you can only choose
 from \code{l}, \code{c} & \code{r}.}
 
-\item{font_size}{j}
+\item{font_size}{A numeric input for font size. For HTML, you can also use
+options}
 
 \item{angle}{0-360, degree that the text will rotate. Can be a vector.}
 
 \item{tooltip}{A vector of strings to be displayed as tooltip.
-Obviously, this feature is only available in HTML.}
+Obviously, this feature is only available in HTML. Read the package
+vignette to see how to use bootstrap tooltip css to improve the loading
+speed and look.}
+
+\item{popover}{Similar with tooltip but can hold more contents. The best way
+to build a popover is through \code{spec_popover()}. If you only provide a text
+string, it will be used as content. Note that You have to enable this
+bootstrap module manually. Read the package vignette to see how.}
+
+\item{link}{A vector of strings for url links. Can be used together with
+tooltip and popover.}
+
+\item{escape}{T/F value showing whether special characters should be escaped.}
 
 \item{background_as_tile}{T/F value indicating if you want to have round
 cornered tile as background in HTML.}

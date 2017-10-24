@@ -452,7 +452,7 @@ styling_latex_font_size <- function(x, table_info, font_size) {
   # fontsize is good enough
   return(paste0(
     "\\begingroup\\fontsize{", font_size, "}{", row_height, "}\\selectfont\n", x,
-    "\\endgroup"
+    "\\endgroup{}"
   ))
 }
 
