@@ -233,7 +233,7 @@ mtcars[1:10, 1:2] %>%
 ```
 
 ## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html). It offers a very visually impactful representation in a tabular format. 
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impactful representation in a tabular format. 
 
 ```{r}
 iris[1:10, ] %>%
