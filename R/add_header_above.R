@@ -94,7 +94,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace) {
   )
   header_items <- apply(header_df, 1, function(x) {
     if (trimws(x[1]) == "") {
-      paste0('<th style="border-bottom:hidden"></th>')
+      paste0('<th style="border-bottom:hidden" colspan="', x[2], '"></th>')
     } else {
       paste0('<th style="text-align:center; border-bottom:hidden; ',
              'padding-bottom:0; padding-left:3px;padding-right:3px;',
