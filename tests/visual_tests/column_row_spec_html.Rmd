@@ -18,6 +18,14 @@ library(knitr)
 library(kableExtra)
 library(xml2)
 
+y <- knitr::kable(head(mtcars), "html")
+y %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1:3, width = "5cm")
+```
+
+```{r}
+
 dt <- data.frame(
   row_id = c("abb", "xxx", "aaa"),
   contents = c(
@@ -39,7 +47,6 @@ dt <- data.frame(
 
 kable(dt, "html") %>%
   kable_styling(full_width = F)   %>%
-  row_spec(1, bold = T) %>%
   column_spec(2, "5cm", bold = T, color = "white", background = "gray") %>%
   column_spec(3, monospace = T, border_right = T) %>%
   column_spec(4, "3cm", italic = T)
@@ -54,6 +61,34 @@ dt$cyl <- paste(dt$cyl, "$")
 kable(dt, "html") %>%
   kable_styling(full_width = F) %>%
   column_spec(7, bold = T) %>%
-  row_spec(0, color = "black", align = "right", font_size = 20) %>%
   row_spec(5, bold = T, italic = T, color = "white", background = "black")
+```
+
+```{r}
+library(data.table)
+csd <- fread('  Oct-17  Sep-17  Aug-17  Jul-17  Jun-17  May-17  Apr-17  Mar-17  Feb-17  Jan-17  Dec-16  Nov-16  Oct-16  Sep-16  2017 YTD    2016 YTD    2015 YTD
+V1                                                                  
+V2      71,687  74,492  72,772  74,785  77,084  72,819  85,367  77,403  85,131  81,585  80,186  89,810  92,871  691,540 1,141,589   1,207,433
+V3      22,788  22,355  23,093  23,239  23,821  23,005  25,883  22,168  24,812  23,715  22,708  28,128  29,366  211,164 353,006 411,659
+V4  #DIV/0! 31.8%   30.0%   31.7%   31.1%   30.9%   31.6%   30.3%   28.6%   29.1%   29.1%   28.3%   31.3%   31.6%   30.5%   30.9%   34.1%
+Some long variable name     30,047  31,910  30,046  31,766  33,455  30,913  37,524  33,683  37,589  36,571  35,590  44,447  44,295  296,933 516,597 528,305
+V5      2.89%   1.83%   1.55%   1.97%   2.85%   1.37%   4.95%   5.54%   3.45%   3.12%   1.92%   2.65%   1.69%   3.01%   2.04%   0.61%
+V6      867 583 465 626 952 422 1,857   1,866   1,298   1,140   682 1,179   748 8,936   10,539  3,201
+V7      29,180  31,327  29,581  31,140  32,503  30,491  35,667  31,817  36,291  35,431  34,908  43,268  43,547  287,997 506,058 525,104
+V8      0:23    0:15    0:10    0:20    0:29    0:14    0:53    1:03    0:33    0:24    0:20    0:25    0:17    0:29    0:21    0:06
+V9      4:53    4:44    4:46    5:00    5:01    5:05    5:01    5:05    5:01    4:57    5:01    4:49    4:52    4:57    4:47    4:11
+V10     86% 91% 94% 89% 83% 91% 78% 72% 81% 86% 89% 85% 92% 85% 89% 94%
+V11     99.05%  98.20%  96.40%  97.25%  97.80%  96.50%  95.55%  95.85%  95.65%  96.25%  96.55%  97.75%  97.95%  96.92%  97.33%  98.23%
+V12     99.75%  100.00% 99.90%  98.85%  99.00%  98.75%  99.00%  99.55%  99.85%  99.45%  99.20%  97.70%  97.55%  99.41%  98.50%  99.01%
+')
+csd <- csd[-1,-2]
+names(csd)[1] <- 'V0'
+words <- c('these','are','some','words','extreme','slightly')
+
+csd[,1] <- replicate(nrow(csd), paste(sample(words, 7, T), collapse = " "))
+
+csd %>% 
+          kable('html', digits = 2) %>%
+          column_spec(1, bold = T, width = "5cm; display: inline-block;") %>% 
+          kable_styling(bootstrap_options = c("striped", "hover")) 
 ```

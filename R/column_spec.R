@@ -87,8 +87,7 @@ column_spec_html <- function(kable_input, column, width,
       target_cell <- xml_child(xml_child(kable_tbody, i), j)
       if (!is.null(width)) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "width: ", width,
-                                                 "; display: inline-block; ")
+                                                 "width: ", width, "; ")
       }
       if (bold) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
@@ -121,6 +120,8 @@ column_spec_html <- function(kable_input, column, width,
       }
     }
   }
+
+
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   return(out)
