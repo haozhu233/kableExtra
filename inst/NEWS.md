@@ -1,3 +1,13 @@
+kableExtra 0.7.0
+* Add HTML color code support to kableExtra
+
+kableExtra 0.6.1
+--------------------------------------------------------------------------------
+* Fixed a bug in column_spec width introduced in ver 0.6.0
+
+* Fixed a bug in add_header_above. #90
+
+
 kableExtra 0.6.0
 --------------------------------------------------------------------------------
 * Added cell_spec for HTML & LaTeX

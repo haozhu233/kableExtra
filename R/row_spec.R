@@ -208,7 +208,7 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
   new_row <- paste(unlist(new_row), collapse = " & ")
 
   if (!is.null(background)) {
-    new_row <- paste0("\\\\rowcolor{", background, "}  ", new_row)
+    new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
   }
 
   return(new_row)

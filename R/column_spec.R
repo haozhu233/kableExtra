@@ -183,7 +183,7 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
   }
 
   if (!is.null(background)) {
-    background <- sprintf("\\\\columncolor{%s}", background)
+    background <- paste0("\\\\columncolor", latex_color(background))
   }
 
   latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
