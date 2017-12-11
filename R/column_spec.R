@@ -179,7 +179,7 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
   }
 
   if (!is.null(color)) {
-    color <- paste0("\\\\color", latex_color(color))
+    color <- paste0("\\\\leavevmode\\\\color", latex_color(color))
   }
 
   if (!is.null(background)) {
