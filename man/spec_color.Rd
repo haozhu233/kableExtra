@@ -5,7 +5,7 @@
 \title{Generate viridis Color code for continuous values}
 \usage{
 spec_color(x, alpha = 1, begin = 0, end = 1, direction = 1,
-  option = "D", na_color = "#BBBBBB")
+  option = "D", na_color = "#BBBBBB", scale_from = NA)
 }
 \arguments{
 \item{x}{continuous vectors of values}
@@ -25,6 +25,9 @@ options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"),
 and "viridis" (or "D", the default option).}
 
 \item{na_color}{color code for NA values}
+
+\item{scale_from}{input range (vector of length two). If not given,
+is calculated from the range of x}
 }
 \description{
 Generate viridis Color code for continuous values

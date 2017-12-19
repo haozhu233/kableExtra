@@ -4,7 +4,8 @@
 \alias{spec_font_size}
 \title{Generate common font size for continuous values}
 \usage{
-spec_font_size(x, begin = 8, end = 16, na_font_size = 12)
+spec_font_size(x, begin = 8, end = 16, na_font_size = 12,
+  scale_from = NA)
 }
 \arguments{
 \item{x}{continuous vectors of values}
@@ -14,6 +15,9 @@ spec_font_size(x, begin = 8, end = 16, na_font_size = 12)
 \item{end}{Largest font size. Default is 20.}
 
 \item{na_font_size}{font size for NA values}
+
+\item{scale_from}{input range (vector of length two). If not given,
+is calculated from the range of x}
 }
 \description{
 Generate common font size for continuous values

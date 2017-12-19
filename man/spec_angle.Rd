@@ -4,7 +4,7 @@
 \alias{spec_angle}
 \title{Generate rotation angle for continuous values}
 \usage{
-spec_angle(x, begin, end)
+spec_angle(x, begin, end, scale_from = NA)
 }
 \arguments{
 \item{x}{continuous vectors of values}
@@ -12,6 +12,9 @@ spec_angle(x, begin, end)
 \item{begin}{Smallest degree to rotate. Default is 0}
 
 \item{end}{Largest degree to rotate. Default is 359.}
+
+\item{scale_from}{input range (vector of length two). If not given,
+is calculated from the range of x}
 }
 \description{
 Generate rotation angle for continuous values
