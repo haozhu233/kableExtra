@@ -8,8 +8,8 @@
 #' @export
 spec_color <- function(x, alpha = 1, begin = 0, end = 1,
                        direction = 1, option = "D",
-                       na_color = "#BBBBBB", scale_from = NA) {
-  if (is.na(scale_from)) {
+                       na_color = "#BBBBBB", scale_from = NULL) {
+  if (is.null(scale_from)) {
     x <- round(rescale(x, c(1, 256)))
   } else {
     x <- round(rescale(x, to = c(1, 256),
@@ -57,8 +57,8 @@ latex_color <- function(colors) {
 #' is calculated from the range of x
 #' @export
 spec_font_size <- function(x, begin = 8, end = 16, na_font_size = 12,
-                           scale_from = NA) {
-  if (is.na(scale_from)) {
+                           scale_from = NULL) {
+  if (is.null(scale_from)) {
     x <- round(rescale(x, c(begin, end)))
   } else {
     x <- round(rescale(x, to = c(begin, end),
@@ -76,8 +76,8 @@ spec_font_size <- function(x, begin = 8, end = 16, na_font_size = 12,
 #' @param scale_from input range (vector of length two). If not given,
 #' is calculated from the range of x
 #' @export
-spec_angle <- function(x, begin, end, scale_from = NA) {
-  if (is.na(scale_from)) {
+spec_angle <- function(x, begin, end, scale_from = NULL) {
+  if (is.null(scale_from)) {
     x <- round(rescale(x, c(begin, end)))
   } else {
     x <- round(rescale(x, to = c(begin, end),
