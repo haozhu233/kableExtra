@@ -75,7 +75,7 @@ as_kable_xml <- function(x) {
 }
 
 read_kable_as_xml <- function(x) {
-  kable_html <- read_html(as.character(x))
+  kable_html <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
   xml_child(xml_child(kable_html, 1), 1)
 }
 
