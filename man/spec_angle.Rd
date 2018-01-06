@@ -4,7 +4,7 @@
 \alias{spec_angle}
 \title{Generate rotation angle for continuous values}
 \usage{
-spec_angle(x, begin, end, scale_from = NA)
+spec_angle(x, begin, end, scale_from = NULL)
 }
 \arguments{
 \item{x}{continuous vectors of values}

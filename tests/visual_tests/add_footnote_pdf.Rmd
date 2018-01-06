@@ -35,3 +35,15 @@ Centered Table + page footnotes
 kable(dt, format = "latex", longtable = T, booktabs = T) %>%
   add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
 ```
+
+## LaTeX + longtable
+Centered Table + page footnotes
+```{r}
+kable(dt, format = "latex", longtable = T) %>%
+  add_footnote(c("footnote 1", "footnote 2", "footnote 3"))
+```
+
+```{r}
+kable(dt, format = "latex", booktabs = T, longtable = T) %>%
+add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+```
