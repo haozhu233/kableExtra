@@ -2,17 +2,17 @@
 #'
 #' @export
 footnote <- function(kable_input,
-                             general = NULL,
-                             number = NULL,
-                             alphabet = NULL,
-                             symbol = NULL,
-                             footnote_order = c("general", "number",
-                                                "alphabet", "symbol"),
-                             footnote_as_chunk = FALSE,
-                             general_title = "Note: ",
-                             number_title = "",
-                             alphabet_title = "",
-                             symbol_title = ""
+                     general = NULL,
+                     number = NULL,
+                     alphabet = NULL,
+                     symbol = NULL,
+                     footnote_order = c("general", "number",
+                                        "alphabet", "symbol"),
+                     footnote_as_chunk = FALSE,
+                     general_title = "Note: ",
+                     number_title = "",
+                     alphabet_title = "",
+                     symbol_title = ""
 ) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -94,8 +94,7 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents) {
 }
 
 # HTML
-footnote_html <- function(kable_input, footnote_table,
-                                  footnote_as_chunk) {
+footnote_html <- function(kable_input, footnote_table, footnote_as_chunk) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
@@ -146,6 +145,8 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 }
 
 # LaTeX
-footnote_latex <- function() {
+footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
+  table_info <- magic_mirror(kable_input)
+
 
 }

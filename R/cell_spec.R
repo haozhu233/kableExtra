@@ -50,7 +50,9 @@ cell_spec <- function(x, format,
                       background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
 
-  if (missing(format) || is.null(format)) format = getOption('knitr.table.format')
+  if (missing(format) || is.null(format)) {
+    format <- getOption('knitr.table.format')
+  }
   if (is.null(format)) {
     message("Setting cell_spec format as html")
     format <- "html"
@@ -75,9 +77,10 @@ cell_spec_html <- function(x, bold, italic, monospace,
                            escape, background_as_tile) {
   if (escape) x <- escape_html(x)
   cell_style <- NULL
-  if (bold) cell_style <- paste(cell_style,"font-weight: bold;")
-  if (italic) cell_style <- paste(cell_style, "font-style: italic;")
-  if (monospace) cell_style <- paste(cell_style, "font-family: monospace;")
+  cell_style <- paste(cell_style, ifelse(bold, "font-weight: bold;", ""))
+  cell_style <- paste(cell_style, ifelse(italic, "font-style: italic;", ""))
+  cell_style <- paste(cell_style,
+                      ifelse(monospace, "font-family: monospace;", ""))
   if (!is.null(color)) {
     cell_style <- paste0(cell_style, "color: ", html_color(color), ";")
   }
