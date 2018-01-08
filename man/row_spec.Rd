@@ -6,7 +6,7 @@
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
   monospace = FALSE, color = NULL, background = NULL, align = NULL,
-  font_size = NULL, angle = NULL)
+  font_size = NULL, angle = NULL, extra_css)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -38,6 +38,9 @@ options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, 
 \code{x-large}, \code{xx-large}, \code{smaller}, \code{larger}, \code{initial} and \code{inherit}.}
 
 \item{angle}{0-360, degree that the text will rotate.}
+
+\item{extra_css}{Extra css text to be passed into the cells of the row. Note
+that it's not for the whole row.}
 }
 \description{
 This function allows users to select a row and then specify

@@ -23,6 +23,8 @@
 #' options including `xx-small`, `x-small`, `small`, `medium`, `large`,
 #' `x-large`, `xx-large`, `smaller`, `larger`, `initial` and `inherit`.
 #' @param angle 0-360, degree that the text will rotate.
+#' @param extra_css Extra css text to be passed into the cells of the row. Note
+#' that it's not for the whole row.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
@@ -31,7 +33,7 @@
 row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
                      color = NULL, background = NULL, align = NULL,
-                     font_size = NULL, angle = NULL) {
+                     font_size = NULL, angle = NULL, extra_css) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -42,7 +44,8 @@ row_spec <- function(kable_input, row,
   }
   if (kable_format == "html") {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
-                         color, background, align, font_size, angle))
+                         color, background, align, font_size, angle,
+                         extra_css))
   }
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
@@ -51,7 +54,8 @@ row_spec <- function(kable_input, row,
 }
 
 row_spec_html <- function(kable_input, row, bold, italic, monospace,
-                          color, background, align, font_size, angle) {
+                          color, background, align, font_size, angle,
+                          extra_css) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
@@ -67,7 +71,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     for (theader_i in 1:length(xml_children(original_header_row))) {
       target_header_cell <- xml_child(original_header_row, theader_i)
       xml_cell_style(target_header_cell, bold, italic, monospace, color, background,
-                     align, font_size, angle)
+                     align, font_size, angle, extra_css)
     }
     row <- row[row != 0]
   }
@@ -86,7 +90,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
       for (i in 1:length(xml_children(target_row))) {
         target_cell <- xml_child(target_row, i)
         xml_cell_style(target_cell, bold, italic, monospace, color, background,
-                       align, font_size, angle)
+                       align, font_size, angle, extra_css)
       }
     }
   }
@@ -97,7 +101,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 }
 
 xml_cell_style <- function(x, bold, italic, monospace, color, background,
-                           align, font_size, angle) {
+                           align, font_size, angle, extra_css) {
   if (bold) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "font-weight: bold;")
@@ -135,6 +139,9 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background,
                                    "deg); -o-transform: rotate(", angle,
                                    "deg); transform: rotate(", angle,
                                    "deg);")
+  }
+  if (!is.null(extra_css)) {
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"), extra_css)
   }
   return(x)
 }

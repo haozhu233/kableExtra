@@ -43,3 +43,18 @@ iris[, 1:4] %>%
   row_spec(0, angle = 270, align = "right") %>%
   kable_styling(full_width = F) 
 ```
+
+```{r}
+mtcars[1:10, 1:2] %>%
+  mutate(
+    car = row.names(.),
+    # You don't need format = "html" if you have ever defined options(knitr.table.format)
+    mpg = cell_spec(mpg, "html", bold = ifelse(mpg > 20, TRUE, FALSE)),
+    cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
+                    background = factor(cyl, c(4, 6, 8), 
+                                        c("#666666", "#999999", "#BBBBBB")))
+  ) %>%
+  select(car, mpg, cyl) %>%
+  knitr::kable("html", escape = F) %>%
+  kable_styling("striped", full_width = F)
+```

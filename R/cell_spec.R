@@ -32,6 +32,7 @@
 #' bootstrap module manually. Read the package vignette to see how.
 #' @param link A vector of strings for url links. Can be used together with
 #' tooltip and popover.
+#' @param extra_css Extra css text to be passed into the cell
 #' @param escape T/F value showing whether special characters should be escaped.
 #' @param background_as_tile T/F value indicating if you want to have round
 #' cornered tile as background in HTML.
@@ -46,6 +47,7 @@ cell_spec <- function(x, format,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
+                      extra_css = NULL,
                       escape = TRUE,
                       background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
@@ -61,7 +63,7 @@ cell_spec <- function(x, format,
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace,
                           color, background, align, font_size, angle,
-                          tooltip, popover, link,
+                          tooltip, popover, link, extra_css,
                           escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
@@ -73,7 +75,7 @@ cell_spec <- function(x, format,
 
 cell_spec_html <- function(x, bold, italic, monospace,
                            color, background, align, font_size, angle,
-                           tooltip, popover, link,
+                           tooltip, popover, link, extra_css,
                            escape, background_as_tile) {
   if (escape) x <- escape_html(x)
   cell_style <- NULL
@@ -91,6 +93,9 @@ cell_spec_html <- function(x, bold, italic, monospace,
       "padding-right: 4px; padding-left: 4px; ",
       "background-color: ", html_color(background), ";"
     )
+  }
+  if (!is.null(extra_css)) {
+    cell_style <- paste0(cell_style, extra_css)
   }
   if (!is.null(align)) {
     cell_style <- paste0(cell_style, "text-align: ", align, ";")

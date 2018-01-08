@@ -1,5 +1,8 @@
 kableExtra 0.7.0
-* Add HTML color code support to kableExtra
+* Added HTML color code support to kableExtra
+* Fixed bug #105: bold/italic/monospace cannot accept T/F as vector
+* Added extra_css to cell_spec, row_spec & column_spec
+
 
 kableExtra 0.6.1
 --------------------------------------------------------------------------------
