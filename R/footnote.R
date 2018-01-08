@@ -149,4 +149,6 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
   table_info <- magic_mirror(kable_input)
 
 
+
+
 }

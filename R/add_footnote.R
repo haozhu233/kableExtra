@@ -204,8 +204,8 @@ add_footnote <- function(input, label = NULL,
             }
           }
         }
-        export <- gsub("\\\\end\\{tabular\\}",
-                       paste0(footer, "\\\\end{tabular}"),
+        export <- gsub(table_info$end_tabular,
+                       paste0(footer, "\\\\end{", table_info$tabular, "}"),
                        export)
       }
     }

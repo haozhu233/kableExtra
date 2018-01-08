@@ -10,9 +10,25 @@ library(knitr)
 library(kableExtra)
 
 mtcars[1:5, 1:5] %>%
-  kable("html", caption = paste0("test", footnote_marker_symbol(1))) %>%
+  kable("html", caption = paste0("test", footnote_marker_alphabet(1))) %>%
   kable_styling() %>%
-  footnote("ccc", c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
-                   number_title = "special: ", alphabet_title = "abc: ", 
-                   footnote_as_chunk = T)
+  footnote(general = "ccc", 
+           number = c("number 1; ", "number 2. "), 
+           alphabet = c("a 1; ", "a 2."), 
+           symbol = c("s 1; ", "s 2."))
+```
+
+```{r}
+mtcars[1:5, 1:5] %>%
+  kable("html", caption = paste0("test", footnote_marker_alphabet(1))) %>%
+  kable_styling() %>%
+  footnote(general = "ccc", 
+           number = c("number 1; ", "number 2. "), 
+           alphabet = c("a 1; ", "a 2."), 
+           symbol = c("s 1; ", "s 2."),
+           general_title = "",
+           number_title = "special: ", 
+           alphabet_title = "abc: ", 
+           symbol_title = "triangle: ",
+           footnote_as_chunk = T)
 ```
