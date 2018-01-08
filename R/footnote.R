@@ -1,7 +1,7 @@
-#' Add advanced footnote
+#' Add footnote (new)
 #'
 #' @export
-add_footnote_adv <- function(kable_input,
+footnote <- function(kable_input,
                              general = NULL,
                              number = NULL,
                              alphabet = NULL,
@@ -45,10 +45,10 @@ add_footnote_adv <- function(kable_input,
     kable_format, footnote_titles, footnote_contents
   )
   if (kable_format == "html") {
-    return(add_footnote_adv_html(kable_input, footnote_table, footnote_as_chunk))
+    return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
   }
   # if (kable_format == "latex") {
-  #   return(add_footnote_adv_latex(kable_input, footnote_table))
+  #   return(footnote_latex(kable_input, footnote_table))
   # }
 }
 
@@ -94,12 +94,12 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents) {
 }
 
 # HTML
-add_footnote_adv_html <- function(kable_input, footnote_table,
+footnote_html <- function(kable_input, footnote_table,
                                   footnote_as_chunk) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
-  new_html_footnote <- adv_html_tfoot_maker(footnote_table, footnote_as_chunk)
+  new_html_footnote <- html_tfoot_maker(footnote_table, footnote_as_chunk)
   xml_add_child(kable_xml, new_html_footnote)
 
   out <- as_kable_xml(kable_xml)
@@ -107,11 +107,11 @@ add_footnote_adv_html <- function(kable_input, footnote_table,
   return(out)
 }
 
-adv_html_tfoot_maker <- function(footnote_table, footnote_as_chunk) {
+html_tfoot_maker <- function(footnote_table, footnote_as_chunk) {
   footnote_types <- names(footnote_table$contents)
   footnote_text <- c()
   for (i in footnote_types) {
-    footnote_text <- c(footnote_text, adv_html_tfoot_maker_(
+    footnote_text <- c(footnote_text, html_tfoot_maker_(
       footnote_table$contents[[i]], footnote_table$titles[[i]], i,
       footnote_as_chunk))
   }
@@ -122,8 +122,7 @@ adv_html_tfoot_maker <- function(footnote_table, footnote_as_chunk) {
   return(xml_child(xml_child(footnote_node, 1), 1))
 }
 
-adv_html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
-
+html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
   footnote_text <- apply(ft_contents, 1, function(x) {
     paste0('<sup>', x[1], '</sup> ', x[2])
   })
@@ -139,10 +138,14 @@ adv_html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
   } else {
     footnote_text <- paste0(
       '<tr><td style="padding: 0; border: 0;" colspan="100%">',
-      paste0(footnote_text, collapse = ""),
+      paste0(footnote_text, collapse = " "),
       '</td></tr>'
     )
   }
-  # }
   return(footnote_text)
+}
+
+# LaTeX
+footnote_latex <- function() {
+
 }

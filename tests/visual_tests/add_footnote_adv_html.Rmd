@@ -12,7 +12,7 @@ library(kableExtra)
 mtcars[1:5, 1:5] %>%
   kable("html") %>%
   kable_styling() %>%
-  add_footnote_adv("ccc", c("number 1", "number 2"), c("a 1", "a 2"), c("s 1", "s 2"),
+  footnote("ccc", c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
                    number_title = "special: ", alphabet_title = "abc: ", 
                    footnote_as_chunk = T)
 ```

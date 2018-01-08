@@ -2,12 +2,12 @@
 
 export("%>%")
 export(add_footnote)
-export(add_footnote_adv)
 export(add_header_above)
 export(add_indent)
 export(cell_spec)
 export(collapse_rows)
 export(column_spec)
+export(footnote)
 export(group_rows)
 export(kableExtra_latex_packages)
 export(kable_as_image)
