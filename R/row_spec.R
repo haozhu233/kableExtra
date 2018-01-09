@@ -33,7 +33,7 @@
 row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
                      color = NULL, background = NULL, align = NULL,
-                     font_size = NULL, angle = NULL, extra_css) {
+                     font_size = NULL, angle = NULL, extra_css = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }

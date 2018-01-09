@@ -6,7 +6,7 @@
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
   monospace = FALSE, color = NULL, background = NULL, align = NULL,
-  font_size = NULL, angle = NULL, extra_css)
+  font_size = NULL, angle = NULL, extra_css = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
