@@ -71,7 +71,6 @@ footnote <- function(kable_input,
   footnote_order <- footnote_order[footnote_order %in% notnull]
   footnote_titles <- footnote_titles[footnote_order]
   footnote_contents <- footnote_contents[footnote_order]
-  footnote_contents <- lapply(footnote_contents, esca)
   if (escape) {
     if (kable_format == "html") {
       footnote_contents <- lapply(footnote_contents, escape_html)
@@ -199,7 +198,6 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
-
 }
 
 latex_tfoot_maker <- function(footnote_table, footnote_as_chunk, ncol) {
