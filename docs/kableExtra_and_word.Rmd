@@ -1,0 +1,27 @@
+---
+title: "kableExtra and Word"
+author: "Hao Zhu"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: simplex
+vignette: >
+  %\VignetteIndexEntry{kableExtra and Word}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<video width="800" height="400" controls>
+  <source src="word.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+***
+
+> You can `copy` formatted tables from HTML and `paste` them into a Word document
+without losing the format. 

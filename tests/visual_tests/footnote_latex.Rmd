@@ -22,3 +22,9 @@ dt %>%
            number_title = "special: ", alphabet_title = "abc: ", 
            footnote_as_chunk = T)
 ```
+
+```{r}
+mtcars[1:5, 1:5] %>%
+  kable("latex", booktabs = T) %>%
+  footnote(general = c("Note 1", "Note 2"), general_title = "")
+```

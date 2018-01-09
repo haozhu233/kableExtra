@@ -99,12 +99,11 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents) {
   } else {
     symbol_index <- number_index$symbol.html
   }
-  contents_length <- sapply(footnote_contents, length)
 
   if (!is.null(footnote_contents$general)) {
     footnote_contents$general <- data.frame(
       index = "",
-      footnote = paste(footnote_contents$general, collapse = " ")
+      footnote = footnote_contents$general
     )
   }
   if (!is.null(footnote_contents$number)) {
