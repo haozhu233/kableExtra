@@ -2,17 +2,20 @@
 title: "add_footnote_adv"
 author: "Hao"
 date: "1/5/2018"
-output: html_document
+output: pdf_document
 ---
 
 ```{r}
 library(knitr)
 library(kableExtra)
 
-mtcars[1:5, 1:5] %>%
-  kable("html", caption = paste0("test", footnote_marker_symbol(1))) %>%
-  kable_styling() %>%
-  footnote("ccc", c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
-                   number_title = "special: ", alphabet_title = "abc: ", 
-                   footnote_as_chunk = T)
+dt <- mtcars[1:5, 1:2]
+colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "latex"))
+
+dt %>%
+  kable("latex", caption = paste0("test", footnote_marker_symbol(1, "latex")),
+        booktabs = T, escape = F) %>%
+  footnote(NULL, c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
+           number_title = "special: ", alphabet_title = "abc: ", 
+           footnote_as_chunk = T)
 ```

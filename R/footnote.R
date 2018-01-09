@@ -47,9 +47,9 @@ footnote <- function(kable_input,
   if (kable_format == "html") {
     return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
   }
-  # if (kable_format == "latex") {
-  #   return(footnote_latex(kable_input, footnote_table))
-  # }
+  if (kable_format == "latex") {
+    return(footnote_latex(kable_input, footnote_table, footnote_as_chunk))
+  }
 }
 
 footnote_table_maker <- function(format, footnote_titles, footnote_contents) {
@@ -147,8 +147,55 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
   table_info <- magic_mirror(kable_input)
+  out <- enc2utf8(as.character(kable_input))
+  if (table_info$tabular == "longtable") {
+    return()
+  }
+  footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
+                                     table_info$ncol)
+  out <- sub(table_info$end_tabular,
+             paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
+             out)
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "kable_meta") <- table_info
+  return(out)
 
+}
 
+latex_tfoot_maker <- function(footnote_table, footnote_as_chunk, ncol) {
+  footnote_types <- names(footnote_table$contents)
+  footnote_text <- c()
+  for (i in footnote_types) {
+    footnote_text <- c(footnote_text, latex_tfoot_maker_(
+      footnote_table$contents[[i]], footnote_table$titles[[i]], i,
+      footnote_as_chunk, ncol))
+  }
+  footnote_text <- paste0(footnote_text, collapse = "\n")
+  return(footnote_text)
+}
 
-
+latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk, ncol) {
+  footnote_text <- apply(ft_contents, 1, function(x) {
+    if (x[1] == "") {
+      x[2]
+    } else {
+      paste0('\\\\textsuperscript{', x[1], '} ', x[2])
+    }
+  })
+  if (ft_title != "") {
+    title_text <- paste0('\\\\textbf{', ft_title, '} ')
+    footnote_text <- c(title_text, footnote_text)
+  }
+  if (!ft_chunk) {
+    footnote_text <- paste0(
+      '\\\\multicolumn{', ncol, '}{l}{', footnote_text, '}\\\\\\\\'
+    )
+  } else {
+    footnote_text <- paste0(
+      '\\\\multicolumn{', ncol, '}{l}{',
+      paste0(footnote_text, collapse = " "),
+      '}\\\\\\\\'
+    )
+  }
+  return(footnote_text)
 }

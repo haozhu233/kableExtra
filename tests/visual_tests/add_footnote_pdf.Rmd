@@ -44,6 +44,7 @@ kable(dt, format = "latex", longtable = T) %>%
 ```
 
 ```{r}
-kable(dt, format = "latex", booktabs = T, longtable = T) %>%
-add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+kable(dt, format = "latex", booktabs = T) %>%
+  kable_styling(full_width = T) %>%
+  add_footnote(c("Footnote 1", "Have a good day.", "sss"), notation = "alphabet")
 ```

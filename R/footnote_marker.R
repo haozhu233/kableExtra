@@ -11,7 +11,7 @@ footnote_marker_number <- function(x, format) {
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
   } else {
-    return(paste0("\\\\textsuperscript{", x, "}"))
+    return(paste0("\\textsuperscript{", x, "}"))
   }
 }
 
@@ -28,7 +28,7 @@ footnote_marker_alphabet <- function(x, format) {
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
   } else {
-    return(paste0("\\\\textsuperscript{", x, "}"))
+    return(paste0("\\textsuperscript{", x, "}"))
   }
 }
 
@@ -48,6 +48,6 @@ footnote_marker_symbol <- function(x, format) {
     return(paste0("<sup>", x, "</sup>"))
   } else {
     x <- number_index$symbol.latex[x]
-    return(paste0("\\\\textsuperscript{", x, "}"))
+    return(paste0("\\textsuperscript{", x, "}"))
   }
 }
