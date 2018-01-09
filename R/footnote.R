@@ -187,9 +187,6 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
-  if (table_info$tabular == "longtable") {
-    return()
-  }
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol)
   out <- sub(table_info$end_tabular,

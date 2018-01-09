@@ -9,12 +9,15 @@ output: pdf_document
 library(knitr)
 library(kableExtra)
 
-dt <- mtcars[1:5, 1:2]
+dt <- mtcars[, 1:2]
 colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "latex"))
+```
 
+
+```{r}
 dt %>%
   kable("latex", caption = paste0("test", footnote_marker_symbol(1, "latex")),
-        booktabs = T, escape = F) %>%
+        booktabs = T, escape = F, longtable = T) %>%
   footnote(NULL, c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
            number_title = "special: ", alphabet_title = "abc: ", 
            footnote_as_chunk = T)
