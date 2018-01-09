@@ -26,7 +26,7 @@
 #' @param alphabet_title Section header for alphabet footnotes. Default is "".
 #' @param symbol_title Section header for symbol footnotes. Default is "".
 #'
-#' @examples x <- mtcars[1:5, 1:5]
+#' @examples dt <- mtcars[1:5, 1:5]
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
 #'
 #' @export

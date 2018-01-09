@@ -11,7 +11,7 @@
 #' @param format Either `html` or `latex`. All functions here can read
 #' default value from global option `knitr.table.format`.
 #'
-#' @examples x <- mtcars[1:5, 1:5]
+#' @examples dt <- mtcars[1:5, 1:5]
 #' colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "html"))
 #' rownames(dt)[2] <- paste0(rownames(dt)[2], footnote_marker_alphabet(1, "html"))
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
