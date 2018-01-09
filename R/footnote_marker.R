@@ -1,4 +1,16 @@
 #' Footnote marker
+#'
+#' @description Put footnote mark in superscription in table. Unless you are
+#' using it in the `caption` of `kable`, you will need to put `escape = F`
+#' in `kable` (similar with `cell_spec`). Again, similar with `cell_spec`, the
+#' `format` option here can read default value from global option
+#' `knitr.table.format`.
+#'
+#' @param x a number. For example, for `footnote_marker_alphabet(2)` will
+#' return "b" in HTML.
+#' @param format Either `html` or `latex`. All functions here can read
+#' default value from global option `knitr.table.format`.
+#'
 #' @export
 footnote_marker_number <- function(x, format) {
   if (missing(format) || is.null(format)) {
@@ -15,6 +27,7 @@ footnote_marker_number <- function(x, format) {
   }
 }
 
+#' @rdname footnote_marker_number
 #' @export
 footnote_marker_alphabet <- function(x, format) {
   if (missing(format) || is.null(format)) {
@@ -32,6 +45,7 @@ footnote_marker_alphabet <- function(x, format) {
   }
 }
 
+#' @rdname footnote_marker_number
 #' @export
 footnote_marker_symbol <- function(x, format) {
   if (missing(format) || is.null(format)) {

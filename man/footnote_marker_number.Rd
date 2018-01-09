@@ -2,10 +2,27 @@
 % Please edit documentation in R/footnote_marker.R
 \name{footnote_marker_number}
 \alias{footnote_marker_number}
+\alias{footnote_marker_alphabet}
+\alias{footnote_marker_symbol}
 \title{Footnote marker}
 \usage{
 footnote_marker_number(x, format)
+
+footnote_marker_alphabet(x, format)
+
+footnote_marker_symbol(x, format)
+}
+\arguments{
+\item{x}{a number. For example, for \code{footnote_marker_alphabet(2)} will
+return "b" in HTML.}
+
+\item{format}{Either \code{html} or \code{latex}. All functions here can read
+default value from global option \code{knitr.table.format}.}
 }
 \description{
-Footnote marker
+Put footnote mark in superscription in table. Unless you are
+using it in the \code{caption} of \code{kable}, you will need to put \code{escape = F}
+in \code{kable} (similar with \code{cell_spec}). Again, similar with \code{cell_spec}, the
+\code{format} option here can read default value from global option
+\code{knitr.table.format}.
 }
