@@ -169,6 +169,7 @@ htmlTable_styling <- function(kable_input,
 
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
+  class(out) <- c("kableExtra", class(out))
   return(out)
 }
 

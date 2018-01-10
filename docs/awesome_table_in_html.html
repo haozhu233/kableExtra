@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2017-12-27" />
+<meta name="date" content="2018-01-10" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -219,7 +219,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2017-12-27</em></h4>
+<h4 class="date"><em>2018-01-10</em></h4>
 
 </div>
 
@@ -244,7 +244,7 @@ devtools::install_github(&quot;haozhu233/kableExtra&quot;)</code></pre>
 <h1>Getting Started</h1>
 <p>Here we are using the first few columns and rows from dataset <code>mtcars</code></p>
 <pre class="r"><code>library(knitr)</code></pre>
-<pre><code>## Warning: package 'knitr' was built under R version 3.4.1</code></pre>
+<pre><code>## Warning: package 'knitr' was built under R version 3.4.3</code></pre>
 <pre class="r"><code>library(kableExtra)
 dt &lt;- mtcars[1:5, 1:6]</code></pre>
 <p>When you are using <code>kable()</code>, if you don’t specify <code>format</code>, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don’t need to change anything in your code. However, markdown doesn’t support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should <strong>define <code>format</code> in <code>kable()</code></strong> as either “html” or “latex”. <em>You can also define a global option at the beginning using <code>options(knitr.table.format = &quot;html&quot;)</code> so you don’t repeat the step everytime.</em> <strong>In this tutorial, I’ll still put <code>format=&quot;html&quot;</code> in the function in case users just want to quickly replicate the results.</strong></p>
@@ -1989,10 +1989,10 @@ cyl
 Mazda RX4
 </td>
 <td style="text-align:left;">
-<span style="color: red;">21</span>
+<span style="   color: red;">21</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
 </td>
 </tr>
 <tr>
@@ -2000,10 +2000,10 @@ Mazda RX4
 Mazda RX4 Wag
 </td>
 <td style="text-align:left;">
-<span style="color: red;">21</span>
+<span style="   color: red;">21</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
 </td>
 </tr>
 <tr>
@@ -2011,10 +2011,10 @@ Mazda RX4 Wag
 Datsun 710
 </td>
 <td style="text-align:left;">
-<span style="color: red;">22.8</span>
+<span style="   color: red;">22.8</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
 </td>
 </tr>
 <tr>
@@ -2022,10 +2022,10 @@ Datsun 710
 Hornet 4 Drive
 </td>
 <td style="text-align:left;">
-<span style="color: red;">21.4</span>
+<span style="   color: red;">21.4</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
 </td>
 </tr>
 <tr>
@@ -2033,10 +2033,10 @@ Hornet 4 Drive
 Hornet Sportabout
 </td>
 <td style="text-align:left;">
-<span style="color: blue;">18.7</span>
+<span style="   color: blue;">18.7</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #BBBBBB;text-align: c;">8</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #BBBBBB;text-align: c;">8</span></span>
 </td>
 </tr>
 <tr>
@@ -2044,10 +2044,10 @@ Hornet Sportabout
 Valiant
 </td>
 <td style="text-align:left;">
-<span style="color: blue;">18.1</span>
+<span style="   color: blue;">18.1</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
 </td>
 </tr>
 <tr>
@@ -2055,10 +2055,10 @@ Valiant
 Duster 360
 </td>
 <td style="text-align:left;">
-<span style="color: blue;">14.3</span>
+<span style="   color: blue;">14.3</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #BBBBBB;text-align: c;">8</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #BBBBBB;text-align: c;">8</span></span>
 </td>
 </tr>
 <tr>
@@ -2066,10 +2066,10 @@ Duster 360
 Merc 240D
 </td>
 <td style="text-align:left;">
-<span style="color: red;">24.4</span>
+<span style="   color: red;">24.4</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
 </td>
 </tr>
 <tr>
@@ -2077,10 +2077,10 @@ Merc 240D
 Merc 230
 </td>
 <td style="text-align:left;">
-<span style="color: red;">22.8</span>
+<span style="   color: red;">22.8</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #666666;text-align: c;">4</span></span>
 </td>
 </tr>
 <tr>
@@ -2088,10 +2088,10 @@ Merc 230
 Merc 280
 </td>
 <td style="text-align:left;">
-<span style="color: blue;">19.2</span>
+<span style="   color: blue;">19.2</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
+<span style="-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #999999;text-align: c;">6</span></span>
 </td>
 </tr>
 </tbody>
@@ -2134,172 +2134,172 @@ Species
 <tbody>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(40, 174, 128, 1);font-size: 14px;">5.1</span>
+<span style=" font-weight: bold;  color: rgba(40, 174, 128, 1);font-size: 14px;">5.1</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(31, 154, 138, 1);font-size: 13px;">3.5</span>
+<span style=" font-weight: bold;  color: rgba(31, 154, 138, 1);font-size: 13px;">3.5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+<span style=" font-weight: bold;  color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 206, 145, 1);">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(72, 34, 116, 1);font-size: 9px;">3</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 160, 109, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 206, 145, 1);">setosa</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(57, 87, 140, 1);font-size: 10px;">4.7</span>
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(56, 88, 140, 1);font-size: 10px;">3.2</span>
+<span style=" font-weight: bold;  color: rgba(72, 34, 116, 1);font-size: 9px;">3</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">1.3</span>
+<span style=" font-weight: bold;  color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(246, 110, 92, 1);">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(222, 73, 104, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 160, 109, 1);">setosa</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(31, 154, 138, 1);font-size: 13px;">5</span>
+<span style=" font-weight: bold;  color: rgba(57, 87, 140, 1);font-size: 10px;">4.7</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(41, 175, 127, 1);font-size: 14px;">3.6</span>
+<span style=" font-weight: bold;  color: rgba(56, 88, 140, 1);font-size: 10px;">3.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+<span style=" font-weight: bold;  color: rgba(68, 1, 84, 1);font-size: 8px;">1.3</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(183, 55, 121, 1);">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(187, 223, 39, 1);font-size: 16px;">5.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(187, 223, 39, 1);font-size: 16px;">3.9</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(187, 223, 39, 1);font-size: 16px;">1.7</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(187, 223, 39, 1);font-size: 16px;">0.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(140, 41, 129, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(246, 110, 92, 1);">setosa</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span>
+<span style=" font-weight: bold;  color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span>
+<span style=" font-weight: bold;  color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(34, 168, 132, 1);font-size: 13px;">0.3</span>
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(100, 26, 128, 1);">setosa</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(31, 154, 138, 1);font-size: 13px;">5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
-</td>
-<td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(60, 15, 112, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(222, 73, 104, 1);">setosa</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">4.4</span>
+<span style=" font-weight: bold;  color: rgba(31, 154, 138, 1);font-size: 13px;">5</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">2.9</span>
+<span style=" font-weight: bold;  color: rgba(41, 175, 127, 1);font-size: 14px;">3.6</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+<span style=" font-weight: bold;  color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(20, 14, 54, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(183, 55, 121, 1);">setosa</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span>
+<span style=" font-weight: bold;  color: rgba(187, 223, 39, 1);font-size: 16px;">5.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span>
+<span style=" font-weight: bold;  color: rgba(187, 223, 39, 1);font-size: 16px;">3.9</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
+<span style=" font-weight: bold;  color: rgba(187, 223, 39, 1);font-size: 16px;">1.7</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: rgba(68, 1, 84, 1);font-size: 8px;">0.1</span>
+<span style=" font-weight: bold;  color: rgba(187, 223, 39, 1);font-size: 16px;">0.4</span>
 </td>
 <td style="text-align:center;">
-<span style=" font-weight: bold;color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(0, 0, 4, 1);">setosa</span>
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(140, 41, 129, 1);">setosa</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(34, 168, 132, 1);font-size: 13px;">0.3</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(100, 26, 128, 1);">setosa</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(31, 154, 138, 1);font-size: 13px;">5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(60, 15, 112, 1);">setosa</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(68, 1, 84, 1);font-size: 8px;">4.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(68, 1, 84, 1);font-size: 8px;">2.9</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(20, 14, 54, 1);">setosa</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: rgba(68, 1, 84, 1);font-size: 8px;">0.1</span>
+</td>
+<td style="text-align:center;">
+<span style=" font-weight: bold;  color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(0, 0, 4, 1);">setosa</span>
 </td>
 </tr>
 </tbody>
@@ -2308,7 +2308,7 @@ Species
 </div>
 <div id="text-specification" class="section level2">
 <h2>Text Specification</h2>
-<p>If you check the results of <code>cell_spec</code>, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a <code>rmarkdown</code> document or write some text in shiny apps, if you need extra markups other than <strong>bold</strong> or <em>italic</em>, you may use this function to <span style="color: red;">color</span>, <span style="font-size: 16px;">change font size </span> or <span style="-webkit-transform: rotate(30deg); -moz-transform: rotate(30deg); -ms-transform: rotate(30deg); -o-transform: rotate(30deg); transform: rotate(30deg); display: inline-block; "><span style>rotate</span></span> your text.</p>
+<p>If you check the results of <code>cell_spec</code>, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a <code>rmarkdown</code> document or write some text in shiny apps, if you need extra markups other than <strong>bold</strong> or <em>italic</em>, you may use this function to <span style="   color: red;TRUE">color</span>, <span style="   TRUEfont-size: 16px;">change font size </span> or <span style="-webkit-transform: rotate(30deg); -moz-transform: rotate(30deg); -ms-transform: rotate(30deg); -o-transform: rotate(30deg); transform: rotate(30deg); display: inline-block; "><span style="   TRUE">rotate</span></span> your text.</p>
 <p>An aliased function <code>text_spec</code> is also provided for a more literal writing experience. In HTML, there is no difference between these two functions.</p>
 <pre class="r"><code>sometext &lt;- strsplit(paste0(
   &quot;You can even try to make some crazy things like this paragraph. &quot;, 
@@ -2321,11 +2321,11 @@ text_formatted &lt;- paste(
   collapse = &quot; &quot;)
 
 # To display the text, type `r text_formatted` outside of the chunk</code></pre>
-<p><span style="color: rgba(68, 1, 84, 1);font-size: 5px;">You</span> <span style="color: rgba(71, 13, 96, 1);font-size: 6px;">can</span> <span style="color: rgba(72, 24, 106, 1);font-size: 6px;">even</span> <span style="color: rgba(72, 34, 116, 1);font-size: 7px;">try</span> <span style="color: rgba(71, 45, 122, 1);font-size: 7px;">to</span> <span style="color: rgba(69, 54, 129, 1);font-size: 8px;">make</span> <span style="color: rgba(66, 64, 134, 1);font-size: 8px;">some</span> <span style="color: rgba(62, 73, 137, 1);font-size: 9px;">crazy</span> <span style="color: rgba(59, 81, 139, 1);font-size: 9px;">things</span> <span style="color: rgba(55, 90, 140, 1);font-size: 10px;">like</span> <span style="color: rgba(51, 98, 141, 1);font-size: 10px;">this</span> <span style="color: rgba(48, 106, 142, 1);font-size: 11px;">paragraph.</span> <span style="color: rgba(44, 113, 142, 1);font-size: 11px;">It</span> <span style="color: rgba(41, 121, 142, 1);font-size: 12px;">may</span> <span style="color: rgba(38, 129, 142, 1);font-size: 12px;">seem</span> <span style="color: rgba(35, 136, 142, 1);font-size: 13px;">like</span> <span style="color: rgba(33, 144, 141, 1);font-size: 13px;">a</span> <span style="color: rgba(31, 150, 139, 1);font-size: 14px;">useless</span> <span style="color: rgba(31, 158, 137, 1);font-size: 14px;">feature</span> <span style="color: rgba(33, 165, 133, 1);font-size: 15px;">right</span> <span style="color: rgba(38, 173, 129, 1);font-size: 15px;">now</span> <span style="color: rgba(48, 180, 124, 1);font-size: 16px;">but</span> <span style="color: rgba(59, 187, 117, 1);font-size: 16px;">it’s</span> <span style="color: rgba(74, 193, 109, 1);font-size: 17px;">so</span> <span style="color: rgba(90, 200, 100, 1);font-size: 17px;">cool</span> <span style="color: rgba(108, 205, 90, 1);font-size: 18px;">and</span> <span style="color: rgba(127, 211, 78, 1);font-size: 18px;">nobody</span> <span style="color: rgba(145, 215, 66, 1);font-size: 19px;">can</span> <span style="color: rgba(166, 219, 53, 1);font-size: 19px;">resist.</span> <span style="color: rgba(187, 223, 39, 1);font-size: 20px;">;)</span></p>
+<p><span style="   color: rgba(68, 1, 84, 1);TRUEfont-size: 5px;">You</span> <span style="   color: rgba(71, 13, 96, 1);TRUEfont-size: 6px;">can</span> <span style="   color: rgba(72, 24, 106, 1);TRUEfont-size: 6px;">even</span> <span style="   color: rgba(72, 34, 116, 1);TRUEfont-size: 7px;">try</span> <span style="   color: rgba(71, 45, 122, 1);TRUEfont-size: 7px;">to</span> <span style="   color: rgba(69, 54, 129, 1);TRUEfont-size: 8px;">make</span> <span style="   color: rgba(66, 64, 134, 1);TRUEfont-size: 8px;">some</span> <span style="   color: rgba(62, 73, 137, 1);TRUEfont-size: 9px;">crazy</span> <span style="   color: rgba(59, 81, 139, 1);TRUEfont-size: 9px;">things</span> <span style="   color: rgba(55, 90, 140, 1);TRUEfont-size: 10px;">like</span> <span style="   color: rgba(51, 98, 141, 1);TRUEfont-size: 10px;">this</span> <span style="   color: rgba(48, 106, 142, 1);TRUEfont-size: 11px;">paragraph.</span> <span style="   color: rgba(44, 113, 142, 1);TRUEfont-size: 11px;">It</span> <span style="   color: rgba(41, 121, 142, 1);TRUEfont-size: 12px;">may</span> <span style="   color: rgba(38, 129, 142, 1);TRUEfont-size: 12px;">seem</span> <span style="   color: rgba(35, 136, 142, 1);TRUEfont-size: 13px;">like</span> <span style="   color: rgba(33, 144, 141, 1);TRUEfont-size: 13px;">a</span> <span style="   color: rgba(31, 150, 139, 1);TRUEfont-size: 14px;">useless</span> <span style="   color: rgba(31, 158, 137, 1);TRUEfont-size: 14px;">feature</span> <span style="   color: rgba(33, 165, 133, 1);TRUEfont-size: 15px;">right</span> <span style="   color: rgba(38, 173, 129, 1);TRUEfont-size: 15px;">now</span> <span style="   color: rgba(48, 180, 124, 1);TRUEfont-size: 16px;">but</span> <span style="   color: rgba(59, 187, 117, 1);TRUEfont-size: 16px;">it’s</span> <span style="   color: rgba(74, 193, 109, 1);TRUEfont-size: 17px;">so</span> <span style="   color: rgba(90, 200, 100, 1);TRUEfont-size: 17px;">cool</span> <span style="   color: rgba(108, 205, 90, 1);TRUEfont-size: 18px;">and</span> <span style="   color: rgba(127, 211, 78, 1);TRUEfont-size: 18px;">nobody</span> <span style="   color: rgba(145, 215, 66, 1);TRUEfont-size: 19px;">can</span> <span style="   color: rgba(166, 219, 53, 1);TRUEfont-size: 19px;">resist.</span> <span style="   color: rgba(187, 223, 39, 1);TRUEfont-size: 20px;">;)</span></p>
 </div>
 <div id="tooltip" class="section level2">
 <h2>Tooltip</h2>
-<p>It’s very easy to add a tooltip to text via <code>cell_spec</code>. For example, <code>text_spec(&quot;tooltip&quot;, color = &quot;red&quot;, tooltip = &quot;Hello World&quot;)</code> will give you something like <span style="color: red;" data-toggle="tooltip" data-placement="right" title="Hello World">Hover over me</span> (you need to wait for a few seconds before your browser renders it).</p>
+<p>It’s very easy to add a tooltip to text via <code>cell_spec</code>. For example, <code>text_spec(&quot;tooltip&quot;, color = &quot;red&quot;, tooltip = &quot;Hello World&quot;)</code> will give you something like <span style="   color: red;TRUE" data-toggle="tooltip" data-placement="right" title="Hello World">Hover over me</span> (you need to wait for a few seconds before your browser renders it).</p>
 <p>Note that the original browser-based tooltip is slow. If you want to have a faster response, you may want to initialize bootstrap’s tooltip by putting the following HTML code on the page.</p>
 <pre><code>&lt;script&gt;
 $(document).ready(function(){
@@ -2377,7 +2377,7 @@ Hover over these items
 top
 </td>
 <td style="text-align:left;">
-<span style data-toggle="popover" data-trigger="hover" data-placement="top" data-content="top">Message on top</span>
+<span style="   " data-toggle="popover" data-trigger="hover" data-placement="top" data-content="top">Message on top</span>
 </td>
 </tr>
 <tr>
@@ -2385,7 +2385,7 @@ top
 bottom
 </td>
 <td style="text-align:left;">
-<span style data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="bottom">Message on bottom</span>
+<span style="   " data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="bottom">Message on bottom</span>
 </td>
 </tr>
 <tr>
@@ -2393,7 +2393,7 @@ bottom
 right
 </td>
 <td style="text-align:left;">
-<span style data-toggle="popover" data-trigger="hover" data-placement="right" data-content="right">Message on right</span>
+<span style="   " data-toggle="popover" data-trigger="hover" data-placement="right" data-content="right">Message on right</span>
 </td>
 </tr>
 <tr>
@@ -2401,7 +2401,7 @@ right
 left
 </td>
 <td style="text-align:left;">
-<span style data-toggle="popover" data-trigger="hover" data-placement="left" data-content="left">Message on left</span>
+<span style="   " data-toggle="popover" data-trigger="hover" data-placement="left" data-content="left">Message on left</span>
 </td>
 </tr>
 </tbody>
@@ -2409,7 +2409,7 @@ left
 </div>
 <div id="links" class="section level2">
 <h2>Links</h2>
-<p>You can add links to text via <code>text_spec(&quot;Google&quot;, link = &quot;https://google.com&quot;)</code>: <a href="https://google.com" style>Google</a>. If you want your hover message to be more obvious, it might be a good idea to put a <code>#</code> (go back to the top of the page) or <code>javascript:void(0)</code> (literally do nothing) in the <code>link</code> option. <code>text_spec(&quot;Hover on me&quot;, link = &quot;javascript:void(0)&quot;, popover = &quot;Hello&quot;)</code>: <a href="javascript:void(0)" style data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Hello">Hover on me</a></p>
+<p>You can add links to text via <code>text_spec(&quot;Google&quot;, link = &quot;https://google.com&quot;)</code>: <a href="https://google.com" style="   TRUE">Google</a>. If you want your hover message to be more obvious, it might be a good idea to put a <code>#</code> (go back to the top of the page) or <code>javascript:void(0)</code> (literally do nothing) in the <code>link</code> option. <code>text_spec(&quot;Hover on me&quot;, link = &quot;javascript:void(0)&quot;, popover = &quot;Hello&quot;)</code>: <a href="javascript:void(0)" style="   TRUE" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Hello">Hover on me</a></p>
 </div>
 <div id="integration-with-formattable" class="section level2">
 <h2>Integration with <code>formattable</code></h2>
@@ -2474,10 +2474,10 @@ Mazda RX4
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg); transform: rotate(60deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+<span style="-webkit-transform: rotate(60deg); -moz-transform: rotate(60deg); -ms-transform: rotate(60deg); -o-transform: rotate(60deg); transform: rotate(60deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
-<span style=" font-style: italic;color: green;">160</span>
+<span style="  font-style: italic; color: green;">160</span>
 </td>
 <td style="text-align:left;width: 3cm; ">
 <span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
@@ -2491,10 +2491,10 @@ Mazda RX4 Wag
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffcc6f">21.0</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg); transform: rotate(120deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+<span style="-webkit-transform: rotate(120deg); -moz-transform: rotate(120deg); -ms-transform: rotate(120deg); -o-transform: rotate(120deg); transform: rotate(120deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
-<span style=" font-style: italic;color: green;">160</span>
+<span style="  font-style: italic; color: green;">160</span>
 </td>
 <td style="text-align:left;width: 3cm; ">
 <span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
@@ -2508,10 +2508,10 @@ Datsun 710
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffa500">22.8</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">4</span></span>
+<span style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">4</span></span>
 </td>
 <td style="text-align:left;">
-<span style=" font-style: italic;color: green;">108</span>
+<span style="  font-style: italic; color: green;">108</span>
 </td>
 <td style="text-align:left;width: 3cm; ">
 <span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 53.14%">93</span>
@@ -2525,10 +2525,10 @@ Hornet 4 Drive
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffc357">21.4</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg); transform: rotate(240deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
+<span style="-webkit-transform: rotate(240deg); -moz-transform: rotate(240deg); -ms-transform: rotate(240deg); -o-transform: rotate(240deg); transform: rotate(240deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">6</span></span>
 </td>
 <td style="text-align:left;">
-<span style=" font-weight: bold;color: red;">258</span>
+<span style=" font-weight: bold;  color: red;">258</span>
 </td>
 <td style="text-align:left;width: 3cm; ">
 <span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 62.86%">110</span>
@@ -2542,10 +2542,10 @@ Hornet Sportabout
 <span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">18.7</span>
 </td>
 <td style="text-align:left;">
-<span style="-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg); transform: rotate(300deg); display: inline-block; "><span style="color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">8</span></span>
+<span style="-webkit-transform: rotate(300deg); -moz-transform: rotate(300deg); -ms-transform: rotate(300deg); -o-transform: rotate(300deg); transform: rotate(300deg); display: inline-block; "><span style="   color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: red;text-align: center;">8</span></span>
 </td>
 <td style="text-align:left;">
-<span style=" font-weight: bold;color: red;">360</span>
+<span style=" font-weight: bold;  color: red;">360</span>
 </td>
 <td style="text-align:left;width: 3cm; ">
 <span style="display: inline-block; direction: rtl; border-radius: 4px; padding-right: 2px; background-color: lightgreen; width: 100.00%">175</span>
@@ -3543,7 +3543,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3551,7 +3551,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3575,7 +3575,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3591,7 +3591,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3610,7 +3610,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3618,7 +3618,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3632,7 +3632,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3640,7 +3640,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3659,7 +3659,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>

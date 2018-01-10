@@ -36,7 +36,8 @@ Imports:
     scales, 
     viridisLite,
     stats,
-    grDevices
+    grDevices,
+    htmlwidgets
 Suggests:
     testthat,
     magick,
