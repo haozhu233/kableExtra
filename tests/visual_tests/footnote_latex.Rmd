@@ -26,5 +26,6 @@ dt %>%
 ```{r}
 mtcars[1:5, 1:5] %>%
   kable("latex", booktabs = T) %>%
-  footnote(general = c("Note 1", "Note 2"), general_title = "")
+  footnote(number = c("For this particular use (i.e. a general note) the comments above are adequate. For proper footnotes in tables you should probably use the threeparttable package. You should also probably be using the booktabs package. See this answer to this question", "Note 2"),
+           number_title = "Note: ", threeparttable = T, footnote_as_chunk = T)
 ```

@@ -20,6 +20,10 @@
 #' the footnotes should be printed in a chunk (without line break).
 #' @param escape T/F value. It controls whether the contents and titles should
 #' be escaped against HTML or LaTeX. Default is TRUE.
+#' @param threeparttable T/F value for whether to use LaTeX package
+#' threeparttable. Threeparttable will force the width of caption and
+#' footnotes be the width of the original table. It's useful when you have
+#' long paragraph of footnotes.
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -39,6 +43,7 @@ footnote <- function(kable_input,
                                         "alphabet", "symbol"),
                      footnote_as_chunk = FALSE,
                      escape = TRUE,
+                     threeparttable = FALSE,
                      general_title = "Note: ",
                      number_title = "",
                      alphabet_title = "",
@@ -87,7 +92,8 @@ footnote <- function(kable_input,
     return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
   }
   if (kable_format == "latex") {
-    return(footnote_latex(kable_input, footnote_table, footnote_as_chunk))
+    return(footnote_latex(kable_input, footnote_table, footnote_as_chunk,
+                          threeparttable))
   }
 }
 
@@ -183,32 +189,67 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 }
 
 # LaTeX
-footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk) {
+footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
+                           threeparttable) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
+
+  if (table_info$tabular == "longtable") {
+    threeparttable <- FALSE
+    warning("threeparttable does not support longtable.")
+  }
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
-                                     table_info$ncol)
-  out <- sub(table_info$end_tabular,
-             paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
-             out)
+                                     table_info$ncol, threeparttable)
+  if (threeparttable) {
+    if (grepl("\\\\caption\\{.*?\\}", out)) {
+      out <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{",
+                 out)
+    } else {
+      out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
+                 paste0("\\\\begin{threeparttable}\n\\\\begin{",
+                        table_info$tabular, "}"),
+                 out)
+    }
+    out <- sub(table_info$end_tabular,
+               paste0("\\\\end{", table_info$tabular,
+                      "}\n\\\\begin{tablenotes}",
+                      ifelse(footnote_as_chunk, "[para]", ""),
+                      "\n\\\\small\n", footnote_text,
+                      "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
+               out)
+  } else {
+    out <- sub(table_info$end_tabular,
+               paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
+               out)
+  }
+
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
 }
 
-latex_tfoot_maker <- function(footnote_table, footnote_as_chunk, ncol) {
+latex_tfoot_maker <- function(footnote_table, footnote_as_chunk, ncol,
+                              threeparttable) {
   footnote_types <- names(footnote_table$contents)
   footnote_text <- c()
-  for (i in footnote_types) {
-    footnote_text <- c(footnote_text, latex_tfoot_maker_(
-      footnote_table$contents[[i]], footnote_table$titles[[i]], i,
-      footnote_as_chunk, ncol))
+  if (threeparttable) {
+    for (i in footnote_types) {
+      footnote_text <- c(footnote_text, latex_tfoot_maker_tpt_(
+        footnote_table$contents[[i]], footnote_table$titles[[i]],
+        footnote_as_chunk, ncol))
+    }
+  } else {
+    for (i in footnote_types) {
+      footnote_text <- c(footnote_text, latex_tfoot_maker_(
+        footnote_table$contents[[i]], footnote_table$titles[[i]],
+        footnote_as_chunk, ncol))
+    }
   }
   footnote_text <- paste0(footnote_text, collapse = "\n")
   return(footnote_text)
 }
 
-latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk, ncol) {
+latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
   footnote_text <- apply(ft_contents, 1, function(x) {
     if (x[1] == "") {
       x[2]
@@ -231,5 +272,26 @@ latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk, ncol) {
       '}\\\\\\\\'
     )
   }
+  return(footnote_text)
+}
+
+latex_tfoot_maker_tpt_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
+  footnote_text <- apply(ft_contents, 1, function(x) {
+    if (x[1] == "") {
+      paste0('\\\\item ', x[2])
+    } else {
+      paste0('\\\\item[', x[1], '] ', x[2])
+    }
+  })
+  if (ft_title != "") {
+    title_text <- paste0('\\\\item \\\\textbf{', ft_title, '} ')
+    footnote_text <- c(title_text, footnote_text)
+  }
+  footnote_text <- paste0(footnote_text, collapse = "\n")
+  # if (!ft_chunk) {
+  #   footnote_text <- paste0(footnote_text, collapse = "\n")
+  # } else {
+  #   footnote_text <- paste0(footnote_text, collapse = " ")
+  # }
   return(footnote_text)
 }
