@@ -95,7 +95,8 @@ spec_angle <- function(x, begin, end, scale_from = NULL) {
 #'
 #' @export
 spec_tooltip <- function(title, position = "right") {
-  position <- match.arg(position, c("right", "bottom", "top", "left", "auto"))
+  position <- match.arg(position, c("right", "bottom", "top", "left", "auto"),
+                        several.ok = TRUE)
   tooltip_options <- paste(
     'data-toggle="tooltip"',
     paste0('data-placement="', position, '"'),
