@@ -14,7 +14,7 @@ print.kableExtra <- function(x) {
 html_dependency_kePrint <- function() {
   htmlDependency(name = "kePrint",
                  version = "0.0.1",
-                 src = system.file("htmlwidgets/lib/kePrint-0.0.1",
+                 src = system.file("kePrint-0.0.1",
                                    package = "kableExtra"),
                  script = "kePrint.js")
 }

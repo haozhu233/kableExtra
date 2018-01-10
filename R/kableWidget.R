@@ -1,6 +1,6 @@
 #' @import htmlwidgets
 #' @export
-kableWidget <- function(kable_input, width = NULL, height = NULL) {
+kableExtraWidget <- function(kable_input, width = NULL, height = NULL) {
   kable_format <- attr(kable_input, "format")
   if (kable_format != "html") {
     stop("kable_as_widget only works for HTML tables.")
