@@ -194,7 +194,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
-  if (table_info$tabular == "longtable") {
+  if (table_info$tabular == "longtable" & threeparttable == TRUE) {
     threeparttable <- FALSE
     warning("threeparttable does not support longtable.")
   }
