@@ -20,7 +20,7 @@ html_dependency_kePrint <- function() {
 }
 
 #' @export
-knit_print.kableExtra <- function(x) {
+knit_print.kableExtra <- function(x, ...) {
   x <- paste0(x, "\n\n")
   asis_output(x)
 }
