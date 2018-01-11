@@ -66,6 +66,7 @@ collapse_rows_html <- function(kable_input, columns) {
 
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
+  if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
 }
 

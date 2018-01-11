@@ -147,6 +147,7 @@ footnote_html <- function(kable_input, footnote_table, footnote_as_chunk) {
 
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
+  if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
 }
 

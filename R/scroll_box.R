@@ -29,5 +29,6 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
   out <- structure(out, format = "html",
                    class = "knitr_kable")
   attributes(out) <- kable_attrs
+  if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
 }

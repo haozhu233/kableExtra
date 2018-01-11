@@ -97,6 +97,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
+  if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
 }
 
