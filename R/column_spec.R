@@ -114,11 +114,11 @@ column_spec_html <- function(kable_input, column, width,
       }
       if (underline) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                       "text-decoration: underline;")
+                                                 "text-decoration: underline;")
       }
       if (strikeout) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                       "text-decoration: line-through;")
+                                                 "text-decoration: line-through;")
       }
       if (!is.null(color)) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
@@ -214,7 +214,7 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
 
   latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily",
                            "\\\\underline", "\\\\sout")[
-    c(bold, italic, monospace, underline, strikeout)]
+                             c(bold, italic, monospace, underline, strikeout)]
   latex_array_options <- c(latex_array_options, extra_align,
                            color, background)
   latex_array_options <- paste0(
@@ -222,10 +222,10 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
   )
   x <- paste0(latex_array_options, x)
   if (border_left) {
-    x <- paste0("|", x)
+    x <- paste0("\\|", x)
   }
   if (border_right) {
-    x <- paste0(x, "|")
+    x <- paste0(x, "\\|")
   }
 
   return(x)
