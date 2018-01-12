@@ -89,11 +89,11 @@ collapse_rows_latex <- function(kable_input, columns) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
-  if (table_info$duplicated_rows) {
-    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
-    out <- dup_fx_out[[1]]
-    table_info <- dup_fx_out[[2]]
-  }
+  # if (table_info$duplicated_rows) {
+  #   dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+  #   out <- dup_fx_out[[1]]
+  #   table_info <- dup_fx_out[[2]]
+  # }
 
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
@@ -101,10 +101,9 @@ collapse_rows_latex <- function(kable_input, columns) {
 
   contents <- table_info$contents
   kable_dt <- kable_dt_latex(contents)
-  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = F)
+  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = FALSE)
 
   new_kable_dt <- kable_dt
-  new_contents <- c()
   for (j in seq(1:ncol(collapse_matrix))) {
     column_align <- table_info$align_vector_origin[columns[j]]
     column_width <- ifelse(
@@ -126,8 +125,11 @@ collapse_rows_latex <- function(kable_input, columns) {
   if (!table_info$booktabs) {
     contents[2:ex_bottom] <- paste0(contents[2:ex_bottom], "\n\\\\hline")
   }
+
+  new_contents <- c()
   for (i in seq(1:nrow(collapse_matrix))) {
     new_contents[i] <- paste0(new_kable_dt[i, ], collapse = " & ")
+    table_info$contents[i+1] <- new_contents[i]
     if (i != nrow(collapse_matrix)) {
       row_midrule <- midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
                                     table_info$booktabs)
