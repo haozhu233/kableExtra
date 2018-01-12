@@ -10,8 +10,12 @@
 #' need to be bolded.
 #' @param italic A T/F value to control whether the text of the selected row
 #' need to be emphasized.
-#' @param monospace A T/F value to control whether the text of the selected column
+#' @param monospace A T/F value to control whether the text of the selected row
 #' need to be monospaced (verbatim)
+#' @param underline A T/F value to control whether the text of the selected row
+#' need to be underlined
+#' @param strikeout A T/F value to control whether the text of the selected row
+#' need to be stricked out.
 #' @param color A character string for row text color. For example, "red" or
 #' "#BBBBBB".
 #' @param background A character string for row background color. Here please
@@ -32,6 +36,7 @@
 #' @export
 row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
+                     underline = FALSE, strikeout = FALSE,
                      color = NULL, background = NULL, align = NULL,
                      font_size = NULL, angle = NULL, extra_css = NULL) {
   if (!is.numeric(row)) {
@@ -44,16 +49,19 @@ row_spec <- function(kable_input, row,
   }
   if (kable_format == "html") {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
+                         underline, strikeout,
                          color, background, align, font_size, angle,
                          extra_css))
   }
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
+                          underline, strikeout,
                           color, background, align, font_size, angle))
   }
 }
 
 row_spec_html <- function(kable_input, row, bold, italic, monospace,
+                          underline, strikeout,
                           color, background, align, font_size, angle,
                           extra_css) {
   kable_attrs <- attributes(kable_input)
@@ -70,7 +78,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
     for (theader_i in 1:length(xml_children(original_header_row))) {
       target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_cell_style(target_header_cell, bold, italic, monospace, color, background,
+      xml_cell_style(target_header_cell, bold, italic, monospace,
+                     underline, strikeout, color, background,
                      align, font_size, angle, extra_css)
     }
     row <- row[row != 0]
@@ -89,7 +98,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
       target_row <- xml_child(kable_tbody, j)
       for (i in 1:length(xml_children(target_row))) {
         target_cell <- xml_child(target_row, i)
-        xml_cell_style(target_cell, bold, italic, monospace, color, background,
+        xml_cell_style(target_cell, bold, italic, monospace,
+                       underline, strikeout, color, background,
                        align, font_size, angle, extra_css)
       }
     }
@@ -101,7 +111,8 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-xml_cell_style <- function(x, bold, italic, monospace, color, background,
+xml_cell_style <- function(x, bold, italic, monospace,
+                           underline, strikeout, color, background,
                            align, font_size, angle, extra_css) {
   if (bold) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -114,6 +125,14 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background,
   if (monospace) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "font-family: monospace;")
+  }
+  if (underline) {
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
+                                   "text-decoration: underline;")
+  }
+  if (strikeout) {
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
+                                   "text-decoration: line-through;")
   }
   if (!is.null(color)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -148,6 +167,7 @@ xml_cell_style <- function(x, bold, italic, monospace, color, background,
 }
 
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
+                           underline, strikeout,
                            color, background, align, font_size, angle) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
@@ -162,6 +182,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   for (i in row) {
     target_row <- table_info$contents[i]
     new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
+                                     underline, strikeout,
                                      color, background, align, font_size, angle)
     out <- sub(target_row, new_row, out, perl = T)
   }
@@ -172,11 +193,12 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
 }
 
 latex_new_row_builder <- function(target_row, bold, italic, monospace,
+                                  underline, strikeout,
                                   color, background, align, font_size, angle) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\bfseries{", x, "}")
+      paste0("\\\\textbf{", x, "}")
     })
   }
   if (italic) {
@@ -189,7 +211,16 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
       paste0("\\\\ttfamily{", x, "}")
     })
   }
-
+  if (underline) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\underline{", x, "}")
+    })
+  }
+  if (strikeout) {
+    new_row <- lapply(new_row, function(x) {
+      paste0("\\\\sout{", x, "}")
+    })
+  }
   if (!is.null(color)) {
     new_row <- lapply(new_row, function(x) {
       paste0("\\\\textcolor", latex_color(color), "{", x, "}")

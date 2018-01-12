@@ -13,6 +13,10 @@
 #' need to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
+#' @param underline A T/F value to control whether the text of the selected row
+#' need to be underlined
+#' @param strikeout A T/F value to control whether the text of the selected row
+#' need to be stricked out.
 #' @param color A character string for column text color. Here please pay
 #' attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string for column background color. Here please
@@ -32,7 +36,8 @@
 #' @export
 column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
-                        monospace = FALSE, color = NULL, background = NULL,
+                        monospace = FALSE, underline = FALSE, strikeout = FALSE,
+                        color = NULL, background = NULL,
                         border_left = FALSE, border_right = FALSE,
                         extra_css = NULL) {
   if (!is.numeric(column)) {
@@ -46,12 +51,14 @@ column_spec <- function(kable_input, column,
   if (kable_format == "html") {
     return(column_spec_html(kable_input, column, width,
                             bold, italic, monospace,
+                            underline, strikeout,
                             color, background,
                             border_left, border_right, extra_css))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
                              bold, italic, monospace,
+                             underline, strikeout,
                              color, background,
                              border_left, border_right))
   }
@@ -59,6 +66,7 @@ column_spec <- function(kable_input, column,
 
 column_spec_html <- function(kable_input, column, width,
                              bold, italic, monospace,
+                             underline, strikeout,
                              color, background,
                              border_left, border_right, extra_css) {
   kable_attrs <- attributes(kable_input)
@@ -104,6 +112,14 @@ column_spec_html <- function(kable_input, column, width,
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                  "font-family: monospace;")
       }
+      if (underline) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                       "text-decoration: underline;")
+      }
+      if (strikeout) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                       "text-decoration: line-through;")
+      }
       if (!is.null(color)) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                  "color: ", color, ";")
@@ -137,6 +153,7 @@ column_spec_html <- function(kable_input, column, width,
 
 column_spec_latex <- function(kable_input, column, width,
                               bold, italic, monospace,
+                              underline, strikeout,
                               color, background,
                               border_left, border_right) {
   table_info <- magic_mirror(kable_input)
@@ -151,7 +168,7 @@ column_spec_latex <- function(kable_input, column, width,
     table_info$align_vector_origin[column],
     function(x) {
       latex_column_align_builder(
-        x, width, bold, italic, monospace,
+        x, width, bold, italic, monospace, underline, strikeout,
         color, background, border_left, border_right)
     }
   ))
@@ -175,6 +192,7 @@ column_spec_latex <- function(kable_input, column, width,
 }
 
 latex_column_align_builder <- function(x, width, bold, italic, monospace,
+                                       underline, strikeout,
                                        color, background,
                                        border_left, border_right) {
   extra_align <- ""
@@ -194,8 +212,9 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
     background <- paste0("\\\\columncolor", latex_color(background))
   }
 
-  latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily")[
-    c(bold, italic, monospace)]
+  latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily",
+                           "\\\\underline", "\\\\sout")[
+    c(bold, italic, monospace, underline, strikeout)]
   latex_array_options <- c(latex_array_options, extra_align,
                            color, background)
   latex_array_options <- paste0(

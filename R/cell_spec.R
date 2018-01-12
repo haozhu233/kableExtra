@@ -8,6 +8,10 @@
 #' @param bold T/F for font bold.
 #' @param italic T/F for font italic.
 #' @param monospace T/F for font monospaced (verbatim)
+#' @param underline A T/F value to control whether the text of the selected row
+#' need to be underlined
+#' @param strikeout A T/F value to control whether the text of the selected row
+#' need to be stricked out.
 #' @param color A character string for text color. Here please pay
 #' attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string for background color. Here please
@@ -44,6 +48,7 @@
 #' @export
 cell_spec <- function(x, format,
                       bold = FALSE, italic = FALSE, monospace = FALSE,
+                      underline = FALSE, strikeout = FALSE,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
@@ -61,19 +66,19 @@ cell_spec <- function(x, format,
   }
 
   if (tolower(format) == "html") {
-    return(cell_spec_html(x, bold, italic, monospace,
+    return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
                           color, background, align, font_size, angle,
                           tooltip, popover, link, extra_css,
                           escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
-    return(cell_spec_latex(x, bold, italic, monospace,
+    return(cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle, escape,
                            latex_background_in_cell))
   }
 }
 
-cell_spec_html <- function(x, bold, italic, monospace,
+cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle,
                            tooltip, popover, link, extra_css,
                            escape, background_as_tile) {
@@ -83,6 +88,10 @@ cell_spec_html <- function(x, bold, italic, monospace,
   cell_style <- paste(cell_style, ifelse(italic, "font-style: italic;", ""))
   cell_style <- paste(cell_style,
                       ifelse(monospace, "font-family: monospace;", ""))
+  cell_style <- paste(cell_style,
+                      ifelse(underline, "text-decoration: underline;", ""))
+  cell_style <- paste(cell_style,
+                      ifelse(strikeout, "text-decoration: line-through;", ""))
   if (!is.null(color)) {
     cell_style <- paste0(cell_style, "color: ", html_color(color), ";")
   }
@@ -148,13 +157,15 @@ cell_spec_html <- function(x, bold, italic, monospace,
   return(x)
 }
 
-cell_spec_latex <- function(x, bold, italic, monospace,
+cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
                             color, background, align, font_size, angle, escape,
                             latex_background_in_cell) {
   if (escape) x <- escape_latex(x)
-  if (bold) x <- paste0("\\bfseries{", x, "}")
-  if (italic) x <- paste0("\\em{", x, "}")
-  if (monospace) x <- paste0("\\ttfamily{", x, "}")
+  x <- sprintf(ifelse(bold, "\\textbf{%s}", "%s"), x)
+  x <- sprintf(ifelse(italic, "\\em{%s}", "%s"), x)
+  x <- sprintf(ifelse(monospace, "\\ttfamily{%s}", "%s"), x)
+  x <- sprintf(ifelse(underline, "\\underline{%s}", "%s"), x)
+  x <- sprintf(ifelse(strikeout, "\\sout{%s}", "%s"), x)
   if (!is.null(color)) {
     color <- latex_color(color)
     x <- paste0("\\textcolor", color, "{", x, "}")
