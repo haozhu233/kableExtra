@@ -188,12 +188,14 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
 #' @export
 text_spec <- function(x, format,
                       bold = FALSE, italic = FALSE, monospace = FALSE,
+                      underline = FALSE, strikeout = FALSE,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
                       escape = TRUE, background_as_tile = TRUE,
                       latex_background_in_cell = FALSE) {
-  cell_spec(x, format, bold, italic, monospace, color, background, align,
+  cell_spec(x, format, bold, italic, monospace, underline, strikeout,
+            color, background, align,
             font_size, angle, tooltip, popover, link, escape, background_as_tile,
             latex_background_in_cell)
 }
