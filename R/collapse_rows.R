@@ -8,13 +8,16 @@
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param columns Numeric column positions where rows need to be collapsed.
+#' @param latex_hline Option controlling the behavior of adding hlines to table.
+#' Choose from `full`, `major`, `none`.
 #'
 #' @examples dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
 #' x <- knitr::kable(dt, "html")
 #' collapse_rows(x)
 #'
 #' @export
-collapse_rows <- function(kable_input, columns = NULL) {
+collapse_rows <- function(kable_input, columns = NULL,
+                          latex_hline = c("full", "major", "none")) {
   # if (is.null(columns)) {
   #   stop("Please specify numeric positions of columns you want to collapse.")
   # }
@@ -27,7 +30,8 @@ collapse_rows <- function(kable_input, columns = NULL) {
     return(collapse_rows_html(kable_input, columns))
   }
   if (kable_format == "latex") {
-    return(collapse_rows_latex(kable_input, columns))
+    latex_hline <- match.arg(latex_hline, c("full", "major", "none"))
+    return(collapse_rows_latex(kable_input, columns, latex_hline))
   }
 }
 
@@ -85,15 +89,9 @@ collapse_row_matrix <- function(kable_dt, columns, html = T)  {
   return(mapping_matrix)
 }
 
-collapse_rows_latex <- function(kable_input, columns) {
+collapse_rows_latex <- function(kable_input, columns, latex_hline) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
-
-  # if (table_info$duplicated_rows) {
-  #   dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
-  #   out <- dup_fx_out[[1]]
-  #   table_info <- dup_fx_out[[2]]
-  # }
 
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
@@ -129,10 +127,20 @@ collapse_rows_latex <- function(kable_input, columns) {
   new_contents <- c()
   for (i in seq(1:nrow(collapse_matrix))) {
     new_contents[i] <- paste0(new_kable_dt[i, ], collapse = " & ")
-    table_info$contents[i+1] <- new_contents[i]
+    table_info$contents[i + 1] <- new_contents[i]
     if (i != nrow(collapse_matrix)) {
-      row_midrule <- midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
-                                    table_info$booktabs)
+      row_midrule <- switch(
+        latex_hline,
+        "none" = "",
+        "full" = midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                                table_info$booktabs),
+        "major" = ifelse(
+          sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
+          midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                         table_info$booktabs),
+          ""
+        )
+      )
       new_contents[i] <- paste0(new_contents[i], "\\\\\\\\\n", row_midrule)
     }
     out <- sub(contents[i + 1], new_contents[i], out)
@@ -168,7 +176,7 @@ collapse_new_dt_item <- function(x, span, width = NULL, align) {
 midline_groups <- function(x, booktabs = T) {
   diffs <- c(1, diff(x))
   start_indexes <- c(1, which(diffs > 1))
-  end_indexes <- c(start_indexes-1, length(x))
+  end_indexes <- c(start_indexes - 1, length(x))
   ranges <- paste0(x[start_indexes], "-", x[end_indexes])
   if (booktabs) {
     out <- paste0("\\\\cmidrule{", ranges, "}")
