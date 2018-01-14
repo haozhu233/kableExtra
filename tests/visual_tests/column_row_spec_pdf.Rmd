@@ -47,3 +47,9 @@ kable(dt, "latex", booktabs = T, align = "r") %>%
   row_spec(3, monospace = T, color = "yellow", background = "black")
 ```
 
+```{r}
+kable(mtcars[1:5, 1:5], "latex", booktabs = T) %>%
+  row_spec(2, extra_latex_after = "\\cline{2-6}") %>%
+  row_spec(4, hline_after = T)
+```
+

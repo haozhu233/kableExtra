@@ -29,6 +29,10 @@
 #' @param angle 0-360, degree that the text will rotate.
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole row.
+#' @param hline_after T/F. A replicate of `hline.after` in xtable. It
+#' addes a hline after ther row
+#' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
+#' with `add.to.row` in xtable
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
@@ -38,7 +42,8 @@ row_spec <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
                      underline = FALSE, strikeout = FALSE,
                      color = NULL, background = NULL, align = NULL,
-                     font_size = NULL, angle = NULL, extra_css = NULL) {
+                     font_size = NULL, angle = NULL, extra_css = NULL,
+                     hline_after = FALSE, extra_latex_after = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -56,7 +61,8 @@ row_spec <- function(kable_input, row,
   if (kable_format == "latex") {
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
                           underline, strikeout,
-                          color, background, align, font_size, angle))
+                          color, background, align, font_size, angle,
+                          hline_after, extra_latex_after))
   }
 }
 
@@ -168,7 +174,8 @@ xml_cell_style <- function(x, bold, italic, monospace,
 
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            underline, strikeout,
-                           color, background, align, font_size, angle) {
+                           color, background, align, font_size, angle,
+                           hline_after, extra_latex_after) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
@@ -183,8 +190,11 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     target_row <- table_info$contents[i]
     new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
                                      underline, strikeout,
-                                     color, background, align, font_size, angle)
-    out <- sub(target_row, new_row, out, perl = T)
+                                     color, background, align, font_size, angle,
+                                     hline_after, extra_latex_after)
+    out <- str_replace(out,
+                       paste0(target_row, "\\\\\\\\"),
+                       new_row)
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
@@ -194,7 +204,8 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
 
 latex_new_row_builder <- function(target_row, bold, italic, monospace,
                                   underline, strikeout,
-                                  color, background, align, font_size, angle) {
+                                  color, background, align, font_size, angle,
+                                  hline_after, extra_latex_after) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
@@ -250,5 +261,14 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
     new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
   }
 
+  new_row <- paste0(new_row, "\\\\\\\\")
+
+  if (hline_after) {
+    new_row <- paste0(new_row, "\n\\\\hline")
+  }
+  if (!is.null(extra_latex_after)) {
+    new_row <- paste0(new_row, "\n",
+                      regex_escape(extra_latex_after, double_backslash = TRUE))
+  }
   return(new_row)
 }

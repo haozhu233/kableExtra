@@ -5,8 +5,9 @@
 \title{Specify the look of the selected row}
 \usage{
 row_spec(kable_input, row, bold = FALSE, italic = FALSE,
-  monospace = FALSE, color = NULL, background = NULL, align = NULL,
-  font_size = NULL, angle = NULL, extra_css = NULL)
+  monospace = FALSE, underline = FALSE, strikeout = FALSE, color = NULL,
+  background = NULL, align = NULL, font_size = NULL, angle = NULL,
+  extra_css = NULL, hline_after = FALSE, extra_latex_after = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -20,8 +21,14 @@ need to be bolded.}
 \item{italic}{A T/F value to control whether the text of the selected row
 need to be emphasized.}
 
-\item{monospace}{A T/F value to control whether the text of the selected column
+\item{monospace}{A T/F value to control whether the text of the selected row
 need to be monospaced (verbatim)}
+
+\item{underline}{A T/F value to control whether the text of the selected row
+need to be underlined}
+
+\item{strikeout}{A T/F value to control whether the text of the selected row
+need to be stricked out.}
 
 \item{color}{A character string for row text color. For example, "red" or
 "#BBBBBB".}
@@ -41,6 +48,12 @@ options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, 
 
 \item{extra_css}{Extra css text to be passed into the cells of the row. Note
 that it's not for the whole row.}
+
+\item{hline_after}{T/F. A replicate of \code{hline.after} in xtable. It
+addes a hline after ther row}
+
+\item{extra_latex_after}{Extra LaTeX text to be added after the row. Similar
+with \code{add.to.row} in xtable}
 }
 \description{
 This function allows users to select a row and then specify

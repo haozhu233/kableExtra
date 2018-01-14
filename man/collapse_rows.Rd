@@ -4,12 +4,16 @@
 \alias{collapse_rows}
 \title{Collapse repeated rows to multirow cell}
 \usage{
-collapse_rows(kable_input, columns = NULL)
+collapse_rows(kable_input, columns = NULL, latex_hline = c("full", "major",
+  "none"))
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{columns}{Numeric column positions where rows need to be collapsed.}
+
+\item{latex_hline}{Option controlling the behavior of adding hlines to table.
+Choose from \code{full}, \code{major}, \code{none}.}
 }
 \description{
 Collapse same values in columns into multirow cells. This

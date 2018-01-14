@@ -6,15 +6,15 @@
 \title{Specify Cell/Text format}
 \usage{
 cell_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
-  color = NULL, background = NULL, align = NULL, font_size = NULL,
-  angle = NULL, tooltip = NULL, popover = NULL, link = NULL,
-  extra_css = NULL, escape = TRUE, background_as_tile = TRUE,
-  latex_background_in_cell = TRUE)
+  underline = FALSE, strikeout = FALSE, color = NULL, background = NULL,
+  align = NULL, font_size = NULL, angle = NULL, tooltip = NULL,
+  popover = NULL, link = NULL, extra_css = NULL, escape = TRUE,
+  background_as_tile = TRUE, latex_background_in_cell = TRUE)
 
 text_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
-  color = NULL, background = NULL, align = NULL, font_size = NULL,
-  angle = NULL, tooltip = NULL, popover = NULL, link = NULL,
-  escape = TRUE, background_as_tile = TRUE,
+  underline = FALSE, strikeout = FALSE, color = NULL, background = NULL,
+  align = NULL, font_size = NULL, angle = NULL, tooltip = NULL,
+  popover = NULL, link = NULL, escape = TRUE, background_as_tile = TRUE,
   latex_background_in_cell = FALSE)
 }
 \arguments{
@@ -28,6 +28,12 @@ text_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
 \item{italic}{T/F for font italic.}
 
 \item{monospace}{T/F for font monospaced (verbatim)}
+
+\item{underline}{A T/F value to control whether the text of the selected row
+need to be underlined}
+
+\item{strikeout}{A T/F value to control whether the text of the selected row
+need to be stricked out.}
 
 \item{color}{A character string for text color. Here please pay
 attention to the differences in color codes between HTML and LaTeX.}
