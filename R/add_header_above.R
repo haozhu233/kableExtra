@@ -28,8 +28,10 @@ add_header_above <- function(kable_input, header = NULL,
                              monospace = FALSE, escape = TRUE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
-    stop("Please specify output format in your kable function. Currently ",
-         "generic markdown table using pandoc is not supported.")
+    warning("Please specify format in kable. kableExtra can customize either ",
+         "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+         "for details.")
+    return(kable_input)
   }
   if (kable_format == "html") {
     return(htmlTable_add_header_above(kable_input, header,
