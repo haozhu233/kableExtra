@@ -360,41 +360,53 @@ kable(collapse_rows_dt, "html", align = "c") %>%
 ```
 
 # Table Footnote
-## Notation systems
-You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
 
-### Alphabet
+> Now it's recommended to use the new `footnote` function instead of `add_footnote` to make table footnotes. 
+
+Documentations for `add_footnote` can be found [here](http://haozhu233.github.io/kableExtra/legacy_features#add_footnote).
+
+There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements. 
 ```{r}
-kable(dt, "html") %>%
-  kable_styling("striped") %>%
-  add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+kable(dt, "html", align = "c") %>%
+  kable_styling(full_width = F) %>%
+  footnote(general = "Here is a general comments of the table. ",
+           number = c("Footnote 1; ", "Footnote 2; "),
+           alphabet = c("Footnote A; ", "Footnote B; "),
+           symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2")
+           )
 ```
 
-### Number
+You can also specify title for each category by using the `***_title` arguments. Default value for `general_title` is "Note: " and "" for the rest three. You can also change the order using `footnote_order`. You can even display footnote as chunk texts (default is as a list) using `footnote_as_chunk`.
+
 ```{r}
-kable(dt, "html") %>%
-  kable_styling("striped") %>%
-  add_footnote(c("Footnote 1", "Have a good day."), notation = "number")
+kable(dt, "html", align = "c") %>%
+  kable_styling(full_width = F) %>%
+  footnote(general = "Here is a general comments of the table. ",
+           number = c("Footnote 1; ", "Footnote 2; "),
+           alphabet = c("Footnote A; ", "Footnote B; "),
+           symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2"),
+           general_title = "General: ", number_title = "Type I: ",
+           alphabet_title = "Type II: ", symbol_title = "Type III: ",
+           footnote_as_chunk = T
+           )
 ```
 
-### Symbol
-```{r}
-kable(dt, "html") %>%
-  kable_styling("striped") %>%
-  add_footnote(c("Footnote 1", "Footnote 2", "Footnote 3"), notation = "symbol")
-```
-
-## In-table markers
-By design, `add_footnote()` will transform any `[note]` to in-table footnote markers. 
+If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
 
 ```{r}
-kable(dt, "html", caption = "Demo Table[note]") %>%
-  kable_styling("striped") %>%
-  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
-  add_footnote(c("This table is from mtcars", 
-                 "Group 1 contains mpg, cyl and disp", 
-                 "Group 2 contains hp, drat and wt"), 
-               notation = "symbol")
+dt_footnote <- dt
+names(dt_footnote)[2] <- paste0(names(dt_footnote)[2], 
+                                footnote_marker_symbol(1))
+row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4], 
+                                footnote_marker_alphabet(1))
+kable(dt_footnote, "html", align = "c", 
+      # Remember this escape = F
+      escape = F) %>%
+  kable_styling(full_width = F) %>%
+  footnote(alphabet = "Footnote A; ",
+           symbol = "Footnote Symbol 1; ",
+           alphabet_title = "Type II: ", symbol_title = "Type III: ",
+           footnote_as_chunk = T)
 ```
 
 # HTML Only Features

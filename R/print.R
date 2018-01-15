@@ -1,5 +1,5 @@
 #' @export
-print.kableExtra <- function(x) {
+print.kableExtra <- function(x, ...) {
   cat(as.character(x))
   html_header <- htmltools::tags$head(
     rmarkdown::html_dependency_jquery(),

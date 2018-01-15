@@ -18,6 +18,7 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage[normalem]{ulem}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -82,6 +83,7 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage[normalem]{ulem}
 ```
 
 ## Plain LaTeX
@@ -199,6 +201,7 @@ Similar with `column_spec`, you can define specifications for rows. Currently, y
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling("striped", full_width = F) %>%
   column_spec(7, border_left = T, bold = T) %>%
+  row_spec(1, strikeout = T) %>%
   row_spec(3:5, bold = T, color = "white", background = "black")
 ```
 
@@ -324,7 +327,9 @@ kable(dt, format = "latex", booktabs = T) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. If you even need to specify column/row format, use `column_spec` & `row_spec` before you pipe it into `collapse_rows`.
+Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+
+In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`.
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -333,7 +338,7 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C4 = sample(c(0,1), 15, replace = TRUE))
 kable(collapse_rows_dt, format = "latex", booktabs = T, align = "c") %>%
   column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2)
+  collapse_rows(columns = 1:2, latex_hline = "major")
 ```
 
 ```{r}
@@ -343,40 +348,52 @@ kable(collapse_rows_dt, format = "latex", align = "c") %>%
 ```
 
 # Table Footnote
-## Notation system
-You can also use `add_footnote()` function from this package. You will need to supply a character vector with each element as one footnote. You may select from `number`, `alphabet` and `symbol` for different types of notations. Example are listed below.
 
-### Alphabet
+> Now it's recommended to use the new `footnote` function instead of `add_footnote` to make table footnotes. 
+
+Documentations for `add_footnote` can be found [here](http://haozhu233.github.io/kableExtra/legacy_features#add_footnote).
+
+There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements. 
 ```{r}
-kable(dt, format = "latex", booktabs = T) %>%
-  kable_styling() %>%
-  add_footnote(c("Footnote 1", "Have a good day."), notation = "alphabet")
+kable(dt, "latex", align = "c") %>%
+  kable_styling(full_width = F) %>%
+  footnote(general = "Here is a general comments of the table. ",
+           number = c("Footnote 1; ", "Footnote 2; "),
+           alphabet = c("Footnote A; ", "Footnote B; "),
+           symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2")
+           )
 ```
 
-### Number
+You can also specify title for each category by using the `***_title` arguments. Default value for `general_title` is "Note: " and "" for the rest three. You can also change the order using `footnote_order`. You can even display footnote as chunk texts (default is as a list) using `footnote_as_chunk`.
+
 ```{r}
-kable(dt, format = "latex", booktabs = T) %>%
-  kable_styling() %>%
-  add_footnote(c("Footnote 1", "Have a good day."), notation = "number")
+kable(dt, "latex", align = "c", booktabs = T) %>%
+  footnote(general = "Here is a general comments of the table. ",
+           number = c("Footnote 1; ", "Footnote 2; "),
+           alphabet = c("Footnote A; ", "Footnote B; "),
+           symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2"),
+           general_title = "General: ", number_title = "Type I: ",
+           alphabet_title = "Type II: ", symbol_title = "Type III: ",
+           footnote_as_chunk = T
+           )
 ```
 
-### Symbol
-```{r}
-kable(dt, format = "latex", booktabs = T) %>%
-  kable_styling() %>%
-  add_footnote(c("Footnote 1", "Footnote 2", "Footnote 3"), notation = "symbol")
-```
+If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
 
-## In-table markers
-By design, `add_footnote()` will transform any `[note]` to in-table footnote markers. 
 ```{r}
-kable(dt, format = "latex", caption = "Demo Table[note]", booktabs = T) %>%
-  kable_styling(latex_options = "hold_position") %>%
-  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
-  add_footnote(c("This table is from mtcars", 
-                 "Group 1 contains mpg, cyl and disp", 
-                 "Group 2 contains hp, drat and wt"), 
-               notation = "symbol")
+dt_footnote <- dt
+names(dt_footnote)[2] <- paste0(names(dt_footnote)[2], 
+                                # That "latex" can be eliminated if defined in global
+                                footnote_marker_symbol(1, "latex"))
+row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4], 
+                                footnote_marker_alphabet(1))
+kable(dt_footnote, "latex", align = "c", booktabs = T,
+      # Remember this escape = F
+      escape = F) %>%
+  footnote(alphabet = "Footnote A; ",
+           symbol = "Footnote Symbol 1; ",
+           alphabet_title = "Type II: ", symbol_title = "Type III: ",
+           footnote_as_chunk = T)
 ```
 
 # LaTeX Only Features
