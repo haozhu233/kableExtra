@@ -3,6 +3,10 @@ title: "Use kableExtra with formattable"
 author: "Hao Zhu"
 date: "`r Sys.Date()`"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{Use kableExtra with formattable}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 I know you love `formattable`'s `color_tile` and `color_bar`. I do too. In my mind, these two features are among the best visualization methods in a tabular format. You may wonder if it's possible use it together with `kableExtra` so you can have a nested table with awesome presentation at the same time. Here is how. 
