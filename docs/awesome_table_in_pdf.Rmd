@@ -64,7 +64,7 @@ If you are using a recent version of rmarkdown, you are recommended to load this
 
 ```{r, eval = FALSE}
 # Not evaluated. Ilustration purpose
-options(kableExtra.latex.load_package = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
 

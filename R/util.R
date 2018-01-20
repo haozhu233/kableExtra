@@ -108,7 +108,8 @@ latex_pkg_list <- function() {
     "\\usepackage{colortbl}",
     "\\usepackage{pdflscape}",
     "\\usepackage{tabu}",
-    "\\usepackage{threeparttable}"
+    "\\usepackage{threeparttable}",
+    "\\usepackage[normalem]{ulem}"
   ))
 }
 
