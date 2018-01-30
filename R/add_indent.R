@@ -70,21 +70,22 @@ add_indent_html <- function(kable_input, positions) {
     positions <- positions_corrector(positions, group_header_rows,
                                      length(xml_children(kable_tbody)))
   }
+
   for (i in positions) {
     node_to_edit <- xml_child(xml_children(kable_tbody)[[i]], 1)
-    if (!xml_has_attr(node_to_edit, "indentLevel")) {
+    if (!xml_has_attr(node_to_edit, "indentlevel")) {
       xml_attr(node_to_edit, "style") <- paste(
         xml_attr(node_to_edit, "style"), "padding-left: 2em;"
       )
-      xml_attr(node_to_edit, "indentLevel") <- 1
+      xml_attr(node_to_edit, "indentlevel") <- 1
     } else {
-      indentLevel <- as.numeric(xml_attr(node_to_edit, "indentLevel"))
+      indentLevel <- as.numeric(xml_attr(node_to_edit, "indentlevel"))
       xml_attr(node_to_edit, "style") <- sub(
         paste0("padding-left: ", indentLevel * 2, "em;"),
         paste0("padding-left: ", (indentLevel + 1) * 2, "em;"),
         xml_attr(node_to_edit, "style")
       )
-      xml_attr(node_to_edit, "indentLevel") <- indentLevel + 1
+      xml_attr(node_to_edit, "indentlevel") <- indentLevel + 1
     }
   }
   out <- as_kable_xml(kable_xml)
