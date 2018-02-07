@@ -204,15 +204,10 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
   if (threeparttable) {
-    if (grepl("\\\\caption\\{.*?\\}", out)) {
-      out <- sub("\\\\caption\\{", "\\\\begin{threeparttable}\n\\\\caption{",
-                 out)
-    } else {
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{threeparttable}\n\\\\begin{",
                         table_info$tabular, "}"),
                  out)
-    }
     out <- sub(table_info$end_tabular,
                paste0("\\\\end{", table_info$tabular,
                       "}\n\\\\begin{tablenotes}",
