@@ -33,13 +33,16 @@
 #' be kept. Default is `FALSE`.
 #' @param density Resolution to read the PDF file. Default value is 300, which
 #' should be sufficient in most cases.
+#' @param keep_tex A T/F option to control if the latex file that is initially created
+#' should be kept. Default is `FALSE`.
 #'
 #' @export
 kable_as_image <- function(kable_input, filename = NULL,
                            file_format = "png",
                            latex_header_includes = NULL,
                            keep_pdf = FALSE,
-                           density = 300) {
+                           density = 300,
+                           keep_tex = FALSE) {
   if (!requireNamespace("magick", quietly = TRUE)) {
     stop('kable_as_image requires the magick package, which is not available ',
          'on all platforms. Please get it installed ',
@@ -70,7 +73,9 @@ kable_as_image <- function(kable_input, filename = NULL,
     writeLines(temp_tex, paste0(temp_file, ".tex"))
     system(paste0("xelatex -interaction=batchmode ", temp_file, ".tex"))
     temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
-    unlink(temp_file_delete)
+    if(!keep_tex) {
+      unlink(temp_file_delete)
+    }
 
     table_img_pdf <- try(magick::image_read(paste0(temp_file, ".pdf"),
                                             density = density),
