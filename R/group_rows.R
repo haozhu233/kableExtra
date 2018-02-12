@@ -19,6 +19,8 @@
 #' documents.
 #' @param escape A T/F value showing whether special characters should be
 #' escaped.
+#' @param colnum A numeric that determines how many columns the text should span.
+#' The default setting will have the text span the entire length.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
@@ -30,7 +32,7 @@ group_rows <- function(kable_input, group_label = NULL,
                        index = NULL,
                        label_row_css = "border-bottom: 1px solid;",
                        latex_gap_space = "0.3em",
-                       escape = TRUE) {
+                       escape = TRUE, colnum = NULL) {
 
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -42,11 +44,11 @@ group_rows <- function(kable_input, group_label = NULL,
   if (is.null(index)) {
     if (kable_format == "html") {
       return(group_rows_html(kable_input, group_label, start_row, end_row,
-                             label_row_css, escape))
+                             label_row_css, escape, colnum))
     }
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                              latex_gap_space, escape))
+                              latex_gap_space, escape, colnum))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -55,14 +57,14 @@ group_rows <- function(kable_input, group_label = NULL,
       for (i in 1:nrow(index)) {
         out <- group_rows_html(out, index$header[i],
                                index$start[i], index$end[i],
-                               label_row_css, escape)
+                               label_row_css, escape, colnum)
       }
     }
     if (kable_format == "latex") {
       for (i in 1:nrow(index)) {
         out <- group_rows_latex(out, index$header[i],
                                index$start[i], index$end[i],
-                               latex_gap_space, escape)
+                               latex_gap_space, escape, colnum)
       }
     }
     return(out)
@@ -79,7 +81,7 @@ group_row_index_translator <- function(index) {
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
-                            label_row_css, escape) {
+                            label_row_css, escape, colnum) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -97,7 +99,9 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 
   # Insert a group header row
   starting_node <- xml_child(kable_tbody, group_seq[1])
-  kable_ncol <- length(xml_children(starting_node))
+  kable_ncol <- ifelse(is.null(colnum),
+                       length(xml_children(starting_node)),
+                       colnum)
   group_header_row_text <- paste0(
     '<tr groupLength="', length(group_seq), '"><td colspan="', kable_ncol,
     '" style="', label_row_css, '"><strong>', group_label,
@@ -115,7 +119,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 }
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
-                             gap_space, escape) {
+                             gap_space, escape, colnum) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
@@ -135,7 +139,10 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   if (table_info$booktabs) {
     new_rowtext <- paste0(
       "\\\\addlinespace[", gap_space, "]\n",
-      "\\\\multicolumn{", table_info$ncol, "}{l}{\\\\textbf{", group_label,
+      "\\\\multicolumn{", ifelse(is.null(colnum),
+                                 table_info$ncol,
+                                 colnum),
+      "}{l}{\\\\textbf{", group_label,
       "}}\\\\\\\\\n",
       rowtext
     )
