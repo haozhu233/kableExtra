@@ -23,7 +23,8 @@
 #' `scale_down` is useful for super wide table. It will automatically adjust
 #' the table to page width. `repeat_header` in only meaningful in a longtable
 #' environment. It will let the header row repeat on every page in that long
-#' table.
+#' table. `row_label_right` will right justify the row labels and `row_label_center`
+#' will center justify the row labels.  Default justification is left.
 #' @param full_width A `TRUE` or `FALSE` variable controlling whether the HTML
 #' table should have 100\% width. Since HTML and pdf have different flavors on
 #' the preferable format for `full_width`. If not specified, a HTML table will
@@ -190,7 +191,8 @@ pdfTable_styling <- function(kable_input,
 
   latex_options <- match.arg(
     latex_options,
-    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "repeat_header"),
+    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "repeat_header",
+      "row_label_right","row_label_center"),
     several.ok = T
   )
 
@@ -249,6 +251,27 @@ pdfTable_styling <- function(kable_input,
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
+
+  if ("row_label_right" %in% latex_options | "row_label_center" %in% latex_options) {
+    if ( "row_label_right" %in% latex_options ) {
+      row_label_orientation <- "r"
+    } else {
+      row_label_orientation <- "c"
+    }
+
+    if(table_info$tabular=="longtable") {
+      out <- sub("\\\\begin\\{longtable\\}\\{l",
+                 paste0("\\begin\\{longtable\\}\\{",
+                        row_label_orientation),
+                 out)
+    } else {
+      out <- sub("\\\\begin\\{tabular\\}\\{l",
+                 paste0("\\begin\\{tabular\\}\\{",
+                        row_label_orientation),
+                 out)
+    }
+  }
+
   return(out)
 }
 
