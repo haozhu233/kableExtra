@@ -6,3 +6,5 @@ figure
 *.tex
 *.synctex.gz
 *.lot
+*.docx
+.DS_store

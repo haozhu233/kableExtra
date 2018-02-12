@@ -16,6 +16,8 @@
 #' need to be monospaced (verbatim)
 #' @param escape A T/F value showing whether special characters should be
 #' escaped.
+#' @param line A T/F value to control whether a line will appear underneath the
+#' header
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -25,7 +27,7 @@
 #' @export
 add_header_above <- function(kable_input, header = NULL,
                              bold = FALSE, italic = FALSE,
-                             monospace = FALSE, escape = TRUE) {
+                             monospace = FALSE, escape = TRUE,line = TRUE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -35,17 +37,17 @@ add_header_above <- function(kable_input, header = NULL,
   }
   if (kable_format == "html") {
     return(htmlTable_add_header_above(kable_input, header,
-                                      bold, italic, monospace, escape))
+                                      bold, italic, monospace, escape,line))
   }
   if (kable_format == "latex") {
     return(pdfTable_add_header_above(kable_input, header,
-                                     bold, italic, monospace, escape))
+                                     bold, italic, monospace, escape,line))
   }
 }
 
 # HTML
 htmlTable_add_header_above <- function(kable_input, header,
-                                       bold, italic, monospace, escape) {
+                                       bold, italic, monospace, escape,line) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
@@ -66,7 +68,7 @@ htmlTable_add_header_above <- function(kable_input, header,
   }
 
   new_header_row <- htmlTable_new_header_generator(header,
-                                                   bold, italic, monospace)
+                                                   bold, italic, monospace,line)
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
@@ -89,7 +91,7 @@ standardize_header_input <- function(header) {
   return(data.frame(header = names(header), colspan = header, row.names = NULL))
 }
 
-htmlTable_new_header_generator <- function(header_df, bold, italic, monospace) {
+htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,line) {
   row_style <- paste0(
     ifelse(bold, "font-weight: bold; ", ""),
     ifelse(italic, "font-style: italic; ", ""),
@@ -103,7 +105,8 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace) {
              'padding-bottom:0; padding-left:3px;padding-right:3px;',
              row_style,
              '" colspan="',
-             x[2], '"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">',
+             x[2], '"><div style="',
+             ifelse(line,'border-bottom: 1px solid #ddd; padding-bottom: 5px;">','">'),
              x[1], '</div></th>')
     }
   })
@@ -114,7 +117,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace) {
 
 # Add an extra header row above the current header in a LaTeX table ------
 pdfTable_add_header_above <- function(kable_input, header,
-                                      bold, italic, monospace, escape) {
+                                      bold, italic, monospace, escape, line) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
   if (escape) {
@@ -124,7 +127,11 @@ pdfTable_add_header_above <- function(kable_input, header,
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs,
                                                     bold, italic, monospace)
-  new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
+  if(line){
+    new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
+  } else {
+    new_header <- new_header_split[1]
+  }
   out <- str_replace(enc2utf8(as.character(kable_input)),
                      hline_type,
                      paste0(hline_type, "\n", new_header))
