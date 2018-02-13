@@ -30,7 +30,7 @@ dt %>%
   dplyr::mutate(wt = paste0("%", mpg)) %>%
 kable(format = "latex", booktabs = T) %>%
   kable_styling() %>%
-  group_rows("Group 1", 4, 7) %>%
+  group_rows("Group 1", 4, 7, align='r',colnum=3) %>%
   group_rows("Group 2", 8, 10)
 ```
 
@@ -39,7 +39,7 @@ rbind(dt, dt, dt) %>%
 kable(format = "latex", booktabs = T) %>%
   kable_styling() %>%
   group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10) %>%
+  group_rows("Group 2", 8, 10, align='c') %>%
   group_rows("Group 2", 20, 22)
 
 aa <- mtcars

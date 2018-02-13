@@ -19,6 +19,10 @@
 #' documents.
 #' @param escape A T/F value showing whether special characters should be
 #' escaped.
+#' @param align Adjust justification of group_label in latex only. Value should be "c" for
+#' centered on row, "r" for right justification, or "l" for left justification. Default
+#' Value is "l"  If using html, the alignment can be set by using the label_row_css
+#' parameter.
 #' @param colnum A numeric that determines how many columns the text should span.
 #' The default setting will have the text span the entire length.
 #'
@@ -32,7 +36,7 @@ group_rows <- function(kable_input, group_label = NULL,
                        index = NULL,
                        label_row_css = "border-bottom: 1px solid;",
                        latex_gap_space = "0.3em",
-                       escape = TRUE, colnum = NULL) {
+                       escape = TRUE, align = "l", colnum = NULL) {
 
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -43,18 +47,22 @@ group_rows <- function(kable_input, group_label = NULL,
   }
   if (is.null(index)) {
     if (kable_format == "html") {
+      if(!missing(align)) warning("Align parameter is not used in HTML Mode,
+                                    use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
                              label_row_css, escape, colnum))
     }
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                              latex_gap_space, escape, colnum))
+                              latex_gap_space, escape, align, colnum))
     }
   } else {
     index <- group_row_index_translator(index)
     out <- kable_input
     if (kable_format == "html") {
       for (i in 1:nrow(index)) {
+        if(!missing(align)) warning("Align parameter is not used in HTML Mode,
+                                    use label_row_css instead.")
         out <- group_rows_html(out, index$header[i],
                                index$start[i], index$end[i],
                                label_row_css, escape, colnum)
@@ -64,7 +72,7 @@ group_rows <- function(kable_input, group_label = NULL,
       for (i in 1:nrow(index)) {
         out <- group_rows_latex(out, index$header[i],
                                index$start[i], index$end[i],
-                               latex_gap_space, escape, colnum)
+                               latex_gap_space, escape, align, colnum)
       }
     }
     return(out)
@@ -119,7 +127,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 }
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
-                             gap_space, escape, colnum) {
+                             gap_space, escape, align, colnum) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
@@ -142,14 +150,14 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
       "\\\\multicolumn{", ifelse(is.null(colnum),
                                  table_info$ncol,
                                  colnum),
-      "}{l}{\\\\textbf{", group_label,
+      "}{", align, "}{\\\\textbf{", group_label,
       "}}\\\\\\\\\n",
       rowtext
     )
   } else {
     rowtext <- paste0("\\\\hline\n", rowtext)
     new_rowtext <- paste0(
-      "\\\\hline\n\\\\multicolumn{", table_info$ncol, "}{l}{\\\\textbf{",
+      "\\\\hline\n\\\\multicolumn{", table_info$ncol, "}{", align,"}{\\\\textbf{",
       group_label, "}}\\\\\\\\\n", rowtext
     )
   }
