@@ -261,12 +261,12 @@ pdfTable_styling <- function(kable_input,
 
     if(table_info$tabular=="longtable") {
       out <- sub("\\\\begin\\{longtable\\}\\{l",
-                 paste0("\\begin\\{longtable\\}\\{",
+                 paste0("\\\\begin\\{longtable\\}\\{",
                         row_label_orientation),
                  out)
     } else {
       out <- sub("\\\\begin\\{tabular\\}\\{l",
-                 paste0("\\begin\\{tabular\\}\\{",
+                 paste0("\\\\begin\\{tabular\\}\\{",
                         row_label_orientation),
                  out)
     }
