@@ -35,6 +35,9 @@
 #' a `LaTeX` table, if `float_*` is selected, `LaTeX` package `wrapfig` will be
 #' imported.
 #' @param font_size A numeric input for table font size
+#' @param row_label_position A character string determining the justification of the row
+#' labels in a table.  Possible values inclued `l` for left, `c` for center, and `r` for
+#' right.  The default value is `l` for left justifcation.
 #' @param ... extra options for HTML or LaTeX. See `details`.
 #'
 #' @details For LaTeX, extra options includes:
@@ -59,6 +62,7 @@ kable_styling <- function(kable_input,
                           full_width = NULL,
                           position = "center",
                           font_size = NULL,
+                          row_label_position = "l",
                           ...) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
@@ -88,6 +92,9 @@ kable_styling <- function(kable_input,
     if (is.null(full_width)) {
       full_width <- getOption("kable_styling_full_width", T)
     }
+    if(!missing(row_label_position)) {
+      warning("'row_label_position' is not active for HTML tables yet and parameter will not be used.")
+    }
     return(htmlTable_styling(kable_input,
                              bootstrap_options = bootstrap_options,
                              full_width = full_width,
@@ -102,7 +109,9 @@ kable_styling <- function(kable_input,
                             latex_options = latex_options,
                             full_width = full_width,
                             position = position,
-                            font_size = font_size, ...))
+                            font_size = font_size,
+                            row_label_position = row_label_position,
+                            ...))
   }
 }
 
@@ -186,7 +195,8 @@ pdfTable_styling <- function(kable_input,
                              repeat_header_method = c("append", "replace"),
                              repeat_header_continued = FALSE,
                              stripe_color = "gray!6",
-                             latex_table_env = NULL) {
+                             latex_table_env = NULL,
+                             row_label_position) {
 
   latex_options <- match.arg(
     latex_options,
@@ -249,6 +259,21 @@ pdfTable_styling <- function(kable_input,
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
+
+  if (row_label_position != "l") {
+    if(table_info$tabular=="longtable") {
+      out <- sub("\\\\begin\\{longtable\\}\\{l",
+                 paste0("\\\\begin\\{longtable\\}\\{",
+                        row_label_position),
+                 out)
+    } else {
+      out <- sub("\\\\begin\\{tabular\\}\\{l",
+                 paste0("\\\\begin\\{tabular\\}\\{",
+                        row_label_position),
+                 out)
+    }
+  }
+
   return(out)
 }
 
