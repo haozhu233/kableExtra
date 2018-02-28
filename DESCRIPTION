@@ -11,7 +11,7 @@ Authors@R: c(
     person('GuangChuang', 'Yu', email = 'guangchuangyu@gmail.com', role = 'ctb'),
     person('Stéphane', 'Laurent', role = 'ctb'),
     person('Rob', 'Shepherd', role = 'ctb'),
-    person('Yoni', 'Sidi', role = 'ctb')，
+    person('Yoni', 'Sidi', role = 'ctb'), 
     person('Brian', 'Salzer', role = 'ctb')
     )
 Description: Build complex HTML or 'LaTeX' tables using 'kable()' from 'knitr' 
