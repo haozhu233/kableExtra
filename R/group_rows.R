@@ -28,7 +28,7 @@
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
 #' @param hline_after A replicate of `hline.after` in xtable. It
-#' addes a hline after ther row
+#' addes a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
