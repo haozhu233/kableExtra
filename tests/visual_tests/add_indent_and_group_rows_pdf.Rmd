@@ -40,6 +40,7 @@ kable(format = "latex", booktabs = T) %>%
   kable_styling() %>%
   group_rows("Group 1", 4, 7) %>%
   group_rows("Group 2", 8, 10, latex_align='c') %>%
+  group_rows("Group 2", 13, 15, hline_after = T, bold = F, italic = T, extra_latex_after = '\\addlinespace[0.2em]\n') %>%
   group_rows("Group 2", 20, 22)
 
 aa <- mtcars
