@@ -27,6 +27,8 @@
 #' The default setting will have the text span the entire length.
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
+#' @param hline_before A T/F value that addes a horizontal line before the group_row label.  Default
+#' value is False.
 #' @param hline_after A replicate of `hline.after` in xtable. It
 #' addes a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
@@ -44,6 +46,7 @@ group_rows <- function(kable_input, group_label = NULL,
                        escape = TRUE, latex_align = "l", colnum = NULL,
                        bold = T,
                        italic = F,
+                       hline_before = F,
                        hline_after = F,
                        extra_latex_after = NULL) {
 
@@ -64,7 +67,7 @@ group_rows <- function(kable_input, group_label = NULL,
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
-                              bold, italic, hline_after, extra_latex_after))
+                              bold, italic, hline_before, hline_after, extra_latex_after))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -83,7 +86,7 @@ group_rows <- function(kable_input, group_label = NULL,
         out <- group_rows_latex(out, index$header[i],
                                index$start[i], index$end[i],
                                latex_gap_space, escape, latex_align, colnum,
-                               bold, italic, hline_after, extra_latex_after)
+                               bold, italic, hline_before, hline_after, extra_latex_after)
       }
     }
     return(out)
@@ -139,7 +142,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              gap_space, escape, latex_align, colnum,
-                             bold = T, italic = F, hline_after = F,
+                             bold = T, italic = F, hline_before = F ,hline_after = F,
                              extra_latex_after = NULL) {
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
@@ -164,6 +167,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   if (table_info$booktabs) {
     pre_rowtext <- paste0(
       "\\\\addlinespace[", gap_space, "]\n",
+      ifelse(hline_before,"\\\\hline\n", ""),
       "\\\\multicolumn{", ifelse(is.null(colnum),
                                  table_info$ncol,
                                  colnum),
