@@ -308,11 +308,19 @@ styling_latex_striped <- function(x, table_info, color) {
 }
 
 styling_latex_hold_position <- function(x) {
-  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]", x)
+  if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
+    str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[!h]")
+  } else {
+    str_replace(x, "\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]")
+  }
 }
 
 styling_latex_HOLD_position <- function(x) {
-  sub("\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]", x)
+  if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
+    str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[H]")
+  } else {
+    str_replace(x, "\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]")
+  }
 }
 
 styling_latex_scale_down <- function(x, table_info) {
