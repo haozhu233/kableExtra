@@ -22,7 +22,7 @@ are ordered from darkest to lightest. If -1, the order of colors is reversed.}
 
 \item{option}{A character string indicating the colormap option to use. Four
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"),
-and "viridis" (or "D", the default option).}
+"viridis" (or "D", the default option) and "cividis" (or "E").}
 
 \item{na_color}{color code for NA values}
 

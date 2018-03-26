@@ -7,7 +7,9 @@
 group_rows(kable_input, group_label = NULL, start_row = NULL,
   end_row = NULL, index = NULL,
   label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.3em",
-  escape = TRUE)
+  escape = TRUE, latex_align = "l", colnum = NULL, bold = T,
+  italic = F, hline_before = F, hline_after = F,
+  extra_latex_after = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -34,6 +36,26 @@ documents.}
 
 \item{escape}{A T/F value showing whether special characters should be
 escaped.}
+
+\item{latex_align}{Adjust justification of group_label in latex only. Value should be "c" for
+centered on row, "r" for right justification, or "l" for left justification. Default
+Value is "l"  If using html, the alignment can be set by using the label_row_css
+parameter.}
+
+\item{colnum}{A numeric that determines how many columns the text should span.
+The default setting will have the text span the entire length.}
+
+\item{bold}{A T/F value to control whether the text should be bolded.}
+
+\item{italic}{A T/F value to control whether the text should to be emphasized.}
+
+\item{hline_before}{A T/F value that addes a horizontal line before the group_row label.  Default
+value is False.}
+
+\item{hline_after}{A replicate of \code{hline.after} in xtable. It
+addes a hline after the row}
+
+\item{extra_latex_after}{Extra LaTeX text to be added after the row.}
 }
 \description{
 Group a few rows in a table together under a label.

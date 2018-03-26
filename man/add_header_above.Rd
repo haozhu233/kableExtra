@@ -5,7 +5,7 @@
 \title{Add a header row on top of current header}
 \usage{
 add_header_above(kable_input, header = NULL, bold = FALSE, italic = FALSE,
-  monospace = FALSE, escape = TRUE)
+  monospace = FALSE, escape = TRUE, line = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -25,6 +25,9 @@ need to be monospaced (verbatim)}
 
 \item{escape}{A T/F value showing whether special characters should be
 escaped.}
+
+\item{line}{A T/F value to control whether a line will appear underneath the
+header}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful

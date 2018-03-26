@@ -6,7 +6,7 @@
 \usage{
 kable_styling(kable_input, bootstrap_options = "basic",
   latex_options = "basic", full_width = NULL, position = "center",
-  font_size = NULL, ...)
+  font_size = NULL, row_label_position = "l", ...)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -44,6 +44,10 @@ a \code{LaTeX} table, if \code{float_*} is selected, \code{LaTeX} package \code{
 imported.}
 
 \item{font_size}{A numeric input for table font size}
+
+\item{row_label_position}{A character string determining the justification of the row
+labels in a table.  Possible values inclued \code{l} for left, \code{c} for center, and \code{r} for
+right.  The default value is \code{l} for left justifcation.}
 
 \item{...}{extra options for HTML or LaTeX. See \code{details}.}
 }

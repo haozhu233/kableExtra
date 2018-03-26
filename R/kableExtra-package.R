@@ -61,7 +61,7 @@
 #' xml_child xml_children xml_name xml_add_sibling xml_add_child xml_text
 #' xml_remove write_xml xml_text<-
 #' @importFrom rvest html_table
-#' @importFrom knitr knit_meta_add include_graphics knit_print asis_output
+#' @importFrom knitr knit_meta_add include_graphics knit_print asis_output kable
 #' @importFrom rmarkdown latex_dependency html_dependency_bootstrap
 #' html_dependency_jquery
 #' @importFrom magrittr %>%
@@ -80,3 +80,6 @@ NULL
 
 #' @export
 magrittr::`%>%`
+
+#' @export
+knitr::kable
