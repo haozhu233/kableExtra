@@ -67,6 +67,7 @@ footnote_marker_symbol <- function(x, format) {
     return(paste0("<sup>", x, "</sup>"))
   } else {
     x <- number_index$symbol.latex[x]
+    x <- gsub("\\\\\\\\", "\\\\", x)
     return(paste0("\\textsuperscript{", x, "}"))
   }
 }
