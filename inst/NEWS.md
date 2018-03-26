@@ -2,8 +2,8 @@ kableExtra 0.7.1
 --------------------------------------------------------------------------------
 * Fixed #115, a bug in latex footnote about escaping.
 * Fixed #116, a bug about the position of footnote in longtable with booktabs
-* replace threeparttable with threeparttablex
 * Fixed #119, a bug between collapse_rows and add_header_above
+* Improve footnotes in longtable and replace threeparttable with threeparttablex. Now footnotes works smoothly in longtable, even with full width in tabu. 
 
 
 kableExtra 0.7.0
