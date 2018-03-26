@@ -215,6 +215,9 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                       "\n\\\\small\n", footnote_text,
                       "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
                out)
+  } else if (table_info$booktabs) {
+    out <- sub("\\\\bottomrule",
+               paste0("\\\\bottomrule\n", footnote_text), out)
   } else {
     out <- sub(table_info$end_tabular,
                paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
