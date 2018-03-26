@@ -7,8 +7,9 @@ print.kableExtra <- function(x, ...) {
   )
   html_table <- htmltools::HTML(as.character(x))
   html_result <- htmltools::tagList(html_header, html_table)
-  htmltools::html_print(html_result)
-
+  if (interactive & rstudioapi::isAvailable()) {
+    htmltools::html_print(html_result, viewer = rstudioapi::viewer)
+  }
   print(html_result)
 }
 

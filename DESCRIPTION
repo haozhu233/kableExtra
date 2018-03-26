@@ -38,7 +38,8 @@ Imports:
     viridisLite,
     stats,
     grDevices,
-    htmltools
+    htmltools,
+    rstudioapi
 Suggests:
     testthat,
     magick,

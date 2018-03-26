@@ -71,6 +71,7 @@
 #' @importFrom viridisLite viridis
 #' @importFrom stats ave
 #' @importFrom grDevices col2rgb
+#' @importFrom rstudioapi isAvailable viewer
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra
