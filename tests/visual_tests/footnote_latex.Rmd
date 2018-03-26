@@ -25,7 +25,12 @@ dt %>%
 
 ```{r}
 mtcars[1:5, 1:5] %>%
-  kable("latex", booktabs = T) %>%
+  kable("latex", booktabs = T, caption = "hi") %>%
+  kable_styling(position = "left") %>%
   footnote(number = c("For this particular use (i.e. a general note) the comments above are adequate. For proper footnotes in tables you should probably use the threeparttable package. You should also probably be using the booktabs package. See this answer to this question", "Note 2"),
            number_title = "Note: ", threeparttable = T, footnote_as_chunk = T)
+```
+
+```{r}
+kable(cars, caption = 'table caption', format = 'latex', escape = TRUE) %>% kableExtra::footnote(general = 'an_underscore', escape = T)
 ```

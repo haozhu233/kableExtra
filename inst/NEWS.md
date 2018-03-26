@@ -1,3 +1,8 @@
+kableExtra 0.7.1
+--------------------------------------------------------------------------------
+* Fixed #115, a bug in latex footnote about escaping.
+
+
 kableExtra 0.7.0
 --------------------------------------------------------------------------------
 * Now HTML table will be previewed in Viewer panel
