@@ -46,7 +46,12 @@ collapse_rows_html <- function(kable_input, columns) {
   if (is.null(columns)) {
     columns <- seq(1, ncol(kable_dt))
   }
-  kable_dt$row_id <- rownames(kable_dt)
+  if (!is.null(kable_attrs$header_above)) {
+    kable_dt_col_names <- unlist(kable_dt[kable_attrs$header_above, ])
+    kable_dt <- kable_dt[-(1:kable_attrs$header_above),]
+    names(kable_dt) <- kable_dt_col_names
+  }
+  kable_dt$row_id <- seq(nrow(kable_dt))
   collapse_matrix <- collapse_row_matrix(kable_dt, columns)
 
   for (i in 1:nrow(collapse_matrix)) {

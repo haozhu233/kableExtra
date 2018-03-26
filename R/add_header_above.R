@@ -71,6 +71,11 @@ htmlTable_add_header_above <- function(kable_input, header,
                                                    bold, italic, monospace,line)
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
+  if (is.null(kable_attrs$header_above)) {
+    kable_attrs$header_above <- 1
+  } else {
+    kable_attrs$header_above <- kable_attrs$header_above + 1
+  }
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
