@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2018-01-16" />
+<meta name="date" content="2018-03-26" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -219,7 +219,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author"><em>Hao Zhu</em></h4>
-<h4 class="date"><em>2018-01-16</em></h4>
+<h4 class="date"><em>2018-03-26</em></h4>
 
 </div>
 
@@ -243,9 +243,8 @@ devtools::install_github(&quot;haozhu233/kableExtra&quot;)</code></pre>
 <div id="getting-started" class="section level1">
 <h1>Getting Started</h1>
 <p>Here we are using the first few columns and rows from dataset <code>mtcars</code></p>
-<pre class="r"><code>library(knitr)</code></pre>
-<pre><code>## Warning: package 'knitr' was built under R version 3.4.3</code></pre>
-<pre class="r"><code>library(kableExtra)
+<pre class="r"><code>library(knitr)
+library(kableExtra)
 dt &lt;- mtcars[1:5, 1:6]</code></pre>
 <p>When you are using <code>kable()</code>, if you don’t specify <code>format</code>, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don’t need to change anything in your code. However, markdown doesn’t support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should <strong>define <code>format</code> in <code>kable()</code></strong> as either “html” or “latex”. <em>You can also define a global option at the beginning using <code>options(knitr.table.format = &quot;html&quot;)</code> so you don’t repeat the step everytime.</em> <strong>In this tutorial, I’ll still put <code>format=&quot;html&quot;</code> in the function in case users just want to quickly replicate the results.</strong></p>
 <pre class="r"><code>options(knitr.table.format = &quot;html&quot;) 
@@ -2102,7 +2101,8 @@ Merc 280
 <p>This package also comes with a few helper functions, including <code>spec_color</code>, <code>spec_font_size</code> &amp; <code>spec_angle</code>. These functions can rescale continuous variables to certain scales. For example, function <code>spec_color</code> would map a continuous variable to any <a href="https://CRAN.R-project.org/package=viridisLite">viridis color palettes</a>. It offers a very visually impactful representation in a tabular format.</p>
 <pre class="r"><code>iris[1:10, ] %&gt;%
   mutate_if(is.numeric, function(x) {
-    cell_spec(x, &quot;html&quot;, bold = T, color = spec_color(x, end = 0.9),
+    cell_spec(x, &quot;html&quot;, bold = T, 
+              color = spec_color(x, end = 0.9),
               font_size = spec_font_size(x))
   }) %&gt;%
   mutate(Species = cell_spec(
@@ -3125,7 +3125,7 @@ Duster 360
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Merc 240D
 </td>
 <td style="text-align:right;">
@@ -3148,7 +3148,7 @@ Merc 240D
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Merc 230
 </td>
 <td style="text-align:right;">
@@ -3171,7 +3171,7 @@ Merc 230
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Merc 280
 </td>
 <td style="text-align:right;">
@@ -3282,7 +3282,7 @@ Mazda RX4 Wag
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Datsun 710
 </td>
 <td style="text-align:right;">
@@ -3305,7 +3305,7 @@ Datsun 710
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Hornet 4 Drive
 </td>
 <td style="text-align:right;">
@@ -3328,7 +3328,7 @@ Hornet 4 Drive
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Hornet Sportabout
 </td>
 <td style="text-align:right;">
@@ -3386,7 +3386,7 @@ wt
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Mazda RX4
 </td>
 <td style="text-align:right;">
@@ -3432,7 +3432,7 @@ Mazda RX4 Wag
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Datsun 710
 </td>
 <td style="text-align:right;">
@@ -3478,7 +3478,7 @@ Hornet 4 Drive
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1">
+<td style="text-align:left; padding-left: 2em;" indentlevel="1">
 Hornet Sportabout
 </td>
 <td style="text-align:right;">
@@ -3559,7 +3559,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3567,7 +3567,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3575,7 +3575,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3583,7 +3583,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3591,7 +3591,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3602,7 +3602,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3618,7 +3618,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3640,7 +3640,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>

@@ -318,6 +318,21 @@ kable(mtcars[1:10, 1:6], format = "latex", caption = "Group Rows", booktabs = T)
 # Not evaluated. The code above should have the same result as the first example in this section.
 ```
 
+Note that `kable` has a relatively special feature to handle `align` and it may bring troubles to you if you are not using it correctly. In the documentation of the `align` argument of `kable`, it says:
+
+> If `length(align) == 1L`, the string will be expanded to a vector of individual letters, e.g. `'clc'` becomes `c('c', 'l', 'c')`, **unless the output format is LaTeX**.
+
+For example, 
+```{r, eval=F}
+kable(mtcars[1:2, 1:2], "latex", align = c("cl"))
+# \begin{tabular}{l|cl|cl}  # Note the column alignment here
+# \hline
+#   & mpg & cyl\\
+# ...
+```
+
+LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual. As a result, it won't throw an error if you are just using `kable` to make some simple tables. However, when you use `kableExtra` to make some advanced modification, it will start to throw some bugs. As a result, please try to form a habbit of using a vector in the `align` argument for `kable` (tip: you can use `rep` function to replicate elements. For example, `c("c", rep("l", 10))`). 
+
 ## Row indentation
 Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
 For advanced users, you can even define your own css for the group labeling.
@@ -346,6 +361,8 @@ kable(collapse_rows_dt, format = "latex", align = "c") %>%
   column_spec(1, bold = T, width = "5em") %>%
   collapse_rows(1:2)
 ```
+
+
 
 # Table Footnote
 
@@ -394,6 +411,14 @@ kable(dt_footnote, "latex", align = "c", booktabs = T,
            symbol = "Footnote Symbol 1; ",
            alphabet_title = "Type II: ", symbol_title = "Type III: ",
            footnote_as_chunk = T)
+```
+
+If your table footnote is very long, please consider to put your table in a `ThreePartTable` frame. Note that, in kableExtra version <= 0.7.0, we were using `threeparttable` but since kableExtra 0.8.0, we start to use `ThreePartTable` from `threeparttablex` instead. `ThreePartTable` supports both the `longtable` and `tabu` environments. 
+
+```{r}
+kable(dt, "latex", align = "c", booktabs = T, caption = "s") %>%
+  footnote(general = "Here is a very very very very very very very very very very very very very very very very very very very very long footnote", 
+           threeparttable = T)
 ```
 
 # LaTeX Only Features

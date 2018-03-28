@@ -197,13 +197,10 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   table_info <- magic_mirror(kable_input)
   out <- enc2utf8(as.character(kable_input))
 
-  # if (table_info$tabular == "longtable" & threeparttable == TRUE) {
-  #   threeparttable <- FALSE
-  #   warning("threeparttable does not support longtable.")
-  # }
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
   if (threeparttable) {
+    if (table_info$tabular %in% c("longtable", "longtabu") ) {
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{ThreePartTable}\n\\\\begin{TableNotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
@@ -211,24 +208,43 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                         "\n\\\\end{TableNotes}\n\\\\begin{",
                         table_info$tabular, "}"),
                  out)
-    out <- sub(table_info$end_tabular,
-               paste0("\\\\end{", table_info$tabular,
-                      "}\n\\\\end{ThreePartTable}"),
-               out)
-    if (table_info$booktabs) {
-      out <- sub("\\\\bottomrule", "\\\\bottomrule\n\\\\insertTableNotes", out)
+      out <- sub(paste0("\\\\end\\{",table_info$tabular, "\\}"),
+                 paste0("\\\\end{", table_info$tabular,
+                        "}\n\\\\end{ThreePartTable}"),
+                 out)
+      if (table_info$booktabs) {
+        out <- sub("\\\\bottomrule", "\\\\bottomrule\n\\\\insertTableNotes", out)
+      } else {
+        out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
+                   "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
+                   out)
+      }
     } else {
-      out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
-                 "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
+      if (table_info$tabular == "tabu") {
+        stop("Please use `longtable = T` in your kable function. ",
+             "Full width threeparttable only works with longtable.")
+      }
+      out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
+                 paste0("\\\\begin{threeparttable}\n\\\\begin{",
+                        table_info$tabular, "}"),
+                 out)
+      out <- sub(table_info$end_tabular,
+                 paste0("\\\\end{", table_info$tabular,
+                        "}\n\\\\begin{tablenotes}",
+                        ifelse(footnote_as_chunk, "[para]", ""),
+                        "\n\\\\small\n", footnote_text,
+                        "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
                  out)
     }
-  } else if (table_info$booktabs) {
-    out <- sub("\\\\bottomrule",
-               paste0("\\\\bottomrule\n", footnote_text), out)
   } else {
-    out <- sub(table_info$end_tabular,
-               paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
-               out)
+    if (table_info$booktabs) {
+      out <- sub("\\\\bottomrule",
+                 paste0("\\\\bottomrule\n", footnote_text), out)
+    } else {
+      out <- sub(table_info$end_tabular,
+                 paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
+                 out)
+    }
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
