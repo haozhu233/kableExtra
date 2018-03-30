@@ -347,6 +347,41 @@ kable(collapse_rows_dt, format = "latex", align = "c") %>%
   collapse_rows(1:2)
 ```
 
+When there are too many layers, sometimes the table can become too wide. You can choose to stack the first few layers by setting `row_group_label_position` to `stack`. 
+
+
+```{r}
+collapse_rows_dt <- expand.grid(
+  Country = sprintf('Country with a long name %s', c('A', 'B')),
+  State = sprintf('State %s', c('a', 'b')),
+  City = sprintf('City %s', c('1', '2')),
+  District = sprintf('District %s', c('1', '2'))
+) %>% arrange(Country, State, City) %>%
+  mutate_all(as.character) %>%
+  mutate(C1 = rnorm(n()),
+         C2 = rnorm(n()))
+
+kable(collapse_rows_dt, format = "latex", 
+      booktabs = T, align = "c", linesep = '') %>%
+  collapse_rows(1:3, row_group_label_position = 'stack') 
+```
+
+To better distinguish different layers, you can format the each layer using `row_group_label_fonts`. You can also customize the hlines to better differentiate groups.
+
+```{r}
+row_group_label_fonts <- list(
+  list(bold = T, italic = T), 
+  list(bold = F, italic = F)
+  )
+kable(collapse_rows_dt, format = "latex", 
+                     booktabs = T, align = "c", linesep = '') %>%
+  column_spec(1, bold=T) %>%
+  collapse_rows(1:3, latex_hline = 'custom', custom_latex_hline = 1:3, 
+                row_group_label_position = 'stack', 
+                row_group_label_fonts = row_group_label_fonts) 
+```
+
+
 # Table Footnote
 
 > Now it's recommended to use the new `footnote` function instead of `add_footnote` to make table footnotes. 
