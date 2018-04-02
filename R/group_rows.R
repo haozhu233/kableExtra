@@ -154,8 +154,8 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   if (escape) {
-    group_label <- escape_latex(group_label)
-    group_label <- gsub("\\\\", "\\\\\\\\", group_label)
+    group_label <- escape_latex2(group_label)
+    group_label <- linebreak(group_label, align = latex_align, double_escape = TRUE)
   }
 
   if(bold){

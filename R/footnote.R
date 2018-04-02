@@ -84,7 +84,9 @@ footnote <- function(kable_input,
       footnote_titles <- lapply(footnote_titles, escape_html)
     } else {
       footnote_contents <- lapply(footnote_contents, escape_latex2)
+      footnote_contents <- lapply(footnote_contents, linebreak)
       footnote_titles <- lapply(footnote_titles, escape_latex2)
+      footnote_titles <- lapply(footnote_titles, linebreak)
     }
   }
   footnote_table <- footnote_table_maker(

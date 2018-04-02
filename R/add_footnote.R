@@ -97,6 +97,7 @@ add_footnote <- function(input, label = NULL,
     # Clean the entry for labels
     if (escape) {
       label <- escape_latex(label)
+      label <- linebreak(label)
     }
     label <- gsub("\\\\", "\\\\\\\\", label)
 
