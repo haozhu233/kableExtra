@@ -14,5 +14,6 @@
     usepackage_latex("threeparttable")
     usepackage_latex("threeparttablex")
     usepackage_latex("ulem", "normalem")
+    usepackage_latex("makecell")
   }
 }

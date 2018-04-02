@@ -125,9 +125,13 @@ pdfTable_add_header_above <- function(kable_input, header,
                                       bold, italic, monospace, escape, line) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
+
   if (escape) {
     header$header <- escape_latex2(header$header)
+    header$header <- linebreak(header$header, align = "c", double_escape = TRUE)
   }
+
+
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs,
                                                     bold, italic, monospace)

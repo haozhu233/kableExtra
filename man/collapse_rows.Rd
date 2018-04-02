@@ -5,7 +5,9 @@
 \title{Collapse repeated rows to multirow cell}
 \usage{
 collapse_rows(kable_input, columns = NULL, latex_hline = c("full", "major",
-  "none"))
+  "none", "custom"), row_group_label_position = c("identity", "stack"),
+  custom_latex_hline = NULL, row_group_label_fonts = NULL,
+  headers_to_remove = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -13,7 +15,20 @@ collapse_rows(kable_input, columns = NULL, latex_hline = c("full", "major",
 \item{columns}{Numeric column positions where rows need to be collapsed.}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
-Choose from \code{full}, \code{major}, \code{none}.}
+Choose from \code{full}, \code{major}, \code{none}, \code{custom}.}
+
+\item{row_group_label_position}{Option controlling positions of row group
+labels. Choose from \code{identity}, \code{stack}.}
+
+\item{custom_latex_hline}{Numeric column positions whose collapsed rows will
+be separated by hlines.}
+
+\item{row_group_label_fonts}{A list of arguments that can be supplied to
+group_rows function to format the row group label when
+\code{row_group_label_position} is \code{stack}}
+
+\item{headers_to_remove}{Numeric column positions where headers should be
+removed when they are stacked.}
 }
 \description{
 Collapse same values in columns into multirow cells. This
