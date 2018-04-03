@@ -5,7 +5,7 @@
 \title{Add a header row on top of current header}
 \usage{
 add_header_above(kable_input, header = NULL, bold = FALSE, italic = FALSE,
-  monospace = FALSE, escape = TRUE, line = TRUE)
+  monospace = FALSE, align = "c", escape = TRUE, line = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -22,6 +22,10 @@ As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" 
 
 \item{monospace}{A T/F value to control whether the text of the selected column
 need to be monospaced (verbatim)}
+
+\item{align}{A character string for cell alignment. For HTML, possible values could
+be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
+while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
 
 \item{escape}{A T/F value showing whether special characters should be
 escaped.}

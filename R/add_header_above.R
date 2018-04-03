@@ -14,6 +14,9 @@
 #' @param italic A T/F value to control whether the text should to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
 #' need to be monospaced (verbatim)
+#' @param align A character string for cell alignment. For HTML, possible values could
+#' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
+#' while for LaTeX, you can only choose from `l`, `c` & `r`.
 #' @param escape A T/F value showing whether special characters should be
 #' escaped.
 #' @param line A T/F value to control whether a line will appear underneath the
@@ -27,7 +30,8 @@
 #' @export
 add_header_above <- function(kable_input, header = NULL,
                              bold = FALSE, italic = FALSE,
-                             monospace = FALSE, escape = TRUE,line = TRUE) {
+                             monospace = FALSE, align = "c",
+                             escape = TRUE, line = TRUE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -36,18 +40,18 @@ add_header_above <- function(kable_input, header = NULL,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(htmlTable_add_header_above(kable_input, header,
-                                      bold, italic, monospace, escape,line))
+    return(htmlTable_add_header_above(kable_input, header, bold, italic,
+                                      monospace, align, escape,line))
   }
   if (kable_format == "latex") {
-    return(pdfTable_add_header_above(kable_input, header,
-                                     bold, italic, monospace, escape,line))
+    return(pdfTable_add_header_above(kable_input, header, bold, italic,
+                                     monospace, align, escape,line))
   }
 }
 
 # HTML
-htmlTable_add_header_above <- function(kable_input, header,
-                                       bold, italic, monospace, escape,line) {
+htmlTable_add_header_above <- function(kable_input, header, bold, italic,
+                                       monospace, align, escape, line) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
@@ -67,8 +71,8 @@ htmlTable_add_header_above <- function(kable_input, header,
          "columns with the original kable output.")
   }
 
-  new_header_row <- htmlTable_new_header_generator(header,
-                                                   bold, italic, monospace,line)
+  new_header_row <- htmlTable_new_header_generator(header, bold, italic,
+                                                   monospace,align, line)
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
   if (is.null(kable_attrs$header_above)) {
@@ -96,8 +100,13 @@ standardize_header_input <- function(header) {
   return(data.frame(header = names(header), colspan = header, row.names = NULL))
 }
 
-htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,line) {
+htmlTable_new_header_generator <- function(header_df, bold, italic,
+                                           monospace, align, line) {
+  if (align %in% c("l", "c", "r")) {
+    align <- switch(align, r = "right", c = "center", l = "left")
+  }
   row_style <- paste0(
+    paste0("text-align: ", align, "; "),
     ifelse(bold, "font-weight: bold; ", ""),
     ifelse(italic, "font-style: italic; ", ""),
     ifelse(monospace, "font-family: monospace; ", "")
@@ -106,7 +115,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,li
     if (trimws(x[1]) == "") {
       paste0('<th style="border-bottom:hidden" colspan="', x[2], '"></th>')
     } else {
-      paste0('<th style="text-align:center; border-bottom:hidden; ',
+      paste0('<th style="border-bottom:hidden; ',
              'padding-bottom:0; padding-left:3px;padding-right:3px;',
              row_style,
              '" colspan="',
@@ -121,20 +130,21 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,li
 }
 
 # Add an extra header row above the current header in a LaTeX table ------
-pdfTable_add_header_above <- function(kable_input, header,
-                                      bold, italic, monospace, escape, line) {
+pdfTable_add_header_above <- function(kable_input, header, bold, italic,
+                                      monospace, align, escape, line) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
 
   if (escape) {
     header$header <- escape_latex2(header$header)
-    header$header <- linebreak(header$header, align = "c", double_escape = TRUE)
+    header$header <- linebreak(header$header, align = align, double_escape = TRUE)
   }
 
+  align <- match.arg(align, c("c", "l", "r"))
 
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
-  new_header_split <- pdfTable_new_header_generator(header, table_info$booktabs,
-                                                    bold, italic, monospace)
+  new_header_split <- pdfTable_new_header_generator(
+    header, table_info$booktabs, bold, italic, monospace, align)
   if(line){
     new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   } else {
@@ -157,13 +167,13 @@ pdfTable_add_header_above <- function(kable_input, header,
 }
 
 pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
-                                          bold, italic, monospace) {
+                                          bold, italic, monospace, align) {
   if (booktabs) {
-    header_df$align <- "c"
+    header_df$align <- align
   } else {
-    header_df$align <- "|c|"
-    header_df$align[1] <- "c|"
-    header_df$align[nrow(header_df)] <- "|c"
+    header_df$align <- paste0("|", align, "|")
+    header_df$align[1] <- paste0(align, "|")
+    header_df$align[nrow(header_df)] <- paste0("|", align)
   }
   header_items <- apply(header_df, 1, function(x) {
     # if(x[2] == 1) return(x[1])
