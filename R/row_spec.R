@@ -194,9 +194,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    out <- str_replace(out,
-                       paste0(target_row, "\\\\\\\\"),
-                       new_row)
+    out <- sub(paste0(target_row, "\\\\\\\\"), new_row, out, perl = T)
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")

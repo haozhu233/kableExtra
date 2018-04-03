@@ -28,7 +28,7 @@ kable(dt, "latex", booktabs = T,
 ```
 
 ## Insert linebreak in table
-In LaTeX, to make linebreaks in table cells, people usually use the `makecell` package. `kableExtra` 0.8.0 comes with a function called `linebreak` to facilitate that. Basically, this function will scan the existance of `\n`. If `\n` exists, it will put the texts in a `makecell` statement in a proper format. It works in a very similar way with `cell_spec`.
+In LaTeX, to make linebreaks in table cells, people usually use the `makecell` package. `kableExtra` 0.8.0 comes with a function called `linebreak` to facilitate that. Basically, this function will scan the existance of `\n`. If `\n` exists, it will put the texts in a `makecell` statement. It works in a very similar way with `cell_spec` so you will need to put `escape = F` in `kable`.
 
 ```{r}
 linebreak("a\nb")
@@ -48,7 +48,7 @@ dt2 %>%
 ```
 
 ### Linebreak in other kableExtra functions
-If you have a need to put a linebreak in `kableExtra` functions such as `add_header_above` and `group_rows`, just go ahead and use `\n` and it will be automatically converted. Note that this feature is controlled by the `escape` option in those functions. 
+If you have a need to put a linebreak in `kableExtra` functions such as `add_header_above` and `group_rows`, just go ahead and use `\n` directly (in kableExtra >= 0.8.0) and it will be automatically converted. Note that this feature is also controlled by the `escape` option in those functions. 
 
 ```{r}
 dt2 %>%
