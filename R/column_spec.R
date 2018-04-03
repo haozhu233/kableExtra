@@ -178,7 +178,7 @@ column_spec_latex <- function(kable_input, column, width,
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
   out <- sub(kable_align_old, kable_align_new,
-             enc2utf8(as.character(kable_input)),
+             solve_enc(kable_input),
              perl = T)
   out <- structure(out, format = "latex", class = "knitr_kable")
   if (!is.null(width)) {

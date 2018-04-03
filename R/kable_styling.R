@@ -207,7 +207,8 @@ pdfTable_styling <- function(kable_input,
   repeat_header_method <- match.arg(repeat_header_method)
 
   out <- NULL
-  out <- enc2utf8(as.character(kable_input))
+  out <- solve_enc(kable_input)
+
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {

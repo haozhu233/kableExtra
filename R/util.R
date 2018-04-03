@@ -133,5 +133,8 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
   return(list(kable_input, table_info))
 }
 
-
+# Solve enc issue for LaTeX tables
+solve_enc <- function(x) {
+  enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+}
 

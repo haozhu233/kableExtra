@@ -179,7 +179,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            color, background, align, font_size, angle,
                            hline_after, extra_latex_after) {
   table_info <- magic_mirror(kable_input)
-  out <- enc2utf8(as.character(kable_input))
+  out <- solve_enc(kable_input)
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)

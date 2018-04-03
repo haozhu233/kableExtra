@@ -31,7 +31,7 @@ add_indent <- function(kable_input, positions) {
 # Add indentation for LaTeX
 add_indent_latex <- function(kable_input, positions) {
   table_info <- magic_mirror(kable_input)
-  out <- enc2utf8(as.character(kable_input))
+  out <- solve_enc(kable_input)
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)

@@ -197,7 +197,7 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                            threeparttable) {
   table_info <- magic_mirror(kable_input)
-  out <- enc2utf8(as.character(kable_input))
+  out <- solve_enc(kable_input)
 
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)

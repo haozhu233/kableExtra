@@ -150,7 +150,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   } else {
     new_header <- new_header_split[1]
   }
-  out <- str_replace(enc2utf8(as.character(kable_input)),
+  out <- str_replace(solve_enc(kable_input),
                      hline_type,
                      paste0(hline_type, "\n", new_header))
   out <- structure(out, format = "latex", class = "knitr_kable")

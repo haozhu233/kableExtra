@@ -101,7 +101,7 @@ add_footnote <- function(input, label = NULL,
     }
     label <- gsub("\\\\", "\\\\\\\\", label)
 
-    export <- enc2utf8(export)
+    export <- solve_enc(export)
     table_info <- magic_mirror(input)
     if (table_info$tabular == "longtable") {
       if (notation != "number") {

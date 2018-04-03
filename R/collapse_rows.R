@@ -117,7 +117,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline,
                                 row_group_label_position, row_group_label_fonts,
                                 custom_latex_hline, headers_to_remove) {
   table_info <- magic_mirror(kable_input)
-  out <- enc2utf8(as.character(kable_input))
+  out <- solve_enc(kable_input)
 
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)

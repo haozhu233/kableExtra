@@ -30,7 +30,7 @@ landscape_latex <- function(kable_input, margin) {
   kable_attrs <- attributes(kable_input)
   out <- paste0(
     "\n\\begin{landscape}",
-    enc2utf8(as.character(kable_input)),
+    solve_enc(kable_input),
     "\n\\end{landscape}"
   )
 

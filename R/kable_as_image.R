@@ -65,7 +65,7 @@ kable_as_image <- function(kable_input, filename = NULL,
       "\\usepackage{xltxtra,xunicode}",
       latex_header_includes,
       "\\begin{document}",
-      enc2utf8(as.character(kable_input)),
+      solve_enc(kable_input),
       "\\end{document}"
     )
     temp_tex <- paste(temp_tex, collapse = "\n")
