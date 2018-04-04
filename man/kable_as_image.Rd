@@ -21,7 +21,7 @@ here.}
 
 \item{latex_header_includes}{A character vector of extra LaTeX header stuff.
 Each element is a row. You can have things like
-\code{c("\\usepackage{threeparttable}", "\\usepackage{icons}")}}
+\code{c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")}}
 
 \item{keep_pdf}{A T/F option to control if the mid-way standalone pdf should
 be kept. Default is \code{FALSE}.}

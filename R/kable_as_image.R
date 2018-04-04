@@ -28,7 +28,7 @@
 #' `jpeg`, `gif`, `tiff`, etc. Default is `png`.
 #' @param latex_header_includes A character vector of extra LaTeX header stuff.
 #' Each element is a row. You can have things like
-#' `c("\\usepackage{threeparttable}", "\\usepackage{icons}")`
+#' `c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")`
 #' @param keep_pdf A T/F option to control if the mid-way standalone pdf should
 #' be kept. Default is `FALSE`.
 #' @param density Resolution to read the PDF file. Default value is 300, which
