@@ -123,9 +123,7 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
   for (i in which(dup_index != 1)) {
     dup_row <- table_info$contents[i]
     empty_times <- dup_index[i] - 1
-    new_row <- str_replace(
-      dup_row, "&",
-      paste0("& \\\\\\\\vphantom\\\\{", empty_times, "\\\\}"))
+    new_row <- paste0(dup_row, "\\\\vphantom\\{", empty_times, "\\}")
     kable_input <- str_replace(kable_input, dup_row, new_row)
     table_info$contents[i] <- new_row
   }
