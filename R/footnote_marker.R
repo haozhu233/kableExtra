@@ -10,6 +10,9 @@
 #' return "b" in HTML.
 #' @param format Either `html` or `latex`. All functions here can read
 #' default value from global option `knitr.table.format`.
+#' @param double_escape T/F if output is in LaTeX, whether it should be double
+#' escaped. If you are using footnote_marker in `group_rows`` labeling row or
+#' `add_header_above`, you need to set this to be `TRUE`.
 #'
 #' @examples dt <- mtcars[1:5, 1:5]
 #' colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "html"))
@@ -17,7 +20,7 @@
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
 #'
 #' @export
-footnote_marker_number <- function(x, format) {
+footnote_marker_number <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
     format <- getOption('knitr.table.format')
   }
@@ -27,14 +30,16 @@ footnote_marker_number <- function(x, format) {
   }
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
-  } else {
+  } else if (!double_escape) {
     return(paste0("\\textsuperscript{", x, "}"))
+  } else {
+    return(paste0("\\\\textsuperscript{", x, "}"))
   }
 }
 
 #' @rdname footnote_marker_number
 #' @export
-footnote_marker_alphabet <- function(x, format) {
+footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
     format <- getOption('knitr.table.format')
   }
@@ -45,14 +50,16 @@ footnote_marker_alphabet <- function(x, format) {
   if (is.numeric(x)) x <- letters[x]
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
-  } else {
+  } else if (!double_escape) {
     return(paste0("\\textsuperscript{", x, "}"))
+  } else {
+    return(paste0("\\\\textsuperscript{", x, "}"))
   }
 }
 
 #' @rdname footnote_marker_number
 #' @export
-footnote_marker_symbol <- function(x, format) {
+footnote_marker_symbol <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
     format <- getOption('knitr.table.format')
   }
@@ -65,9 +72,12 @@ footnote_marker_symbol <- function(x, format) {
   if (format == "html") {
     x <- number_index$symbol.html[x]
     return(paste0("<sup>", x, "</sup>"))
-  } else {
+  } else if (!double_escape) {
     x <- number_index$symbol.latex[x]
     x <- gsub("\\\\\\\\", "\\\\", x)
     return(paste0("\\textsuperscript{", x, "}"))
+  } else {
+    x <- number_index$symbol.latex[x]
+    return(paste0("\\\\textsuperscript{", x, "}"))
   }
 }

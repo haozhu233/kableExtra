@@ -6,11 +6,11 @@
 \alias{footnote_marker_symbol}
 \title{Footnote marker}
 \usage{
-footnote_marker_number(x, format)
+footnote_marker_number(x, format, double_escape = FALSE)
 
-footnote_marker_alphabet(x, format)
+footnote_marker_alphabet(x, format, double_escape = FALSE)
 
-footnote_marker_symbol(x, format)
+footnote_marker_symbol(x, format, double_escape = FALSE)
 }
 \arguments{
 \item{x}{a number. For example, for \code{footnote_marker_alphabet(2)} will
@@ -18,6 +18,9 @@ return "b" in HTML.}
 
 \item{format}{Either \code{html} or \code{latex}. All functions here can read
 default value from global option \code{knitr.table.format}.}
+
+\item{double_escape}{T/F if output is in LaTeX, whether it should be double
+escaped. If you are using footnote_marker in \code{group_rows`` labeling row or}add_header_above\code{, you need to set this to be}TRUE`.}
 }
 \description{
 Put footnote mark in superscription in table. Unless you are

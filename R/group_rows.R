@@ -154,14 +154,13 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   if (escape) {
-    group_label <- escape_latex2(group_label)
-    group_label <- linebreak(group_label, align = latex_align, double_escape = TRUE)
+    group_label <- input_escape(group_label, latex_align)
   }
 
-  if(bold){
+  if (bold) {
     group_label <- paste0("\\\\textbf{", group_label, "}")
   }
-  if(italic) group_label <- paste0("\\\\textit{", group_label, "}")
+  if (italic) group_label <- paste0("\\\\textit{", group_label, "}")
   # Add group label
   rowtext <- table_info$contents[start_row + 1]
   if (table_info$booktabs) {

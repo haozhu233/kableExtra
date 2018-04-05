@@ -138,3 +138,8 @@ solve_enc <- function(x) {
   enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
 }
 
+input_escape <- function(x, latex_align) {
+  x <- escape_latex2(x)
+  x <- linebreak(x, align = latex_align, double_escape = TRUE)
+}
+

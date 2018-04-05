@@ -136,8 +136,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   header <- standardize_header_input(header)
 
   if (escape) {
-    header$header <- escape_latex2(header$header)
-    header$header <- linebreak(header$header, align = align, double_escape = TRUE)
+    header$header <- input_escape(header$header, align)
   }
 
   align <- match.arg(align, c("c", "l", "r"))
