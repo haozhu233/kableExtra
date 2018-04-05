@@ -18,7 +18,9 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -64,7 +66,7 @@ If you are using a recent version of rmarkdown, you are recommended to load this
 
 ```{r, eval = FALSE}
 # Not evaluated. Ilustration purpose
-options(kableExtra.latex.load_package = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
 
@@ -83,7 +85,10 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+
 ```
 
 ## Plain LaTeX
@@ -318,6 +323,21 @@ kable(mtcars[1:10, 1:6], format = "latex", caption = "Group Rows", booktabs = T)
 # Not evaluated. The code above should have the same result as the first example in this section.
 ```
 
+Note that `kable` has a relatively special feature to handle `align` and it may bring troubles to you if you are not using it correctly. In the documentation of the `align` argument of `kable`, it says:
+
+> If `length(align) == 1L`, the string will be expanded to a vector of individual letters, e.g. `'clc'` becomes `c('c', 'l', 'c')`, **unless the output format is LaTeX**.
+
+For example, 
+```{r, eval=F}
+kable(mtcars[1:2, 1:2], "latex", align = c("cl"))
+# \begin{tabular}{l|cl|cl}  # Note the column alignment here
+# \hline
+#   & mpg & cyl\\
+# ...
+```
+
+LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual. As a result, it won't throw an error if you are just using `kable` to make some simple tables. However, when you use `kableExtra` to make some advanced modification, it will start to throw some bugs. As a result, please try to form a habbit of using a vector in the `align` argument for `kable` (tip: you can use `rep` function to replicate elements. For example, `c("c", rep("l", 10))`). 
+
 ## Row indentation
 Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
 For advanced users, you can even define your own css for the group labeling.
@@ -381,7 +401,6 @@ kable(collapse_rows_dt, format = "latex",
                 row_group_label_fonts = row_group_label_fonts) 
 ```
 
-
 # Table Footnote
 
 > Now it's recommended to use the new `footnote` function instead of `add_footnote` to make table footnotes. 
@@ -431,7 +450,33 @@ kable(dt_footnote, "latex", align = "c", booktabs = T,
            footnote_as_chunk = T)
 ```
 
+If your table footnote is very long, please consider to put your table in a `ThreePartTable` frame. Note that, in kableExtra version <= 0.7.0, we were using `threeparttable` but since kableExtra 0.8.0, we start to use `ThreePartTable` from `threeparttablex` instead. `ThreePartTable` supports both the `longtable` and `tabu` environments. 
+
+```{r}
+kable(dt, "latex", align = "c", booktabs = T, caption = "s") %>%
+  footnote(general = "Here is a very very very very very very very very very very very very very very very very very very very very long footnote", 
+           threeparttable = T)
+```
+
 # LaTeX Only Features
+## Linebreak processor
+Unlike in HTML, where you can use `<br>` at any time, in LaTeX, it's actually quite difficult to make a linebreak in a table. Therefore I created the `linebreak` function to faciliate this process. Please see the [Best Practice for Newline in LaTeX Table](http://haozhu233.github.io/kableExtra/best_practice_for_newline_in_latex_table.pdf) for details. 
+
+```{r}
+dt_lb <- data.frame(
+  Item = c("Hello\nWorld", "This\nis a cat"), 
+  Value = c(10, 100)
+)
+
+dt_lb %>%
+  mutate_all(linebreak) %>%
+  kable("latex", booktabs = T, escape = F,
+        col.names = linebreak(c("Item\n(Name)", "Value\n(Number)"), align = "c"))
+```
+
+At the same time, since `kableExtra 0.8.0`, all `kableExtra` functions that have some contents input (such as `footnote` or `group_rows`) will automatically convert `\n` to linebreaks for you in both LaTeX and HTML. 
+
+
 ## Table on a Landscape Page
 Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
 ```{r}
@@ -447,7 +492,7 @@ kable(dt, format = "latex", caption = "Demo Table (Landscape)[note]", booktabs =
 ```
 
 ## Use LaTeX table in HTML or Word
-If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). 
+If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). This feature may not work if you are using tinytex. If you are using tinytex, please consider using other alternatives of this function. 
 
 ```{r, eval = F}
 # Not evaluated. 

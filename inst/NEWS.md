@@ -1,32 +1,62 @@
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
+* Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 
+
 * Fixed #115, a bug in latex footnote about escaping.
+
 * Fixed #116, a bug about the position of footnote in longtable with booktabs
+
 * Fixed #119, a bug between collapse_rows and add_header_above
+
 * Improve footnotes in longtable and replace threeparttable with threeparttablex. Now footnotes works smoothly in longtable, even with full width in tabu.
+
 * Fixed #135, a bug in footnote_marker_symbol
+
 * Added a new layout for collapse_rows, thanks @georgegui! #159
+
 * Added the linebreak function to support adding linebreaks to LaTeX table. 
-* Added internal support to convert \n to linebreak in table to all kableExtra functions
+
+* Added internal support to convert \n to linebreak in table to all kableExtra functions for both LaTeX and HTML
+
 * Added a document about wrapping texts and adding linebreaks. 
+
+* Fixed a bug related to the handling of special characters
+
+* Remove HTML to Word doc from vignette because it's too large. 
+
+* Fixed varies other bugs. 
 
 
 kableExtra 0.7.0
 --------------------------------------------------------------------------------
 * Now HTML table will be previewed in Viewer panel
+
 * Added HTML color code support to kableExtra
+
 * Added footnote as a more flexible replacement for add_footnote. `Add_footnote()` will be kept maintained for a while. 
+
 * Fixed bug #105: bold/italic/monospace cannot accept T/F as vector
+
 * Added extra_css to cell_spec, row_spec & column_spec
+
 * Fixed bug #88: add_footnote doesn't support full width
+
 * Added hline_after and extra_latex_after to row_spec #101
+
 * Improved warning message for kables not in `html` or `latex`
+
 * Added latex_hline to collapse_rows so users can choose from full, major or none
+
 * Added strikeout and underline to column_spec, row_spec and cell_spec. 
+
 * Added extra_css to column_spec, row_spec and cell_spec.
+
 * Added a vignette about how to copy tables from HTML to Word. 
+
 * Change some read_xml to read_html
+
 * Added scale_from to some spec_tools
+
 * Quite a few minor bug fixes
 
 

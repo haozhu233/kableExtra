@@ -69,8 +69,5 @@ For more information, please check the package vignette.
 - [Create Awesome HTML Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html)
 - [Create Awesome LaTeX Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
-## Limitations/Known bug
-- When you are using `header-includes` together with `kableExtra`, you cannot use inline R codes in `header-includes`. R code written in there won't be executed. It's a limitation of the current setup of `rmarkdown`.
-- In HTML, `bootstrap_options` in `kable_styling` assumes you to have bootstrap 3 style sheet loaded to have all features functioning.
-- `add_header_above` and `add_footnote` should be able to work in any conditions but if you are using `kable_styling` in customed templates it can get a little tricky.
-- In LaTeX, it is known that striped lines is not working with tufte handout since right now I cannot insert a latex package to its LaTeX header. You need to load required latex packages by yourself.
+## Acknowledgement
+I would like to thank colleagues at [Hebrew SeniorLife Institute for Aging Research](https://www.instituteforagingresearch.org/) and the [Boston Pepper Center](http://pepper.bwh.harvard.edu/) for their input. I also would like to appreciate the mentorship from Tom Travison ([@tgt75](https://twitter.com/tgt75)) and all the efforts from the open source community, which help this package keep getting better.

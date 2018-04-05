@@ -1,6 +1,6 @@
 ---
-title: "Create Awesome HTML Table with knitr::kable and kableExtra"
-author: "Hao Zhu"
+title: "用kableExtra做牛*的表格"
+author: "朱昊"
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -8,13 +8,16 @@ output:
     toc: true
     toc_depth: 2
     toc_float: true
-vignette: >
-  %\VignetteIndexEntry{Create Awesome HTML Table with knitr::kable and kableExtra}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
-> Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
+突然意识到这包写了都一年了，网上一篇正经的中文指南都没有，有些过意不去啊，赶紧补上。
+
+另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)来看吧。
+
+同时
+
+# 简介
+`kableExtra`的目标是~~没有蛀牙~~帮你搭建以及美化一些常用而又较为复杂的表格。它借鉴了
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 

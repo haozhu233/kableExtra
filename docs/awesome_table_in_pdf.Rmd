@@ -18,7 +18,9 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -83,7 +85,10 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+
 ```
 
 ## Plain LaTeX
@@ -454,6 +459,24 @@ kable(dt, "latex", align = "c", booktabs = T, caption = "s") %>%
 ```
 
 # LaTeX Only Features
+## Linebreak processor
+Unlike in HTML, where you can use `<br>` at any time, in LaTeX, it's actually quite difficult to make a linebreak in a table. Therefore I created the `linebreak` function to faciliate this process. Please see the [Best Practice for Newline in LaTeX Table](http://haozhu233.github.io/kableExtra/best_practice_for_newline_in_latex_table.pdf) for details. 
+
+```{r}
+dt_lb <- data.frame(
+  Item = c("Hello\nWorld", "This\nis a cat"), 
+  Value = c(10, 100)
+)
+
+dt_lb %>%
+  mutate_all(linebreak) %>%
+  kable("latex", booktabs = T, escape = F,
+        col.names = linebreak(c("Item\n(Name)", "Value\n(Number)"), align = "c"))
+```
+
+At the same time, since `kableExtra 0.8.0`, all `kableExtra` functions that have some contents input (such as `footnote` or `group_rows`) will automatically convert `\n` to linebreaks for you in both LaTeX and HTML. 
+
+
 ## Table on a Landscape Page
 Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
 ```{r}
@@ -469,7 +492,7 @@ kable(dt, format = "latex", caption = "Demo Table (Landscape)[note]", booktabs =
 ```
 
 ## Use LaTeX table in HTML or Word
-If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). 
+If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). This feature may not work if you are using tinytex. If you are using tinytex, please consider using other alternatives of this function. 
 
 ```{r, eval = F}
 # Not evaluated. 

@@ -6,6 +6,15 @@
 \usage{
 linebreak(x, align = c("l", "c", "r"), double_escape = F)
 }
+\arguments{
+\item{x}{A character vector}
+
+\item{align}{Choose from "l", "c" or "r"}
+
+\item{double_escape}{Whether special character should be double escaped.
+Default is FALSE.}
+}
 \description{
-Make linebreak in LaTeX Table cells
+This function generate LaTeX code of \code{makecell} so that users
+can have linebreaks in their table
 }
