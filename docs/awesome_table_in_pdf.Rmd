@@ -432,7 +432,7 @@ kable(dt, "latex", align = "c", booktabs = T) %>%
            )
 ```
 
-If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
+If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_marker_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_marker_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. Note that if you want to use these `footnote_marker` functions in `kableExtra` functions like `group_rows` (for the row label) or `add_header_above`, you need to set `double_escape = T`and `escape = F` in those functions. I'm trying to find other ways around. Please let me know if you have a good idea and are willing to contribute. 
 
 ```{r}
 dt_footnote <- dt
