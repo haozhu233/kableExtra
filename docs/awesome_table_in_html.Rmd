@@ -193,7 +193,7 @@ iris[1:10, ] %>%
     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
   )) %>%
   kable("html", escape = F, align = "c") %>%
-  kable_styling("striped", full_width = F)
+  kable_styling(c("striped", "condensed"), full_width = F)
 ```
 
 In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 

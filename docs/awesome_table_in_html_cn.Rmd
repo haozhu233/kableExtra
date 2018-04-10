@@ -10,35 +10,37 @@ output:
     toc_float: true
 ---
 
-突然意识到这包写了都一年了，网上一篇正经的中文指南都没有，有些过意不去啊，赶紧补上。
+突然意识到这包写了都一年了还没写过中文doc，有些过意不去啊，赶紧补上。
 
 另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)来看吧。
 
-同时
+（因为我基本是在自由发挥。。你们不要太去在意中文英文的不同哈。。。）
 
 # 简介
-`kableExtra`的目标是~~没有蛀牙~~帮你搭建以及美化一些常用而又较为复杂的表格。它借鉴了
+`kableExtra`的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的脏活累活，我就先帮你给做啦。：）
 
-# Overview
-The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
-
-To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
-
-# Installation
+# 安装
+CRAN安装`install.packages("kableExtra")`不用我说，想尝鲜可以使用开发版。
 ```r
-install.packages("kableExtra")
-
-# For dev version
 # install.packages("devtools")
 devtools::install_github("haozhu233/kableExtra")
 ```
-# Getting Started
-Here we are using the first few columns and rows from dataset `mtcars`
+
+# 第一步 
+
+
+
+## bootstrap了解一下
+如果你从没听过bootstrap的话，你可以去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面，也因此在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些借口方便你快速实现一些bootstrap风的表格。
+
+在这份文档中，我们主要使用`mtcars`这个数据的前几列和几行数据来演示。
+
 ```{r}
 library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
+
 
 When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* **In this tutorial, I'll still put `format="html"` in the function in case users just want to quickly replicate the results.** 
 

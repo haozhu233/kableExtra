@@ -1,4 +1,4 @@
-# kableExtra
+# kableExtra <img src="https://haozhu233.github.io/kableExtra/kableExtra.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download_total](http://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=kableExtra)

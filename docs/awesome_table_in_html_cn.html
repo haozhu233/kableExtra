@@ -224,24 +224,22 @@ div.tocify {
 </div>
 
 
-<p>突然意识到这包写了都一年了，网上一篇正经的中文指南都没有，有些过意不去啊，赶紧补上。</p>
+<p>突然意识到这包写了都一年了还没写过中文doc，有些过意不去啊，赶紧补上。</p>
 <p>另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站<a href="http://haozhu233.github.io/kableExtra/" class="uri">http://haozhu233.github.io/kableExtra/</a>来看吧。</p>
+<p>（因为我基本是在自由发挥。。你们不要太去在意中文英文的不同哈。。。）</p>
 <div class="section level1">
 <h1>简介</h1>
-<p><code>kableExtra</code>的目标是<del>没有蛀牙</del>帮你搭建以及美化一些常用而又较为复杂的表格</p>
+<p><code>kableExtra</code>的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的脏活累活，我就先帮你给做啦。：）</p>
 </div>
-<div id="overview" class="section level1">
-<h1>Overview</h1>
-<p>The goal of <code>kableExtra</code> is to help you build common complex tables and manipulate table styles. It imports the pipe <code>%&gt;%</code> symbol from <code>magrittr</code> and verbalize all the functions, so basically you can add “layers” to a kable output in a way that is similar with <code>ggplot2</code> and <code>plotly</code>.</p>
-<p>To learn how to generate complex tables in LaTeX, please visit <a href="http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf" class="uri">http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf</a></p>
-</div>
-<div id="installation" class="section level1">
-<h1>Installation</h1>
-<pre class="r"><code>install.packages(&quot;kableExtra&quot;)
-
-# For dev version
-# install.packages(&quot;devtools&quot;)
+<div class="section level1">
+<h1>安装</h1>
+<p>CRAN安装<code>install.packages(&quot;kableExtra&quot;)</code>不用我说，想尝鲜可以使用开发版。</p>
+<pre class="r"><code># install.packages(&quot;devtools&quot;)
 devtools::install_github(&quot;haozhu233/kableExtra&quot;)</code></pre>
+</div>
+<div class="section level1">
+<h1>第一步</h1>
+<p>在开始以前，如果你从没听过bootstrap的话，你可以去<del>游泳健身</del>了解一下。。</p>
 </div>
 <div id="getting-started" class="section level1">
 <h1>Getting Started</h1>
@@ -3555,7 +3553,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3571,7 +3569,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3579,7 +3577,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3587,7 +3585,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3595,7 +3593,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3606,7 +3604,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3614,7 +3612,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3644,7 +3642,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3655,7 +3653,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
