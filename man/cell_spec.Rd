@@ -14,8 +14,8 @@ cell_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
 text_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
   underline = FALSE, strikeout = FALSE, color = NULL, background = NULL,
   align = NULL, font_size = NULL, angle = NULL, tooltip = NULL,
-  popover = NULL, link = NULL, escape = TRUE, background_as_tile = TRUE,
-  latex_background_in_cell = FALSE)
+  popover = NULL, link = NULL, extra_css = NULL, escape = TRUE,
+  background_as_tile = TRUE, latex_background_in_cell = FALSE)
 }
 \arguments{
 \item{x}{Things to be formated. It could be a vector of numbers or strings.}
