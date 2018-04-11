@@ -192,10 +192,13 @@ text_spec <- function(x, format,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
-                      escape = TRUE, background_as_tile = TRUE,
+                      extra_css = NULL,
+                      escape = TRUE,
+                      background_as_tile = TRUE,
                       latex_background_in_cell = FALSE) {
   cell_spec(x, format, bold, italic, monospace, underline, strikeout,
             color, background, align,
-            font_size, angle, tooltip, popover, link, escape, background_as_tile,
+            font_size, angle, tooltip, popover, link,
+            extra_css, escape, background_as_tile,
             latex_background_in_cell)
 }
