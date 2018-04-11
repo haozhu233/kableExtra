@@ -16,4 +16,6 @@
     usepackage_latex("ulem", "normalem")
     usepackage_latex("makecell")
   }
+  auto_format <- getOption("kableExtra.auto_format", default = TRUE)
+  if (auto_format) auto_set_format()
 }
