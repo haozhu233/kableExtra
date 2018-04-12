@@ -332,7 +332,7 @@ styling_latex_scale_down <- function(x, table_info) {
     return(x)
   }
   x <- sub(table_info$begin_tabular,
-           paste0("\\\\resizebox\\{\\\\linewidth\\}\\{\\!\\}\\{",
+           paste0("\\\\resizebox\\{\\\\linewidth\\}\\{\\!\\}\\{\n",
                   table_info$begin_tabular),
            x)
   sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)

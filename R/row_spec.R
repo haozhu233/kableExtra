@@ -194,7 +194,13 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    out <- sub(paste0(target_row, "\\\\\\\\"), new_row, out, perl = T)
+    if (length(new_row) == 1) {
+      out <- sub(target_row, new_row, out, perl = T)
+    } else {
+      out <- sub(paste0(target_row, "\\\\\\\\"),
+                 paste(new_row, collapse = ""), out, perl = T)
+    }
+    table_info$contents[i] <- new_row
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
@@ -209,49 +215,49 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\textbf{", x, "}")
+      paste0("\\\\textbf\\{", x, "\\}")
     })
   }
   if (italic) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\em{", x, "}")
+      paste0("\\\\em\\{", x, "\\}")
     })
   }
   if (monospace) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\ttfamily{", x, "}")
+      paste0("\\\\ttfamily\\{", x, "\\}")
     })
   }
   if (underline) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\underline{", x, "}")
+      paste0("\\\\underline\\{", x, "\\}")
     })
   }
   if (strikeout) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\sout{", x, "}")
+      paste0("\\\\sout\\{", x, "\\}")
     })
   }
   if (!is.null(color)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\textcolor", latex_color(color), "{", x, "}")
+      paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
     })
   }
   if (!is.null(font_size)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\begingroup\\\\fontsize{", font_size, "}{",
+      paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
              as.numeric(font_size) + 2,
-             "}\\\\selectfont ", x, "\\\\endgroup")})
+             "\\}\\\\selectfont ", x, "\\\\endgroup")})
   }
   if (!is.null(align)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\multicolumn{1}{", align, "}{", x, "}")
+      paste0("\\\\multicolumn\\{1\\}\\{", align, "\\}\\{", x, "\\}")
     })
   }
 
   if (!is.null(angle)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\rotatebox{", angle, "}{", x, "}")
+      paste0("\\\\rotatebox\\{", angle, "\\}\\{", x, "\\}")
     })
   }
 
@@ -261,14 +267,18 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
     new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
   }
 
-  new_row <- paste0(new_row, "\\\\\\\\")
-
-  if (hline_after) {
-    new_row <- paste0(new_row, "\n\\\\hline")
+  if (!hline_after & is.null(extra_latex_after)) {
+    return(new_row)
+  } else {
+    latex_after <- "\\\\\\\\"
+    if (hline_after) {
+      latex_after <- paste0(latex_after, "\n\\\\hline")
+    }
+    if (!is.null(extra_latex_after)) {
+      latex_after <- paste0(latex_after, "\n",
+                            regex_escape(extra_latex_after,
+                                         double_backslash = TRUE))
+    }
+    return(c(new_row, latex_after))
   }
-  if (!is.null(extra_latex_after)) {
-    new_row <- paste0(new_row, "\n",
-                      regex_escape(extra_latex_after, double_backslash = TRUE))
-  }
-  return(new_row)
 }

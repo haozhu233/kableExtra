@@ -180,6 +180,13 @@ column_spec_latex <- function(kable_input, column, width,
   out <- sub(kable_align_old, kable_align_new,
              solve_enc(kable_input),
              perl = T)
+
+  if (!is.null(width)) {
+    fix_newline <- replace_makecell_with_newline(out, table_info, column)
+    out <- fix_newline[[1]]
+    table_info <- fix_newline[[2]]
+  }
+
   out <- structure(out, format = "latex", class = "knitr_kable")
   if (!is.null(width)) {
     if (is.null(table_info$column_width)) {
@@ -231,4 +238,37 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
   }
 
   return(x)
+}
+
+replace_makecell_with_newline <- function(kable_input, table_info, column) {
+  if (!str_detect(kable_input, "makecell")) return(list(kable_input, table_info))
+  contents_table <- data.frame(sapply(table_info$contents,
+                           function(x) {str_split(x, " \\& ")[[1]]}),
+                           stringsAsFactors = F)
+  names(contents_table) <- paste0("x", 1:table_info$nrow)
+  rows_check_makecell <- str_detect(contents_table[column, ], "makecell")
+  if (sum(rows_check_makecell) == 0) return(list(kable_input, table_info))
+  rows_to_replace <- which(rows_check_makecell)
+
+  for (i in column) {
+    target_column <- contents_table[i, ]
+    for (j in which(str_detect(target_column, "\\\\\\\\makecell"))) {
+      contents_table[i, j] <- str_replace(
+        contents_table[i, j], "\\\\\\\\makecell\\\\\\[.\\\\\\]\\\\\\{", "")
+      contents_table[i, j] <- str_replace(
+        contents_table[i, j], "\\}$", "")
+      contents_table[i, j] <- str_replace_all(
+        contents_table[i, j], "\\\\\\\\\\\\\\\\", "\\\\\\\\newline "
+      )
+    }
+  }
+
+  new_contents <- unlist(lapply(contents_table, paste, collapse = " & "))
+  for (i in rows_to_replace) {
+    kable_input <- sub(table_info$contents[i], new_contents[i], kable_input,
+                       perl = T)
+    table_info$contents[i] <- new_contents[i]
+  }
+
+  return(list(kable_input, table_info))
 }
