@@ -256,7 +256,7 @@ replace_makecell_with_newline <- function(kable_input, table_info, column) {
       contents_table[i, j] <- str_replace(
         contents_table[i, j], "\\\\\\\\makecell\\\\\\[.\\\\\\]\\\\\\{", "")
       contents_table[i, j] <- str_replace(
-        contents_table[i, j], "\\}$", "")
+        contents_table[i, j], "\\\\\\}$", "")
       contents_table[i, j] <- str_replace_all(
         contents_table[i, j], "\\\\\\\\\\\\\\\\", "\\\\\\\\newline "
       )

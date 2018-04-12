@@ -10,14 +10,14 @@ output:
     toc_float: true
 ---
 
-突然意识到这包写了都一年了还没写过中文doc，有些过意不去啊，赶紧补上。
+突然意识到这包写了都一年了还没写过中文文档，现在给大家补上。
 
 另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)来看吧。
 
 （因为我基本是在自由发挥。。你们不要太去在意中文英文的不同哈。。。）
 
 # 简介
-`kableExtra`的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的脏活累活，我就先帮你给做啦。：）
+`kableExtra`的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的事情，就让这个包帮你打理了吧。：）
 
 # 安装
 CRAN安装`install.packages("kableExtra")`不用我说，想尝鲜可以使用开发版。
@@ -27,99 +27,95 @@ devtools::install_github("haozhu233/kableExtra")
 ```
 
 # 第一步 
-
-
-
-## bootstrap了解一下
-如果你从没听过bootstrap的话，你可以去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面，也因此在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些借口方便你快速实现一些bootstrap风的表格。
-
-在这份文档中，我们主要使用`mtcars`这个数据的前几列和几行数据来演示。
+## 用`kable`生成HTML表格
+首先要强调一下，`kable`这个function来自于R圈大佬谢益辉的`knitr`包。大致上说，`kable`可以生成三种格式的表格：`HTML`, `LaTeX` 和 `markdown`（默认）。`markdown`作为默认的格式完美契合`rmarkdown`本身，可却因为`markdown`表格本身功能上的限制，在很多情况下达不到我们的要求。因此，当你需要个性化你的表格时，你往往需要先让`kable`先帮你生成一个`HTML`的表格。在这份文档中，我们主要使用`mtcars`这个数据的前几列和几行数据来演示。
 
 ```{r}
-library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:6]
-```
 
-
-When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* **In this tutorial, I'll still put `format="html"` in the function in case users just want to quickly replicate the results.** 
-
-```{r}
-options(knitr.table.format = "html") 
-## If you don't define format here, you'll need put `format = "html"` in every kable function.
-```
-
-## Basic HTML table
-Basic HTML output of `kable` looks very crude. To the end, it's just a plain HTML table without any love from css.
-```{r}
 kable(dt, "html")
 ```
 
-## Bootstrap theme
-When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
+
+注意，如果你有好几个表格要去生成，与其在每一个kable里定义格式，不如在所有的事情开始之前定义一个全局的设置。这样的话，上面的语句就只需要打`kable(dt)`就可以了。
+
+```{r}
+options(knitr.table.format = "html") 
+```
+
+## bootstrap了解一下
+如果你从没听过bootstrap的话，你应该去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面。也因此，bootstrap在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些借口方便你快速实现一些bootstrap风的表格。
+
 ```{r}
 dt %>%
   kable("html") %>%
   kable_styling()
 ```
 
-# Table Styles
-`kable_styling` offers a few other ways to customize the look of a HTML table. 
+# 表格整体风格
+`kable_styling`提供了几种其他的方式来定制表格的整体风格。
 
-## Bootstrap table classes
-If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
+## Bootstrap的表格`class`
+如果你熟悉bootstrap，那么以下这些css `class`对你一定不陌生：`striped`, `bordered`, `hover`, `condensed` 以及 `responsive`. 如果你不熟悉，你可以看看 [这里](http://getbootstrap.com/css/#tables)。你可以通过`kable_styling`快速地把这些样式应用到你的表格里。比如，下面这个例子就是给表格加上斑马纹和悬浮效果。
 
-For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-The option `condensed` can also be handy in many cases when you don't want your table to be too large. It has slightly shorter row height.
+有些人觉得默认的bootstrap表格每行都太高了，这时候用上`condensed`会让内容显得更紧凑。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
-Tables with option `responsive` looks the same with others on a large screen. However, on a small screen like phone, they are horizontally scrollable. Please resize your window to see the result.
+`responsive`这选项可以让表格样式随屏幕宽度变化，更适合手机屏。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## Full width?
-By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
+## “为啥我的表格这么宽啊？”
+“为啥我的表格这么宽”是一个`rmarkdown`新人常见问题。原因是`bootstrap`把宽度统一订成了100%的容器宽。设计`bootstrap`的人原来想让你用他们的grid system来控制表格的宽度，可是当你在写`rmarkdown`的时候，难道还想即兴来定义一串`<div>`？解决办法如下。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 
-## Position
-Table Position only matters when the table doesn't have `full_width`. You can choose to align the table to `center`, `left` or `right` side of the page
+## 表格位置
+表格在页面中位置也是排版很重要的一块。注意，这只有在表格不是全屏宽的时候才有用（这是当然的啦。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. 
+除了常见的左中右，你还可以选择`float_left`和`float_right`。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "float_right")
 ```
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
+从小丘西行百二十步，隔篁竹，闻水声，如鸣佩环，心乐之。伐竹取道，下见小潭，水尤清洌。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。青树翠蔓，蒙络摇缀，参差披拂。
 
-## Font size
-If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
+潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动；俶尔远逝，往来翕忽，似与游者相乐。
+
+潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。
+
+坐潭上，四面竹树环合，寂寥无人，凄神寒骨，悄怆幽邃。以其境过清，不可久居，乃记之而去。
+
+同游者，吴武陵，龚古，余弟宗玄。隶而从者，崔氏二小生：曰恕己，曰奉壹。
+
+
+## 字体大小
+如题，当你的表格过大时，你可以调调字体大小。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", font_size = 7)
 ```
 
-# Column / Row Specification
-## Column spec
-When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
-
-Warning: If you have a super long table, you should be cautious when you use `column_spec` as the xml node modification takes time.
+# 列与行的格式
+## 列
+`column_spec`如其名，可以帮你定义某一列的样式，比如宽度啊，字体颜色啊，加粗，斜体等。列的宽度其实尤为重要，这样你表格的样式不会被一串巨长的文字打乱。
 
 ```{r}
 text_tbl <- data.frame(
@@ -138,8 +134,8 @@ kable(text_tbl, "html") %>%
 ```
 
 
-## Row spec
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+## 行
+`row_spec`和`column_spec`差不多，除了没有列宽这样的东西。注意，当你数第几行的时候，你不需要考虑表头和你通过`group_rows`添加的那些行，就数那些原生的“内容”行就行。
 
 ```{r}
 kable(dt, "html") %>%
@@ -148,25 +144,19 @@ kable(dt, "html") %>%
   row_spec(3:5, bold = T, color = "white", background = "#D7261E")
 ```
 
-
-
-## Header Rows
-One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
+### 表头的那行
+只需要说`row_spec(0, ...)`就可以了。
 ```{r}
 kable(dt, format = "html") %>%
   kable_styling("striped", full_width = F) %>%
   row_spec(0, angle = -45)
 ```
 
-# Cell/Text Specification
-Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
-* Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
-* `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
+# 格子的格式
+`cell_spec` 和之前说的两个`spec`不一样，你应该在把你的数据放进`kable`之前使用它。就像如下的例子，`cell_spec`可以很轻易的用在`dplyr`的pipeline里。注意，因为你用`cell_spec`生成的是直接的`HTML`和`LaTeX`，你需要在`kable`里加上`escape = FALSE`。同时，你需要告诉`cell_spec`你到底需要`HTML`还是`LaTeX`。如果你需要大量使用的话，使用全局格式设定会让你好过很多。再说一遍，`options(knitr.table.format = "latex")`。
 
-Currently, `cell_spec` supports features including bold, italic, monospace, text color, background color, align, font size & rotation angle. More features may be added in the future. Please see function documentations as reference. 
-
-## Conditional logic
-It is very easy to use `cell_spec` with conditional logic. Here is an example.
+## `cell_spec`和`ifelse`
+`cell_spec`和`ifelse`结合会让表格里的数据的可视度一下子高很多。
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 mtcars[1:10, 1:2] %>%
@@ -183,8 +173,8 @@ mtcars[1:10, 1:2] %>%
   kable_styling("striped", full_width = F)
 ```
 
-## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impactful representation in a tabular format. 
+## 给你的表格加上Viridis Color
+这包还带了几个`cell_spec`的辅助型方程，包括 `spec_color`, `spec_font_size` 和 `spec_angle`. 他们可以帮你把数据变成相应的颜色，字体大小和角度。其中最有意思的是那个颜色，这里用了[viridis color](https://CRAN.R-project.org/package=viridisLite)这个色板. 合理使用的话几乎可以在表格里画热图。
 
 ```{r}
 iris[1:10, ] %>%
@@ -201,32 +191,23 @@ iris[1:10, ] %>%
   kable_styling("striped", full_width = F)
 ```
 
-In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 
 
-## Text Specification
-If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
-
-An aliased function `text_spec` is also provided for a more literal writing experience. In HTML, there is no difference between these two functions. 
+## 普通文本的格式
+其实你也可以用`cell_spec`或者`text_spec`去定义普通文字的样式。 
 
 ```{r}
-sometext <- strsplit(paste0(
-  "You can even try to make some crazy things like this paragraph. ", 
-  "It may seem like a useless feature right now but it's so cool ",
-  "and nobody can resist. ;)"
-), " ")[[1]]
+sometext <- strsplit("人群中突然钻出一个光头", "")[[1]]
 text_formatted <- paste(
   text_spec(sometext, "html", color = spec_color(1:length(sometext), end = 0.9),
             font_size = spec_font_size(1:length(sometext), begin = 5, end = 20)),
-  collapse = " ")
+  collapse = "")
 
-# To display the text, type `r text_formatted` outside of the chunk
 ```
 `r text_formatted`
 
-## Tooltip
-It's very easy to add a tooltip to text via `cell_spec`. For example, `text_spec("tooltip", color = "red", tooltip = "Hello World")` will give you something like `r text_spec("Hover over me", color = "red", tooltip = "Hello World")` (you need to wait for a few seconds before your browser renders it). 
+## Tooltip 悬浮提示框
+你可以通过`cell_spec`相对简单地添加悬浮提示框. 举个例子，`text_spec("tooltip", color = "red", tooltip = "Hello World")` 会生成 `r text_spec("Hover over me", color = "red", tooltip = "Hello World")`。注意HTML原生的提示框非常慢，你可能会想用`bootstrap`的javascript版的。如果你想这么做的话，你需要把接下来的这段代码放在你的rmarkdown文本的任何地方。需要注意的是，如果你和这个文档一样使用了这种目录在侧面的格式，你就没办法使用这个功能。原因在于这个和`jqueryui`的`tooltip`互相冲突。这种情况下，你可能会想试试我下面说的`popover`。这两个差不多。
 
-Note that the original browser-based tooltip is slow. If you want to have a faster response, you may want to initialize bootstrap's tooltip by putting the following HTML code on the page. 
 ```
 <script>
 $(document).ready(function(){
@@ -235,12 +216,8 @@ $(document).ready(function(){
 </script>
 ```
 
-In a rmarkdown document, you can just drop it outside of any R chunks. Unfortunately however, for rmarkdown pages with a **floating TOC** (like this page), you can't use bootstrap tooltips because there is a conflict in namespace between Bootstrap and JQueryUI (tocify.js). As a result, I can't provide a live demo here. If you want to have a tooltip together with a floating TOC, you should use `popover` which has a very similar effect.
-
-
-
-## Popover Message
-The popover message looks very similar with tooltip but it can hold more contents. Unlike tooltip which can minimally work without you manually enable that module, you **have to** enable the `popover` module to get it work. The upper side is that there is no conflict between Bootstrap & JQueryUI this time, you can use it without any concern.
+## Popover Message 有头的悬浮弹出提示框
+和之前一样的设定，区别在于你可以给`popover`的小框加一个标题。不加的话，和上面的功能基本一样。
 
 ```
 <script>
@@ -272,13 +249,11 @@ kable(popover_dt, "html", escape = FALSE) %>%
   kable_styling("striped", full_width = FALSE)
 ```
 
-## Links
-You can add links to text via `text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` (go back to the top of the page) or `javascript:void(0)` (literally do nothing) in the `link` option.
-`text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`:
-`r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
+## 链接
+你可以给文字添加一个链接`text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`。这里有一个利用加链接让`popover`悬浮框本来的文本更加明显的小技巧 `text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`: `r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
 
-## Integration with `formattable` 
-You can combine the good parts from `kableExtra` & `formattable` together into one piece. Read more at http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html
+## 同时使用`kableExtra`和`formattable` 
+如果你也喜欢任坤大佬的`formattable`的话，你其实可以将`formattable`和`kableExtra`用在一起，灰常酷炫。
 ```{r, message = FALSE, warning=FALSE}
 library(formattable)
 mtcars[1:5, 1:4] %>%
@@ -300,16 +275,16 @@ mtcars[1:5, 1:4] %>%
 ```
 
 
-# Grouped Columns / Rows
-## Add header rows to group columns
-Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
+# 行组和列组
+## 列组
+我们在Word里做表格时，要想表示两个列同属一个类，我们会在这两列的上面再加一行，画条横线，写上名字。基本上`add_header_above`就是做这事的。在使用这个方程时，你需要给他一个**`named vector`**（划重点）。这个`named vector`的本身是column span，而具体的文字则在names里（没看懂我在说啥的，请参考下面的例子）。这样的设计主要是为了方便。
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped") %>%
   add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
 ```
 
-In fact, if you want to add another row of header on top, please feel free to do so.
+事实上，你甚至可以一层一层继续往上加下去。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(c("striped", "bordered")) %>%
