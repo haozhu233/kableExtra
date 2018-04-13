@@ -10,14 +10,15 @@ output:
     toc_float: true
 ---
 
-突然意识到这包写了都一年了还没写过中文文档，现在给大家补上。
+说起来这包写了都一年了我还没写过中文文档，现在给大家补上。
 
 另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)来看吧。
 
-（因为我基本是在自由发挥。。你们不要太去在意中文英文的不同哈。。。）
+（因为我基本是在~~自由发挥~~重写一遍。。你们不要太去在意中文英文的不同哈。。。）
+
 
 # 简介
-`kableExtra`的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的事情，就让这个包帮你打理了吧。：）
+`kableExtra`的目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述，尤其是对于一些LaTeX初心者（比如当年的我。。），往往会让人绝望。而现在，在这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的事情，就留给这个包吧。：）
 
 # 安装
 CRAN安装`install.packages("kableExtra")`不用我说，想尝鲜可以使用开发版。
@@ -37,12 +38,13 @@ dt <- mtcars[1:5, 1:6]
 kable(dt, "html")
 ```
 
-
 注意，如果你有好几个表格要去生成，与其在每一个kable里定义格式，不如在所有的事情开始之前定义一个全局的设置。这样的话，上面的语句就只需要打`kable(dt)`就可以了。
 
 ```{r}
 options(knitr.table.format = "html") 
 ```
+
+当然，在今后的版本中（目前开发版），甚至这一步都可以被省略。今后，`kableExtra`将会自动根据你需要的情况帮你设好这个全局格式。这一步发生在你加载这个包的时候（`library(kableExtra)`），所以如果你不想要这个功能的话，可以在你加载`kableExtra`之前通过设置`options(kableExtra.auto_format = F)`来解决。
 
 ## bootstrap了解一下
 如果你从没听过bootstrap的话，你应该去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面。也因此，bootstrap在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些借口方便你快速实现一些bootstrap风的表格。
@@ -56,8 +58,8 @@ dt %>%
 # 表格整体风格
 `kable_styling`提供了几种其他的方式来定制表格的整体风格。
 
-## Bootstrap的表格`class`
-如果你熟悉bootstrap，那么以下这些css `class`对你一定不陌生：`striped`, `bordered`, `hover`, `condensed` 以及 `responsive`. 如果你不熟悉，你可以看看 [这里](http://getbootstrap.com/css/#tables)。你可以通过`kable_styling`快速地把这些样式应用到你的表格里。比如，下面这个例子就是给表格加上斑马纹和悬浮效果。
+## Bootstrap的表格格式
+如果你熟悉bootstrap，那么以下这些CSS类对你一定不陌生：`striped`, `bordered`, `hover`, `condensed` 以及 `responsive`. 不熟悉也没关系，你可以看看 [这里](http://getbootstrap.com/css/#tables)来了解。你可以通过`kable_styling`快速地把这些样式应用到你的表格里。比如，下面这个例子就是给表格加上斑马纹和悬浮效果。
 
 ```{r}
 kable(dt, "html") %>%
@@ -77,7 +79,7 @@ kable(dt, "html") %>%
 ```
 
 ## “为啥我的表格这么宽啊？”
-“为啥我的表格这么宽”是一个`rmarkdown`新人常见问题。原因是`bootstrap`把宽度统一订成了100%的容器宽。设计`bootstrap`的人原来想让你用他们的grid system来控制表格的宽度，可是当你在写`rmarkdown`的时候，难道还想即兴来定义一串`<div>`？解决办法如下。
+“为啥我的表格这么宽”是一个`rmarkdown`新人常见问题。这其中的原因是，`bootstrap`把表格的宽度统一订成了100%的[容器](http://w3schools.wang/w3css/w3css_containers.html)宽。设计`bootstrap`的人原来想让你用他们的grid system来控制表格的宽度，可是当你在写`rmarkdown`的时候，难不成还想即兴来定义一串`<div>`？解决办法如下。
 ```{r}
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F)
@@ -95,15 +97,7 @@ kable(dt, "html") %>%
 kable(dt, "html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "float_right")
 ```
-从小丘西行百二十步，隔篁竹，闻水声，如鸣佩环，心乐之。伐竹取道，下见小潭，水尤清洌。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。青树翠蔓，蒙络摇缀，参差披拂。
-
-潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动；俶尔远逝，往来翕忽，似与游者相乐。
-
-潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。
-
-坐潭上，四面竹树环合，寂寥无人，凄神寒骨，悄怆幽邃。以其境过清，不可久居，乃记之而去。
-
-同游者，吴武陵，龚古，余弟宗玄。隶而从者，崔氏二小生：曰恕己，曰奉壹。
+滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。 古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。 古今多少事，都付笑谈中。
 
 
 ## 字体大小
@@ -115,7 +109,7 @@ kable(dt, "html") %>%
 
 # 列与行的格式
 ## 列
-`column_spec`如其名，可以帮你定义某一列的样式，比如宽度啊，字体颜色啊，加粗，斜体等。列的宽度其实尤为重要，这样你表格的样式不会被一串巨长的文字打乱。
+`column_spec`如其名，可以帮你定义某一列或者几列的样式，比如宽度，字体颜色，加粗，斜体等。列的宽度其实尤为重要，这样如果你的表格里有一串巨长的文字，它的格式不会一下被打乱。
 
 ```{r}
 text_tbl <- data.frame(
@@ -135,7 +129,7 @@ kable(text_tbl, "html") %>%
 
 
 ## 行
-`row_spec`和`column_spec`差不多，除了没有列宽这样的东西。注意，当你数第几行的时候，你不需要考虑表头和你通过`group_rows`添加的那些行，就数那些原生的“内容”行就行。
+`row_spec`和`column_spec`差不多，除了没有列宽。注意，当你数第几行的时候，你不需要考虑表头和你通过`group_rows`添加的那些行，就数那些原生的“内容”行就行。
 
 ```{r}
 kable(dt, "html") %>%
@@ -153,7 +147,7 @@ kable(dt, format = "html") %>%
 ```
 
 # 格子的格式
-`cell_spec` 和之前说的两个`spec`不一样，你应该在把你的数据放进`kable`之前使用它。就像如下的例子，`cell_spec`可以很轻易的用在`dplyr`的pipeline里。注意，因为你用`cell_spec`生成的是直接的`HTML`和`LaTeX`，你需要在`kable`里加上`escape = FALSE`。同时，你需要告诉`cell_spec`你到底需要`HTML`还是`LaTeX`。如果你需要大量使用的话，使用全局格式设定会让你好过很多。再说一遍，`options(knitr.table.format = "latex")`。
+`cell_spec` 和之前说的两个`spec`不一样，你应该在把你的数据放进`kable`之前使用它，就像接下来的例子。你可以很容易地在`dplyr`的pipeline里加上一截`cell_spec`。注意，因为你用`cell_spec`生成的是直接的`HTML`和`LaTeX`，你需要在`kable`里加上`escape = FALSE`。同时，你需要告诉`cell_spec`你到底需要`HTML`还是`LaTeX`。而在今后版本的`kableExtra`里，因为全局的表格格式已经被自动设好了，你就不需要做这一步了。
 
 ## `cell_spec`和`ifelse`
 `cell_spec`和`ifelse`结合会让表格里的数据的可视度一下子高很多。
@@ -174,7 +168,7 @@ mtcars[1:10, 1:2] %>%
 ```
 
 ## 给你的表格加上Viridis Color
-这包还带了几个`cell_spec`的辅助型方程，包括 `spec_color`, `spec_font_size` 和 `spec_angle`. 他们可以帮你把数据变成相应的颜色，字体大小和角度。其中最有意思的是那个颜色，这里用了[viridis color](https://CRAN.R-project.org/package=viridisLite)这个色板. 合理使用的话几乎可以在表格里画热图。
+这包还带了几个`cell_spec`的辅助型方程，包括 `spec_color`, `spec_font_size` 和 `spec_angle`. 他们可以帮你把数据变成相应的颜色，字体大小和角度。其中最有意思的是那个颜色，这里用了[viridis color](https://CRAN.R-project.org/package=viridisLite)这个色板. 合理使用的话几乎可以用表格做出类似热图的可视化。
 
 ```{r}
 iris[1:10, ] %>%
@@ -253,7 +247,7 @@ kable(popover_dt, "html", escape = FALSE) %>%
 你可以给文字添加一个链接`text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`。这里有一个利用加链接让`popover`悬浮框本来的文本更加明显的小技巧 `text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`: `r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
 
 ## 同时使用`kableExtra`和`formattable` 
-如果你也喜欢任坤大佬的`formattable`的话，你其实可以将`formattable`和`kableExtra`用在一起，灰常酷炫。
+如果你也喜欢[`formattable`](https://github.com/renkun-ken/formattable)的话，你其实可以将`formattable`和`kableExtra`用在一起，灰常酷炫。
 ```{r, message = FALSE, warning=FALSE}
 library(formattable)
 mtcars[1:5, 1:4] %>%
@@ -277,7 +271,7 @@ mtcars[1:5, 1:4] %>%
 
 # 行组和列组
 ## 列组
-我们在Word里做表格时，要想表示两个列同属一个类，我们会在这两列的上面再加一行，画条横线，写上名字。基本上`add_header_above`就是做这事的。在使用这个方程时，你需要给他一个**`named vector`**（划重点）。这个`named vector`的本身是column span，而具体的文字则在names里（没看懂我在说啥的，请参考下面的例子）。这样的设计主要是为了方便。
+我们在Word里做表格时，要想表示两个列同属一个分类，我们会在这两列的上面再加一行，画条横线，写上名字。基本上`add_header_above`就是被设计来做这事的。在使用这个方程时，你需要给他一个**`named vector`**（划重点）。这个`named vector`的本身数值是所有列的 span值，而具体的文字则在names里（没看懂我在说啥的，请参考下面的例子）。
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped") %>%
@@ -293,8 +287,12 @@ kable(dt, "html") %>%
   add_header_above(c(" ", "Group 6" = 6))
 ```
 
-## Group rows via labeling
-Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
+## 行组
+我们一般做表格时，想表示几行同属一类一般有两种方式，其一是新插入一行大类的名称，然后再给那几行小的加上缩进。其二是在左边再加上一列，通过合并相印的行来表示所属的意思。相对应的，在`kableExtra`里，第一种方法可以用`group_rows`实现，而第二种则可以用`collapse_row`。
+
+### `group_rows`
+我们先说`group_rows`，请看下面这个例子。
+
 ```{r}
 kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
@@ -302,7 +300,7 @@ kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
   group_rows("Group 2", 8, 10)
 ```
 
-Another way to use `group_rows` is to provide an grouping index, similar with `add_header_above()`. This feature is only available in kableExtra > 0.5.2.
+另一种使用`group_rows`的方法是提供一个目录，用法和`add_header_above`相同。
 ```{r, eval = F}
 # Not evaluated. This example generates the same table as above.
 kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
@@ -310,24 +308,24 @@ kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
   group_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 ```
 
-For advanced users, you can even define your own css for the group labeling.
+如果你熟悉CSS，你可以自己定义标签行的样式。
+
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped", full_width = F) %>%
   group_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
 ```
 
-## Row indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
-For advanced users, you can even define your own css for the group labeling.
+### 行的缩进
+有时候只添加缩进就可以变的很有用，这时候你需要`add_indent`。
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped", full_width = F) %>%
   add_indent(c(1, 3, 5))
 ```
 
-## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+### 合并行
+`collapse_rows` 做的就是我们之前说的第二种在表格内表示所属关系的方法。请看下面的例子，第一二两列所有重复的内容都被自动合并了。
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -340,13 +338,10 @@ kable(collapse_rows_dt, "html", align = "c") %>%
   collapse_rows(columns = 1:2)
 ```
 
-# Table Footnote
+# 表格注脚
 
-> Now it's recommended to use the new `footnote` function instead of `add_footnote` to make table footnotes. 
+给表格添加注脚也是一个很常见的操作。在`kableExtra`里对应的是`footnote`方程。在这里，你可以使用四套编号体系：无编号`general`，数字`number`，字母`alphabet`和特殊符号`symbol`。注意，特殊符号我只定义了20个，因为一般你给表格加的注脚也不会有那么多。正如下面这个例子，你可以选择只用其中一种或者同时使用几种。
 
-Documentations for `add_footnote` can be found [here](http://haozhu233.github.io/kableExtra/legacy_features#add_footnote).
-
-There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements. 
 ```{r}
 kable(dt, "html", align = "c") %>%
   kable_styling(full_width = F) %>%
@@ -357,7 +352,7 @@ kable(dt, "html", align = "c") %>%
            )
 ```
 
-You can also specify title for each category by using the `***_title` arguments. Default value for `general_title` is "Note: " and "" for the rest three. You can also change the order using `footnote_order`. You can even display footnote as chunk texts (default is as a list) using `footnote_as_chunk`.
+要是想要修改每一类的标题的话，你可以使用那些`***_title`变量. 你还可以通过 `footnote_order`来更改他们的顺序. 你甚至可以通过`footnote_as_chunk`，让备注们以一个段落的方式显示.
 
 ```{r}
 kable(dt, "html", align = "c") %>%
@@ -366,13 +361,13 @@ kable(dt, "html", align = "c") %>%
            number = c("Footnote 1; ", "Footnote 2; "),
            alphabet = c("Footnote A; ", "Footnote B; "),
            symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2"),
-           general_title = "General: ", number_title = "Type I: ",
-           alphabet_title = "Type II: ", symbol_title = "Type III: ",
+           general_title = "备注: ", number_title = "备注233: ",
+           alphabet_title = "备注666: ", symbol_title = "备注888: ",
            footnote_as_chunk = T
            )
 ```
 
-If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
+若是想在表格内部添加注释的小字的话，你需要使用那些`footnote_mark_***()`方程. 和 `cell_spec`一样，你需要告诉他们你想要的格式（在今后的版本里你不需要了）同时在使用`kable`的时候往里加上`escape=F`。
 
 ```{r}
 dt_footnote <- dt
@@ -390,11 +385,9 @@ kable(dt_footnote, "html", align = "c",
            footnote_as_chunk = T)
 ```
 
-# HTML Only Features
-## Scroll box
-If you have a huge table and you don't want to reduce the font size to unreadable, you may want to put your HTML table in a scroll box, of which users can pick the part they like to read. Note that scroll box isn't printer friendly, so be aware of that when you use this feature. 
-
-When you use `scroll_box`, you can specify either `height` or `width`. When you specify `height`, you will get a vertically scrollable box and vice versa. If you specify both, you will get a two-way scrollable box. 
+# HTML独占功能
+## 框住你的表格
+若你的表格过大而你又不想随便缩字体大小，你可以用`scroll_box`把它放进一个盒子，这样用户可以自己选择想看的位置。下面的例子里我同时定义了盒子的高度和宽度，但你其实可以根据你的需求，只定义其中一个。需要注意的是，如果你同时需要打印这个表格，那你最好不要使用这个`scroll_box`。因为在打印的时候，被打印的将不会是整个表格，而会是到时候你屏幕上显示的部分。
 
 ```{r}
 kable(cbind(mtcars, mtcars), "html") %>%

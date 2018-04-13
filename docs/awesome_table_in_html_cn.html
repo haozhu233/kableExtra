@@ -11,7 +11,7 @@
 
 <meta name="author" content="朱昊" />
 
-<meta name="date" content="2018-04-12" />
+<meta name="date" content="2018-04-13" />
 
 <title>用kableExtra做牛*的表格</title>
 
@@ -219,17 +219,17 @@ div.tocify {
 
 <h1 class="title toc-ignore">用kableExtra做牛*的表格</h1>
 <h4 class="author"><em>朱昊</em></h4>
-<h4 class="date"><em>2018-04-12</em></h4>
+<h4 class="date"><em>2018-04-13</em></h4>
 
 </div>
 
 
-<p>突然意识到这包写了都一年了还没写过中文文档，现在给大家补上。</p>
+<p>说起来这包写了都一年了我还没写过中文文档，现在给大家补上。</p>
 <p>另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站<a href="http://haozhu233.github.io/kableExtra/" class="uri">http://haozhu233.github.io/kableExtra/</a>来看吧。</p>
-<p>（因为我基本是在自由发挥。。你们不要太去在意中文英文的不同哈。。。）</p>
+<p>（因为我基本是在<del>自由发挥</del>重写一遍。。你们不要太去在意中文英文的不同哈。。。）</p>
 <div class="section level1">
 <h1>简介</h1>
-<p><code>kableExtra</code>的基本目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述往往反而会让人绝望，尤其是对于一些LaTeX初心者（比如当年的我。。）。而现在，在有了这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的事情，就让这个包帮你打理了吧。：）</p>
+<p><code>kableExtra</code>的目标是帮你搭建以及美化一些常用而又较为复杂的表格。这些表格有个特点，那就是用word 或者excel来做会极其简单，而要用一个编程语言去描述，尤其是对于一些LaTeX初心者（比如当年的我。。），往往会让人绝望。而现在，在这个包的帮助下，我希望你能用一种更为直觉的方式来创建你的表格，把更多的时间花在内容上。而那些排版之类的事情，就留给这个包吧。：）</p>
 </div>
 <div class="section level1">
 <h1>安装</h1>
@@ -391,6 +391,7 @@ Hornet Sportabout
 </table>
 <p>注意，如果你有好几个表格要去生成，与其在每一个kable里定义格式，不如在所有的事情开始之前定义一个全局的设置。这样的话，上面的语句就只需要打<code>kable(dt)</code>就可以了。</p>
 <pre class="r"><code>options(knitr.table.format = &quot;html&quot;) </code></pre>
+<p>当然，在今后的版本中（目前开发版），甚至这一步都可以被省略。今后，<code>kableExtra</code>将会自动根据你需要的情况帮你设好这个全局格式。这一步发生在你加载这个包的时候（<code>library(kableExtra)</code>），所以如果你不想要这个功能的话，可以在你加载<code>kableExtra</code>之前通过设置<code>options(kableExtra.auto_format = F)</code>来解决。</p>
 </div>
 <div id="bootstrap" class="section level2">
 <h2>bootstrap了解一下</h2>
@@ -546,9 +547,9 @@ Hornet Sportabout
 <div class="section level1">
 <h1>表格整体风格</h1>
 <p><code>kable_styling</code>提供了几种其他的方式来定制表格的整体风格。</p>
-<div id="bootstrapclass" class="section level2">
-<h2>Bootstrap的表格<code>class</code></h2>
-<p>如果你熟悉bootstrap，那么以下这些css <code>class</code>对你一定不陌生：<code>striped</code>, <code>bordered</code>, <code>hover</code>, <code>condensed</code> 以及 <code>responsive</code>. 如果你不熟悉，你可以看看 <a href="http://getbootstrap.com/css/#tables">这里</a>。你可以通过<code>kable_styling</code>快速地把这些样式应用到你的表格里。比如，下面这个例子就是给表格加上斑马纹和悬浮效果。</p>
+<div id="bootstrap" class="section level2">
+<h2>Bootstrap的表格格式</h2>
+<p>如果你熟悉bootstrap，那么以下这些CSS类对你一定不陌生：<code>striped</code>, <code>bordered</code>, <code>hover</code>, <code>condensed</code> 以及 <code>responsive</code>. 不熟悉也没关系，你可以看看 <a href="http://getbootstrap.com/css/#tables">这里</a>来了解。你可以通过<code>kable_styling</code>快速地把这些样式应用到你的表格里。比如，下面这个例子就是给表格加上斑马纹和悬浮效果。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
 <table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
@@ -989,7 +990,7 @@ Hornet Sportabout
 </div>
 <div class="section level2">
 <h2>“为啥我的表格这么宽啊？”</h2>
-<p>“为啥我的表格这么宽”是一个<code>rmarkdown</code>新人常见问题。原因是<code>bootstrap</code>把宽度统一订成了100%的容器宽。设计<code>bootstrap</code>的人原来想让你用他们的grid system来控制表格的宽度，可是当你在写<code>rmarkdown</code>的时候，难道还想即兴来定义一串<code>&lt;div&gt;</code>？解决办法如下。</p>
+<p>“为啥我的表格这么宽”是一个<code>rmarkdown</code>新人常见问题。这其中的原因是，<code>bootstrap</code>把表格的宽度统一订成了100%的<a href="http://w3schools.wang/w3css/w3css_containers.html">容器</a>宽。设计<code>bootstrap</code>的人原来想让你用他们的grid system来控制表格的宽度，可是当你在写<code>rmarkdown</code>的时候，难不成还想即兴来定义一串<code>&lt;div&gt;</code>？解决办法如下。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1430,11 +1431,7 @@ Hornet Sportabout
 </tr>
 </tbody>
 </table>
-<p>从小丘西行百二十步，隔篁竹，闻水声，如鸣佩环，心乐之。伐竹取道，下见小潭，水尤清洌。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。青树翠蔓，蒙络摇缀，参差披拂。</p>
-<p>潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动；俶尔远逝，往来翕忽，似与游者相乐。</p>
-<p>潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。</p>
-<p>坐潭上，四面竹树环合，寂寥无人，凄神寒骨，悄怆幽邃。以其境过清，不可久居，乃记之而去。</p>
-<p>同游者，吴武陵，龚古，余弟宗玄。隶而从者，崔氏二小生：曰恕己，曰奉壹。</p>
+<p>滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。 古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。古今多少事，都付笑谈中。滚滚长江东逝水，浪花淘尽英雄。是非成败转头空。青山依旧在，几度夕阳红。白发渔樵江渚上，惯看秋月春风。 一壶浊酒喜相逢。 古今多少事，都付笑谈中。</p>
 </div>
 <div class="section level2">
 <h2>字体大小</h2>
@@ -1590,7 +1587,7 @@ Hornet Sportabout
 <h1>列与行的格式</h1>
 <div class="section level2">
 <h2>列</h2>
-<p><code>column_spec</code>如其名，可以帮你定义某一列的样式，比如宽度啊，字体颜色啊，加粗，斜体等。列的宽度其实尤为重要，这样你表格的样式不会被一串巨长的文字打乱。</p>
+<p><code>column_spec</code>如其名，可以帮你定义某一列或者几列的样式，比如宽度，字体颜色，加粗，斜体等。列的宽度其实尤为重要，这样如果你的表格里有一串巨长的文字，它的格式不会一下被打乱。</p>
 <pre class="r"><code>text_tbl &lt;- data.frame(
   Items = c(&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;),
   Features = c(
@@ -1645,7 +1642,7 @@ Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie 
 </div>
 <div class="section level2">
 <h2>行</h2>
-<p><code>row_spec</code>和<code>column_spec</code>差不多，除了没有列宽这样的东西。注意，当你数第几行的时候，你不需要考虑表头和你通过<code>group_rows</code>添加的那些行，就数那些原生的“内容”行就行。</p>
+<p><code>row_spec</code>和<code>column_spec</code>差不多，除了没有列宽。注意，当你数第几行的时候，你不需要考虑表头和你通过<code>group_rows</code>添加的那些行，就数那些原生的“内容”行就行。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   column_spec(5:7, bold = T) %&gt;%
@@ -1947,7 +1944,7 @@ Hornet Sportabout
 </div>
 <div class="section level1">
 <h1>格子的格式</h1>
-<p><code>cell_spec</code> 和之前说的两个<code>spec</code>不一样，你应该在把你的数据放进<code>kable</code>之前使用它。就像如下的例子，<code>cell_spec</code>可以很轻易的用在<code>dplyr</code>的pipeline里。注意，因为你用<code>cell_spec</code>生成的是直接的<code>HTML</code>和<code>LaTeX</code>，你需要在<code>kable</code>里加上<code>escape = FALSE</code>。同时，你需要告诉<code>cell_spec</code>你到底需要<code>HTML</code>还是<code>LaTeX</code>。如果你需要大量使用的话，使用全局格式设定会让你好过很多。再说一遍，<code>options(knitr.table.format = &quot;latex&quot;)</code>。</p>
+<p><code>cell_spec</code> 和之前说的两个<code>spec</code>不一样，你应该在把你的数据放进<code>kable</code>之前使用它，就像接下来的例子。你可以很容易地在<code>dplyr</code>的pipeline里加上一截<code>cell_spec</code>。注意，因为你用<code>cell_spec</code>生成的是直接的<code>HTML</code>和<code>LaTeX</code>，你需要在<code>kable</code>里加上<code>escape = FALSE</code>。同时，你需要告诉<code>cell_spec</code>你到底需要<code>HTML</code>还是<code>LaTeX</code>。而在今后版本的<code>kableExtra</code>里，因为全局的表格格式已经被自动设好了，你就不需要做这一步了。</p>
 <div id="cell_specifelse" class="section level2">
 <h2><code>cell_spec</code>和<code>ifelse</code></h2>
 <p><code>cell_spec</code>和<code>ifelse</code>结合会让表格里的数据的可视度一下子高很多。</p>
@@ -2094,7 +2091,7 @@ Merc 280
 </div>
 <div id="viridis-color" class="section level2">
 <h2>给你的表格加上Viridis Color</h2>
-<p>这包还带了几个<code>cell_spec</code>的辅助型方程，包括 <code>spec_color</code>, <code>spec_font_size</code> 和 <code>spec_angle</code>. 他们可以帮你把数据变成相应的颜色，字体大小和角度。其中最有意思的是那个颜色，这里用了<a href="https://CRAN.R-project.org/package=viridisLite">viridis color</a>这个色板. 合理使用的话几乎可以在表格里画热图。</p>
+<p>这包还带了几个<code>cell_spec</code>的辅助型方程，包括 <code>spec_color</code>, <code>spec_font_size</code> 和 <code>spec_angle</code>. 他们可以帮你把数据变成相应的颜色，字体大小和角度。其中最有意思的是那个颜色，这里用了<a href="https://CRAN.R-project.org/package=viridisLite">viridis color</a>这个色板. 合理使用的话几乎可以用表格做出类似热图的可视化。</p>
 <pre class="r"><code>iris[1:10, ] %&gt;%
   mutate_if(is.numeric, function(x) {
     cell_spec(x, &quot;html&quot;, bold = T, 
@@ -2399,7 +2396,7 @@ left
 </div>
 <div id="kableextraformattable" class="section level2">
 <h2>同时使用<code>kableExtra</code>和<code>formattable</code></h2>
-<p>如果你也喜欢任坤大佬的<code>formattable</code>的话，你其实可以将<code>formattable</code>和<code>kableExtra</code>用在一起，灰常酷炫。</p>
+<p>如果你也喜欢<a href="https://github.com/renkun-ken/formattable"><code>formattable</code></a>的话，你其实可以将<code>formattable</code>和<code>kableExtra</code>用在一起，灰常酷炫。</p>
 <pre class="r"><code>library(formattable)
 mtcars[1:5, 1:4] %&gt;%
   mutate(
@@ -2545,7 +2542,7 @@ Hornet Sportabout
 <h1>行组和列组</h1>
 <div class="section level2">
 <h2>列组</h2>
-<p>我们在Word里做表格时，要想表示两个列同属一个类，我们会在这两列的上面再加一行，画条横线，写上名字。基本上<code>add_header_above</code>就是做这事的。在使用这个方程时，你需要给他一个<strong><code>named vector</code></strong>（划重点）。这个<code>named vector</code>的本身是column span，而具体的文字则在names里（没看懂我在说啥的，请参考下面的例子）。这样的设计主要是为了方便。</p>
+<p>我们在Word里做表格时，要想表示两个列同属一个分类，我们会在这两列的上面再加一行，画条横线，写上名字。基本上<code>add_header_above</code>就是被设计来做这事的。在使用这个方程时，你需要给他一个<strong><code>named vector</code></strong>（划重点）。这个<code>named vector</code>的本身数值是所有列的 span值，而具体的文字则在names里（没看懂我在说啥的，请参考下面的例子）。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(&quot;striped&quot;) %&gt;%
   add_header_above(c(&quot; &quot; = 1, &quot;Group 1&quot; = 2, &quot;Group 2&quot; = 2, &quot;Group 3&quot; = 2))</code></pre>
@@ -2903,9 +2900,12 @@ Hornet Sportabout
 </tbody>
 </table>
 </div>
-<div id="group-rows-via-labeling" class="section level2">
-<h2>Group rows via labeling</h2>
-<p>Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age &lt; 40, age &gt; 40). With the new function <code>group_rows()</code> in <code>kableExtra</code>, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don’t need to count for the header rows nor other group label rows. You only need to think about the row numbers in the “original R dataframe”.</p>
+<div class="section level2">
+<h2>行组</h2>
+<p>我们一般做表格时，想表示几行同属一类一般有两种方式，其一是新插入一行大类的名称，然后再给那几行小的加上缩进。其二是在左边再加上一列，通过合并相印的行来表示所属的意思。相对应的，在<code>kableExtra</code>里，第一种方法可以用<code>group_rows</code>实现，而第二种则可以用<code>collapse_row</code>。</p>
+<div id="group_rows" class="section level3">
+<h3><code>group_rows</code></h3>
+<p>我们先说<code>group_rows</code>，请看下面这个例子。</p>
 <pre class="r"><code>kable(mtcars[1:10, 1:6], &quot;html&quot;, caption = &quot;Group Rows&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   group_rows(&quot;Group 1&quot;, 4, 7) %&gt;%
@@ -3181,12 +3181,12 @@ Merc 280
 </tr>
 </tbody>
 </table>
-<p>Another way to use <code>group_rows</code> is to provide an grouping index, similar with <code>add_header_above()</code>. This feature is only available in kableExtra &gt; 0.5.2.</p>
+<p>另一种使用<code>group_rows</code>的方法是提供一个目录，用法和<code>add_header_above</code>相同。</p>
 <pre class="r"><code># Not evaluated. This example generates the same table as above.
 kable(mtcars[1:10, 1:6], &quot;html&quot;, caption = &quot;Group Rows&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   group_rows(index = c(&quot; &quot; = 3, &quot;Group 1&quot; = 4, &quot;Group 2&quot; = 3))</code></pre>
-<p>For advanced users, you can even define your own css for the group labeling.</p>
+<p>如果你熟悉CSS，你可以自己定义标签行的样式。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   group_rows(&quot;Group 1&quot;, 3, 5, label_row_css = &quot;background-color: #666; color: #fff;&quot;)</code></pre>
@@ -3339,9 +3339,9 @@ Hornet Sportabout
 </tbody>
 </table>
 </div>
-<div id="row-indentation" class="section level2">
-<h2>Row indentation</h2>
-<p>Unlike <code>group_rows()</code>, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, <code>add_indent()</code> is probably more apporiate. For advanced users, you can even define your own css for the group labeling.</p>
+<div class="section level3">
+<h3>行的缩进</h3>
+<p>有时候只添加缩进就可以变的很有用，这时候你需要<code>add_indent</code>。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   add_indent(c(1, 3, 5))</code></pre>
@@ -3489,9 +3489,9 @@ Hornet Sportabout
 </tbody>
 </table>
 </div>
-<div id="group-rows-via-multi-row-cell" class="section level2">
-<h2>Group rows via multi-row cell</h2>
-<p>Function <code>group_rows</code> is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use <code>collapse_rows</code> instead, which will put repeating cells in columns into multi-row cells.</p>
+<div class="section level3">
+<h3>合并行</h3>
+<p><code>collapse_rows</code> 做的就是我们之前说的第二种在表格内表示所属关系的方法。请看下面的例子，第一二两列所有重复的内容都被自动合并了。</p>
 <pre class="r"><code>collapse_rows_dt &lt;- data.frame(C1 = c(rep(&quot;a&quot;, 10), rep(&quot;b&quot;, 5)),
                  C2 = c(rep(&quot;c&quot;, 7), rep(&quot;d&quot;, 3), rep(&quot;c&quot;, 2), rep(&quot;d&quot;, 3)),
                  C3 = 1:15,
@@ -3553,7 +3553,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3577,7 +3577,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3604,7 +3604,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3618,7 +3618,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3626,7 +3626,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3660,13 +3660,10 @@ d
 </table>
 </div>
 </div>
-<div id="table-footnote" class="section level1">
-<h1>Table Footnote</h1>
-<blockquote>
-<p>Now it’s recommended to use the new <code>footnote</code> function instead of <code>add_footnote</code> to make table footnotes.</p>
-</blockquote>
-<p>Documentations for <code>add_footnote</code> can be found <a href="http://haozhu233.github.io/kableExtra/legacy_features#add_footnote">here</a>.</p>
-<p>There are four notation systems in <code>footnote</code>, namely <code>general</code>, <code>number</code>, <code>alphabet</code> and <code>symbol</code>. The last three types of footnotes will be labeled with corresponding marks while <code>general</code> won’t be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements.</p>
+</div>
+<div class="section level1">
+<h1>表格注脚</h1>
+<p>给表格添加注脚也是一个很常见的操作。在<code>kableExtra</code>里对应的是<code>footnote</code>方程。在这里，你可以使用四套编号体系：无编号<code>general</code>，数字<code>number</code>，字母<code>alphabet</code>和特殊符号<code>symbol</code>。注意，特殊符号我只定义了20个，因为一般你给表格加的注脚也不会有那么多。正如下面这个例子，你可以选择只用其中一种或者同时使用几种。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   footnote(general = &quot;Here is a general comments of the table. &quot;,
@@ -3859,15 +3856,15 @@ Hornet Sportabout
 </tr>
 </tfoot>
 </table>
-<p>You can also specify title for each category by using the <code>***_title</code> arguments. Default value for <code>general_title</code> is “Note:” and “” for the rest three. You can also change the order using <code>footnote_order</code>. You can even display footnote as chunk texts (default is as a list) using <code>footnote_as_chunk</code>.</p>
+<p>要是想要修改每一类的标题的话，你可以使用那些<code>***_title</code>变量. 你还可以通过 <code>footnote_order</code>来更改他们的顺序. 你甚至可以通过<code>footnote_as_chunk</code>，让备注们以一个段落的方式显示.</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   footnote(general = &quot;Here is a general comments of the table. &quot;,
            number = c(&quot;Footnote 1; &quot;, &quot;Footnote 2; &quot;),
            alphabet = c(&quot;Footnote A; &quot;, &quot;Footnote B; &quot;),
            symbol = c(&quot;Footnote Symbol 1; &quot;, &quot;Footnote Symbol 2&quot;),
-           general_title = &quot;General: &quot;, number_title = &quot;Type I: &quot;,
-           alphabet_title = &quot;Type II: &quot;, symbol_title = &quot;Type III: &quot;,
+           general_title = &quot;备注: &quot;, number_title = &quot;备注233: &quot;,
+           alphabet_title = &quot;备注666: &quot;, symbol_title = &quot;备注888: &quot;,
            footnote_as_chunk = T
            )</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -4015,27 +4012,27 @@ Hornet Sportabout
 <tfoot>
 <tr>
 <td style="padding: 0; border: 0;" colspan="100%">
-<strong>General: </strong> <sup></sup> Here is a general comments of the table.
+<strong>备注: </strong> <sup></sup> Here is a general comments of the table.
 </td>
 </tr>
 <tr>
 <td style="padding: 0; border: 0;" colspan="100%">
-<strong>Type I: </strong> <sup>1</sup> Footnote 1; <sup>2</sup> Footnote 2;
+<strong>备注233: </strong> <sup>1</sup> Footnote 1; <sup>2</sup> Footnote 2;
 </td>
 </tr>
 <tr>
 <td style="padding: 0; border: 0;" colspan="100%">
-<strong>Type II: </strong> <sup>a</sup> Footnote A; <sup>b</sup> Footnote B;
+<strong>备注666: </strong> <sup>a</sup> Footnote A; <sup>b</sup> Footnote B;
 </td>
 </tr>
 <tr>
 <td style="padding: 0; border: 0;" colspan="100%">
-<strong>Type III: </strong> <sup>*</sup> Footnote Symbol 1; <sup>†</sup> Footnote Symbol 2
+<strong>备注888: </strong> <sup>*</sup> Footnote Symbol 1; <sup>†</sup> Footnote Symbol 2
 </td>
 </tr>
 </tfoot>
 </table>
-<p>If you need to add footnote marks in table, you need to do it manually (no fancy) using <code>footnote_mark_***()</code>. Remember that similar with <code>cell_spec</code>, you need to tell this function whether you want it to do it in <code>HTML</code> (default) or <code>LaTeX</code>. You can set it for all using the <code>knitr.table.format</code> global option. ALso, if you have ever use <code>footnote_mark_***()</code>, you need to put <code>escape = F</code> in your <code>kable</code> function to avoid escaping of special characters.</p>
+<p>若是想在表格内部添加注释的小字的话，你需要使用那些<code>footnote_mark_***()</code>方程. 和 <code>cell_spec</code>一样，你需要告诉他们你想要的格式（在今后的版本里你不需要了）同时在使用<code>kable</code>的时候往里加上<code>escape=F</code>。</p>
 <pre class="r"><code>dt_footnote &lt;- dt
 names(dt_footnote)[2] &lt;- paste0(names(dt_footnote)[2], 
                                 footnote_marker_symbol(1))
@@ -4205,12 +4202,11 @@ Hornet Sportabout
 </tfoot>
 </table>
 </div>
-<div id="html-only-features" class="section level1">
-<h1>HTML Only Features</h1>
-<div id="scroll-box" class="section level2">
-<h2>Scroll box</h2>
-<p>If you have a huge table and you don’t want to reduce the font size to unreadable, you may want to put your HTML table in a scroll box, of which users can pick the part they like to read. Note that scroll box isn’t printer friendly, so be aware of that when you use this feature.</p>
-<p>When you use <code>scroll_box</code>, you can specify either <code>height</code> or <code>width</code>. When you specify <code>height</code>, you will get a vertically scrollable box and vice versa. If you specify both, you will get a two-way scrollable box.</p>
+<div id="html" class="section level1">
+<h1>HTML独占功能</h1>
+<div class="section level2">
+<h2>框住你的表格</h2>
+<p>若你的表格过大而你又不想随便缩字体大小，你可以用<code>scroll_box</code>把它放进一个盒子，这样用户可以自己选择想看的位置。下面的例子里我同时定义了盒子的高度和宽度，但你其实可以根据你的需求，只定义其中一个。需要注意的是，如果你同时需要打印这个表格，那你最好不要使用这个<code>scroll_box</code>。因为在打印的时候，被打印的将不会是整个表格，而会是到时候你屏幕上显示的部分。</p>
 <pre class="r"><code>kable(cbind(mtcars, mtcars), &quot;html&quot;) %&gt;%
   kable_styling() %&gt;%
   scroll_box(width = &quot;500px&quot;, height = &quot;200px&quot;)</code></pre>
