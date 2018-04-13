@@ -20,11 +20,11 @@
             <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
         </filter>
         <path d="M227.295049,214.589204 L228.479871,213.40982 C231.707781,210.196727 236.941256,210.196727 240.169165,213.40982 C243.397075,216.622913 243.397075,221.832366 240.169165,225.04546 L238.984343,226.224844 L239.03399,226.274263 L227.344696,237.909903 L227.295049,237.860483 L227.245402,237.909903 L215.556107,226.274263 L215.605755,226.224844 L214.420932,225.04546 C211.193023,221.832366 211.193023,216.622913 214.420932,213.40982 C217.648842,210.196727 222.882317,210.196727 226.110226,213.40982 L227.295049,214.589204 Z" id="path-7"></path>
-        <filter x="-22.9%" y="-14.9%" width="152.3%" height="159.5%" filterUnits="objectBoundingBox" id="filter-8">
-            <feOffset dx="1" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+        <filter x="-22.9%" y="-18.6%" width="145.8%" height="152.0%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
             <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
             <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
-            <feColorMatrix values="0 0 0 0 0.33941858   0 0 0 0 0.33941858   0 0 0 0 0.33941858  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
         </filter>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
