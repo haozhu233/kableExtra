@@ -10,9 +10,11 @@ output:
     toc_float: true
 ---
 
+<img src="kableExtra.svg" align="right" alt="logo" width="80" height = "93" style = "border: none; float: right;">
+
 说起来这包写了都一年了我还没写过中文文档，现在给大家补上。
 
-另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)来看吧。
+另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)。
 
 （因为我基本是在~~自由发挥~~重写一遍。。你们不要太去在意中文英文的不同哈。。。）
 
@@ -47,7 +49,7 @@ options(knitr.table.format = "html")
 当然，在今后的版本中（目前开发版），甚至这一步都可以被省略。今后，`kableExtra`将会自动根据你需要的情况帮你设好这个全局格式。这一步发生在你加载这个包的时候（`library(kableExtra)`），所以如果你不想要这个功能的话，可以在你加载`kableExtra`之前通过设置`options(kableExtra.auto_format = F)`来解决。
 
 ## bootstrap了解一下
-如果你从没听过bootstrap的话，你应该去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面。也因此，bootstrap在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些借口方便你快速实现一些bootstrap风的表格。
+如果你从没听过bootstrap的话，你应该去了解一下。简单来说，bootstrap是个开源的CSS库，可以用来很方便地美化HTML页面。也因此，bootstrap在RStudio的产品中被大量使用。你用rmarkdown和shiny生成出来的HTML文档和app都有加载。而这个包的HTML部分也提供了一些接口方便你快速实现一些bootstrap风的表格。
 
 ```{r}
 dt %>%

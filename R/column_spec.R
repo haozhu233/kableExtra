@@ -27,6 +27,12 @@
 #' @param border_right A logical variable indicating whether there should be a
 #' border line on the right of the selected column. In HTML, you can also pass
 #' in a character string for the CSS of the border line
+#' @param min_width Only for HTML table. Normal column width will automatically
+#' collapse when the window cannot hold enough contents. With this `min_width`,
+#' you can set up a column with a width that won't collapse even when the
+#' window is not wide enough.
+#' @param max_width Only for HTML table. `max_width` defines the maximum width
+#' of table columns.
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole column but to each individual cells
 #'
@@ -39,6 +45,7 @@ column_spec <- function(kable_input, column,
                         monospace = FALSE, underline = FALSE, strikeout = FALSE,
                         color = NULL, background = NULL,
                         border_left = FALSE, border_right = FALSE,
+                        width_min = NULL, width_max = NULL,
                         extra_css = NULL) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
@@ -55,7 +62,9 @@ column_spec <- function(kable_input, column,
                             bold, italic, monospace,
                             underline, strikeout,
                             color, background,
-                            border_left, border_right, extra_css))
+                            border_left, border_right,
+                            width_min, width_max,
+                            extra_css))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
@@ -70,7 +79,9 @@ column_spec_html <- function(kable_input, column, width,
                              bold, italic, monospace,
                              underline, strikeout,
                              color, background,
-                             border_left, border_right, extra_css) {
+                             border_left, border_right,
+                             width_min, width_max,
+                             extra_css) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -101,6 +112,14 @@ column_spec_html <- function(kable_input, column, width,
       if (!is.null(width)) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                                  "width: ", width, "; ")
+      }
+      if (!is.null(width_min)) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "min-width: ", width_min, "; ")
+      }
+      if (!is.null(width_max)) {
+        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                                 "max-width: ", width_max, "; ")
       }
       if (bold) {
         xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
