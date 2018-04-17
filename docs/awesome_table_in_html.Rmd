@@ -421,3 +421,13 @@ kable(cbind(mtcars, mtcars), "html") %>%
   kable_styling() %>%
   scroll_box(width = "500px", height = "200px")
 ```
+
+<br>
+
+You can also specify width using a percentage.
+
+```{r}
+kable(cbind(mtcars, mtcars), "html") %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+```
