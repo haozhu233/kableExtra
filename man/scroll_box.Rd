@@ -22,3 +22,16 @@ scroll_box(kable_input, height = NULL, width = NULL,
 This function will put a HTML kable object in a fixed-height,
 fixed-width or both box and make it scrollable.
 }
+\examples{
+\dontrun{
+# Specify table size by pixels
+kable(cbind(mtcars, mtcars), "html") \%>\%
+    kable_styling() \%>\%
+    scroll_box(width = "500px", height = "200px")
+
+# Specify by percent
+kable(cbind(mtcars, mtcars), "html") \%>\%
+    kable_styling() \%>\%
+    scroll_box(width = "100\%", height = "200px")
+}
+}

@@ -10,6 +10,20 @@
 #' @param extra_css Extra CSS styles
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Specify table size by pixels
+#' kable(cbind(mtcars, mtcars), "html") %>%
+#'     kable_styling() %>%
+#'     scroll_box(width = "500px", height = "200px")
+#'
+#' # Specify by percent
+#' kable(cbind(mtcars, mtcars), "html") %>%
+#'     kable_styling() %>%
+#'     scroll_box(width = "100%", height = "200px")
+#' }
+
 scroll_box <- function(kable_input, height = NULL, width = NULL,
                        box_css = "border: 1px solid #ddd; padding: 5px; ",
                        extra_css = NULL) {
