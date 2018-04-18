@@ -2,6 +2,8 @@ kableExtra 0.9.0
 --------------------------------------------------------------------------------
 * Added min_width and max_width to column_spec.
 
+* Added documentation about 100% width in scroll_box (Thank you @isteves!)
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 
