@@ -35,6 +35,8 @@
 #' of table columns.
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole column but to each individual cells
+#' @param include_thead T/F. A HTML only feature to contoll whether the
+#' header row will be manipulated. Default is `FALSE`.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
@@ -46,7 +48,7 @@ column_spec <- function(kable_input, column,
                         color = NULL, background = NULL,
                         border_left = FALSE, border_right = FALSE,
                         width_min = NULL, width_max = NULL,
-                        extra_css = NULL) {
+                        extra_css = NULL, include_thead = FALSE) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -64,7 +66,7 @@ column_spec <- function(kable_input, column,
                             color, background,
                             border_left, border_right,
                             width_min, width_max,
-                            extra_css))
+                            extra_css, include_thead))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
@@ -81,7 +83,7 @@ column_spec_html <- function(kable_input, column, width,
                              color, background,
                              border_left, border_right,
                              width_min, width_max,
-                             extra_css) {
+                             extra_css, include_thead) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -109,67 +111,96 @@ column_spec_html <- function(kable_input, column, width,
   for (i in all_contents_rows) {
     for (j in column) {
       target_cell <- xml_child(xml_child(kable_tbody, i), j)
-      if (!is.null(width)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "width: ", width, "; ")
-      }
-      if (!is.null(width_min)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "min-width: ", width_min, "; ")
-      }
-      if (!is.null(width_max)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "max-width: ", width_max, "; ")
-      }
-      if (bold) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "font-weight: bold;")
-      }
-      if (italic) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "font-style: italic;")
-      }
-      if (monospace) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "font-family: monospace;")
-      }
-      if (underline) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "text-decoration: underline;")
-      }
-      if (strikeout) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "text-decoration: line-through;")
-      }
-      if (!is.null(color)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "color: ", color, ";")
-      }
-      if (!is.null(background)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "background-color: ",
-                                                 background, ";")
-      }
-      if (border_left) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "border-left:", border_l_css, ";")
-      }
-      if (border_right) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 "border-right:", border_r_css, ";")
-      }
-      if (!is.null(extra_css)) {
-        xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                                 extra_css)
-      }
+      column_spec_html_cell(
+        target_cell, width, width_min, width_max,
+        bold, italic, monospace, underline, strikeout,
+        color, background, border_left, border_right,
+        border_l_css, border_r_css,
+        extra_css
+      )
     }
   }
 
+  if (include_thead) {
+    kable_thead <- xml_tpart(kable_xml, "thead")
+    nrow_thead <- length(xml_children(kable_thead))
+    for (j in column) {
+      target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
+      column_spec_html_cell(
+        target_cell, width, width_min, width_max,
+        bold, italic, monospace, underline, strikeout,
+        color, background, border_left, border_right,
+        border_l_css, border_r_css,
+        extra_css
+      )
+    }
+  }
 
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
+}
+
+column_spec_html_cell <- function(target_cell, width, width_min, width_max,
+                                  bold, italic, monospace, underline, strikeout,
+                                  color, background,
+                                  border_left, border_right,
+                                  border_l_css, border_r_css,
+                                  extra_css) {
+  if (!is.null(width)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "width: ", width, "; ")
+  }
+  if (!is.null(width_min)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "min-width: ", width_min, "; ")
+  }
+  if (!is.null(width_max)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "max-width: ", width_max, "; ")
+  }
+  if (bold) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "font-weight: bold;")
+  }
+  if (italic) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "font-style: italic;")
+  }
+  if (monospace) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "font-family: monospace;")
+  }
+  if (underline) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "text-decoration: underline;")
+  }
+  if (strikeout) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "text-decoration: line-through;")
+  }
+  if (!is.null(color)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "color: ", color, ";")
+  }
+  if (!is.null(background)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "background-color: ",
+                                             background, ";")
+  }
+  if (border_left) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "border-left:", border_l_css, ";")
+  }
+  if (border_right) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             "border-right:", border_r_css, ";")
+  }
+  if (!is.null(extra_css)) {
+    xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
+                                             extra_css)
+  }
 }
 
 column_spec_latex <- function(kable_input, column, width,

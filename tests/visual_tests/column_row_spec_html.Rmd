@@ -21,7 +21,7 @@ library(xml2)
 y <- knitr::kable(head(mtcars), "html")
 y %>%
   kable_styling(full_width = F) %>%
-  column_spec(1:3, width = "5cm")
+  column_spec(1:3, width_min = "5cm", color = "red", include_thead = F)
 ```
 
 ```{r}

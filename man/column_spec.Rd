@@ -8,7 +8,7 @@ column_spec(kable_input, column, width = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, underline = FALSE,
   strikeout = FALSE, color = NULL, background = NULL,
   border_left = FALSE, border_right = FALSE, width_min = NULL,
-  width_max = NULL, extra_css = NULL)
+  width_max = NULL, extra_css = NULL, include_thead = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -49,6 +49,9 @@ in a character string for the CSS of the border line}
 
 \item{extra_css}{Extra css text to be passed into the cells of the row. Note
 that it's not for the whole column but to each individual cells}
+
+\item{include_thead}{T/F. A HTML only feature to contoll whether the
+header row will be manipulated. Default is \code{FALSE}.}
 
 \item{min_width}{Only for HTML table. Normal column width will automatically
 collapse when the window cannot hold enough contents. With this \code{min_width},

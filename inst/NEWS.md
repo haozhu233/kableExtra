@@ -4,6 +4,8 @@ kableExtra 0.9.0
 
 * Added documentation about 100% width in scroll_box (Thank you @isteves!)
 
+* Added `include_thead` to `column_spec`. (#177)
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 
