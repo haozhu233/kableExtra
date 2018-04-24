@@ -190,7 +190,8 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   row <- row + 1
   for (i in row) {
     target_row <- table_info$contents[i]
-    new_row <- latex_new_row_builder(target_row, bold, italic, monospace,
+    new_row <- latex_new_row_builder(target_row, table_info,
+                                     bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
@@ -208,7 +209,8 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-latex_new_row_builder <- function(target_row, bold, italic, monospace,
+latex_new_row_builder <- function(target_row, table_info,
+                                  bold, italic, monospace,
                                   underline, strikeout,
                                   color, background, align, font_size, angle,
                                   hline_after, extra_latex_after) {
@@ -250,6 +252,18 @@ latex_new_row_builder <- function(target_row, bold, italic, monospace,
              "\\}\\\\selectfont ", x, "\\\\endgroup")})
   }
   if (!is.null(align)) {
+    if (!is.null(table_info$column_width)) {
+      p_align <- switch(align,
+                        "l" = "\\\\raggedright\\\\arraybackslash",
+                        "c" = "\\\\centering\\\\arraybackslash",
+                        "r" = "\\\\raggedleft\\\\arraybackslash")
+      align <- rep(align, table_info$ncol)
+      p_cols <- as.numeric(sub("column_", "", names(table_info$column_width)))
+      for (i in 1:length(p_cols)) {
+        align[p_cols[i]] <- paste0("\\>\\{", p_align, "\\}p\\{",
+                                   table_info$column_width[[i]], "\\}")
+      }
+    }
     new_row <- lapply(new_row, function(x) {
       paste0("\\\\multicolumn\\{1\\}\\{", align, "\\}\\{", x, "\\}")
     })
