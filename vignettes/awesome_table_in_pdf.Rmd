@@ -32,7 +32,7 @@ vignette: >
 > Please see the package [documentation site](http://haozhu233.github.io/kableExtra) for how to use this package in HTML and more.  
 
 # Overview
-The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalizes all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
 
 To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
@@ -53,7 +53,7 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
-When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "latex")` so you don't repeat the step everytime.* **In this tutorial, I'll still put `format="latex"` in the function in case users just want to quickly replicate the results.** 
+When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "latex")` so you don't repeat the step every time.* **In this tutorial, I'll still put `format="latex"` in the function in case users just want to quickly replicate the results.** 
 
 ```{r}
 options(knitr.table.format = "latex") 
@@ -70,7 +70,7 @@ options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
 
-If you are using R Sweave, beamer, R package vignette template, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
+If you are using R Sweave, beamer, R package vignette template, tufte or some customized rmarkdown templates, you can put the following metadata into the `yaml` section. If you are familiar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
 ```
 header-includes:
@@ -100,7 +100,7 @@ kable(dt, format = "latex")
 ```
 
 ## LaTeX table with booktabs
-Similar with Bootstrap in HTML, in LaTeX, you can also use a trick to make your table look prettier as well. The different part is that, this time you don't need to pipe kable outputs to another function. Instead, you should call `booktabs = T` directly in `kable()`
+Similar to Bootstrap in HTML, in LaTeX, you can also use a trick to make your table look prettier as well. The different part is that, this time you don't need to pipe kable outputs to another function. Instead, you should call `booktabs = T` directly in `kable()`
 ```{r}
 kable(dt, format = "latex", booktabs = T)
 ```
@@ -125,10 +125,10 @@ kable(dt, format = "latex", caption = "Demo table", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-If you find `hold_position` is not powerful enough to literally PIN your table in the exact position, you may want to use `HOLD_position`, which is a more powerful version of this feature. For those who are familar with LaTeX, `hold_position` uses `[!h]` and `HOLD_position` uses `[H]` and the `float` package.
+If you find `hold_position` is not powerful enough to literally PIN your table in the exact position, you may want to use `HOLD_position`, which is a more powerful version of this feature. For those who are familiar with LaTeX, `hold_position` uses `[!h]` and `HOLD_position` uses `[H]` and the `float` package.
 
 ### Scale down
-When you have a wide table that will normally go out of the page and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, if your table is too small, it will also scale up your table. It was named in this way only because scaling up isn't very useful in most cases. 
+When you have a wide table that will normally go out of the page, and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, if your table is too small, it will also scale up your table. It was named in this way only because scaling up isn't very useful in most cases. 
 ```{r}
 kable(cbind(dt, dt, dt), format = "latex", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
@@ -139,7 +139,7 @@ kable(cbind(dt), format = "latex", booktabs = T) %>%
 ```
 
 ### Repeat header in longtable
-In `kableExtra` 0.3.0 or above, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`. If you want to complete replace the table caption instead of appending, you can specify it in the option `repeat_header_method`.
+In `kableExtra` 0.3.0 or above, a new option `repeat_header` was introduced into `kable_styling`. It will add header rows to longtables spanning multiple pages. For table captions on following pages, it will append *"continued"* to the caption to differentiate. If you need texts other than *"(continued)"* (for example, other languages), you can specify it using `kable_styling(..., repeat_header_text = "xxx")`. If you want to completely replace the table caption instead of appending, you can specify it in the option `repeat_header_method`.
 ```{r}
 long_dt <- rbind(mtcars, mtcars) 
 
@@ -182,7 +182,7 @@ kable(dt, format = "latex", booktabs = T) %>%
 
 # Column / Row Specification
 ## Column spec
-When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
+When you have a table with lots of explanatory texts, you may want to specify the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g., a "Total" column) by making it bold. In these scenarios, you can use `column_spec()`. You can find an example below. 
 ```{r}
 text_tbl <- data.frame(
   Items = c("Item 1", "Item 2", "Item 3"),
@@ -200,7 +200,7 @@ kable(text_tbl, format = "latex", booktabs = T) %>%
 ```
 
 ## Row spec
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar to other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
@@ -221,7 +221,7 @@ kable(dt, format = "latex", booktabs = T, align = "c") %>%
 
 
 # Cell/Text Specification
-Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
+Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimensional indexes for targeted cells, this design is way easier to learn and use, and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
 
@@ -336,10 +336,10 @@ kable(mtcars[1:2, 1:2], "latex", align = c("cl"))
 # ...
 ```
 
-LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual. As a result, it won't throw an error if you are just using `kable` to make some simple tables. However, when you use `kableExtra` to make some advanced modification, it will start to throw some bugs. As a result, please try to form a habbit of using a vector in the `align` argument for `kable` (tip: you can use `rep` function to replicate elements. For example, `c("c", rep("l", 10))`). 
+LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual. As a result, it won't throw an error if you are just using `kable` to make some simple tables. However, when you use `kableExtra` to make some advanced modification, it will start to throw some bugs. As a result, please try to form a habit of using a vector in the `align` argument for `kable` (tip: you can use `rep` function to replicate elements. For example, `c("c", rep("l", 10))`). 
 
 ## Row indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
+Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate. 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
@@ -347,7 +347,7 @@ kable(dt, format = "latex", booktabs = T) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
+Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider using `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. 
 
 In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`.
 
@@ -407,7 +407,7 @@ kable(collapse_rows_dt, format = "latex",
 
 Documentations for `add_footnote` can be found [here](http://haozhu233.github.io/kableExtra/legacy_features#add_footnote).
 
-There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements. 
+There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfilling the APA table footnotes requirements. 
 ```{r}
 kable(dt, "latex", align = "c") %>%
   kable_styling(full_width = F) %>%
@@ -432,7 +432,7 @@ kable(dt, "latex", align = "c", booktabs = T) %>%
            )
 ```
 
-If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_marker_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_marker_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. Note that if you want to use these `footnote_marker` functions in `kableExtra` functions like `group_rows` (for the row label) or `add_header_above`, you need to set `double_escape = T`and `escape = F` in those functions. I'm trying to find other ways around. Please let me know if you have a good idea and are willing to contribute. 
+If you need to add footnote marks in a table, you need to do it manually (no fancy) using `footnote_marker_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. Also, if you have ever used `footnote_marker_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. Note that if you want to use these `footnote_marker` functions in `kableExtra` functions like `group_rows` (for the row label) or `add_header_above`, you need to set `double_escape = T` and `escape = F` in those functions. I'm trying to find other ways around. Please let me know if you have a good idea and are willing to contribute. 
 
 ```{r}
 dt_footnote <- dt
@@ -460,7 +460,7 @@ kable(dt, "latex", align = "c", booktabs = T, caption = "s") %>%
 
 # LaTeX Only Features
 ## Linebreak processor
-Unlike in HTML, where you can use `<br>` at any time, in LaTeX, it's actually quite difficult to make a linebreak in a table. Therefore I created the `linebreak` function to faciliate this process. Please see the [Best Practice for Newline in LaTeX Table](http://haozhu233.github.io/kableExtra/best_practice_for_newline_in_latex_table.pdf) for details. 
+Unlike in HTML, where you can use `<br>` at any time, in LaTeX, it's actually quite difficult to make a linebreak in a table. Therefore I created the `linebreak` function to facilitate this process. Please see the [Best Practice for Newline in LaTeX Table](http://haozhu233.github.io/kableExtra/best_practice_for_newline_in_latex_table.pdf) for details. 
 
 ```{r}
 dt_lb <- data.frame(
@@ -492,7 +492,7 @@ kable(dt, format = "latex", caption = "Demo Table (Landscape)[note]", booktabs =
 ```
 
 ## Use LaTeX table in HTML or Word
-If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider to use `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). This feature may not work if you are using tinytex. If you are using tinytex, please consider using other alternatives of this function. 
+If you want to include a LaTeX rendered table in your HTML or Word document, or if you just want to save table as an image, you may consider using `kable_as_image()`. Note that this feature requires you to have [magick](https://github.com/ropensci/magick) installed (`install.packages("magick")`). Also, if you are planning to use it on Windows, you need to install [Ghostscript](https://www.ghostscript.com/). This feature may not work if you are using tinytex. If you are using tinytex, please consider using other alternatives to this function. 
 
 ```{r, eval = F}
 # Not evaluated. 
