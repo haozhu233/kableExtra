@@ -90,7 +90,15 @@ magic_mirror_latex <- function(kable_input){
   }
   kable_info$duplicated_rows <- (sum(duplicated(kable_info$contents)) != 0)
   # Column names
-  kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
+  if (kable_info$booktabs) {
+    if (is.na(which(read_lines(kable_input) == "\\midrule")[1])) {
+      kable_info$colnames <- NULL
+    } else {
+      kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
+    }
+  } else {
+    kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
+  }
   # Row names
   kable_info$rownames <- str_extract(kable_info$contents, "^[^ &]*")
 

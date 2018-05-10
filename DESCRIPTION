@@ -31,6 +31,7 @@ Depends:
 Imports:
     knitr (>= 1.16),
     magrittr,
+    stringi,
     stringr (>= 1.0),
     xml2,
     rvest,

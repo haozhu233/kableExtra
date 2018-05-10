@@ -124,10 +124,11 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
   for (i in which(dup_index != 1)) {
     dup_row <- table_info$contents[i]
     empty_times <- dup_index[i] - 1
+    # insert empty_times before last non whitespace characters
     new_row <- str_replace(
-      dup_row, "&",
-      paste0("& \\\\\\\\vphantom\\\\{", empty_times, "\\\\}"))
-    kable_input <- str_replace(kable_input, dup_row, new_row)
+      dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
+      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
+    kable_input <- sub(dup_row, new_row, kable_input)
     table_info$contents[i] <- new_row
   }
   table_info$duplicated_rows <- FALSE

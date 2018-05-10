@@ -281,15 +281,27 @@ pdfTable_styling <- function(kable_input,
 styling_latex_striped <- function(x, table_info, color) {
   # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
   if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
-    row_color <- sprintf("\\rowcolors{2}{white}{%s}", color)
+    if (table_info$booktabs & is.null(table_info$colnames)) {
+      row_color <- sprintf("\\rowcolors{1}{white}{%s}", color)
+    } else {
+      row_color <- sprintf("\\rowcolors{2}{white}{%s}", color)
+    }
   } else {
-    row_color <- sprintf("\\rowcolors{2}{%s}{white}", color)
+    if (table_info$booktabs & is.null(table_info$colnames)) {
+      row_color <- sprintf("\\rowcolors{1}{white}{%s}", color)
+    } else {
+      row_color <- sprintf("\\rowcolors{2}{%s}{white}", color)
+    }
   }
 
   x <- read_lines(x)
   if (table_info$booktabs) {
     header_rows_start <- which(x == "\\toprule")[1]
-    header_rows_end <- which(x == "\\midrule")[1]
+    if (is.null(table_info$colnames)) {
+      header_rows_end <- header_rows_start
+    } else {
+      header_rows_end <- which(x == "\\midrule")[1]
+    }
   } else {
     header_rows_start <- which(x == "\\hline")[1]
     header_rows_end <- which(x == "\\hline")[2]
@@ -344,7 +356,11 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
   x <- read_lines(x)
   if (table_info$booktabs) {
     header_rows_start <- which(x == "\\toprule")[1]
-    header_rows_end <- which(x == "\\midrule")[1]
+    if (is.null(table_info$colnames)) {
+      header_rows_end <- header_rows_start
+    } else {
+      header_rows_end <- which(x == "\\midrule")[1]
+    }
   } else {
     header_rows_start <- which(x == "\\hline")[1]
     header_rows_end <- which(x == "\\hline")[2]
