@@ -66,8 +66,9 @@ kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
 ## More Information
 For more information, please check the package vignette.
 
-- [Create Awesome HTML Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html)
+- [Create Awesome HTML Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html) ([中文](http://haozhu233.github.io/kableExtra/awesome_table_in_html_cn.html))
 - [Create Awesome LaTeX Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
+
 
 ## Acknowledgement
 I would like to thank colleagues at [Hebrew SeniorLife Institute for Aging Research](https://www.instituteforagingresearch.org/) and the [Boston Pepper Center](http://pepper.bwh.harvard.edu/) for their input. I also would like to appreciate the mentorship from Tom Travison ([@tgt75](https://twitter.com/tgt75)) and all the efforts from the open source community, which help this package keep getting better.
