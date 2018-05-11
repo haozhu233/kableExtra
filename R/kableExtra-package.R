@@ -63,7 +63,7 @@
 #' @importFrom rvest html_table
 #' @importFrom knitr knit_meta_add include_graphics knit_print asis_output kable
 #' @importFrom rmarkdown latex_dependency html_dependency_bootstrap
-#' html_dependency_jquery
+#' html_dependency_jquery pandoc_self_contained_html
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv head
 #' @importFrom readr read_lines read_file
