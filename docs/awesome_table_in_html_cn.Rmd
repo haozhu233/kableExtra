@@ -207,7 +207,7 @@ text_formatted <- paste(
 ```
 <script>
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip(); 
+$('[data-toggle="tooltip"]').tooltip(); 
 });
 </script>
 ```
@@ -218,14 +218,14 @@ $(document).ready(function(){
 ```
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
+$('[data-toggle="popover"]').popover(); 
 });
 </script>
 ```
 
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
+$('[data-toggle="popover"]').popover(); 
 });
 </script>
 
@@ -315,7 +315,7 @@ kable(mtcars[1:10, 1:6], "html", caption = "Group Rows") %>%
 ```{r}
 kable(dt, "html") %>%
   kable_styling("striped", full_width = F) %>%
-  group_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
+  group_rows("Group 1", 3, 5, label_row_css = "background: repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px); color: #fff;")
 ```
 
 ### 行的缩进
@@ -331,9 +331,9 @@ kable(dt, "html") %>%
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
-                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
+                               C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
+                               C3 = 1:15,
+                               C4 = sample(c(0,1), 15, replace = TRUE))
 kable(collapse_rows_dt, "html", align = "c") %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T) %>%
@@ -351,7 +351,7 @@ kable(dt, "html", align = "c") %>%
            number = c("Footnote 1; ", "Footnote 2; "),
            alphabet = c("Footnote A; ", "Footnote B; "),
            symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2")
-           )
+  )
 ```
 
 要是想要修改每一类的标题的话，你可以使用那些`***_title`变量. 你还可以通过 `footnote_order`来更改他们的顺序. 你甚至可以通过`footnote_as_chunk`，让备注们以一个段落的方式显示.
@@ -366,7 +366,7 @@ kable(dt, "html", align = "c") %>%
            general_title = "备注: ", number_title = "备注233: ",
            alphabet_title = "备注666: ", symbol_title = "备注888: ",
            footnote_as_chunk = T
-           )
+  )
 ```
 
 若是想在表格内部添加注释的小字的话，你需要使用那些`footnote_mark_***()`方程. 和 `cell_spec`一样，你需要告诉他们你想要的格式（在今后的版本里你不需要了）同时在使用`kable`的时候往里加上`escape=F`。
@@ -376,7 +376,7 @@ dt_footnote <- dt
 names(dt_footnote)[2] <- paste0(names(dt_footnote)[2], 
                                 footnote_marker_symbol(1))
 row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4], 
-                                footnote_marker_alphabet(1))
+                                    footnote_marker_alphabet(1))
 kable(dt_footnote, "html", align = "c", 
       # Remember this escape = F
       escape = F) %>%
@@ -395,4 +395,14 @@ kable(dt_footnote, "html", align = "c",
 kable(cbind(mtcars, mtcars), "html") %>%
   kable_styling() %>%
   scroll_box(width = "500px", height = "200px")
+```
+
+另外，除了一个具体的宽度或者高度，你也可以选择百分比哦。比如`width="100%"`就很实用。另外不喜欢默认的灰色直角框，你也可以通过定义`box_css`把消掉或者替换掉。
+```{r}
+kable(cbind(mtcars, mtcars)[1:5, ], "html") %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", box_css = '
+padding: 15px; border: 15px solid transparent;
+background: linear-gradient(white,white), repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px);
+background-clip: padding-box, border-box;')
 ```

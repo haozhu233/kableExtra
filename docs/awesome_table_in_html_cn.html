@@ -11,7 +11,7 @@
 
 <meta name="author" content="朱昊" />
 
-<meta name="date" content="2018-04-14" />
+<meta name="date" content="2018-04-24" />
 
 <title>用kableExtra做牛*的表格</title>
 
@@ -219,7 +219,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">用kableExtra做牛*的表格</h1>
 <h4 class="author"><em>朱昊</em></h4>
-<h4 class="date"><em>2018-04-14</em></h4>
+<h4 class="date"><em>2018-04-24</em></h4>
 
 </div>
 
@@ -2314,7 +2314,7 @@ text_formatted &lt;- paste(
 <p>你可以通过<code>cell_spec</code>相对简单地添加悬浮提示框. 举个例子，<code>text_spec(&quot;tooltip&quot;, color = &quot;red&quot;, tooltip = &quot;Hello World&quot;)</code> 会生成 <span style="     color: red;" data-toggle="tooltip" data-placement="right" title="Hello World">Hover over me</span>。注意HTML原生的提示框非常慢，你可能会想用<code>bootstrap</code>的javascript版的。如果你想这么做的话，你需要把接下来的这段代码放在你的rmarkdown文本的任何地方。需要注意的是，如果你和这个文档一样使用了这种目录在侧面的格式，你就没办法使用这个功能。原因在于这个和<code>jqueryui</code>的<code>tooltip</code>互相冲突。这种情况下，你可能会想试试我下面说的<code>popover</code>。这两个差不多。</p>
 <pre><code>&lt;script&gt;
 $(document).ready(function(){
-    $('[data-toggle=&quot;tooltip&quot;]').tooltip(); 
+$('[data-toggle=&quot;tooltip&quot;]').tooltip(); 
 });
 &lt;/script&gt;</code></pre>
 </div>
@@ -2323,12 +2323,12 @@ $(document).ready(function(){
 <p>和之前一样的设定，区别在于你可以给<code>popover</code>的小框加一个标题。不加的话，和上面的功能基本一样。</p>
 <pre><code>&lt;script&gt;
 $(document).ready(function(){
-    $('[data-toggle=&quot;popover&quot;]').popover(); 
+$('[data-toggle=&quot;popover&quot;]').popover(); 
 });
 &lt;/script&gt;</code></pre>
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
+$('[data-toggle="popover"]').popover(); 
 });
 </script>
 <pre class="r"><code>popover_dt &lt;- data.frame(
@@ -3190,7 +3190,7 @@ kable(mtcars[1:10, 1:6], &quot;html&quot;, caption = &quot;Group Rows&quot;) %&g
 <p>如果你熟悉CSS，你可以自己定义标签行的样式。</p>
 <pre class="r"><code>kable(dt, &quot;html&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
-  group_rows(&quot;Group 1&quot;, 3, 5, label_row_css = &quot;background-color: #666; color: #fff;&quot;)</code></pre>
+  group_rows(&quot;Group 1&quot;, 3, 5, label_row_css = &quot;background: repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px); color: #fff;&quot;)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -3264,7 +3264,7 @@ Mazda RX4 Wag
 </td>
 </tr>
 <tr grouplength="3">
-<td colspan="7" style="background-color: #666; color: #fff;">
+<td colspan="7" style="background: repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px); color: #fff;">
 <strong>Group 1</strong>
 </td>
 </tr>
@@ -3494,9 +3494,9 @@ Hornet Sportabout
 <h3>合并行</h3>
 <p><code>collapse_rows</code> 做的就是我们之前说的第二种在表格内表示所属关系的方法。请看下面的例子，第一二两列所有重复的内容都被自动合并了。</p>
 <pre class="r"><code>collapse_rows_dt &lt;- data.frame(C1 = c(rep(&quot;a&quot;, 10), rep(&quot;b&quot;, 5)),
-                 C2 = c(rep(&quot;c&quot;, 7), rep(&quot;d&quot;, 3), rep(&quot;c&quot;, 2), rep(&quot;d&quot;, 3)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
+                               C2 = c(rep(&quot;c&quot;, 7), rep(&quot;d&quot;, 3), rep(&quot;c&quot;, 2), rep(&quot;d&quot;, 3)),
+                               C3 = 1:15,
+                               C4 = sample(c(0,1), 15, replace = TRUE))
 kable(collapse_rows_dt, &quot;html&quot;, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   column_spec(1, bold = T) %&gt;%
@@ -3554,7 +3554,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3562,7 +3562,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3578,7 +3578,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3597,7 +3597,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3605,7 +3605,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3638,7 +3638,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3654,7 +3654,7 @@ d
 15
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 </tbody>
@@ -3671,7 +3671,7 @@ d
            number = c(&quot;Footnote 1; &quot;, &quot;Footnote 2; &quot;),
            alphabet = c(&quot;Footnote A; &quot;, &quot;Footnote B; &quot;),
            symbol = c(&quot;Footnote Symbol 1; &quot;, &quot;Footnote Symbol 2&quot;)
-           )</code></pre>
+  )</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -3867,7 +3867,7 @@ Hornet Sportabout
            general_title = &quot;备注: &quot;, number_title = &quot;备注233: &quot;,
            alphabet_title = &quot;备注666: &quot;, symbol_title = &quot;备注888: &quot;,
            footnote_as_chunk = T
-           )</code></pre>
+  )</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -4038,7 +4038,7 @@ Hornet Sportabout
 names(dt_footnote)[2] &lt;- paste0(names(dt_footnote)[2], 
                                 footnote_marker_symbol(1))
 row.names(dt_footnote)[4] &lt;- paste0(row.names(dt_footnote)[4], 
-                                footnote_marker_alphabet(1))
+                                    footnote_marker_alphabet(1))
 kable(dt_footnote, &quot;html&quot;, align = &quot;c&quot;, 
       # Remember this escape = F
       escape = F) %&gt;%
@@ -6553,6 +6553,449 @@ Volvo 142E
 </td>
 <td style="text-align:right;">
 4
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>另外，除了一个具体的宽度或者高度，你也可以选择百分比哦。比如<code>width=&quot;100%&quot;</code>就很实用。另外不喜欢默认的灰色直角框，你也可以通过定义<code>box_css</code>把消掉或者替换掉。</p>
+<pre class="r"><code>kable(cbind(mtcars, mtcars)[1:5, ], &quot;html&quot;) %&gt;%
+  kable_styling() %&gt;%
+  scroll_box(width = &quot;100%&quot;, box_css = '
+padding: 15px; border: 15px solid transparent;
+background: linear-gradient(white,white), repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px);
+background-clip: padding-box, border-box;')</code></pre>
+<div style="
+padding: 15px; border: 15px solid transparent;
+background: linear-gradient(white,white), repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px);
+background-clip: padding-box, border-box;overflow-x: scroll; width:100%; ">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+<th style="text-align:right;">
+qsec
+</th>
+<th style="text-align:right;">
+vs
+</th>
+<th style="text-align:right;">
+am
+</th>
+<th style="text-align:right;">
+gear
+</th>
+<th style="text-align:right;">
+carb
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+<th style="text-align:right;">
+qsec
+</th>
+<th style="text-align:right;">
+vs
+</th>
+<th style="text-align:right;">
+am
+</th>
+<th style="text-align:right;">
+gear
+</th>
+<th style="text-align:right;">
+carb
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.620
+</td>
+<td style="text-align:right;">
+16.46
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.620
+</td>
+<td style="text-align:right;">
+16.46
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.875
+</td>
+<td style="text-align:right;">
+17.02
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.875
+</td>
+<td style="text-align:right;">
+17.02
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+2.320
+</td>
+<td style="text-align:right;">
+18.61
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+2.320
+</td>
+<td style="text-align:right;">
+18.61
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;">
+3.215
+</td>
+<td style="text-align:right;">
+19.44
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;">
+3.215
+</td>
+<td style="text-align:right;">
+19.44
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet Sportabout
+</td>
+<td style="text-align:right;">
+18.7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+3.15
+</td>
+<td style="text-align:right;">
+3.440
+</td>
+<td style="text-align:right;">
+17.02
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+18.7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+3.15
+</td>
+<td style="text-align:right;">
+3.440
+</td>
+<td style="text-align:right;">
+17.02
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
 </td>
 <td style="text-align:right;">
 2
