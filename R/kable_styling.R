@@ -465,13 +465,13 @@ styling_latex_position_float <- function(x, table_info, option) {
   col_max_length <- apply(size_matrix, 1, max) + 4
   if (table_info$table_env) {
     option <- sprintf("\\\\begin\\{wraptable\\}\\{%s\\}", option)
-    option <- paste0(option, "\\{",sum(col_max_length) * 0.15, "cm\\}")
+    option <- paste0(option, "\\{0pt\\}")
     x <- sub("\\\\begin\\{table\\}\\[\\!h\\]", "\\\\begin\\{table\\}", x)
     x <- sub("\\\\begin\\{table\\}", option, x)
     x <- sub("\\\\end\\{table\\}", "\\\\end\\{wraptable\\}", x)
   } else {
     option <- sprintf("\\begin{wraptable}{%s}", option)
-    option <- paste0(option, "{",sum(col_max_length) * 0.15, "cm}")
+    option <- paste0(option, "{0pt}")
     x <- paste0(option, x, "\\end{wraptable}")
   }
   return(x)
