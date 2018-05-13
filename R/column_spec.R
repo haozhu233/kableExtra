@@ -148,6 +148,9 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                   border_left, border_right,
                                   border_l_css, border_r_css,
                                   extra_css) {
+  if (is.na(xml_attr(target_cell, "style"))) {
+    xml_attr(target_cell, "style") <- ""
+  }
   if (!is.null(width)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                              "width: ", width, "; ")

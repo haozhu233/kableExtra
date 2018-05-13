@@ -122,6 +122,9 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 xml_cell_style <- function(x, bold, italic, monospace,
                            underline, strikeout, color, background,
                            align, font_size, angle, extra_css) {
+  if (is.na(xml_attr(x, "style"))) {
+    xml_attr(x, "style") <- ""
+  }
   if (bold) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "font-weight: bold;")
