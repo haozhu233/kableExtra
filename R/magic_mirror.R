@@ -72,22 +72,21 @@ magic_mirror_latex <- function(kable_input){
   } else {
     kable_info$caption <- str_sub(kable_info$caption, 1, -2)
   }
-  # N of rows
-  kable_info$nrow <- str_count(kable_input, "\\\\\n") -
-    # in the dev version (currently as of 11.2015) of knitr, when longtable is
-    # enabled, caption is moved inside the tabular environment. As a result,
-    # the number of rows should be adjusted.
-    ifelse(
-      kable_info$tabular == "longtable" & !is.na(kable_info$caption) &
-        !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption"),
-      1,0
-    )
   # Contents
   kable_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
   kable_info$contents <- regex_escape(kable_info$contents, T)
-  if (kable_info$tabular == "longtable" & !is.na(kable_info$caption)) {
+  if (kable_info$tabular == "longtable" & !is.na(kable_info$caption) &
+      !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption")) {
     kable_info$contents <- kable_info$contents[-1]
   }
+  if (!is.null(attr(kable_input, "n_head"))) {
+    n_head <- attr(kable_input, "n_head")
+    kable_info$new_header_row <- kable_info$contents[seq(n_head - 1, 1)]
+    kable_info$contents <- kable_info$contents[-seq(1, n_head - 1)]
+    kable_info$header_df <- extra_header_to_header_df(kable_info$new_header_row)
+    kable_info$new_header_row <- paste0(kable_info$new_header_row, "\\\\\\\\")
+  }
+  kable_info$nrow <- length(kable_info$contents)
   kable_info$duplicated_rows <- (sum(duplicated(kable_info$contents)) != 0)
   # Column names
   kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
@@ -98,7 +97,22 @@ magic_mirror_latex <- function(kable_input){
 
   kable_info$table_env <- (!is.na(kable_info$caption) &
                              kable_info$tabular != "longtable")
+
   return(kable_info)
+}
+
+extra_header_to_header_df <- function(extra_header_rows) {
+  lapply(str_split(extra_header_rows, " \\& "), function(x) {
+    as.data.frame(t(sapply(x, extra_header_to_header_df_)), row.names = NA)
+  })
+}
+
+extra_header_to_header_df_ <- function(x) {
+  if (trimws(x) == "") return(c(header = " ", colspan = "1"))
+  x <- trimws(x)
+  x_header <- str_match(x, "([^\\}\\{]*)\\\\\\}$")[2]
+  x_colspan <- str_match(x, "^\\\\\\\\multicolumn\\\\\\{([^\\\\\\}]*)")[2]
+  return(c(header = x_header, colspan = x_colspan))
 }
 
 # Magic Mirror for html table --------
