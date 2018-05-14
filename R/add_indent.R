@@ -39,20 +39,14 @@ add_indent_latex <- function(kable_input, positions) {
     table_info <- dup_fx_out[[2]]
   }
 
-  if (table_info$booktabs & is.null(table_info$colnames)) {
-    max_position <- table_info$nrow
-    position_offset <- 0
-  } else {
-    max_position <- table_info$nrow - 1
-    position_offset <- 1
-  }
+  max_position <- table_info$nrow - table_info$position_offset
 
   if (max(positions) > max_position) {
     stop("There aren't that many rows in the table. Check positions in ",
          "add_indent_latex.")
   }
 
-  for (i in positions + position_offset) {
+  for (i in positions + table_info$position_offset) {
     rowtext <- table_info$contents[i]
     out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
     table_info$contents[i] <- latex_indent_unit(rowtext)

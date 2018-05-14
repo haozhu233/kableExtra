@@ -281,13 +281,10 @@ pdfTable_styling <- function(kable_input,
 styling_latex_striped <- function(x, table_info, color) {
   # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
   if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
-    if (table_info$booktabs & is.null(table_info$colnames)) {
-      row_color <- sprintf("\\rowcolors{1}{white}{%s}", color)
-    } else {
-      row_color <- sprintf("\\rowcolors{2}{white}{%s}", color)
-    }
+    row_color <- sprintf("\\rowcolors{%s}{white}{%s}",
+                         1 + table_info$position_offset, color)
   } else {
-    if (table_info$booktabs & is.null(table_info$colnames)) {
+    if (table_info$position_offset == 0) {
       row_color <- sprintf("\\rowcolors{1}{white}{%s}", color)
     } else {
       row_color <- sprintf("\\rowcolors{2}{%s}{white}", color)

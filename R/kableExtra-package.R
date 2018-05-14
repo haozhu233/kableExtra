@@ -55,7 +55,6 @@
 #' vanilla rmarkdown. For customized rmarkdown templates, it is recommended to
 #' load related LaTeX packages manually.
 #'
-#' @importFrom stringi stri_replace_all_fixed
 #' @importFrom stringr str_count str_split str_match str_detect str_match_all
 #' str_extract str_replace_all str_trim str_extract_all str_sub str_replace
 #' @importFrom xml2 read_xml xml_attr xml_has_attr xml_attr<- read_html
