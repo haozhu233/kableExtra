@@ -1,0 +1,172 @@
+---
+title: "no_colnames_booktabs_pdf"
+author: "Leo"
+date: "5/10/2018"
+output: pdf_document
+---
+
+# Create some test data
+
+```{r, include=F}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+```
+
+```{r}
+simple_df_one_column <- data.frame(
+  text = paste0('TEXT ', seq(1, 6))
+)
+
+simple_df_one_column_math <- data.frame(
+  math = paste0('$\\text{Math:} x = ', seq(1, 6), '$ TEXT')
+)
+
+simple_df_multi_columns <- data.frame(
+  text = paste0('TEXT ', seq(1, 6)),
+  desc = paste0('DESCRIPTION ', seq(1, 6))
+)
+
+simple_df_multi_columns_math <- data.frame(
+  text = paste0('TEXT ', seq(1, 6)),
+  math = paste0('$\\text{Math:} x = ', seq(1, 6), '$ TEXT')
+)
+
+simple_df_longtable_one_column <- data.frame(
+  text = paste0('TEXT ', seq(1, 50))
+)
+
+simple_df_longtable_one_column_math <- data.frame(
+  math = paste0('$\\text{Math:} x = ', seq(1, 50), '$ TEXT')
+)
+
+simple_df_longtable_multi_columns <- data.frame(
+  text = paste0('TEXT ', seq(1, 50)),
+  desc = paste0('DESCRIPTION ', seq(1, 50))
+)
+
+simple_df_longtable_multi_columns_math <- data.frame(
+  text = paste0('TEXT ', seq(1, 50)),
+  math = paste0('$\\text{Math:} x = ', seq(1, 50), '$ TEXT')
+)
+```
+
+# Simple Table with One Column
+
+```{r}
+simple_df_one_column %>%
+  kable("latex", escape = F, booktabs = T) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+```{r}
+simple_df_one_column %>%
+  kable("latex", escape = F, booktabs = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+# Simple Table with One Column and Math
+
+```{r}
+simple_df_one_column_math %>%
+  kable("latex", escape = F, booktabs = T) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+```{r}
+simple_df_one_column_math %>%
+  kable("latex", escape = F, booktabs = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+# Simple Table with Multi Columns
+
+```{r}
+simple_df_multi_columns %>%
+  kable("latex", escape = F, booktabs = T) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+```{r}
+simple_df_multi_columns %>%
+  kable("latex", escape = F, booktabs = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+# Simple Table with Multi Columns and Math
+
+```{r}
+simple_df_multi_columns_math %>%
+  kable("latex", escape = F, booktabs = T) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+```{r}
+simple_df_multi_columns_math %>%
+  kable("latex", escape = F, booktabs = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped'))
+```
+
+# Simple Long Table with One Column
+
+```{r}
+simple_df_longtable_one_column %>%
+  kable("latex", caption = 'Long Table with One Column',
+        escape = F, booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+```{r}
+simple_df_longtable_one_column %>%
+  kable("latex", caption = 'Long Table with One Column without Colnames',
+        escape = F, booktabs = T, longtable = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+# Simple Long Table with One Column and Math
+
+```{r}
+simple_df_longtable_one_column_math %>%
+  kable("latex", caption = 'Long Table with One Column',
+        escape = F, booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+```{r}
+simple_df_longtable_one_column_math %>%
+  kable("latex", caption = 'Long Table with One Column without Colnames',
+        escape = F, booktabs = T, longtable = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+# Simple Long Table with Multi Columns
+
+```{r}
+simple_df_longtable_multi_columns %>%
+  kable("latex", caption = 'Long Table with One Column',
+        escape = F, booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+```{r}
+simple_df_longtable_multi_columns %>%
+  kable("latex", caption = 'Long Table with One Column without Colnames',
+        escape = F, booktabs = T, longtable = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+# Simple Long Table with Multi Columns and Math
+
+```{r}
+simple_df_longtable_multi_columns_math %>%
+  kable("latex", caption = 'Long Table with One Column',
+        escape = F, booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```
+
+```{r}
+simple_df_longtable_multi_columns_math %>%
+  kable("latex", caption = 'Long Table with One Column without Colnames',
+        escape = F, booktabs = T, longtable = T, col.names = NULL) %>%
+  kable_styling(latex_options = c('striped', 'repeat_header'))
+```

@@ -190,7 +190,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     table_info <- dup_fx_out[[2]]
   }
 
-  row <- row + 1
+  row <- row + table_info$position_offset
   for (i in row) {
     target_row <- table_info$contents[i]
     new_row <- latex_new_row_builder(target_row, table_info,
