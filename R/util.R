@@ -63,6 +63,7 @@ regex_escape <- function(x, double_backslash = FALSE) {
   x <- gsub("\\+", "\\\\+", x)
   x <- gsub("\\?", "\\\\?", x)
   x <- gsub("\\|", "\\\\|", x)
+  x <- gsub("\\^", "\\\\^", x)
   return(x)
 }
 
