@@ -10,6 +10,11 @@ kableExtra 0.9.0
 
 * Added support to slidy_presentation & ioslides_presentation
 
+* Fixed header formatting for repeated header row in latex longtable (#183)
+
+* 
+
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 

@@ -198,23 +198,15 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    if (i == 1 & table_info$tabular == "longtable") {
-      if (length(new_row) == 1) {
-        out <- gsub(target_row, new_row, out, perl = T)
-      } else {
-        out <- gsub(paste0(target_row, "\\\\\\\\"),
-                   paste(new_row, collapse = ""), out, perl = T)
-      }
+    temp_sub <- ifelse(i == 1 & table_info$tabular == "longtable", gsub, sub)
+    if (length(new_row) == 1) {
+      out <- temp_sub(target_row, new_row, out, perl = T)
+      table_info$contents[i] <- new_row
     } else {
-      if (length(new_row) == 1) {
-        out <- sub(target_row, new_row, out, perl = T)
-      } else {
-        out <- sub(paste0(target_row, "\\\\\\\\"),
-                   paste(new_row, collapse = ""), out, perl = T)
-      }
+      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                  paste(new_row, collapse = ""), out, perl = T)
+      table_info$contents[i] <- new_row[1]
     }
-
-    table_info$contents[i] <- new_row
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
