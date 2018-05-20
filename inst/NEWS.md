@@ -17,6 +17,8 @@ kableExtra 0.9.0
 * Added valign to collapse_rows to adjust vertical position of the contents. 
 Change default setting from middle to top. (#191)
 
+* Added an auto_index function to facilitate group_rows. (#193) 
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 
@@ -258,7 +260,6 @@ kableExtra 0.2.0
 * Added an example for how to use it in Shiny.
 
 * Fixed a few errors in the LaTeX vignette file.
-
 
 kableExtra 0.1.0
 --------------------------------------------------------------------------------

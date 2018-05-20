@@ -4,8 +4,9 @@
 \alias{collapse_rows}
 \title{Collapse repeated rows to multirow cell}
 \usage{
-collapse_rows(kable_input, columns = NULL, latex_hline = c("full", "major",
-  "none", "custom"), row_group_label_position = c("identity", "stack"),
+collapse_rows(kable_input, columns = NULL, valign = c("top", "middle",
+  "bottom"), latex_hline = c("full", "major", "none", "custom"),
+  row_group_label_position = c("identity", "stack"),
   custom_latex_hline = NULL, row_group_label_fonts = NULL,
   headers_to_remove = NULL)
 }
@@ -13,6 +14,8 @@ collapse_rows(kable_input, columns = NULL, latex_hline = c("full", "major",
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
 \item{columns}{Numeric column positions where rows need to be collapsed.}
+
+\item{valign}{Select from "top"(default), "middle", "bottom"}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
 Choose from \code{full}, \code{major}, \code{none}, \code{custom}.}

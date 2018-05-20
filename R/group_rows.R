@@ -194,3 +194,19 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   out <- add_indent_latex(out, seq(start_row, end_row))
   return(out)
 }
+
+#' Automatically figuring out the group_row index
+#'
+#' @description This helper function allows users to build the `group_row`
+#' index more quickly and use `group_rows` in a way that is similar with
+#' `collapse_rows`.
+#'
+#' @param x The index column. A vector. For example `c("a", "a", "b", "b", "b")``
+#'
+#' @export
+auto_index <- function(x) {
+  x_rle <- rle(x)
+  index <- x_rle$lengths
+  names(index) <- x_rle$values
+  return(index)
+}
