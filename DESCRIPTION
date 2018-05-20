@@ -33,7 +33,7 @@ Imports:
     knitr (>= 1.16),
     magrittr,
     stringr (>= 1.0),
-    xml2,
+    xml2 (>= 1.1.1),
     rvest,
     rmarkdown (>= 1.6.0),
     readr,
