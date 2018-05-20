@@ -6,6 +6,10 @@ kableExtra 0.9.0
 
 * Added `include_thead` to `column_spec`. (#177)
 
+* Added support to tables
+
+* Added support to slidy_presentation & ioslides_presentation
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 

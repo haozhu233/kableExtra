@@ -18,4 +18,10 @@
   }
   auto_format <- getOption("kableExtra.auto_format", default = TRUE)
   if (auto_format) auto_set_format()
+  if (!is.null(rmarkdown::metadata$output) &&
+      rmarkdown::metadata$output %in% c(
+        "ioslides_presentation", "slidy_presentation"
+      )) {
+    options(kableExtra.html.bsTable = TRUE)
+  }
 }

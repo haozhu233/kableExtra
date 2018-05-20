@@ -13,6 +13,7 @@ print.kableExtra <- function(x, ...) {
   print(html_result)
 }
 
+#' @export
 html_dependency_kePrint <- function() {
   htmlDependency(name = "kePrint",
                  version = "0.0.1",
@@ -22,9 +23,23 @@ html_dependency_kePrint <- function() {
 }
 
 #' @export
+html_dependency_bsTable <- function() {
+  htmlDependency(name = "bsTable",
+                 version = "3.3.7",
+                 src = system.file("bootstrapTable-3.3.7",
+                                   package = "kableExtra"),
+                 stylesheet = "bootstrapTable.min.css")
+}
+
+#' @export
 knit_print.kableExtra <- function(x, ...) {
   x <- paste0(x, "\n\n")
-  asis_output(x)
+  meta_list <- list(html_dependency_kePrint())
+  bs <- getOption("kableExtra.html.bsTable", default = FALSE)
+  if (bs) {
+    meta_list[[2]] <- html_dependency_bsTable()
+  }
+  asis_output(x, meta = meta_list)
 }
 
 
