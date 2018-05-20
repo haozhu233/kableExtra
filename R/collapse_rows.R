@@ -8,6 +8,7 @@
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param columns Numeric column positions where rows need to be collapsed.
+#' @param valign Select from "top"(default), "middle", "bottom"
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
 #' Choose from `full`, `major`, `none`, `custom`.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
@@ -26,14 +27,12 @@
 #'
 #' @export
 collapse_rows <- function(kable_input, columns = NULL,
+                          valign = c("top", "middle", "bottom"),
                           latex_hline = c("full", "major", "none", "custom"),
                           row_group_label_position = c('identity', 'stack'),
                           custom_latex_hline = NULL,
                           row_group_label_fonts = NULL,
                           headers_to_remove = NULL) {
-  # if (is.null(columns)) {
-  #   stop("Please specify numeric positions of columns you want to collapse.")
-  # }
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -41,20 +40,21 @@ collapse_rows <- function(kable_input, columns = NULL,
             "for details.")
     return(kable_input)
   }
+  valign <- match.arg(valign, c("top", "middle", "bottom"))
   if (kable_format == "html") {
-    return(collapse_rows_html(kable_input, columns))
+    return(collapse_rows_html(kable_input, columns, valign))
   }
   if (kable_format == "latex") {
     latex_hline <- match.arg(latex_hline, c("full", "major", "none", "custom"))
     row_group_label_position <- match.arg(row_group_label_position,
                                           c('identity', 'stack'))
-    return(collapse_rows_latex(kable_input, columns, latex_hline,
+    return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
       headers_to_remove))
   }
 }
 
-collapse_rows_html <- function(kable_input, columns) {
+collapse_rows_html <- function(kable_input, columns, valign) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -87,7 +87,7 @@ collapse_rows_html <- function(kable_input, columns) {
         xml_attr(target_cell, "rowspan") <- matrix_row[j]
         xml_attr(target_cell, "style") <- paste0(
           xml_attr(target_cell, "style"),
-          "vertical-align: middle !important;")
+          "vertical-align: ", valign, " !important;")
       }
     }
   }
@@ -113,11 +113,18 @@ collapse_row_matrix <- function(kable_dt, columns, html = T)  {
   return(mapping_matrix)
 }
 
-collapse_rows_latex <- function(kable_input, columns, latex_hline,
+collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 row_group_label_position, row_group_label_fonts,
                                 custom_latex_hline, headers_to_remove) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
+
+  valign <- switch(
+    valign,
+    top = "\\[t\\]",
+    middle = "",
+    bottom = "\\[b\\]"
+  )
 
   if (is.null(columns)) {
     columns <- seq(1, table_info$ncol)
@@ -142,7 +149,8 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline,
         }
       } else {
         new_kable_dt[i, j] <- collapse_new_dt_item(
-          kable_dt[i, j], collapse_matrix[i, j], column_width, align = column_align
+          kable_dt[i, j], collapse_matrix[i, j], column_width,
+          align = column_align, valign = valign
         )
       }
     }
@@ -215,11 +223,11 @@ kable_dt_latex <- function(x) {
   data.frame(do.call(rbind, str_split(x[-1], " & ")), stringsAsFactors = FALSE)
 }
 
-collapse_new_dt_item <- function(x, span, width = NULL, align) {
+collapse_new_dt_item <- function(x, span, width = NULL, align, valign) {
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
-    "\\\\multirow\\{", -span, "\\}\\{",
+    "\\\\multirow", valign, "\\{", -span, "\\}\\{",
     ifelse(is.null(width), "\\*", width),
     "\\}\\{",
     switch(align,

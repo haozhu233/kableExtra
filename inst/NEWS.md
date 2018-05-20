@@ -14,6 +14,8 @@ kableExtra 0.9.0
 
 * Removed the \small tag in threeparttable (#162)
 
+* Added valign to collapse_rows to adjust vertical position of the contents. 
+Change default setting from middle to top. (#191)
 
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
