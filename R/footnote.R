@@ -206,7 +206,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{ThreePartTable}\n\\\\begin{TableNotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
-                        "\n\\\\small\n", footnote_text,
+                        "\n", footnote_text,
                         "\n\\\\end{TableNotes}\n\\\\begin{",
                         table_info$tabular, "}"),
                  out)
@@ -234,7 +234,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  paste0("\\\\end{", table_info$tabular,
                         "}\n\\\\begin{tablenotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
-                        "\n\\\\small\n", footnote_text,
+                        "\n", footnote_text,
                         "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
                  out)
     }

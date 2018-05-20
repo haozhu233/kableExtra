@@ -12,7 +12,7 @@ kableExtra 0.9.0
 
 * Fixed header formatting for repeated header row in latex longtable (#183)
 
-* 
+* Removed the \small tag in threeparttable (#162)
 
 
 kableExtra 0.8.0
