@@ -30,6 +30,7 @@
 #' @param alphabet_title Section header for alphabet footnotes. Default is "".
 #' @param symbol_title Section header for symbol footnotes. Default is "".
 #'
+#'
 #' @examples dt <- mtcars[1:5, 1:5]
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
 #'
@@ -175,7 +176,7 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
     paste0('<sup>', x[1], '</sup> ', x[2])
   })
   if (ft_title != "") {
-    title_text <- paste0('<strong>', ft_title, '</strong>')
+    title_text <- paste0('<em>', ft_title, '</em>')
     footnote_text <- c(title_text, footnote_text)
   }
   if (!ft_chunk) {
@@ -284,7 +285,7 @@ latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
     }
   })
   if (ft_title != "") {
-    title_text <- paste0('\\\\textbf{', ft_title, '} ')
+    title_text <- paste0('\\\\textit{', ft_title, '} ')
     footnote_text <- c(title_text, footnote_text)
   }
   if (!ft_chunk) {
@@ -310,7 +311,7 @@ latex_tfoot_maker_tpt_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
     }
   })
   if (ft_title != "") {
-    title_text <- paste0('\\\\item \\\\textbf{', ft_title, '} ')
+    title_text <- paste0('\\\\item \\\\textit{', ft_title, '} ')
     footnote_text <- c(title_text, footnote_text)
   }
   footnote_text <- paste0(footnote_text, collapse = "\n")

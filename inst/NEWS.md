@@ -19,6 +19,8 @@ Change default setting from middle to top. (#191)
 
 * Added an auto_index function to facilitate group_rows. (#193) 
 
+* Changed footnote title format from bold to italic. (#200)
+
 kableExtra 0.8.0
 --------------------------------------------------------------------------------
 * Now kableExtra imports & exports knitr::kable so users don't need to load knitr entirely to NAMESPACE when it's not necessary, for example, in shiny. 
