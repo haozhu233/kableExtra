@@ -8,7 +8,9 @@
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param columns Numeric column positions where rows need to be collapsed.
-#' @param valign Select from "top"(default), "middle", "bottom"
+#' @param valign Select from "top", "middle"(default), "bottom". The reason why
+#' "top" is not default is that the multirow package on CRAN win-builder is
+#' not up to date.
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
 #' Choose from `full`, `major`, `none`, `custom`.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
@@ -27,7 +29,7 @@
 #'
 #' @export
 collapse_rows <- function(kable_input, columns = NULL,
-                          valign = c("top", "middle", "bottom"),
+                          valign = c("middle", "top", "bottom"),
                           latex_hline = c("full", "major", "none", "custom"),
                           row_group_label_position = c('identity', 'stack'),
                           custom_latex_hline = NULL,
@@ -40,7 +42,7 @@ collapse_rows <- function(kable_input, columns = NULL,
             "for details.")
     return(kable_input)
   }
-  valign <- match.arg(valign, c("top", "middle", "bottom"))
+  valign <- match.arg(valign, c("middle", "top", "bottom"))
   if (kable_format == "html") {
     return(collapse_rows_html(kable_input, columns, valign))
   }

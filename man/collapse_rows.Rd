@@ -4,7 +4,7 @@
 \alias{collapse_rows}
 \title{Collapse repeated rows to multirow cell}
 \usage{
-collapse_rows(kable_input, columns = NULL, valign = c("top", "middle",
+collapse_rows(kable_input, columns = NULL, valign = c("middle", "top",
   "bottom"), latex_hline = c("full", "major", "none", "custom"),
   row_group_label_position = c("identity", "stack"),
   custom_latex_hline = NULL, row_group_label_fonts = NULL,
@@ -15,7 +15,9 @@ collapse_rows(kable_input, columns = NULL, valign = c("top", "middle",
 
 \item{columns}{Numeric column positions where rows need to be collapsed.}
 
-\item{valign}{Select from "top"(default), "middle", "bottom"}
+\item{valign}{Select from "top", "middle"(default), "bottom". The reason why
+"top" is not default is that the multirow package on CRAN win-builder is
+not up to date.}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
 Choose from \code{full}, \code{major}, \code{none}, \code{custom}.}
