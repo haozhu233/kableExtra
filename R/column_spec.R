@@ -27,11 +27,11 @@
 #' @param border_right A logical variable indicating whether there should be a
 #' border line on the right of the selected column. In HTML, you can also pass
 #' in a character string for the CSS of the border line
-#' @param min_width Only for HTML table. Normal column width will automatically
-#' collapse when the window cannot hold enough contents. With this `min_width`,
+#' @param width_min Only for HTML table. Normal column width will automatically
+#' collapse when the window cannot hold enough contents. With this `width_min`,
 #' you can set up a column with a width that won't collapse even when the
 #' window is not wide enough.
-#' @param max_width Only for HTML table. `max_width` defines the maximum width
+#' @param width_max Only for HTML table. `width_max` defines the maximum width
 #' of table columns.
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole column but to each individual cells

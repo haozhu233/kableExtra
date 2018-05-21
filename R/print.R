@@ -13,6 +13,8 @@ print.kableExtra <- function(x, ...) {
   print(html_result)
 }
 
+#' HTML dependency for js script to enable bootstrap tooltip and popup message
+#'
 #' @export
 html_dependency_kePrint <- function() {
   htmlDependency(name = "kePrint",
@@ -22,6 +24,8 @@ html_dependency_kePrint <- function() {
                  script = "kePrint.js")
 }
 
+#' HTML dependency for Twitter bootstrap (table only)
+#'
 #' @export
 html_dependency_bsTable <- function() {
   htmlDependency(name = "bsTable",

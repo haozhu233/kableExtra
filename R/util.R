@@ -111,7 +111,9 @@ latex_pkg_list <- function() {
     "\\usepackage{pdflscape}",
     "\\usepackage{tabu}",
     "\\usepackage{threeparttable}",
-    "\\usepackage[normalem]{ulem}"
+    "\\usepackage{threeparttablex}",
+    "\\usepackage[normalem]{ulem}",
+    "\\usepackage{makecell}"
   ))
 }
 

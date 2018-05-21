@@ -406,3 +406,16 @@ padding: 15px; border: 15px solid transparent;
 background: linear-gradient(white,white), repeating-linear-gradient(45deg, #d9230f, #d9230f 10px, #f96352 10px, #f96352 20px);
 background-clip: padding-box, border-box;')
 ```
+
+## 保存HTML表格
+一般来说rmarkdown够用了，但有时候生成很多表格时候，可以考虑`save_kable()`. 如果把`self_contained`设为`F`的话，css文件会被单独放进一个文件夹（而不是被打包进网页），可以节省空间。
+```{r, eval=FALSE}
+kable(mtcars) %>%
+  kable_styling() %>%
+  save_kable(file = "table1.html", self_contained = T)
+```
+
+# 和别的包的合作
+`kable()`简单的格式意味着将由其他的包生成的HTML或者LaTeX转换成`kable`并不是一件难事。
+## `tables`
+最新版的`tables`中加个一个`toKable()`。
