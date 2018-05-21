@@ -20,7 +20,7 @@ dt %>%
         booktabs = T, escape = F, longtable = T) %>%
   footnote(NULL, c("number 1; ", "number 2. "), c("a 1; ", "a 2."), c("s 1; ", "s 2."),
            number_title = "special: ", alphabet_title = "abc: ", 
-           footnote_as_chunk = T)
+           footnote_as_chunk = T, title_format = c("italic", "bold"))
 ```
 
 ```{r}
@@ -28,7 +28,7 @@ mtcars[1:5, 1:5] %>%
   kable("latex", booktabs = T, caption = "hi") %>%
   kable_styling(position = "left") %>%
   footnote(number = c("For this particular use (i.e. a general note) the comments above are adequate. For proper footnotes in tables you should probably use the threeparttable package. You should also probably be using the booktabs package. See this answer to this question", "Note 2"),
-           number_title = "Note: ", threeparttable = T, footnote_as_chunk = T)
+           number_title = "Note: ", threeparttable = T, footnote_as_chunk = T, title_format = c("italic", "bold"))
 ```
 
 ```{r}
