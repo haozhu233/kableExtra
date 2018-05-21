@@ -417,5 +417,6 @@ kable(mtcars) %>%
 
 # 和别的包的合作
 `kable()`简单的格式意味着将由其他的包生成的HTML或者LaTeX转换成`kable`并不是一件难事。
+
 ## `tables`
 最新版的`tables`中加个一个`toKable()`。
