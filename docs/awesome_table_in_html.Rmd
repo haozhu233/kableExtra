@@ -173,16 +173,17 @@ Currently, `cell_spec` supports features including bold, italic, monospace, text
 It is very easy to use `cell_spec` with conditional logic. Here is an example.
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
+options(knitr.table.format = "html") 
 mtcars[1:10, 1:2] %>%
   mutate(
     car = row.names(.),
-    mpg = cell_spec(mpg, color = ifelse(mpg > 20, "red", "blue")),
-    cyl = cell_spec(cyl, color = "white", align = "c", angle = 45, 
+    mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
+    cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
                     background = factor(cyl, c(4, 6, 8), 
                                         c("#666666", "#999999", "#BBBBBB")))
   ) %>%
   select(car, mpg, cyl) %>%
-  kable(escape = F) %>%
+  kable(format = "html", escape = F) %>%
   kable_styling("striped", full_width = F)
 ```
 

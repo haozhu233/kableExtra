@@ -10,7 +10,7 @@ print.kableExtra <- function(x, ...) {
   if (interactive() & rstudioapi::isAvailable()) {
     htmltools::html_print(html_result, viewer = rstudioapi::viewer)
   }
-  print(html_result)
+  # print(html_result)
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message

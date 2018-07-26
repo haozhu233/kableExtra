@@ -1962,16 +1962,17 @@ Hornet Sportabout
 <h2>Conditional logic</h2>
 <p>It is very easy to use <code>cell_spec</code> with conditional logic. Here is an example.</p>
 <pre class="r"><code>library(dplyr)
+options(knitr.table.format = &quot;html&quot;) 
 mtcars[1:10, 1:2] %&gt;%
   mutate(
     car = row.names(.),
-    mpg = cell_spec(mpg, color = ifelse(mpg &gt; 20, &quot;red&quot;, &quot;blue&quot;)),
-    cyl = cell_spec(cyl, color = &quot;white&quot;, align = &quot;c&quot;, angle = 45, 
+    mpg = cell_spec(mpg, &quot;html&quot;, color = ifelse(mpg &gt; 20, &quot;red&quot;, &quot;blue&quot;)),
+    cyl = cell_spec(cyl, &quot;html&quot;, color = &quot;white&quot;, align = &quot;c&quot;, angle = 45, 
                     background = factor(cyl, c(4, 6, 8), 
                                         c(&quot;#666666&quot;, &quot;#999999&quot;, &quot;#BBBBBB&quot;)))
   ) %&gt;%
   select(car, mpg, cyl) %&gt;%
-  kable(escape = F) %&gt;%
+  kable(format = &quot;html&quot;, escape = F) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -3548,7 +3549,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3588,7 +3589,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3596,7 +3597,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3607,7 +3608,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3615,7 +3616,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -3637,7 +3638,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3645,7 +3646,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3656,7 +3657,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3664,7 +3665,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -3672,7 +3673,7 @@ d
 15
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 </tbody>
