@@ -37,7 +37,7 @@ vignette: >
 \end{wrapfigure}
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalizes all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`.
 
-To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
+To learn how to generate complex tables in HTML, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
 # Installation
 ```r
