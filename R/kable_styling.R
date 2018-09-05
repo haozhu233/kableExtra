@@ -49,6 +49,11 @@
 #' such as tabu or tabularx.You shouldn't expect all features could be
 #' supported in self-defined environments.
 #'
+#' @details  For LaTeX, if you use other than English environment
+#' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
+#' characters on a Windows machine, make sure to use
+#' Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+#'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
 #'

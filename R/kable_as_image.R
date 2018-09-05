@@ -28,7 +28,9 @@
 #' `jpeg`, `gif`, `tiff`, etc. Default is `png`.
 #' @param latex_header_includes A character vector of extra LaTeX header stuff.
 #' Each element is a row. You can have things like
-#' `c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")`
+#' `c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")`  You could
+#' probably add your language package here if you use non-English text in your
+#' table, such as `\\\\usepackage[magyar]{babel}`.
 #' @param keep_pdf A T/F option to control if the mid-way standalone pdf should
 #' be kept. Default is `FALSE`.
 #' @param density Resolution to read the PDF file. Default value is 300, which
@@ -70,7 +72,7 @@ kable_as_image <- function(kable_input, filename = NULL,
     )
     temp_tex <- paste(temp_tex, collapse = "\n")
     temp_file <- paste0("table_", format(Sys.time(), "%Y-%m-%d_%H%M%S"))
-    writeLines(temp_tex, paste0(temp_file, ".tex"))
+    writeLines(temp_tex, paste0(temp_file, ".tex"), useBytes = T)
     system(paste0("xelatex -interaction=batchmode ", temp_file, ".tex"))
     temp_file_delete <- paste0(temp_file, c(".tex", ".aux", ".log"))
     if(!keep_tex) {
