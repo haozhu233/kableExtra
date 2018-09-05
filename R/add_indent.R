@@ -48,7 +48,9 @@ add_indent_latex <- function(kable_input, positions) {
 
   for (i in positions + table_info$position_offset) {
     rowtext <- table_info$contents[i]
-    out <- sub(rowtext, latex_indent_unit(rowtext), out, perl = TRUE)
+    out <- sub(paste0(rowtext, "\\\\\\\\\n"),
+               paste0(latex_indent_unit(rowtext), "\\\\\\\\\n"),
+               out, perl = TRUE)
     table_info$contents[i] <- latex_indent_unit(rowtext)
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
