@@ -7,7 +7,8 @@
 add_header_above(kable_input, header = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, underline = FALSE,
   strikeout = FALSE, align = "c", color = NULL, background = NULL,
-  font_size = NULL, angle = NULL, escape = TRUE, line = TRUE)
+  font_size = NULL, angle = NULL, escape = TRUE, line = TRUE,
+  extra_css = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -54,6 +55,9 @@ escaped.}
 
 \item{line}{A T/F value to control whether a line will appear underneath the
 header}
+
+\item{extra_css}{An HTML only option. CSS defined here will be send to the
+td cell.}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful

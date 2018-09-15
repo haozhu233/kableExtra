@@ -35,6 +35,8 @@
 #' escaped.
 #' @param line A T/F value to control whether a line will appear underneath the
 #' header
+#' @param extra_css An HTML only option. CSS defined here will be send to the
+#' td cell.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -47,7 +49,7 @@ add_header_above <- function(kable_input, header = NULL,
                              underline = FALSE, strikeout = FALSE,
                              align = "c", color = NULL, background = NULL,
                              font_size = NULL, angle = NULL,
-                             escape = TRUE, line = TRUE) {
+                             escape = TRUE, line = TRUE, extra_css = NULL) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -58,8 +60,8 @@ add_header_above <- function(kable_input, header = NULL,
   if (kable_format == "html") {
     return(htmlTable_add_header_above(kable_input, header, bold, italic,
                                       monospace, underline, strikeout,
-                                      align, color, background,
-                                      font_size, angle, escape, line))
+                                      align, color, background, font_size,
+                                      angle, escape, line, extra_css))
   }
   if (kable_format == "latex") {
     return(pdfTable_add_header_above(kable_input, header, bold, italic,
@@ -72,8 +74,8 @@ add_header_above <- function(kable_input, header = NULL,
 # HTML
 htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        monospace, underline, strikeout,
-                                       align, color, background,
-                                       font_size, angle, escape, line) {
+                                       align, color, background, font_size,
+                                       angle, escape, line, extra_css) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
@@ -95,7 +97,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
 
   new_header_row <- htmlTable_new_header_generator(
     header, bold, italic, monospace, underline, strikeout, align, line,
-    color, background, font_size, angle
+    color, background, font_size, angle, extra_css
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
@@ -127,7 +129,7 @@ standardize_header_input <- function(header) {
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                                            underline, strikeout, align, line,
                                            color, background, font_size,
-                                           angle) {
+                                           angle, extra_css) {
   if (align %in% c("l", "c", "r")) {
     align <- switch(align, r = "right", c = "center", l = "left")
   }
@@ -153,6 +155,10 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
     if (is.numeric(font_size)) font_size <- paste0(font_size, "px")
     row_style <- paste0(row_style, "font-size: ", font_size, ";")
   }
+  if (!is.null(extra_css)) {
+    row_style <- paste0(row_style, extra_css)
+  }
+
   if (!is.null(angle)) {
     angle <- paste0("-webkit-transform: rotate(", angle,
                     "deg); -moz-transform: rotate(", angle,

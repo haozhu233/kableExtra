@@ -17,7 +17,7 @@ kable(dt, booktabs = T, caption = "Demo Table") %>%
                 latex_options = c("striped", "hold_position"),
                 full_width = F) %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2[note]" = 2), strikeout = T,
-                   italic = c(T, T, F), color = c("red", "yellow", "blue"), background = "gray", angle = 90) %>%
+                   italic = c(T, T, F), color = c("red", "yellow", "blue"), background = "gray", angle = 90, extra_css = "border: 2px solid;") %>%
   add_footnote(c("table footnote"))
 ```
 
