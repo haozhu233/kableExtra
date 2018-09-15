@@ -4,8 +4,10 @@
 \alias{add_header_above}
 \title{Add a header row on top of current header}
 \usage{
-add_header_above(kable_input, header = NULL, bold = FALSE, italic = FALSE,
-  monospace = FALSE, align = "c", escape = TRUE, line = TRUE)
+add_header_above(kable_input, header = NULL, bold = FALSE,
+  italic = FALSE, monospace = FALSE, underline = FALSE,
+  strikeout = FALSE, align = "c", color = NULL, background = NULL,
+  font_size = NULL, angle = NULL, escape = TRUE, line = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -23,9 +25,29 @@ As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" 
 \item{monospace}{A T/F value to control whether the text of the selected column
 need to be monospaced (verbatim)}
 
+\item{underline}{A T/F value to control whether the text of the selected row
+need to be underlined}
+
+\item{strikeout}{A T/F value to control whether the text of the selected row
+need to be stricked out.}
+
 \item{align}{A character string for cell alignment. For HTML, possible values could
 be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
 while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
+
+\item{color}{A character string/vector for text color. Here please pay
+attention to the differences in color codes between HTML and LaTeX.}
+
+\item{background}{A character string/vector for background color. Here please
+pay attention to the differences in color codes between HTML and LaTeX. Also
+note that in HTML, background defined in cell_spec won't cover the whole
+cell.}
+
+\item{font_size}{A numeric input/vector for font size. For HTML, you can also use
+options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, \code{large},
+\code{x-large}, \code{xx-large}, \code{smaller}, \code{larger}, \code{initial} and \code{inherit}.}
+
+\item{angle}{0-360, degree that the text will rotate.}
 
 \item{escape}{A T/F value showing whether special characters should be
 escaped.}

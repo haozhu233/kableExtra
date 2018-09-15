@@ -6,10 +6,10 @@
 \usage{
 group_rows(kable_input, group_label = NULL, start_row = NULL,
   end_row = NULL, index = NULL,
-  label_row_css = "border-bottom: 1px solid;", latex_gap_space = "0.3em",
-  escape = TRUE, latex_align = "l", colnum = NULL, bold = T,
-  italic = F, hline_before = F, hline_after = F,
-  extra_latex_after = NULL)
+  label_row_css = "border-bottom: 1px solid;",
+  latex_gap_space = "0.3em", escape = TRUE, latex_align = "l",
+  colnum = NULL, bold = T, italic = F, hline_before = F,
+  hline_after = F, extra_latex_after = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}

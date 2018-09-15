@@ -293,15 +293,15 @@ styling_latex_striped <- function(x, table_info, color) {
 
   x <- read_lines(x)
   if (table_info$booktabs) {
-    header_rows_start <- which(x == "\\toprule")[1]
+    header_rows_start <- which(trimws(x) == "\\toprule")[1]
     if (is.null(table_info$colnames)) {
       header_rows_end <- header_rows_start
     } else {
-      header_rows_end <- which(x == "\\midrule")[1]
+      header_rows_end <- which(trimws(x) == "\\midrule")[1]
     }
   } else {
-    header_rows_start <- which(x == "\\hline")[1]
-    header_rows_end <- which(x == "\\hline")[2]
+    header_rows_start <- which(trimws(x) == "\\hline")[1]
+    header_rows_end <- which(trimws(x) == "\\hline")[2]
   }
 
   x <- c(

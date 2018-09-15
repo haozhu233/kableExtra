@@ -16,8 +16,9 @@ dt <- mtcars[1:5, 1:4]
 
 kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
   kable_styling() %>%
-  add_header_above(c(" ", "Group_1" = 2, "Group 2[note]" = 2), bold = T, italic = T) %>%
-  add_footnote(c("table footnote")) 
+  add_header_above(c(" ", "Group_1" = 2, "Group 2[note]" = 2), bold = T, italic = c(T, T, F), underline = c(F, T, F), strikeout = c(F, T, F), color = c('red', 'yellow', 'blue'),
+                   background = c('black', "brown", "yellow"), angle = c(0, 90, 0),
+                   font_size = c(7, 15, 10))
 ```
 
 ```{r}
