@@ -2,6 +2,8 @@
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download_total](http://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=kableExtra)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1035917.svg)](https://doi.org/10.5281/zenodo.1035917)
+
 
 ***
 
