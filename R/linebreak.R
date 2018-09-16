@@ -7,7 +7,7 @@
 #' @param align Choose from "l", "c" or "r"
 #' @param double_escape Whether special character should be double escaped.
 #' Default is FALSE.
-#' @param linebreaker Symbol for linebreak. Default is `\n`.
+#' @param linebreaker Symbol for linebreaks to replace. Default is `\n`.
 #'
 #' @export
 linebreak <- function(x, align = c("l", "c", "r"), double_escape = F,
