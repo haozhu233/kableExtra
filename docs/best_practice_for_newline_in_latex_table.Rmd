@@ -70,6 +70,11 @@ dt2 %>%
 
 Note that linebreaks in table captions should be treated in a different way. You will need to insert the linebreak (`\\\\`) by yourself manually, which is easier than using `linebreak`. `linebreak` doesn't work because it put things in a `makecell`, which doesn't work in caption (as it's not a cell :P). At the same time, if you are using kableExtra 0.9.0 or any previous version, you need to load the `caption` package in LaTeX by yourself.
 
+```
+header-includes:
+  - \usepackage{caption}
+```
+
 ### Linebreak in other kableExtra functions
 If you have a need to put a linebreak in `kableExtra` functions such as `add_header_above` and `group_rows`, just go ahead and use `\n` directly (in kableExtra >= 0.8.0) and it will be automatically converted. Note that this feature is also controlled by the `escape` option in those functions. 
 
