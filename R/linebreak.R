@@ -7,20 +7,22 @@
 #' @param align Choose from "l", "c" or "r"
 #' @param double_escape Whether special character should be double escaped.
 #' Default is FALSE.
+#' @param linebreaker Symbol for linebreak. Default is `\n`.
 #'
 #' @export
-linebreak <- function(x, align = c("l", "c", "r"), double_escape = F) {
+linebreak <- function(x, align = c("l", "c", "r"), double_escape = F,
+                      linebreaker = "\n") {
   if (is.numeric(x) | is.logical(x)) return(x)
   align <- match.arg(align, c("l", "c", "r"))
   if (double_escape) {
-    ifelse(str_detect(x, "\n"),
+    ifelse(str_detect(x, linebreaker),
            paste0("\\\\makecell[", align, "]{",
-                  str_replace_all(x, "\n", "\\\\\\\\\\\\\\\\"), "}"),
+                  str_replace_all(x, linebreaker, "\\\\\\\\\\\\\\\\"), "}"),
            x)
   } else {
-    ifelse(str_detect(x, "\n"),
+    ifelse(str_detect(x, linebreaker),
            paste0("\\makecell[", align, "]{",
-                  str_replace_all(x, "\n", "\\\\\\\\"), "}"),
+                  str_replace_all(x, linebreaker, "\\\\\\\\"), "}"),
            x)
   }
 }
