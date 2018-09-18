@@ -109,7 +109,7 @@ collapse_row_matrix <- function(kable_dt, columns, html = T)  {
   mapping_matrix <- list()
   for (i in columns) {
     mapping_matrix[[paste0("x", i)]] <- unlist(lapply(
-      rle(kable_dt[, i])$length, column_block))
+      rle(kable_dt[, i])$lengths, column_block))
   }
   mapping_matrix <- data.frame(mapping_matrix)
   return(mapping_matrix)
