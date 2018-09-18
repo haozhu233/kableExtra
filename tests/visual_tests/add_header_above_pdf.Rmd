@@ -23,7 +23,7 @@ kable(dt, format = "latex", booktabs = T, caption = "Demo Table") %>%
 
 ```{r}
 kable(dt, format = "latex", booktabs = T) %>%
-  add_header_above(c(" ", "a" = 2, "b" = 2))%>%
+  add_header_above(c(" ", "a" = 2, "b" = 2), line_sep = c(0, 5, 0))%>%
   kable_styling()
 ```
 

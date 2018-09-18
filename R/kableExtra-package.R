@@ -72,6 +72,7 @@
 #' @importFrom stats ave
 #' @importFrom grDevices col2rgb
 #' @importFrom rstudioapi isAvailable viewer
+#' @importFrom glue glue
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra

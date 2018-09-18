@@ -15,7 +15,7 @@ linebreak(x, align = c("l", "c", "r"), double_escape = F,
 \item{double_escape}{Whether special character should be double escaped.
 Default is FALSE.}
 
-\item{linebreaker}{Symbol for linebreaks to replace. Default is \code{\n}.}
+\item{linebreaker}{Symbol for linebreaks to replace. Default is \code{\\n}.}
 }
 \description{
 This function generate LaTeX code of \code{makecell} so that users

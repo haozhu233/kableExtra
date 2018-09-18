@@ -42,7 +42,8 @@ Imports:
     stats,
     grDevices,
     htmltools,
-    rstudioapi
+    rstudioapi,
+    glue
 Suggests:
     testthat,
     magick,

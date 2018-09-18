@@ -8,7 +8,7 @@ add_header_above(kable_input, header = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, underline = FALSE,
   strikeout = FALSE, align = "c", color = NULL, background = NULL,
   font_size = NULL, angle = NULL, escape = TRUE, line = TRUE,
-  extra_css = NULL)
+  line_sep = 3, extra_css = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -55,6 +55,9 @@ escaped.}
 
 \item{line}{A T/F value to control whether a line will appear underneath the
 header}
+
+\item{line_sep}{A numeric value indicating how much the midlines should be
+separated by space. Default is 3.}
 
 \item{extra_css}{An HTML only option. CSS defined here will be send to the
 td cell.}

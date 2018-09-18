@@ -35,6 +35,8 @@
 #' escaped.
 #' @param line A T/F value to control whether a line will appear underneath the
 #' header
+#' @param line_sep A numeric value indicating how much the midlines should be
+#' separated by space. Default is 3.
 #' @param extra_css An HTML only option. CSS defined here will be send to the
 #' td cell.
 #'
@@ -49,7 +51,8 @@ add_header_above <- function(kable_input, header = NULL,
                              underline = FALSE, strikeout = FALSE,
                              align = "c", color = NULL, background = NULL,
                              font_size = NULL, angle = NULL,
-                             escape = TRUE, line = TRUE, extra_css = NULL) {
+                             escape = TRUE, line = TRUE, line_sep = 3,
+                             extra_css = NULL) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -61,13 +64,13 @@ add_header_above <- function(kable_input, header = NULL,
     return(htmlTable_add_header_above(kable_input, header, bold, italic,
                                       monospace, underline, strikeout,
                                       align, color, background, font_size,
-                                      angle, escape, line, extra_css))
+                                      angle, escape, line, line_sep, extra_css))
   }
   if (kable_format == "latex") {
     return(pdfTable_add_header_above(kable_input, header, bold, italic,
                                      monospace, underline, strikeout,
                                      align, color, background,
-                                     font_size, angle, escape, line))
+                                     font_size, angle, escape, line, line_sep))
   }
 }
 
@@ -75,7 +78,8 @@ add_header_above <- function(kable_input, header = NULL,
 htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        monospace, underline, strikeout,
                                        align, color, background, font_size,
-                                       angle, escape, line, extra_css) {
+                                       angle, escape, line, line_sep,
+                                       extra_css) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
@@ -96,8 +100,8 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
   }
 
   new_header_row <- htmlTable_new_header_generator(
-    header, bold, italic, monospace, underline, strikeout, align, line,
-    color, background, font_size, angle, extra_css
+    header, bold, italic, monospace, underline, strikeout, align,
+    color, background, font_size, angle, line, line_sep, extra_css
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
@@ -127,9 +131,9 @@ standardize_header_input <- function(header) {
 }
 
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
-                                           underline, strikeout, align, line,
+                                           underline, strikeout, align,
                                            color, background, font_size,
-                                           angle, extra_css) {
+                                           angle, line, line_sep, extra_css) {
   if (align %in% c("l", "c", "r")) {
     align <- switch(align, r = "right", c = "center", l = "left")
   }
@@ -175,15 +179,16 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
 
   line <- ifelse(ez_rep(line, nrow(header_df)),
                  "border-bottom: 1px solid #ddd; padding-bottom: 5px; ", "")
+  line_sep <- ez_rep(line_sep, nrow(header_df))
+  line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
 
   header_items <- ifelse(
     trimws(header_df$header) == "",
     paste0('<th style="border-bottom:hidden" colspan="', header_df$colspan,
            '"></th>'),
     paste0(
-      '<th style="border-bottom:hidden; ',
-      'padding-bottom:0; padding-left:3px;padding-right:3px;',
-      row_style, '" colspan="',
+      '<th style="border-bottom:hidden; padding-bottom:0; ',
+      line_sep, row_style, '" colspan="',
       header_df$colspan, '"><div style="', line, '">', header_df$header,
       '</div></th>')
   )
@@ -194,9 +199,9 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
 
 # Add an extra header row above the current header in a LaTeX table ------
 pdfTable_add_header_above <- function(kable_input, header, bold, italic,
-                                      monospace, underline, strikeout,
-                                      align, color, background,
-                                      font_size, angle, escape, line) {
+                                      monospace, underline, strikeout, align,
+                                      color, background, font_size, angle,
+                                      escape, line, line_sep) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
 
@@ -209,7 +214,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(
     header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
-    align, color, background, font_size, angle)
+    align, color, background, font_size, angle, line_sep)
   if (line) {
     new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   } else {
@@ -240,7 +245,8 @@ ez_rep <- function(x, n) {
 pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
                                           bold, italic, monospace,
                                           underline, strikeout, align,
-                                          color, background, font_size, angle) {
+                                          color, background, font_size, angle,
+                                          line_sep) {
   n <- nrow(header_df)
   bold <- ez_rep(bold, n)
   italic <- ez_rep(italic, n)
@@ -286,17 +292,19 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   )
 
   header_text <- paste(paste(header_items, collapse = " & "), "\\\\\\\\")
-  cline <- cline_gen(header_df, booktabs)
+  cline <- cline_gen(header_df, booktabs, line_sep)
   return(c(header_text, cline))
 }
 
-cline_gen <- function(header_df, booktabs) {
+cline_gen <- function(header_df, booktabs, line_sep) {
   cline_end <- cumsum(header_df$colspan)
   cline_start <- c(0, cline_end) + 1
   cline_start <- cline_start[-length(cline_start)]
-  cline_type <- switch(booktabs + 1,
-                       "\\\\cline{",
-                       "\\\\cmidrule(l{2pt}r{2pt}){")
+  cline_type <- switch(
+    booktabs + 1,
+    "\\\\cline{",
+    glue::glue("\\\\cmidrule(l{[line_sep]pt}r{[line_sep]pt}){",
+               .open = "[", .close = "]"))
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")
