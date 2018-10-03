@@ -1,6 +1,7 @@
 book_filename: "bookdown_example"
 delete_merged_file: true
 new_session: true
+output_dir: "../bookdown"
 language:
   ui:
     chapter_name: "Chapter "
