@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Using kableExtra in Bookdown Projects</title>
+  <title>Using kableExtra in Bookdown</title>
   <meta name="description" content="This example provides documentations for using kableExtra to customize tables in bookdown projects.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Using kableExtra in Bookdown Projects" />
+  <meta property="og:title" content="Using kableExtra in Bookdown" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Using kableExtra in Bookdown Projects" />
+  <meta name="twitter:title" content="Using kableExtra in Bookdown" />
   
   <meta name="twitter:description" content="This example provides documentations for using kableExtra to customize tables in bookdown projects." />
   
@@ -147,7 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Using kableExtra in Bookdown Projects</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Using kableExtra in Bookdown</a>
           </h1>
         </div>
 
@@ -166,13 +166,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>] <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">kable_styling</span>(
-    <span class="dt">bootstrap_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>,<span class="st">&quot;hover&quot;</span>, <span class="st">&quot;bordered&quot;</span>),
+    <span class="dt">bootstrap_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>,<span class="st">&quot;hover&quot;</span>, <span class="st">&quot;bordered&quot;</span>, <span class="st">&quot;condensed&quot;</span>),
     <span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>),
     <span class="dt">full_width =</span> F
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">column_spec</span>(<span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_header_above</span>(<span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;Group A&quot;</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;Group B&quot;</span> =<span class="st"> </span><span class="dv">3</span>))</code></pre>
-<table class="table table-striped table-hover table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-bordered table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="border-bottom:hidden" colspan="1">

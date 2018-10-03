@@ -24,7 +24,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Using kableExtra in Bookdown Projects},
+            pdftitle={Using kableExtra in Bookdown},
             pdfauthor={Hao Zhu},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -117,7 +117,7 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Using kableExtra in Bookdown Projects}
+  \title{Using kableExtra in Bookdown}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
     \author{Hao Zhu}
@@ -163,6 +163,9 @@ this example.
 
 This book is hosted at
 \url{https://github.com/haozhu233/kableExtra/tree/master/docs}.
+
+You can download PDF \& EPUB to see the results of kableExtra in those
+formats using the same code.
 
 You can find the source code for this project at
 \url{https://github.com/haozhu233/kableExtra/tree/master/docs}.
@@ -281,7 +284,7 @@ setting \texttt{options(kableExtra.html.bsTable\ =\ T)}.
 \NormalTok{mtcars[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{] }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{booktabs =}\NormalTok{ T) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}
-    \DataTypeTok{bootstrap_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{,}\StringTok{"hover"}\NormalTok{, }\StringTok{"bordered"}\NormalTok{),}
+    \DataTypeTok{bootstrap_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{,}\StringTok{"hover"}\NormalTok{, }\StringTok{"bordered"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
     \DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{),}
     \DataTypeTok{full_width =}\NormalTok{ F}
 \NormalTok{  ) }\OperatorTok{%>%}

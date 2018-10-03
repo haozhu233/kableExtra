@@ -11,7 +11,7 @@ options(kableExtra.html.bsTable = T)
 mtcars[1:5, 1:5] %>%
   kable(booktabs = T) %>% 
   kable_styling(
-    bootstrap_options = c("striped","hover", "bordered"),
+    bootstrap_options = c("striped","hover", "bordered", "condensed"),
     latex_options = c("striped"),
     full_width = F
   ) %>%
@@ -19,7 +19,7 @@ mtcars[1:5, 1:5] %>%
   add_header_above(c(" ", "Group A" = 2, "Group B" = 3))
 ```
 
-<table class="table table-striped table-hover table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-bordered table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
 <tr>
 <th style="border-bottom:hidden" colspan="1"></th>
