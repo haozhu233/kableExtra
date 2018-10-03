@@ -3,6 +3,9 @@ title: "add_header_above"
 output: 
   pdf_document:
     keep_tex: true
+header-includes:
+  - \usepackage[singlelinecheck=false]{caption}
+  - \captionsetup[table]{labelformat=empty}
 ---
 
 ```{r}
@@ -29,7 +32,7 @@ kable(dt, format = "latex", booktabs = T) %>%
 
 
 ```{r}
-kable(dt, format = "latex", booktabs = T, longtable = T, caption = "aaa") %>%
+kable(dt, format = "latex", booktabs = T, caption = "aaa\\\\bbb") %>%
   add_header_above(c(" ", "a" = 2, "b" = 2))%>%
   kable_styling()
 ```

@@ -24,4 +24,8 @@
       )) {
     options(kableExtra.html.bsTable = TRUE)
   }
+  if (!is.null(knitr::opts_knit$get("rmarkdown.pandoc.to")) &&
+      knitr::opts_knit$get("rmarkdown.pandoc.to") %in% c("epub3", "epub")) {
+    options(kableExtra.knit_print.dependency = FALSE)
+  }
 }

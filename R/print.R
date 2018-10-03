@@ -38,10 +38,16 @@ html_dependency_bsTable <- function() {
 #' @export
 knit_print.kableExtra <- function(x, ...) {
   x <- paste0(x, "\n\n")
-  meta_list <- list(html_dependency_kePrint())
-  bs <- getOption("kableExtra.html.bsTable", default = FALSE)
-  if (bs) {
-    meta_list[[2]] <- html_dependency_bsTable()
+  kp_dependency <- getOption("kableExtra.knit_print.dependency",
+                             default = TRUE)
+  if (kp_dependency) {
+    meta_list <- list(html_dependency_kePrint())
+    bs <- getOption("kableExtra.html.bsTable", default = FALSE)
+    if (bs) {
+      meta_list[[2]] <- html_dependency_bsTable()
+    }
+  } else {
+    meta_list <- NULL
   }
   asis_output(x, meta = meta_list)
 }
