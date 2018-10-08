@@ -11,14 +11,18 @@ mtcars[1:5, 1:5] %>%
   kable(booktabs = T) %>% 
   kable_styling(
     bootstrap_options = c("striped","hover", "bordered", "condensed"),
-    latex_options = c("striped"),
-    full_width = F
+    latex_options = c("striped")
   ) %>%
   column_spec(1, color = "red") %>%
   add_header_above(c(" ", "Group A" = 2, "Group B" = 3))
 ```
 
-However, very unfortunately, as we can see, the `hover` part is not working and the table still looks different from a regular bootstrap table. The reason is that gitbook defines its own way to style tables and some of its rules are conflicting with the one defined in bootstrap. For css, it's like once you load something, it's impossible to really unload it. As a result, unless there are some changes in `bookdown` (for example, we can replace the gitbook table part with bootstrap tables), there is nothing we can do here. 
+**One very important note** here is that by default bookdown loads the gitbook table css on start up. It has some conflicts with `bootstrap` tables. As a result, some features like `hover` won't be able to work by default. To solve this problem, you need to use the latest version of `bookdown` (version >= 0.7.21) and turn off the `table_css` option under `bookdown::gitbook` in `_output.yml`
+
+```
+bookdown::gitbook:
+  table_css: false
+```
 
 ## Epub
 Right now, it's impossible to load addition CSS through HTML dependency (due to a setting in rmarkdown). I will file an issue in `rmarkdown` and see if this is something that can be changed. In the mean time, to use bootstrap tables in Epub, you will have to manually load [this stylesheet](https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css) by putting it to a CSS file (such as "style.css") and load it in `_output.yml`. For example,

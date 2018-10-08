@@ -25,7 +25,7 @@
 <meta name="author" content="Hao Zhu">
 
 
-<meta name="date" content="2018-10-03">
+<meta name="date" content="2018-10-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -179,6 +179,7 @@ language:
 <p>In most cases, functions in <code>kable</code> and <code>kableExtra</code> use the same API to accomplish the same styling task in HTML and LaTeX. However, you also need some format specific settings so your tables will look good in both formats. Some common items here include the <code>booktabs</code> and <code>longtable</code> settings in <code>kable</code> and the <code>bootstrap_options</code> and <code>latex_options</code> in <code>kable_styling</code>.</p>
 <p>Here is an example for a table that will work in both HTML and LaTeX.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kableExtra)
+<span class="kw">options</span>(<span class="dt">kableExtra.html.bsTable =</span> T)
 mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>] <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">kable_styling</span>(

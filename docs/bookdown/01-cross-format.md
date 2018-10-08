@@ -28,6 +28,7 @@ Here is an example for a table that will work in both HTML and LaTeX.
 
 ```r
 library(kableExtra)
+options(kableExtra.html.bsTable = T)
 mtcars[1:5, 1:5] %>%
   kable(booktabs = T) %>% 
   kable_styling(

@@ -1,7 +1,7 @@
 --- 
 title: "Using kableExtra in Bookdown"
 author: "Hao Zhu"
-date: "2018-10-03"
+date: "2018-10-08"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]

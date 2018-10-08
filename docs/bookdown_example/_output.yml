@@ -1,4 +1,5 @@
 bookdown::gitbook:
+  table_css: false
   config:
     download: ["pdf", "epub"]
 bookdown::pdf_book:

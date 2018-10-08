@@ -25,7 +25,7 @@
 <meta name="author" content="Hao Zhu">
 
 
-<meta name="date" content="2018-10-03">
+<meta name="date" content="2018-10-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -167,12 +167,11 @@ mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">5</spa
 <span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">kable_styling</span>(
     <span class="dt">bootstrap_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>,<span class="st">&quot;hover&quot;</span>, <span class="st">&quot;bordered&quot;</span>, <span class="st">&quot;condensed&quot;</span>),
-    <span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>),
-    <span class="dt">full_width =</span> F
+    <span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>)
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">column_spec</span>(<span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_header_above</span>(<span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;Group A&quot;</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;Group B&quot;</span> =<span class="st"> </span><span class="dv">3</span>))</code></pre>
-<table class="table table-striped table-hover table-bordered table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-bordered table-condensed" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="border-bottom:hidden" colspan="1">
@@ -311,7 +310,9 @@ Hornet Sportabout
 </tr>
 </tbody>
 </table>
-<p>However, very unfortunately, as we can see, the <code>hover</code> part is not working and the table still looks different from a regular bootstrap table. The reason is that gitbook defines its own way to style tables and some of its rules are conflicting with the one defined in bootstrap. For css, it’s like once you load something, it’s impossible to really unload it. As a result, unless there are some changes in <code>bookdown</code> (for example, we can replace the gitbook table part with bootstrap tables), there is nothing we can do here.</p>
+<p><strong>One very important note</strong> here is that by default bookdown loads the gitbook table css on start up. It has some conflicts with <code>bootstrap</code> tables. As a result, some features like <code>hover</code> won’t be able to work by default. To solve this problem, you need to use the latest version of <code>bookdown</code> (version &gt;= 0.7.21) and turn off the <code>table_css</code> option under <code>bookdown::gitbook</code> in <code>_output.yml</code></p>
+<pre><code>bookdown::gitbook:
+  table_css: false</code></pre>
 </div>
 <div id="epub" class="section level2">
 <h2><span class="header-section-number">3.2</span> Epub</h2>
