@@ -1,7 +1,7 @@
 # Use Bootstrap Tables in gitbooks & epub
 
 ## Gitbook
-Most of `kableExtra` tricks will work in `bookdown` except those requires [`bootstrap`](http://getbootstrap.com/). By default, `rmarkdown` won't load `bootstrap` for you on gitbook as it's not necesary. In `kableExtra`, I used the [bootstrap 3.3.7 customization tool](https://getbootstrap.com/docs/3.3/customize/) and made a customized css copy. You can load it by setting `options(kableExtra.html.bsTable = T)`. 
+Most of `kableExtra` tricks will work in `bookdown` except those requiring [`bootstrap`](http://getbootstrap.com/). By default, `rmarkdown` won't load `bootstrap` for you on gitbook as it's not necesary. In `kableExtra`, I used the [bootstrap 3.3.7 customization tool](https://getbootstrap.com/docs/3.3/customize/) and made a customized css copy. You can load it by setting `options(kableExtra.html.bsTable = T)`. 
 
 
 ```r

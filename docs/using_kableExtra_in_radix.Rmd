@@ -1,0 +1,35 @@
+---
+title: "Using kableExtra in Radix"
+description: |
+  A new article describing how to use kableExtra in Radix
+author:
+  - name: Hao Zhu
+    url: https://github.com/haozhu233
+date: "`r Sys.Date()`"
+output: radix::radix_article
+---
+
+People may find some features in `kableExtra`, such as hovering/striped rows are not working in `radix`. The reason is that `kableExtra` relies on `bootstrap` stylesheet to do these jobs while `radix` doesn't have those css load. Therefore you need to tell `kableExtra` to load the table css for you by setting `options(kableExtra.html.bsTable = T)`. 
+
+```{r, echo = T}
+library(kableExtra)
+options(kableExtra.html.bsTable = T)  
+
+kable(iris[1:6, ], caption = "kable with kableExtra") %>%
+  kable_styling(c("striped", "hover", "condensed"), full_width = F,
+                position = "left") %>%
+  add_header_above(c("numerical" = 4, "categorical" = 1)) %>%
+  column_spec(1, bold = T) %>%
+  row_spec(0, italic = T)
+```
+
+
+Comparing with other table options
+
+```{r, echo = T}
+kable(iris[1:6, ], caption = "Basic kable")
+```
+
+```{r, echo = T}
+rmarkdown::paged_table(iris)
+```

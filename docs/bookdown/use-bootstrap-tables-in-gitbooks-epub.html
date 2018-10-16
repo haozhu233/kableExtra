@@ -25,7 +25,7 @@
 <meta name="author" content="Hao Zhu">
 
 
-<meta name="date" content="2018-10-08">
+<meta name="date" content="2018-10-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> Use Bootstrap Tables in gitbooks &amp; epub</h1>
 <div id="gitbook" class="section level2">
 <h2><span class="header-section-number">3.1</span> Gitbook</h2>
-<p>Most of <code>kableExtra</code> tricks will work in <code>bookdown</code> except those requires <a href="http://getbootstrap.com/"><code>bootstrap</code></a>. By default, <code>rmarkdown</code> won’t load <code>bootstrap</code> for you on gitbook as it’s not necesary. In <code>kableExtra</code>, I used the <a href="https://getbootstrap.com/docs/3.3/customize/">bootstrap 3.3.7 customization tool</a> and made a customized css copy. You can load it by setting <code>options(kableExtra.html.bsTable = T)</code>.</p>
+<p>Most of <code>kableExtra</code> tricks will work in <code>bookdown</code> except those requiring <a href="http://getbootstrap.com/"><code>bootstrap</code></a>. By default, <code>rmarkdown</code> won’t load <code>bootstrap</code> for you on gitbook as it’s not necesary. In <code>kableExtra</code>, I used the <a href="https://getbootstrap.com/docs/3.3/customize/">bootstrap 3.3.7 customization tool</a> and made a customized css copy. You can load it by setting <code>options(kableExtra.html.bsTable = T)</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kableExtra)
 <span class="kw">options</span>(<span class="dt">kableExtra.html.bsTable =</span> T)
 
