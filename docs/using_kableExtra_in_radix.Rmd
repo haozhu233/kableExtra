@@ -33,3 +33,8 @@ kable(iris[1:6, ], caption = "Basic kable")
 ```{r, echo = T}
 rmarkdown::paged_table(iris)
 ```
+
+# Appendix
+Here is a screenshot of how table looks like if you don't turn on the `kableExtra.html.bsTable` option (with the same code). In fact, the only part that breaks is the `striped` and `hover` option. :P
+
+![](radix_no_bs.png)
