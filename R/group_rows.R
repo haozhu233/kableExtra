@@ -32,6 +32,7 @@
 #' @param hline_after A replicate of `hline.after` in xtable. It
 #' addes a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
+#' @param indent A T?F value to control whether list items are indented.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
@@ -44,11 +45,12 @@ group_rows <- function(kable_input, group_label = NULL,
                        label_row_css = "border-bottom: 1px solid;",
                        latex_gap_space = "0.3em",
                        escape = TRUE, latex_align = "l", colnum = NULL,
-                       bold = T,
-                       italic = F,
-                       hline_before = F,
-                       hline_after = F,
-                       extra_latex_after = NULL) {
+                       bold = TRUE,
+                       italic = FALSE,
+                       hline_before = FALSE,
+                       hline_after = FALSE,
+                       extra_latex_after = NULL,
+                       indent = TRUE) {
 
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -62,12 +64,13 @@ group_rows <- function(kable_input, group_label = NULL,
       if(!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
-                             label_row_css, escape, colnum))
+                             label_row_css, escape, colnum, indent))
     }
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
-                              bold, italic, hline_before, hline_after, extra_latex_after))
+                              bold, italic, hline_before, hline_after,
+                              extra_latex_after, indent))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -78,7 +81,7 @@ group_rows <- function(kable_input, group_label = NULL,
                                     use label_row_css instead.")
         out <- group_rows_html(out, index$header[i],
                                index$start[i], index$end[i],
-                               label_row_css, escape, colnum)
+                               label_row_css, escape, colnum, indent)
       }
     }
     if (kable_format == "latex") {
@@ -86,7 +89,8 @@ group_rows <- function(kable_input, group_label = NULL,
         out <- group_rows_latex(out, index$header[i],
                                index$start[i], index$end[i],
                                latex_gap_space, escape, latex_align, colnum,
-                               bold, italic, hline_before, hline_after, extra_latex_after)
+                               bold, italic, hline_before, hline_after,
+                               extra_latex_after, indent)
       }
     }
     return(out)
@@ -103,7 +107,7 @@ group_row_index_translator <- function(index) {
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
-                            label_row_css, escape, colnum) {
+                            label_row_css, escape, colnum, indent) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -136,14 +140,16 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
-  out <- add_indent_html(out, positions = seq(start_row, end_row))
+  if (indent) {
+    out <- add_indent_html(out, positions = seq(start_row, end_row))
+  }
   return(out)
 }
 
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              gap_space, escape, latex_align, colnum,
                              bold = T, italic = F, hline_before = F ,hline_after = F,
-                             extra_latex_after = NULL) {
+                             extra_latex_after = NULL, indent) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -193,7 +199,9 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
-  out <- add_indent_latex(out, seq(start_row, end_row))
+  if (indent) {
+    out <- add_indent_latex(out, seq(start_row, end_row))
+  }
   return(out)
 }
 

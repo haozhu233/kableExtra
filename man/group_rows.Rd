@@ -8,8 +8,8 @@ group_rows(kable_input, group_label = NULL, start_row = NULL,
   end_row = NULL, index = NULL,
   label_row_css = "border-bottom: 1px solid;",
   latex_gap_space = "0.3em", escape = TRUE, latex_align = "l",
-  colnum = NULL, bold = T, italic = F, hline_before = F,
-  hline_after = F, extra_latex_after = NULL)
+  colnum = NULL, bold = TRUE, italic = FALSE, hline_before = FALSE,
+  hline_after = FALSE, extra_latex_after = NULL, indent = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -56,6 +56,8 @@ value is False.}
 addes a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row.}
+
+\item{indent}{A T?F value to control whether list items are indented.}
 }
 \description{
 Group a few rows in a table together under a label.
