@@ -73,6 +73,8 @@
 #' @importFrom grDevices col2rgb
 #' @importFrom rstudioapi isAvailable viewer
 #' @importFrom glue glue
+#' @importFrom tools file_ext file_path_sans_ext
+#' @importFrom webshot webshot
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra

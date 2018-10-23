@@ -43,7 +43,9 @@ Imports:
     grDevices,
     htmltools,
     rstudioapi,
-    glue
+    glue,
+    tools,
+    webshot
 Suggests:
     testthat,
     magick,
