@@ -20,20 +20,28 @@ language:
     chapter_name: "Chapter "
 ```
 
-## Prepare Your Tables for Both Formats
+## Prepare Your Tables for All Formats
 In most cases, functions in `kable` and `kableExtra` use the same API to accomplish the same styling task in HTML and LaTeX. However, you also need some format specific settings so your tables will look good in both formats. Some common items here include the `booktabs` and `longtable` settings in `kable` and the `bootstrap_options` and `latex_options` in `kable_styling`. 
 
-Here is an example for a table that will work in both HTML and LaTeX.
+Here is an example for a table that will work in HTML, LaTeX & EPUB.
 
 ```{r}
 library(kableExtra)
+library(dplyr)
 options(kableExtra.html.bsTable = T)
-mtcars[1:5, 1:5] %>%
-  kable(booktabs = T) %>% 
-  kable_styling(
-    latex_options = c("striped"),
-    full_width = F
-  ) %>%
-  column_spec(1, bold = T) %>%
-  add_header_above(c(" ", "Group A" = 2, "Group B" = 3))
+iris[1:10, ] %>%
+  mutate_if(is.numeric, function(x) {
+    cell_spec(x, bold = T, 
+              color = spec_color(x, end = 0.9),
+              font_size = spec_font_size(x))
+  }) %>%
+  mutate(Species = cell_spec(
+    Species, color = "white", bold = T,
+    background = spec_color(1:10, end = 0.9, 
+                            option = "A", direction = -1)
+  )) %>%
+  kable(escape = F, align = "c", booktabs = T) %>%
+  kable_styling(c("striped", "condensed"), 
+                latex_options = "striped", 
+                full_width = F)
 ```

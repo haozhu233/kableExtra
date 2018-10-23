@@ -20,81 +20,137 @@ language:
     chapter_name: "Chapter "
 ```
 
-## Prepare Your Tables for Both Formats
+## Prepare Your Tables for All Formats
 In most cases, functions in `kable` and `kableExtra` use the same API to accomplish the same styling task in HTML and LaTeX. However, you also need some format specific settings so your tables will look good in both formats. Some common items here include the `booktabs` and `longtable` settings in `kable` and the `bootstrap_options` and `latex_options` in `kable_styling`. 
 
-Here is an example for a table that will work in both HTML and LaTeX.
+Here is an example for a table that will work in HTML, LaTeX & EPUB.
 
 
 ```r
 library(kableExtra)
-options(kableExtra.html.bsTable = T)
-mtcars[1:5, 1:5] %>%
-  kable(booktabs = T) %>% 
-  kable_styling(
-    latex_options = c("striped"),
-    full_width = F
-  ) %>%
-  column_spec(1, bold = T) %>%
-  add_header_above(c(" ", "Group A" = 2, "Group B" = 3))
+library(dplyr)
 ```
 
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+```
+## Warning: package 'dplyr' was built under R version 3.5.1
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+options(kableExtra.html.bsTable = T)
+iris[1:10, ] %>%
+  mutate_if(is.numeric, function(x) {
+    cell_spec(x, bold = T, 
+              color = spec_color(x, end = 0.9),
+              font_size = spec_font_size(x))
+  }) %>%
+  mutate(Species = cell_spec(
+    Species, color = "white", bold = T,
+    background = spec_color(1:10, end = 0.9, 
+                            option = "A", direction = -1)
+  )) %>%
+  kable(escape = F, align = "c", booktabs = T) %>%
+  kable_styling(c("striped", "condensed"), 
+                latex_options = "striped", 
+                full_width = F)
+```
+
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
-<tr>
-<th style="border-bottom:hidden" colspan="1"></th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Group A</div></th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Group B</div></th>
-</tr>
   <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> mpg </th>
-   <th style="text-align:right;"> cyl </th>
-   <th style="text-align:right;"> disp </th>
-   <th style="text-align:right;"> hp </th>
-   <th style="text-align:right;"> drat </th>
+   <th style="text-align:center;"> Sepal.Length </th>
+   <th style="text-align:center;"> Sepal.Width </th>
+   <th style="text-align:center;"> Petal.Length </th>
+   <th style="text-align:center;"> Petal.Width </th>
+   <th style="text-align:center;"> Species </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;font-weight: bold;"> Mazda RX4 </td>
-   <td style="text-align:right;"> 21.0 </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 160 </td>
-   <td style="text-align:right;"> 110 </td>
-   <td style="text-align:right;"> 3.90 </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(40, 174, 128, 1);font-size: 14px;">5.1</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(31, 154, 138, 1);font-size: 13px;">3.5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 206, 145, 1);">setosa</span> </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;"> Mazda RX4 Wag </td>
-   <td style="text-align:right;"> 21.0 </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 160 </td>
-   <td style="text-align:right;"> 110 </td>
-   <td style="text-align:right;"> 3.90 </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(72, 34, 116, 1);font-size: 9px;">3</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(254, 160, 109, 1);">setosa</span> </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;"> Datsun 710 </td>
-   <td style="text-align:right;"> 22.8 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 108 </td>
-   <td style="text-align:right;"> 93 </td>
-   <td style="text-align:right;"> 3.85 </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(57, 87, 140, 1);font-size: 10px;">4.7</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(56, 88, 140, 1);font-size: 10px;">3.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(68, 1, 84, 1);font-size: 8px;">1.3</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(246, 110, 92, 1);">setosa</span> </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;"> Hornet 4 Drive </td>
-   <td style="text-align:right;"> 21.4 </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 258 </td>
-   <td style="text-align:right;"> 110 </td>
-   <td style="text-align:right;"> 3.08 </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(222, 73, 104, 1);">setosa</span> </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;"> Hornet Sportabout </td>
-   <td style="text-align:right;"> 18.7 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 360 </td>
-   <td style="text-align:right;"> 175 </td>
-   <td style="text-align:right;"> 3.15 </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(31, 154, 138, 1);font-size: 13px;">5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(41, 175, 127, 1);font-size: 14px;">3.6</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(183, 55, 121, 1);">setosa</span> </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(187, 223, 39, 1);font-size: 16px;">5.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(187, 223, 39, 1);font-size: 16px;">3.9</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(187, 223, 39, 1);font-size: 16px;">1.7</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(187, 223, 39, 1);font-size: 16px;">0.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(140, 41, 129, 1);">setosa</span> </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(67, 62, 133, 1);font-size: 10px;">4.6</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(34, 168, 132, 1);font-size: 13px;">0.3</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(100, 26, 128, 1);">setosa</span> </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(31, 154, 138, 1);font-size: 13px;">5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">3.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(60, 15, 112, 1);">setosa</span> </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(68, 1, 84, 1);font-size: 8px;">4.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(68, 1, 84, 1);font-size: 8px;">2.9</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(62, 75, 138, 1);font-size: 10px;">1.4</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(53, 96, 141, 1);font-size: 11px;">0.2</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(20, 14, 54, 1);">setosa</span> </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">4.9</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(67, 62, 133, 1);font-size: 10px;">3.1</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(37, 131, 142, 1);font-size: 12px;">1.5</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: rgba(68, 1, 84, 1);font-size: 8px;">0.1</span> </td>
+   <td style="text-align:center;"> <span style=" font-weight: bold;    color: white;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(0, 0, 4, 1);">setosa</span> </td>
   </tr>
 </tbody>
 </table>

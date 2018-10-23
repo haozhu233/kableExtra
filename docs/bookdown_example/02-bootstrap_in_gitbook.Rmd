@@ -25,7 +25,7 @@ bookdown::gitbook:
 ```
 
 ## Epub
-Right now, it's impossible to load addition CSS through HTML dependency (due to a setting in rmarkdown). I will file an issue in `rmarkdown` and see if this is something that can be changed. In the mean time, to use bootstrap tables in Epub, you will have to manually load [this stylesheet](https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css) by putting it to a CSS file (such as "style.css") and load it in `_output.yml`. For example,
+Right now, it's impossible to load addition CSS through HTML dependency and this mechanism exists for a reason ( [See this issue I filed](https://github.com/rstudio/rmarkdown/issues/1457) ). You will have to manually load [this stylesheet](https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css) by putting it to a CSS file (such as "style.css") and load it in `_output.yml`. For example,
 
 ```
 bookdown::epub_book: 

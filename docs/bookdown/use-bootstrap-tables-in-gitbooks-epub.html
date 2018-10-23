@@ -25,7 +25,7 @@
 <meta name="author" content="Hao Zhu">
 
 
-<meta name="date" content="2018-10-16">
+<meta name="date" content="2018-10-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="cross-format-tables-in-bookdown.html"><a href="cross-format-tables-in-bookdown.html"><i class="fa fa-check"></i><b>2</b> Cross-format Tables in Bookdown</a><ul>
 <li class="chapter" data-level="2.1" data-path="cross-format-tables-in-bookdown.html"><a href="cross-format-tables-in-bookdown.html#use-the-k-m-approach-instead-of-m-k"><i class="fa fa-check"></i><b>2.1</b> Use the “K-M” approach instead of “M-K”</a></li>
-<li class="chapter" data-level="2.2" data-path="cross-format-tables-in-bookdown.html"><a href="cross-format-tables-in-bookdown.html#prepare-your-tables-for-both-formats"><i class="fa fa-check"></i><b>2.2</b> Prepare Your Tables for Both Formats</a></li>
+<li class="chapter" data-level="2.2" data-path="cross-format-tables-in-bookdown.html"><a href="cross-format-tables-in-bookdown.html#prepare-your-tables-for-all-formats"><i class="fa fa-check"></i><b>2.2</b> Prepare Your Tables for All Formats</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="use-bootstrap-tables-in-gitbooks-epub.html"><a href="use-bootstrap-tables-in-gitbooks-epub.html"><i class="fa fa-check"></i><b>3</b> Use Bootstrap Tables in gitbooks &amp; epub</a><ul>
 <li class="chapter" data-level="3.1" data-path="use-bootstrap-tables-in-gitbooks-epub.html"><a href="use-bootstrap-tables-in-gitbooks-epub.html#gitbook"><i class="fa fa-check"></i><b>3.1</b> Gitbook</a></li>
@@ -316,7 +316,7 @@ Hornet Sportabout
 </div>
 <div id="epub" class="section level2">
 <h2><span class="header-section-number">3.2</span> Epub</h2>
-<p>Right now, it’s impossible to load addition CSS through HTML dependency (due to a setting in rmarkdown). I will file an issue in <code>rmarkdown</code> and see if this is something that can be changed. In the mean time, to use bootstrap tables in Epub, you will have to manually load <a href="https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css">this stylesheet</a> by putting it to a CSS file (such as “style.css”) and load it in <code>_output.yml</code>. For example,</p>
+<p>Right now, it’s impossible to load addition CSS through HTML dependency and this mechanism exists for a reason ( <a href="https://github.com/rstudio/rmarkdown/issues/1457">See this issue I filed</a> ). You will have to manually load <a href="https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css">this stylesheet</a> by putting it to a CSS file (such as “style.css”) and load it in <code>_output.yml</code>. For example,</p>
 <pre><code>bookdown::epub_book: 
   stylesheet: style.css</code></pre>
 

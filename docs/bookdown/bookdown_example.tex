@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-10-04}
+    \date{2018-10-23}
 
 \usepackage{booktabs}
 \usepackage{booktabs}
@@ -162,7 +162,7 @@ tables in \texttt{gitbook}. I will try to address these issues using
 this example.
 
 This book is hosted at
-\url{https://github.com/haozhu233/kableExtra/tree/master/docs}.
+\url{https://haozhu233.github.io/kableExtra/bookdown/index.html}
 
 You can download PDF \& EPUB to see the results of kableExtra in those
 formats using the same code.
@@ -212,9 +212,9 @@ language:
     chapter_name: "Chapter "
 \end{verbatim}
 
-\hypertarget{prepare-your-tables-for-both-formats}{%
-\section{Prepare Your Tables for Both
-Formats}\label{prepare-your-tables-for-both-formats}}
+\hypertarget{prepare-your-tables-for-all-formats}{%
+\section{Prepare Your Tables for All
+Formats}\label{prepare-your-tables-for-all-formats}}
 
 In most cases, functions in \texttt{kable} and \texttt{kableExtra} use
 the same API to accomplish the same styling task in HTML and LaTeX.
@@ -224,38 +224,77 @@ look good in both formats. Some common items here include the
 the \texttt{bootstrap\_options} and \texttt{latex\_options} in
 \texttt{kable\_styling}.
 
-Here is an example for a table that will work in both HTML and LaTeX.
+Here is an example for a table that will work in HTML, LaTeX \& EPUB.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(kableExtra)}
-\NormalTok{mtcars[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{] }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{booktabs =}\NormalTok{ T) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}
-    \DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{),}
-    \DataTypeTok{full_width =}\NormalTok{ F}
-\NormalTok{  ) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{column_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DataTypeTok{bold =}\NormalTok{ T) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Group A"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Group B"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{))}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'dplyr' was built under R version 3.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{kableExtra.html.bsTable =}\NormalTok{ T)}
+\NormalTok{iris[}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, ] }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate_if}\NormalTok{(is.numeric, }\ControlFlowTok{function}\NormalTok{(x) \{}
+    \KeywordTok{cell_spec}\NormalTok{(x, }\DataTypeTok{bold =}\NormalTok{ T, }
+              \DataTypeTok{color =} \KeywordTok{spec_color}\NormalTok{(x, }\DataTypeTok{end =} \FloatTok{0.9}\NormalTok{),}
+              \DataTypeTok{font_size =} \KeywordTok{spec_font_size}\NormalTok{(x))}
+\NormalTok{  \}) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Species =} \KeywordTok{cell_spec}\NormalTok{(}
+\NormalTok{    Species, }\DataTypeTok{color =} \StringTok{"white"}\NormalTok{, }\DataTypeTok{bold =}\NormalTok{ T,}
+    \DataTypeTok{background =} \KeywordTok{spec_color}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\DataTypeTok{end =} \FloatTok{0.9}\NormalTok{, }
+                            \DataTypeTok{option =} \StringTok{"A"}\NormalTok{, }\DataTypeTok{direction =} \DecValTok{-1}\NormalTok{)}
+\NormalTok{  )) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{escape =}\NormalTok{ F, }\DataTypeTok{align =} \StringTok{"c"}\NormalTok{, }\DataTypeTok{booktabs =}\NormalTok{ T) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{), }
+                \DataTypeTok{latex_options =} \StringTok{"striped"}\NormalTok{, }
+                \DataTypeTok{full_width =}\NormalTok{ F)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{table}[H]
 \centering\rowcolors{2}{gray!6}{white}
 
-\begin{tabular}{>{\bfseries}lrrrrr}
+\begin{tabular}{ccccc}
 \hiderowcolors
 \toprule
-\multicolumn{1}{c}{ } & \multicolumn{2}{c}{Group A} & \multicolumn{3}{c}{Group B} \\
-\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-6}
-  & mpg & cyl & disp & hp & drat\\
+Sepal.Length & Sepal.Width & Petal.Length & Petal.Width & Species\\
 \midrule
 \showrowcolors
-Mazda RX4 & 21.0 & 6 & 160 & 110 & 3.90\\
-Mazda RX4 Wag & 21.0 & 6 & 160 & 110 & 3.90\\
-Datsun 710 & 22.8 & 4 & 108 & 93 & 3.85\\
-Hornet 4 Drive & 21.4 & 6 & 258 & 110 & 3.08\\
-Hornet Sportabout & 18.7 & 8 & 360 & 175 & 3.15\\
+\bgroup\fontsize{14}{16}\selectfont \textcolor[HTML]{28AE80}{\textbf{5.1}}\egroup{} & \bgroup\fontsize{13}{15}\selectfont \textcolor[HTML]{1F9A8A}{\textbf{3.5}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{3E4B8A}{\textbf{1.4}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{FECE91}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{4.9}}\egroup{} & \bgroup\fontsize{9}{11}\selectfont \textcolor[HTML]{482274}{\textbf{3}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{3E4B8A}{\textbf{1.4}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{FEA06D}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{39578C}{\textbf{4.7}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{38588C}{\textbf{3.2}}\egroup{} & \bgroup\fontsize{8}{10}\selectfont \textcolor[HTML]{440154}{\textbf{1.3}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{F66E5C}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{433E85}{\textbf{4.6}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{433E85}{\textbf{3.1}}\egroup{} & \bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{1.5}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{DE4968}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{13}{15}\selectfont \textcolor[HTML]{1F9A8A}{\textbf{5}}\egroup{} & \bgroup\fontsize{14}{16}\selectfont \textcolor[HTML]{29AF7F}{\textbf{3.6}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{3E4B8A}{\textbf{1.4}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{B73779}{\textcolor{white}{\textbf{setosa}}}\\
+\addlinespace
+\bgroup\fontsize{16}{18}\selectfont \textcolor[HTML]{BBDF27}{\textbf{5.4}}\egroup{} & \bgroup\fontsize{16}{18}\selectfont \textcolor[HTML]{BBDF27}{\textbf{3.9}}\egroup{} & \bgroup\fontsize{16}{18}\selectfont \textcolor[HTML]{BBDF27}{\textbf{1.7}}\egroup{} & \bgroup\fontsize{16}{18}\selectfont \textcolor[HTML]{BBDF27}{\textbf{0.4}}\egroup{} & \cellcolor[HTML]{8C2981}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{433E85}{\textbf{4.6}}\egroup{} & \bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{3.4}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{3E4B8A}{\textbf{1.4}}\egroup{} & \bgroup\fontsize{13}{15}\selectfont \textcolor[HTML]{22A884}{\textbf{0.3}}\egroup{} & \cellcolor[HTML]{641A80}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{13}{15}\selectfont \textcolor[HTML]{1F9A8A}{\textbf{5}}\egroup{} & \bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{3.4}}\egroup{} & \bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{1.5}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{3C0F70}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{8}{10}\selectfont \textcolor[HTML]{440154}{\textbf{4.4}}\egroup{} & \bgroup\fontsize{8}{10}\selectfont \textcolor[HTML]{440154}{\textbf{2.9}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{3E4B8A}{\textbf{1.4}}\egroup{} & \bgroup\fontsize{11}{13}\selectfont \textcolor[HTML]{35608D}{\textbf{0.2}}\egroup{} & \cellcolor[HTML]{140E36}{\textcolor{white}{\textbf{setosa}}}\\
+\bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{4.9}}\egroup{} & \bgroup\fontsize{10}{12}\selectfont \textcolor[HTML]{433E85}{\textbf{3.1}}\egroup{} & \bgroup\fontsize{12}{14}\selectfont \textcolor[HTML]{25838E}{\textbf{1.5}}\egroup{} & \bgroup\fontsize{8}{10}\selectfont \textcolor[HTML]{440154}{\textbf{0.1}}\egroup{} & \cellcolor[HTML]{000004}{\textcolor{white}{\textbf{setosa}}}\\
 \bottomrule
 \end{tabular}
 \rowcolors{2}{white}{white}
@@ -269,7 +308,7 @@ epub}\label{use-bootstrap-tables-in-gitbooks-epub}}
 \section{Gitbook}\label{gitbook}}
 
 Most of \texttt{kableExtra} tricks will work in \texttt{bookdown} except
-those requires \href{http://getbootstrap.com/}{\texttt{bootstrap}}. By
+those requiring \href{http://getbootstrap.com/}{\texttt{bootstrap}}. By
 default, \texttt{rmarkdown} won't load \texttt{bootstrap} for you on
 gitbook as it's not necesary. In \texttt{kableExtra}, I used the
 \href{https://getbootstrap.com/docs/3.3/customize/}{bootstrap 3.3.7
@@ -279,13 +318,13 @@ setting \texttt{options(kableExtra.html.bsTable\ =\ T)}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(kableExtra)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{kableExtra.html.bsTable =}\NormalTok{ T)}
 
 \NormalTok{mtcars[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{] }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{booktabs =}\NormalTok{ T) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}
     \DataTypeTok{bootstrap_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{,}\StringTok{"hover"}\NormalTok{, }\StringTok{"bordered"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
-    \DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{),}
-    \DataTypeTok{full_width =}\NormalTok{ F}
+    \DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{)}
 \NormalTok{  ) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{column_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Group A"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Group B"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{))}
@@ -313,23 +352,26 @@ Hornet Sportabout & 18.7 & 8 & 360 & 175 & 3.15\\
 \rowcolors{2}{white}{white}
 \end{table}
 
-However, very unfortunately, as we can see, the \texttt{hover} part is
-not working and the table still looks different from a regular bootstrap
-table. The reason is that gitbook defines its own way to style tables
-and some of its rules are conflicting with the one defined in bootstrap.
-For css, it's like once you load something, it's impossible to really
-unload it. As a result, unless there are some changes in
-\texttt{bookdown} (for example, we can replace the gitbook table part
-with bootstrap tables), there is nothing we can do here.
+\textbf{One very important note} here is that by default bookdown loads
+the gitbook table css on start up. It has some conflicts with
+\texttt{bootstrap} tables. As a result, some features like
+\texttt{hover} won't be able to work by default. To solve this problem,
+you need to use the latest version of \texttt{bookdown} (version
+\textgreater{}= 0.7.21) and turn off the \texttt{table\_css} option
+under \texttt{bookdown::gitbook} in \texttt{\_output.yml}
+
+\begin{verbatim}
+bookdown::gitbook:
+  table_css: false
+\end{verbatim}
 
 \hypertarget{epub}{%
 \section{Epub}\label{epub}}
 
 Right now, it's impossible to load addition CSS through HTML dependency
-(due to a setting in rmarkdown). I will file an issue in
-\texttt{rmarkdown} and see if this is something that can be changed. In
-the mean time, to use bootstrap tables in Epub, you will have to
-manually load
+and this mechanism exists for a reason (
+\href{https://github.com/rstudio/rmarkdown/issues/1457}{See this issue I
+filed} ). You will have to manually load
 \href{https://github.com/haozhu233/kableExtra/blob/master/inst/bootstrapTable-3.3.7/bootstrapTable.min.css}{this
 stylesheet} by putting it to a CSS file (such as ``style.css'') and load
 it in \texttt{\_output.yml}. For example,
