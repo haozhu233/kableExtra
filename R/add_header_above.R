@@ -267,9 +267,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   font_size <- ez_rep(font_size, n)
   angle <- ez_rep(angle, n)
   if (!booktabs) {
-    align <- paste0("|", align, "|")
-    align[1] <- paste0(align[1], "|")
-    align[nrow(header_df)] <- paste0("|", align[nrow(header_df)])
+    align[1:(nrow(header_df) - 1)] <- paste0(align, "|")
   }
   header <- header_df$header
   colspan <- header_df$colspan
