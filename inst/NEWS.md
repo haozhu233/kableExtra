@@ -2,6 +2,10 @@ kableExtra 1.0.0
 --------------------------------------------------------------------------------
 # Major Changes
 
+# Minor Features
+* Added symbol_manual to footnote so that users can manually customize the 
+sequence of symbols in footnote. 
+
 # Bug Fixes
 * Fixed an issue that prevents linebreak works with factor
 

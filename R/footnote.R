@@ -31,7 +31,8 @@
 #' @param symbol_title Section header for symbol footnotes. Default is "".
 #' @param title_format Choose from "italic"(default), "bold" and "underline".
 #' Multiple options are possible.
-#'
+#' @param symbol_manual User can manually supply a vector of either html or
+#' latex symbols. For example, `symbol_manual = c('*', '\\\\dag', '\\\\ddag')`.`
 #'
 #' @examples dt <- mtcars[1:5, 1:5]
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
@@ -51,7 +52,8 @@ footnote <- function(kable_input,
                      number_title = "",
                      alphabet_title = "",
                      symbol_title = "",
-                     title_format = "italic"
+                     title_format = "italic",
+                     symbol_manual = NULL
 ) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -98,7 +100,7 @@ footnote <- function(kable_input,
   footnote_titles <- lapply(footnote_titles, footnote_title_format,
                             kable_format, title_format)
   footnote_table <- footnote_table_maker(
-    kable_format, footnote_titles, footnote_contents
+    kable_format, footnote_titles, footnote_contents, symbol_manual
   )
   if (kable_format == "html") {
     return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
@@ -139,14 +141,20 @@ footnote_title_format <- function(x, format, title_format) {
   }
 }
 
-footnote_table_maker <- function(format, footnote_titles, footnote_contents) {
-  number_index <- read.csv(system.file("symbol_index.csv",
-                                       package = "kableExtra"))
-  if (format == "latex") {
-    symbol_index <- number_index$symbol.latex
+footnote_table_maker <- function(format, footnote_titles, footnote_contents,
+                                 symbol_manual) {
+  if (is.null(symbol_manual)) {
+    number_index <- read.csv(system.file("symbol_index.csv",
+                                         package = "kableExtra"))
+    if (format == "latex") {
+      symbol_index <- number_index$symbol.latex
+    } else {
+      symbol_index <- number_index$symbol.html
+    }
   } else {
-    symbol_index <- number_index$symbol.html
+    symbol_index <- symbol_manual
   }
+
 
   if (!is.null(footnote_contents$general)) {
     footnote_contents$general <- data.frame(
