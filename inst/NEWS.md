@@ -1,3 +1,10 @@
+kableExtra 1.0.0
+--------------------------------------------------------------------------------
+# Major Changes
+
+# Bug Fixes
+* Fixed an issue that prevents linebreak works with factor
+
 kableExtra 0.9.0
 --------------------------------------------------------------------------------
 * Major Change: Now when you load `kableExtra` package, it will automatically 
