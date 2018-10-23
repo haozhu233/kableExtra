@@ -39,6 +39,8 @@
 #' separated by space. Default is 3.
 #' @param extra_css An HTML only option. CSS defined here will be send to the
 #' td cell.
+#' @param include_empty Whether empty cells in HTML should also be styled.
+#' Default is FALSE.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -52,7 +54,7 @@ add_header_above <- function(kable_input, header = NULL,
                              align = "c", color = NULL, background = NULL,
                              font_size = NULL, angle = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
-                             extra_css = NULL) {
+                             extra_css = NULL, include_empty = FALSE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -61,16 +63,16 @@ add_header_above <- function(kable_input, header = NULL,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(htmlTable_add_header_above(kable_input, header, bold, italic,
-                                      monospace, underline, strikeout,
-                                      align, color, background, font_size,
-                                      angle, escape, line, line_sep, extra_css))
+    return(htmlTable_add_header_above(
+      kable_input, header, bold, italic, monospace, underline, strikeout,
+      align, color, background, font_size, angle, escape, line, line_sep,
+      extra_css, include_empty
+    ))
   }
   if (kable_format == "latex") {
-    return(pdfTable_add_header_above(kable_input, header, bold, italic,
-                                     monospace, underline, strikeout,
-                                     align, color, background,
-                                     font_size, angle, escape, line, line_sep))
+    return(pdfTable_add_header_above(
+      kable_input, header, bold, italic, monospace, underline, strikeout,
+      align, color, background, font_size, angle, escape, line, line_sep))
   }
 }
 
@@ -79,7 +81,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        monospace, underline, strikeout,
                                        align, color, background, font_size,
                                        angle, escape, line, line_sep,
-                                       extra_css) {
+                                       extra_css, include_empty) {
   if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
@@ -101,7 +103,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
 
   new_header_row <- htmlTable_new_header_generator(
     header, bold, italic, monospace, underline, strikeout, align,
-    color, background, font_size, angle, line, line_sep, extra_css
+    color, background, font_size, angle, line, line_sep, extra_css, include_empty
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
@@ -133,7 +135,8 @@ standardize_header_input <- function(header) {
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                                            underline, strikeout, align,
                                            color, background, font_size,
-                                           angle, line, line_sep, extra_css) {
+                                           angle, line, line_sep, extra_css,
+                                           include_empty) {
   if (align %in% c("l", "c", "r")) {
     align <- switch(align, r = "right", c = "center", l = "left")
   }
@@ -170,11 +173,16 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                     "deg); -o-transform: rotate(", angle,
                     "deg); transform: rotate(", angle,
                     "deg); display: inline-block; ")
-    header_df$header <- ifelse(
-      trimws(header_df$header) == "",
-      header_df$header,
-      paste0('<span style="', angle, '">', header_df$header, '</span>')
-    )
+    if (include_empty) {
+      header_df$header <- paste0('<span style="', angle, '">',
+                                 header_df$header, '</span>')
+    } else {
+      header_df$header <- ifelse(
+        trimws(header_df$header) == "",
+        header_df$header,
+        paste0('<span style="', angle, '">', header_df$header, '</span>')
+      )
+    }
   }
 
   line <- ifelse(ez_rep(line, nrow(header_df)),

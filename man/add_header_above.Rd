@@ -8,7 +8,7 @@ add_header_above(kable_input, header = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, underline = FALSE,
   strikeout = FALSE, align = "c", color = NULL, background = NULL,
   font_size = NULL, angle = NULL, escape = TRUE, line = TRUE,
-  line_sep = 3, extra_css = NULL)
+  line_sep = 3, extra_css = NULL, include_empty = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -61,6 +61,9 @@ separated by space. Default is 3.}
 
 \item{extra_css}{An HTML only option. CSS defined here will be send to the
 td cell.}
+
+\item{include_empty}{Whether empty cells in HTML should also be styled.
+Default is FALSE.}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful
