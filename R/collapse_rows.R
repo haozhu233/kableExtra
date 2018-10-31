@@ -7,7 +7,8 @@
 #' specify column styles, you should use `column_spec` before `collapse_rows`.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
-#' @param columns Numeric column positions where rows need to be collapsed.
+#' @param columns A numeric value or vector indicating in which column(s) rows 
+#' need to be collapsed.
 #' @param valign Select from "top", "middle"(default), "bottom". The reason why
 #' "top" is not default is that the multirow package on CRAN win-builder is
 #' not up to date.
@@ -139,19 +140,19 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = FALSE)
 
   new_kable_dt <- kable_dt
-  for (j in seq(1:ncol(collapse_matrix))) {
+  for (j in seq_along(columns)) {
     column_align <- table_info$align_vector_origin[columns[j]]
     column_width <- ifelse(
       is.null(table_info$column_width[[paste0("column_", columns[j])]]),
       "*", table_info$column_width[paste0("column_", columns[j])])
     for (i in seq(1:nrow(collapse_matrix))) {
       if(row_group_label_position == 'stack'){
-        if(j < ncol(collapse_matrix)|(collapse_matrix_rev[i, j] == 0)){
-          new_kable_dt[i, j] <- ''
+        if(columns[j] < ncol(collapse_matrix) || collapse_matrix_rev[i, j] == 0){
+          new_kable_dt[i, columns[j]] <- ''
         }
       } else {
-        new_kable_dt[i, j] <- collapse_new_dt_item(
-          kable_dt[i, j], collapse_matrix[i, j], column_width,
+        new_kable_dt[i, columns[j]] <- collapse_new_dt_item(
+          kable_dt[i, columns[j]], collapse_matrix[i, j], column_width,
           align = column_align, valign = valign
         )
       }
