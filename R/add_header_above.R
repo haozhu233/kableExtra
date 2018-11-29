@@ -272,6 +272,8 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   header <- header_df$header
   colspan <- header_df$colspan
 
+  header <- as.character(header)
+
   header <- ifelse(bold, paste0('\\\\textbf\\{', header, '\\}'), header)
   header <- ifelse(italic, paste0('\\\\em\\{', header, '\\}'), header)
   header <- ifelse(monospace, paste0('\\\\ttfamily\\{', header, '\\}'), header)
