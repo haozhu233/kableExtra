@@ -1,21 +1,21 @@
-"number","alphabet","symbol.latex","symbol.html","symbol.markdown","symbol.pandoc"
-1,"a","*","*","\*","\*"
-2,"b","\\dag","&dagger;","â€ ","â€ "
-3,"c","\\ddag","&Dagger;","â€¡","â€¡"
-4,"d","\\S","&sect;","Â§","Â§"
-5,"e","\\P","&para;","Â¶","Â¶"
-6,"f","**","**","\*\*","\*\*"
-7,"g","\\dag\\dag","&dagger;&dagger;","â€ â€ ","â€ â€ "
-8,"h","\\ddag\\ddag","&Dagger;&Dagger;","â€¡â€¡","â€¡â€¡"
-9,"i","\\S\\S","&sect;&sect;","Â§Â§","Â§Â§"
-10,"j","\\P\\P","&para;&para;","Â¶Â¶","Â¶Â¶"
-11,"k","***","***","\*\*\*","\*\*\*"
-12,"l","\\dag\\dag\\dag","&dagger;&dagger;&dagger;","â€ â€ â€ ","â€ â€ â€ "
-13,"m","\\ddag\\ddag\\ddag","&Dagger;&Dagger;&Dagger;","â€¡â€¡â€¡","â€¡â€¡â€¡"
-14,"n","\\S\\S\\S","&sect;&sect;&sect;","Â§Â§Â§","Â§Â§Â§"
-15,"o","\\P\\P\\P","&para;&para;&para;","Â¶Â¶Â¶","Â¶Â¶Â¶"
-16,"p","****","****","\*\*\*\*","\*\*\*\*"
-17,"q","\\dag\\dag\\dag\\dag","&dagger;&dagger;&dagger;&dagger;","â€ â€ â€ â€ ","â€ â€ â€ â€ "
-18,"r","\\ddag\\ddag\\ddag\\ddag","&Dagger;&Dagger;&Dagger;&Dagger;","â€¡â€¡â€¡â€¡","â€¡â€¡â€¡â€¡"
-19,"s","\\S\\S\\S\\S","&sect;&sect;&sect;&sect;","Â§Â§Â§Â§","Â§Â§Â§Â§"
-20,"t","\\P\\P\\P\\P","&para;&para;&para;&para;","Â¶Â¶Â¶Â¶","Â¶Â¶Â¶Â¶"
+number,alphabet,symbol.latex,symbol.html,symbol.markdown,symbol.pandoc
+1,a,\\dag,&dagger;,†,†
+2,b,*,*,\*,\*
+3,c,\\ddag,&Dagger;,‡,‡
+4,d,\\S,&sect;,§,§
+5,e,\\P,&para;,¶,¶
+6,f,**,**,\*\*,\*\*
+7,g,\\dag\\dag,&dagger;&dagger;,††,††
+8,h,\\ddag\\ddag,&Dagger;&Dagger;,‡‡,‡‡
+9,i,\\S\\S,&sect;&sect;,§§,§§
+10,j,\\P\\P,&para;&para;,¶¶,¶¶
+11,k,***,***,\*\*\*,\*\*\*
+12,l,\\dag\\dag\\dag,&dagger;&dagger;&dagger;,†††,†††
+13,m,\\ddag\\ddag\\ddag,&Dagger;&Dagger;&Dagger;,‡‡‡,‡‡‡
+14,n,\\S\\S\\S,&sect;&sect;&sect;,§§§,§§§
+15,o,\\P\\P\\P,&para;&para;&para;,¶¶¶,¶¶¶
+16,p,****,****,\*\*\*\*,\*\*\*\*
+17,q,\\dag\\dag\\dag\\dag,&dagger;&dagger;&dagger;&dagger;,††††,††††
+18,r,\\ddag\\ddag\\ddag\\ddag,&Dagger;&Dagger;&Dagger;&Dagger;,‡‡‡‡,‡‡‡‡
+19,s,\\S\\S\\S\\S,&sect;&sect;&sect;&sect;,§§§§,§§§§
+20,t,\\P\\P\\P\\P,&para;&para;&para;&para;,¶¶¶¶,¶¶¶¶
