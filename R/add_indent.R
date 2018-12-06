@@ -48,8 +48,8 @@ add_indent_latex <- function(kable_input, positions) {
 
   for (i in positions + table_info$position_offset) {
     rowtext <- table_info$contents[i]
-    out <- sub(paste0(rowtext, "\\\\\\\\\n"),
-               paste0(latex_indent_unit(rowtext), "\\\\\\\\\n"),
+    out <- sub(paste0(rowtext, "(\\\\\\\\\\*?(\\[.*\\])?\n)"),
+               paste0(latex_indent_unit(rowtext), "\\1"),
                out, perl = TRUE)
     table_info$contents[i] <- latex_indent_unit(rowtext)
   }
