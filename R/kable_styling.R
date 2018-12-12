@@ -110,6 +110,7 @@ kable_styling <- function(kable_input,
     if (is.null(full_width)) {
       full_width <- getOption("kable_styling_full_width", F)
     }
+    repeat_header_method <- match.arg(repeat_header_method)
     return(pdfTable_styling(kable_input,
                             latex_options = latex_options,
                             full_width = full_width,
@@ -193,10 +194,10 @@ htmlTable_styling <- function(kable_input,
   return(out)
 }
 
-# LaTeX table style
+# LaTeX table style ------------
 pdfTable_styling <- function(kable_input,
                              latex_options = "basic",
-                             full_width = F,
+                             full_width = FALSE,
                              position,
                              font_size,
                              row_label_position,
@@ -211,8 +212,6 @@ pdfTable_styling <- function(kable_input,
     c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "repeat_header"),
     several.ok = T
   )
-
-  repeat_header_method <- match.arg(repeat_header_method)
 
   out <- NULL
   out <- solve_enc(kable_input)
@@ -263,7 +262,6 @@ pdfTable_styling <- function(kable_input,
                                   table_info$end_tabular)
   }
 
-  position <- match.arg(position)
   out <- styling_latex_position(out, table_info, position, latex_options)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
