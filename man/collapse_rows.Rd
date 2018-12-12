@@ -13,7 +13,8 @@ collapse_rows(kable_input, columns = NULL, valign = c("middle", "top",
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
 
-\item{columns}{Numeric column positions where rows need to be collapsed.}
+\item{columns}{A numeric value or vector indicating in which column(s) rows
+need to be collapsed.}
 
 \item{valign}{Select from "top", "middle"(default), "bottom". The reason why
 "top" is not default is that the multirow package on CRAN win-builder is
