@@ -135,10 +135,13 @@ extract_latex_from_kable <- function(kable_input) {
   regexp <- "(^|[^\\\\])([$][^$]*[^$\\\\]+[$]|[$][$][^$]*[^$\\\\]+[$][$])"
   latex <- character()
   while (grepl(regexp, kable_input)) {
-    block <- str_extract(kable_input, regexp)
+    block <- str_replace(str_extract(kable_input, regexp),
+                         regexp,
+                         "\\2")
+
     name <- paste0("latex", digest(block))
     latex[name] <- block
-    kable_input <- str_replace(kable_input, regexp, name)
+    kable_input <- str_replace(kable_input, regexp, paste0("\\1", name))
   }
   kable_attrs$extracted_latex <- latex
   attributes(kable_input) <- kable_attrs
