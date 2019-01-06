@@ -48,13 +48,18 @@
 #' table environment such as tabu or tabularx.You shouldn't expect all features
 #' could be supported in self-defined environments.
 #' @param protect_latex If `TRUE`, LaTeX code embedded between dollar signs
-#' will be protected from escaping.  Has no effect unless HTML format
-#' is chosen:  this is for including complicated math in HTML output.
+#' will be protected from HTML escaping.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 #' characters on a Windows machine, make sure to use
 #' Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+#' - `protect_latex = TRUE` has no effect.
+#'
+#' For HTML,
+#' - `protect_latex = TRUE` is for including complicated math in HTML output.
+#' The LaTeX may not include dollar signs even if they are escaped.
+#' Pandoc's rules for recognizing embedded LaTeX are used.
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -132,16 +137,16 @@ kable_styling <- function(kable_input,
 
 extract_latex_from_kable <- function(kable_input) {
   kable_attrs <- attributes(kable_input)
-  regexp <- "(^|[^\\\\])([$][^$]*[^$\\\\]+[$]|[$][$][^$]*[^$\\\\]+[$][$])"
+  regexp <- paste0("(?<!\\e)",   # Not escaped
+                   "([$]{1}(?![ ])[^$]+(?<![$\\\\ ])[$]{1}", # $...$
+                   "|[$]{2}(?![ ])[^$]+(?<![$\\\\ ])[$]{2})", # $$...$$
+                   "(?!\\d)")        # Not followed by digit
   latex <- character()
-  while (grepl(regexp, kable_input)) {
-    block <- str_replace(str_extract(kable_input, regexp),
-                         regexp,
-                         "\\2")
-
+  while (str_detect(kable_input, regexp)) {
+    block <- str_extract(kable_input, regexp)
     name <- paste0("latex", digest(block))
     latex[name] <- block
-    kable_input <- str_replace(kable_input, regexp, paste0("\\1", name))
+    kable_input <- str_replace(kable_input, regexp, name)
   }
   kable_attrs$extracted_latex <- latex
   attributes(kable_input) <- kable_attrs
