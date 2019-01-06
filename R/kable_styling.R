@@ -285,42 +285,8 @@ pdfTable_styling <- function(kable_input,
 }
 
 styling_latex_striped <- function(x, table_info, color) {
-  # gray!6 is the same as shadecolor ({RGB}{248, 248, 248}) in pdf_document
-  if (table_info$tabular == "longtable" & !is.na(table_info$caption)) {
-    row_color <- sprintf("\\rowcolors{%s}{white}{%s}",
-                         1 + table_info$position_offset, color)
-  } else {
-    if (table_info$position_offset == 0) {
-      row_color <- sprintf("\\rowcolors{1}{white}{%s}", color)
-    } else {
-      row_color <- sprintf("\\rowcolors{2}{%s}{white}", color)
-    }
-  }
-
-  x <- read_lines(x)
-  if (table_info$booktabs) {
-    header_rows_start <- which(trimws(x) == "\\toprule")[1]
-    if (is.null(table_info$colnames)) {
-      header_rows_end <- header_rows_start
-    } else {
-      header_rows_end <- which(trimws(x) == "\\midrule")[1]
-    }
-  } else {
-    header_rows_start <- which(trimws(x) == "\\hline")[1]
-    header_rows_end <- which(trimws(x) == "\\hline")[2]
-  }
-
-  x <- c(
-    row_color,
-    x[1:(header_rows_start - 1)],
-    "\\hiderowcolors",
-    x[header_rows_start:header_rows_end],
-    "\\showrowcolors",
-    x[(header_rows_end + 1):length(x)],
-    "\\rowcolors{2}{white}{white}"
-  )
-  x <- paste0(x, collapse = "\n")
-  return(x)
+  striped_rows <- seq(1, table_info$nrow, 2)
+  row_spec(x, striped_rows, background = color)
 }
 
 styling_latex_hold_position <- function(x) {

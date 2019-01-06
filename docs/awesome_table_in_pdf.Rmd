@@ -2,16 +2,17 @@
 title: "Create Awesome LaTeX Table with knitr::kable and kableExtra"
 author: "Hao Zhu"
 date: "`r Sys.Date()`"
+classoption: table 
 output: 
   pdf_document:
     toc: true
     toc_depth: 2
+    keep_tex: true
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -50,6 +51,10 @@ devtools::install_github("haozhu233/kableExtra")
 
 # Getting Started
 Here we are using the first few columns and rows from dataset `mtcars`
+```{r, echo = F}
+options(kableExtra.latex.load_packages = F)
+```
+
 ```{r}
 library(knitr)
 library(kableExtra)
@@ -87,7 +92,6 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -98,6 +102,8 @@ header-includes:
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
 ```
+
+Note: `kableExtra` was using `xcolor` for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. If you experience any issues, please report on github. 
 
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.

@@ -1,0 +1,35 @@
+\contentsline {section}{Overview}{2}{section*.2}
+\contentsline {section}{Installation}{2}{section*.3}
+\contentsline {section}{Getting Started}{2}{section*.4}
+\contentsline {subsection}{LaTeX packages used in this package}{3}{section*.5}
+\contentsline {subsection}{Plain LaTeX}{3}{section*.6}
+\contentsline {subsection}{LaTeX table with booktabs}{4}{section*.7}
+\contentsline {section}{Table Styles}{4}{section*.8}
+\contentsline {subsection}{LaTeX options}{4}{section*.9}
+\contentsline {subsubsection}{Striped}{4}{section*.10}
+\contentsline {subsubsection}{Hold position}{5}{section*.11}
+\contentsline {subsubsection}{Scale down}{5}{section*.12}
+\contentsline {subsubsection}{Repeat header in longtable}{6}{section*.13}
+\contentsline {subsection}{Full width?}{8}{section*.14}
+\contentsline {subsection}{Position}{8}{section*.15}
+\contentsline {subsection}{Font Size}{9}{section*.16}
+\contentsline {section}{Column / Row Specification}{9}{section*.17}
+\contentsline {subsection}{Column spec}{9}{section*.18}
+\contentsline {subsection}{Row spec}{10}{section*.19}
+\contentsline {subsection}{Header Rows}{10}{section*.20}
+\contentsline {section}{Cell/Text Specification}{11}{section*.21}
+\contentsline {subsection}{Conditional logic}{11}{section*.22}
+\contentsline {subsection}{Visualize data with Viridis Color}{11}{section*.23}
+\contentsline {subsection}{Text Specification}{12}{section*.24}
+\contentsline {section}{Grouped Columns / Rows}{13}{section*.25}
+\contentsline {subsection}{Add header rows to group columns}{13}{section*.26}
+\contentsline {subsection}{Group rows via labeling}{13}{section*.27}
+\contentsline {subsection}{Row indentation}{15}{section*.28}
+\contentsline {subsection}{Group rows via multi-row cell}{15}{section*.29}
+\contentsline {section}{Table Footnote}{18}{section*.30}
+\contentsline {section}{LaTeX Only Features}{20}{section*.31}
+\contentsline {subsection}{Linebreak processor}{20}{section*.32}
+\contentsline {subsection}{Table on a Landscape Page}{21}{section*.33}
+\contentsline {subsection}{Use LaTeX table in HTML or Word}{23}{section*.34}
+\contentsline {section}{From other packages}{23}{section*.35}
+\contentsline {subsection}{\texttt {tables}}{23}{section*.36}

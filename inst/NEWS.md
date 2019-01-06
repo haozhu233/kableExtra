@@ -1,6 +1,10 @@
 kableExtra 1.0.0
 --------------------------------------------------------------------------------
 # Major Changes
+* `save_table` will be able to save HTML tables to png, jpg and PDF using 
+webshot automatically. 
+* Removed `xcolor` dependency for recent updates in fancyvrb, which causes a
+`xcolor` option clash.
 
 # Minor Features
 * Added symbol_manual to footnote so that users can manually customize the 
@@ -8,6 +12,7 @@ sequence of symbols in footnote.
 
 # Bug Fixes
 * Fixed an issue that prevents linebreak works with factor
+* Moved a lot LaTeX function options to the top level for easier selection. 
 
 kableExtra 0.9.0
 --------------------------------------------------------------------------------

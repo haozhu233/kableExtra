@@ -45,7 +45,11 @@ positions_corrector <- function(positions, group_header_rows, n_row) {
 }
 
 latex_row_cells <- function(x) {
-  strsplit(x, " \\& ")
+  out <- unlist(strsplit(x, " \\& "))
+  if (substr(x, nchar(x) - 2, nchar(x)) == " & ") {
+    out <- c(out, "")
+  }
+  return(out)
 }
 
 regex_escape <- function(x, double_backslash = FALSE) {
@@ -100,7 +104,6 @@ latex_pkg_list <- function() {
     "\\usepackage{longtable}",
     "\\usepackage{array}",
     "\\usepackage{multirow}",
-    "\\usepackage[table]{xcolor}",
     "\\usepackage{wrapfig}",
     "\\usepackage{float}",
     "\\usepackage{colortbl}",
