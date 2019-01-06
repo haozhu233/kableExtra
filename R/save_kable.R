@@ -24,7 +24,7 @@ save_kable <- function(x, file,
                        bs_theme = "simplex", self_contained = TRUE,
                        extra_dependencies = NULL, ...,
                        latex_header_includes = NULL, keep_tex = FALSE) {
-  if (attr(x, "format") == "latex") {
+  if (!is.null(attr(x, "format")) && attr(x, "format") == "latex") {
     return(save_kable_latex(x, file, latex_header_includes, keep_tex))
   }
   return(save_kable_html(x, file, bs_theme, self_contained,
@@ -36,6 +36,7 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = bs_theme),
+    rmarkdown::html_dependency_font_awesome(),
     html_dependency_kePrint()
   )
   if (!is.null(extra_dependencies)) {
@@ -66,6 +67,8 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
       unlink("lib", recursive = TRUE)
     }
   }
+
+  return(file)
 }
 
 save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
@@ -89,7 +92,7 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
   )
   temp_tex <- paste(temp_tex, collapse = "\n")
 
-  temp_tex_file <- tools::file_path_sans_ext(file)
+  temp_tex_file <- paste0(tools::file_path_sans_ext(file), ".tex")
   writeLines(temp_tex, temp_tex_file, useBytes = T)
   system(paste0("xelatex -interaction=batchmode ", temp_tex_file))
   if (!keep_tex) {
@@ -98,23 +101,22 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
     unlink(temp_file_delete)
   }
 
-  table_img_pdf <- try(magick::image_read(paste0(temp_file, ".pdf"),
-                                          density = density),
-                       silent = T)
-  if (class(table_img_pdf) == "try-error") {
-    stop("Ghostscript is required to read PDF on windows. ",
-         "Please download it here: https://ghostscript.com/")
+  if (tools::file_ext(file) != "pdf") {
+    table_img_pdf <- try(
+      magick::image_read(paste0(tools::file_path_sans_ext(file), ".pdf"),
+                         density = 300), silent = T)
+    if (class(table_img_pdf) == "try-error") {
+      stop("We hit an error when trying to use magick to read the generated ",
+           "PDF file. If you are using Windows, it could be possible that you",
+           " had not installed ghostscript (https://ghostscript.com/). ",
+           "Otherwise, you may check your magick installation and try to ",
+           "use magick::image_read to read the PDF file manually. ")
+    }
+    unlink(paste0(tools::file_path_sans_ext(file), ".pdf"))
+    table_img <- magick::image_convert(table_img_pdf,
+                                       tools::file_ext(file))
+    magick::image_write(table_img, file)
   }
-  if (!keep_pdf) {
-    unlink(paste0(temp_file, ".pdf"))
-  }
-  table_img <- magick::image_convert(table_img_pdf, file_format)
-  if (!is.null(filename)) {
-    temp_img <- paste0(filename, ".", file_format)
-  } else {
-    temp_img <- tempfile(fileext = paste0(".", file_format))
-  }
-  magick::image_write(table_img, temp_img)
 
-  include_graphics(temp_img)
+  return(file)
 }

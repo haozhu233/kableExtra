@@ -2,12 +2,10 @@
 title: "Create Awesome LaTeX Table with knitr::kable and kableExtra"
 author: "Hao Zhu"
 date: "`r Sys.Date()`"
-classoption: table 
 output: 
   pdf_document:
     toc: true
     toc_depth: 2
-    keep_tex: true
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}

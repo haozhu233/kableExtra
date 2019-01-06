@@ -10,7 +10,7 @@ kable_styling(kable_input, bootstrap_options = "basic",
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE, stripe_color = "gray!6",
-  latex_table_env = NULL, protect_latex = TRUE)
+  stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -61,6 +61,9 @@ or replace the caption.}
 
 \item{stripe_color}{LaTeX option allowing users to pick a different color
 for their strip lines. This option is not available in HTML}
+
+\item{stripe_index}{LaTeX option allowing users to customize which rows
+should have stripe color.}
 
 \item{latex_table_env}{LaTeX option. A character string to define customized
 table environment such as tabu or tabularx.You shouldn't expect all features

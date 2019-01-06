@@ -44,6 +44,8 @@
 #' or replace the caption.
 #' @param stripe_color LaTeX option allowing users to pick a different color
 #' for their strip lines. This option is not available in HTML
+#' @param stripe_index LaTeX option allowing users to customize which rows
+#' should have stripe color.
 #' @param latex_table_env LaTeX option. A character string to define customized
 #' table environment such as tabu or tabularx.You shouldn't expect all features
 #' could be supported in self-defined environments.
@@ -79,6 +81,7 @@ kable_styling <- function(kable_input,
                           repeat_header_method = c("append", "replace"),
                           repeat_header_continued = FALSE,
                           stripe_color = "gray!6",
+                          stripe_index = NULL,
                           latex_table_env = NULL,
                           protect_latex = TRUE) {
 
@@ -131,6 +134,7 @@ kable_styling <- function(kable_input,
                             repeat_header_method = repeat_header_method,
                             repeat_header_continued = repeat_header_continued,
                             stripe_color = stripe_color,
+                            stripe_index = stripe_index,
                             latex_table_env = latex_table_env))
   }
 }
@@ -250,6 +254,7 @@ pdfTable_styling <- function(kable_input,
                              repeat_header_method,
                              repeat_header_continued,
                              stripe_color,
+                             stripe_index,
                              latex_table_env) {
 
   latex_options <- match.arg(
@@ -264,7 +269,7 @@ pdfTable_styling <- function(kable_input,
   table_info <- magic_mirror(kable_input)
 
   if ("striped" %in% latex_options) {
-    out <- styling_latex_striped(out, table_info, stripe_color)
+    out <- styling_latex_striped(out, table_info, stripe_color, stripe_index)
   }
 
   # hold_position is only meaningful in a table environment
@@ -329,9 +334,11 @@ pdfTable_styling <- function(kable_input,
   return(out)
 }
 
-styling_latex_striped <- function(x, table_info, color) {
-  striped_rows <- seq(1, table_info$nrow, 2)
-  row_spec(x, striped_rows, background = color)
+styling_latex_striped <- function(x, table_info, color, stripe_index) {
+  if (is.null(stripe_index)) {
+    striped_index <- seq(1, table_info$nrow, 2)
+  }
+  row_spec(x, striped_index, background = color)
 }
 
 styling_latex_hold_position <- function(x) {
