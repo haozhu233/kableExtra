@@ -6,7 +6,11 @@
 \usage{
 kable_styling(kable_input, bootstrap_options = "basic",
   latex_options = "basic", full_width = NULL, position = "center",
-  font_size = NULL, row_label_position = "l", ...)
+  font_size = NULL, row_label_position = "l",
+  repeat_header_text = "\\\\textit{(continued)}",
+  repeat_header_method = c("append", "replace"),
+  repeat_header_continued = FALSE, stripe_color = "gray!6",
+  latex_table_env = NULL, protect_latex = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -45,11 +49,25 @@ imported.}
 
 \item{font_size}{A numeric input for table font size}
 
-\item{row_label_position}{A character string determining the justification of the row
-labels in a table.  Possible values inclued \code{l} for left, \code{c} for center, and \code{r} for
-right.  The default value is \code{l} for left justifcation.}
+\item{row_label_position}{A character string determining the justification
+of the row labels in a table.  Possible values inclued \code{l} for left, \code{c} for
+center, and \code{r} for right.  The default value is \code{l} for left justifcation.}
 
-\item{...}{extra options for HTML or LaTeX. See \code{details}.}
+\item{repeat_header_text}{LaTeX option. A text string you want to append on
+or replace the caption.}
+
+\item{repeat_header_method}{LaTeX option, can either be \code{append}(default) or
+\code{replace}}
+
+\item{stripe_color}{LaTeX option allowing users to pick a different color
+for their strip lines. This option is not available in HTML}
+
+\item{latex_table_env}{LaTeX option. A character string to define customized
+table environment such as tabu or tabularx.You shouldn't expect all features
+could be supported in self-defined environments.}
+
+\item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs
+will be protected from HTML escaping.}
 }
 \description{
 This function provides a cleaner approach to modify the style
@@ -58,22 +76,19 @@ that those bootstrap options requires Twitter bootstrap theme, which is not avai
 in some customized template being loaded.
 }
 \details{
-For LaTeX, extra options includes:
-\itemize{
-\item \code{repeat_header_method} can either be \code{append}(default) or \code{replace}
-\item \code{repeat_header_text} is just a text string you want to append on or
-replace the caption.
-\item \code{stripe_color} allows users to pick a different color for their strip lines.
-\item \code{latex_table_env} character string to define customized table environment
-such as tabu or tabularx.You shouldn't expect all features could be
-supported in self-defined environments.
-}
-
 For LaTeX, if you use other than English environment
 \itemize{
 \item all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 characters on a Windows machine, make sure to use
 Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+\item \code{protect_latex = TRUE} has no effect.
+}
+
+For HTML,
+\itemize{
+\item \code{protect_latex = TRUE} is for including complicated math in HTML output.
+The LaTeX may not include dollar signs even if they are escaped.
+Pandoc's rules for recognizing embedded LaTeX are used.
 }
 }
 \examples{

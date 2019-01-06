@@ -15,7 +15,8 @@ Authors@R: c(
     person('Yoni', 'Sidi', role = 'ctb'), 
     person('Brian', 'Salzer', role = 'ctb'),
     person('George', 'Gui', role = 'ctb'),
-    person('Yeliang', 'Fan', role = 'ctb')
+    person('Yeliang', 'Fan', role = 'ctb'),
+    person('Duncan', 'Murdoch, role = 'ctb')
     )
 Description: Build complex HTML or 'LaTeX' tables using 'kable()' from 'knitr' 
     and the piping syntax from 'magrittr'. Function 'kable()' is a light weight 
@@ -45,7 +46,8 @@ Imports:
     rstudioapi,
     glue,
     tools,
-    webshot
+    webshot,
+    digest
 Suggests:
     testthat,
     magick,
@@ -53,5 +55,5 @@ Suggests:
     dplyr
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
