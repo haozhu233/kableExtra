@@ -16,7 +16,7 @@ add_header_above(kable_input, header = NULL, bold = FALSE,
 \item{header}{A (named) character vector with \code{colspan} as values. For
 example, \code{c(" " = 1, "title" = 2)} can be used to create a new header row
 for a 3-column table with "title" spanning across column 2 and 3. For
-convenience, when \code{colspan} equals to 1, users can drop the \code{= 1} part.
+convenience, when \code{colspan} equals to 1, users can drop the \code{ = 1} part.
 As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" = 2)}.}
 
 \item{bold}{A T/F value to control whether the text should be bolded.}

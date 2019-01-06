@@ -55,7 +55,7 @@
 #' vanilla rmarkdown. For customized rmarkdown templates, it is recommended to
 #' load related LaTeX packages manually.
 #'
-#' @importFrom stringr str_count str_split str_match str_detect str_match_all
+#' @importFrom stringr fixed str_count str_split str_match str_detect str_match_all
 #' str_extract str_replace_all str_trim str_extract_all str_sub str_replace
 #' @importFrom xml2 read_xml xml_attr xml_has_attr xml_attr<- read_html
 #' xml_child xml_children xml_name xml_add_sibling xml_add_child xml_text
@@ -75,6 +75,7 @@
 #' @importFrom glue glue
 #' @importFrom tools file_ext file_path_sans_ext
 #' @importFrom webshot webshot
+#' @importFrom digest digest
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra

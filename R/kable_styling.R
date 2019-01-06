@@ -47,11 +47,19 @@
 #' @param latex_table_env LaTeX option. A character string to define customized
 #' table environment such as tabu or tabularx.You shouldn't expect all features
 #' could be supported in self-defined environments.
+#' @param protect_latex If `TRUE`, LaTeX code embedded between dollar signs
+#' will be protected from HTML escaping.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 #' characters on a Windows machine, make sure to use
 #' Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+#' - `protect_latex = TRUE` has no effect.
+#'
+#' For HTML,
+#' - `protect_latex = TRUE` is for including complicated math in HTML output.
+#' The LaTeX may not include dollar signs even if they are escaped.
+#' Pandoc's rules for recognizing embedded LaTeX are used.
 #'
 #' @examples x_html <- knitr::kable(head(mtcars), "html")
 #' kable_styling(x_html, "striped", position = "left", font_size = 7)
@@ -71,7 +79,8 @@ kable_styling <- function(kable_input,
                           repeat_header_method = c("append", "replace"),
                           repeat_header_continued = FALSE,
                           stripe_color = "gray!6",
-                          latex_table_env = NULL) {
+                          latex_table_env = NULL,
+                          protect_latex = TRUE) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -104,7 +113,8 @@ kable_styling <- function(kable_input,
                              bootstrap_options = bootstrap_options,
                              full_width = full_width,
                              position = position,
-                             font_size = font_size))
+                             font_size = font_size,
+                             protect_latex = protect_latex))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -125,13 +135,44 @@ kable_styling <- function(kable_input,
   }
 }
 
+extract_latex_from_kable <- function(kable_input) {
+  kable_attrs <- attributes(kable_input)
+  regexp <- paste0("(?<!\\e)",   # Not escaped
+                   "([$]{1}(?![ ])[^$]+(?<![$\\\\ ])[$]{1}", # $...$
+                   "|[$]{2}(?![ ])[^$]+(?<![$\\\\ ])[$]{2})", # $$...$$
+                   "(?!\\d)")        # Not followed by digit
+  latex <- character()
+  while (str_detect(kable_input, regexp)) {
+    block <- str_extract(kable_input, regexp)
+    name <- paste0("latex", digest(block))
+    latex[name] <- block
+    kable_input <- str_replace(kable_input, regexp, name)
+  }
+  kable_attrs$extracted_latex <- latex
+  attributes(kable_input) <- kable_attrs
+  kable_input
+}
+
+replace_latex_in_kable <- function(kable_input, latex) {
+  kable_attrs <- attributes(kable_input)
+  for (n in names(latex)) {
+    kable_input <- str_replace_all(kable_input, fixed(n), latex[n])
+  }
+  attributes(kable_input) <- kable_attrs
+  kable_input
+}
+
 # htmlTable Styling ------------
 htmlTable_styling <- function(kable_input,
                               bootstrap_options = "basic",
                               full_width = T,
                               position = c("center", "left", "right",
                                            "float_left", "float_right"),
-                              font_size = NULL) {
+                              font_size = NULL,
+                              protect_latex = TRUE) {
+  if (protect_latex) {
+    kable_input <- extract_latex_from_kable(kable_input)
+  }
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
 
@@ -189,6 +230,10 @@ htmlTable_styling <- function(kable_input,
   }
 
   out <- as_kable_xml(kable_xml)
+  if (protect_latex) {
+    out <- replace_latex_in_kable(out, kable_attrs$extracted_latex)
+    kable_attrs$extracted_latex <- NULL
+  }
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)

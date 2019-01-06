@@ -371,7 +371,7 @@ kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
   collapse_rows(columns = 1:2, latex_hline = "major", valign = "middle")
 ```
 
-Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only document it here if you want to give it a try. 
+Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only documenting it here if you want to give it a try. 
 ```{r}
 kable(collapse_rows_dt[-1], "latex", align = "c", booktabs = T) %>%
   column_spec(1, bold = T, width = "5em") %>%
@@ -398,7 +398,7 @@ kable(collapse_rows_dt, "latex",
   collapse_rows(1:3, row_group_label_position = 'stack') 
 ```
 
-To better distinguish different layers, you can format the each layer using `row_group_label_fonts`. You can also customize the hlines to better differentiate groups.
+To better distinguish different layers, you can format each layer using `row_group_label_fonts`. You can also customize the hlines to better differentiate groups.
 
 ```{r}
 row_group_label_fonts <- list(

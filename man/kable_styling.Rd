@@ -10,7 +10,7 @@ kable_styling(kable_input, bootstrap_options = "basic",
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE, stripe_color = "gray!6",
-  latex_table_env = NULL)
+  latex_table_env = NULL, protect_latex = TRUE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -65,6 +65,9 @@ for their strip lines. This option is not available in HTML}
 \item{latex_table_env}{LaTeX option. A character string to define customized
 table environment such as tabu or tabularx.You shouldn't expect all features
 could be supported in self-defined environments.}
+
+\item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs
+will be protected from HTML escaping.}
 }
 \description{
 This function provides a cleaner approach to modify the style
@@ -78,6 +81,14 @@ For LaTeX, if you use other than English environment
 \item all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 characters on a Windows machine, make sure to use
 Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+\item \code{protect_latex = TRUE} has no effect.
+}
+
+For HTML,
+\itemize{
+\item \code{protect_latex = TRUE} is for including complicated math in HTML output.
+The LaTeX may not include dollar signs even if they are escaped.
+Pandoc's rules for recognizing embedded LaTeX are used.
 }
 }
 \examples{
