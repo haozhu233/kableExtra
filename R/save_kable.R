@@ -95,7 +95,6 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
     "\\setmainlanguage{$mainlang$}",
     latex_pkg_list(),
     "\\usepackage{graphicx}",
-    "\\usepackage{mathspec}",
     "\\usepackage{xltxtra,xunicode}",
     latex_header_includes,
     "\\begin{document}",
@@ -111,7 +110,7 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
 
   owd <- setwd(dirname(temp_tex_file))
 
-  system(paste0("xelatex  ", temp_tex_file))
+  system(paste0("xelatex -interaction=batchmode ", temp_tex_file))
   if (!keep_tex) {
     temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
     unlink(temp_file_delete)

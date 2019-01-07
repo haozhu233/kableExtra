@@ -36,7 +36,6 @@ as_image <- function(x, width = NULL, height = NULL,
   }
 
   include_graphics(temp_png, dpi = img_dpi)
-  return(NULL)
 }
 
 
