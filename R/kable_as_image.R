@@ -45,6 +45,8 @@ kable_as_image <- function(kable_input, filename = NULL,
                            keep_pdf = FALSE,
                            density = 300,
                            keep_tex = FALSE) {
+  message('kable_as_image is deprecated. Please use save_kable or as_image ',
+          'instead.')
   if (!requireNamespace("magick", quietly = TRUE)) {
     stop('kable_as_image requires the magick package, which is not available ',
          'on all platforms. Please get it installed ',

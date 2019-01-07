@@ -49,18 +49,30 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
 
   # Use webshot if necessary
   if (tools::file_ext(file) %in% c("png", "jpg", "jpeg", "pdf")) {
-    message("Putting together a HTML file...")
     file_html <- paste0(tools::file_path_sans_ext(file), ".html")
+    file.create(file_html)
+    file_html <- normalizePath(file_html)
+    file <- paste0(tools::file_path_sans_ext(file_html), ".",
+                   tools::file_ext(file))
     htmltools::save_html(html_result, file = file_html)
-    message("Converting HTML to ", tools::file_ext(file), "...")
     webshot::webshot(file_html, file, ...)
-    message("Done. ")
     if (tools::file_ext(file) == "pdf") {
       message("Note that HTML color may not be displayed on PDF properly.")
     }
     unlink(file_html)
-    unlink("lib", recursive = TRUE)
+    unlink(file.path(dirname(file_html), "lib"), recursive = TRUE)
+    if (requireNamespace("magick", quietly = TRUE)) {
+      img_rework <- magick::image_read(file)
+      img_rework <- magick::image_trim(img_rework)
+      img_info <- magick::image_info(img_rework)
+      magick::image_write(img_rework, file)
+      attr(file, "info") <- img_info
+    } else {
+      message("save_kable will have the best result with magick installed. ")
+    }
   } else {
+    file.create(file)
+    file <- normalizePath(file)
     htmltools::save_html(html_result, file = file)
     if (self_contained) {
       rmarkdown::pandoc_self_contained_html(file, file)
@@ -68,7 +80,7 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
     }
   }
 
-  return(file)
+  return(invisible(file))
 }
 
 save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
@@ -94,16 +106,21 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
 
   temp_tex_file <- paste0(tools::file_path_sans_ext(file), ".tex")
   writeLines(temp_tex, temp_tex_file, useBytes = T)
-  system(paste0("xelatex -interaction=batchmode ", temp_tex_file))
+  temp_tex_file <- normalizePath(temp_tex_file)
+  file_no_ext <- tools::file_path_sans_ext(temp_tex_file)
+
+  owd <- setwd(dirname(temp_tex_file))
+
+  system(paste0("xelatex  ", temp_tex_file))
   if (!keep_tex) {
-    temp_file_delete <- paste0(tools::file_path_sans_ext(file),
-                               c(".tex", ".aux", ".log"))
+    temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
     unlink(temp_file_delete)
   }
 
+  table_img_info <- NULL
   if (tools::file_ext(file) != "pdf") {
     table_img_pdf <- try(
-      magick::image_read(paste0(tools::file_path_sans_ext(file), ".pdf"),
+      magick::image_read(paste0(file_no_ext, ".pdf"),
                          density = 300), silent = T)
     if (class(table_img_pdf) == "try-error") {
       stop("We hit an error when trying to use magick to read the generated ",
@@ -112,11 +129,17 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
            "Otherwise, you may check your magick installation and try to ",
            "use magick::image_read to read the PDF file manually. ")
     }
-    unlink(paste0(tools::file_path_sans_ext(file), ".pdf"))
+    unlink(paste0(file_no_ext, ".pdf"))
     table_img <- magick::image_convert(table_img_pdf,
                                        tools::file_ext(file))
-    magick::image_write(table_img, file)
+    table_img_info <- magick::image_info(table_img)
+    magick::image_write(table_img,
+                        paste0(file_no_ext, ".", tools::file_ext(file)))
   }
 
-  return(file)
+  setwd(owd)
+
+  out <- paste0(file_no_ext, ".", tools::file_ext(file))
+  attr(out, "info") <- table_img_info
+  return(invisible(out))
 }
