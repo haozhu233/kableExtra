@@ -336,7 +336,7 @@ pdfTable_styling <- function(kable_input,
 
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
-    striped_index <- seq(1, table_info$nrow, 2)
+    striped_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
   }
   row_spec(x, striped_index, background = color)
 }
