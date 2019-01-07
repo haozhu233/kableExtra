@@ -10,7 +10,8 @@ kable_styling(kable_input, bootstrap_options = "basic",
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE, stripe_color = "gray!6",
-  stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE)
+  stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE,
+  table.envir = "table")
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -71,6 +72,11 @@ could be supported in self-defined environments.}
 
 \item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs
 will be protected from HTML escaping.}
+
+\item{table.envir}{LaTeX floating table environment. \code{kable_style} will put
+a plain no-caption table in a \code{table} environment in order to center the
+table. You can specify this option to things like \code{table*} or \code{float*} based
+on your need.}
 }
 \description{
 This function provides a cleaner approach to modify the style

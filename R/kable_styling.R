@@ -51,6 +51,10 @@
 #' could be supported in self-defined environments.
 #' @param protect_latex If `TRUE`, LaTeX code embedded between dollar signs
 #' will be protected from HTML escaping.
+#' @param table.envir LaTeX floating table environment. `kable_style` will put
+#' a plain no-caption table in a `table` environment in order to center the
+#' table. You can specify this option to things like `table*` or `float*` based
+#'  on your need.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -83,7 +87,8 @@ kable_styling <- function(kable_input,
                           stripe_color = "gray!6",
                           stripe_index = NULL,
                           latex_table_env = NULL,
-                          protect_latex = TRUE) {
+                          protect_latex = TRUE,
+                          table.envir = "table") {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -135,7 +140,8 @@ kable_styling <- function(kable_input,
                             repeat_header_continued = repeat_header_continued,
                             stripe_color = stripe_color,
                             stripe_index = stripe_index,
-                            latex_table_env = latex_table_env))
+                            latex_table_env = latex_table_env,
+                            table.envir = table.envir))
   }
 }
 
@@ -255,7 +261,8 @@ pdfTable_styling <- function(kable_input,
                              repeat_header_continued,
                              stripe_color,
                              stripe_index,
-                             latex_table_env) {
+                             latex_table_env,
+                             table.envir) {
 
   latex_options <- match.arg(
     latex_options,
@@ -312,7 +319,8 @@ pdfTable_styling <- function(kable_input,
                                   table_info$end_tabular)
   }
 
-  out <- styling_latex_position(out, table_info, position, latex_options)
+  out <- styling_latex_position(out, table_info, position, latex_options,
+                                table.envir)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
@@ -454,22 +462,27 @@ styling_latex_full_width <- function(x, table_info) {
   return(list(x, col_align_vector))
 }
 
-styling_latex_position <- function(x, table_info, position, latex_options) {
+styling_latex_position <- function(x, table_info, position, latex_options,
+                                   table.envir) {
   hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
   if (length(hold_position) == 0) hold_position <- ""
   switch(
     position,
-    center = styling_latex_position_center(x, table_info, hold_position),
+    center = styling_latex_position_center(x, table_info, hold_position,
+                                           table.envir),
     left = styling_latex_position_left(x, table_info),
-    right = styling_latex_position_right(x, table_info, hold_position),
-    float_left = styling_latex_position_float(x, table_info, "l"),
-    float_right = styling_latex_position_float(x, table_info, "r")
+    right = styling_latex_position_right(x, table_info, hold_position,
+                                         table.envir),
+    float_left = styling_latex_position_float(x, table_info, "l", table.envir),
+    float_right = styling_latex_position_float(x, table_info, "r", table.envir)
   )
 }
 
-styling_latex_position_center <- function(x, table_info, hold_position) {
+styling_latex_position_center <- function(x, table_info, hold_position,
+                                          table.envir) {
   if (!table_info$table_env & table_info$tabular == "tabular") {
-    x <- paste0("\\begin{table}\n\\centering", x, "\n\\end{table}")
+    x <- paste0("\\begin{", table.envir, "}\n\\centering", x,
+                "\n\\end{", table.envir, "}")
     if (hold_position == "hold_position") {
       x <- styling_latex_hold_position(x)
     } else {
@@ -486,17 +499,19 @@ styling_latex_position_left <- function(x, table_info) {
       paste0("\\\\begin\\{longtable\\}", longtable_option), x)
 }
 
-styling_latex_position_right <- function(x, table_info, hold_position) {
+styling_latex_position_right <- function(x, table_info, hold_position,
+                                         table.envir) {
   warning("Position = right is only supported for longtable in LaTeX. ",
           "Setting back to center...")
-  styling_latex_position_center(x, table_info, hold_position)
+  styling_latex_position_center(x, table_info, hold_position, table.envir)
 }
 
-styling_latex_position_float <- function(x, table_info, option) {
+styling_latex_position_float <- function(x, table_info, option, table.envir) {
   if (table_info$tabular == "longtable") {
     warning("wraptable is not supported for longtable.")
     if (option == "l") return(styling_latex_position_left(x, table_info))
-    if (option == "r") return(styling_latex_position_right(x, table_info, F))
+    if (option == "r") return(styling_latex_position_right(x, table_info, F,
+                                                           table.envir))
   }
   size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
   col_max_length <- apply(size_matrix, 1, max) + 4
