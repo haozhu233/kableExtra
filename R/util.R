@@ -142,7 +142,9 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
 # Solve enc issue for LaTeX tables
 solve_enc <- function(x) {
   #may behave differently based on Sys.setlocale settings with respect to characters
-  enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+  out <- enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+  mostattributes(out) <- attributes(x)
+  return(out)
 }
 
 input_escape <- function(x, latex_align) {
