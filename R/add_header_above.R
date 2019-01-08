@@ -129,7 +129,7 @@ standardize_header_input <- function(header) {
   header_names <- names(header)
   header <- as.numeric(header)
   names(header) <- header_names
-  return(data.frame(header = names(header), colspan = header, row.names = NULL))
+  return(data.frame(header = names(header), colspan = header, row.names = NULL, stringsAsFactors = F))
 }
 
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
@@ -267,7 +267,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   font_size <- ez_rep(font_size, n)
   angle <- ez_rep(angle, n)
   if (!booktabs) {
-    align[1:(nrow(header_df) - 1)] <- paste0(align, "|")
+    align[1:(n - 1)] <- paste0(align[1:(n - 1)], "|")
   }
   header <- header_df$header
   colspan <- header_df$colspan
