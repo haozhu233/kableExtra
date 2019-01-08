@@ -33,7 +33,7 @@ kable(mtcars, "latex", booktabs = T) %>%
   as_image()
 ```
 
-You can also specify either `width` or `height` of the image. The image will be scaled properly.
+You can also specify either `width` or `height` of the image. The image will be scaled properly. The units are in inches. 
 
 ```{r}
 kable(mtcars, "latex", booktabs = T) %>%
@@ -42,12 +42,12 @@ kable(mtcars, "latex", booktabs = T) %>%
   as_image(width = 8)
 ```
 
-`as_image` also works for HTML tables. Of course, it is only meaning to do so if you want a HTML bootstrap style table in PDF/Word. 
+`as_image` also works for HTML tables. It means that you can also put in a bootstrap flavored table (image) in Word or PDF.
 ```{r}
 kable(mtcars, "html") %>%
   kable_styling("striped") %>%
   row_spec(1, color = "red") %>%
-  as_image(width = 2)
+  as_image(width = 4)
 ```
 
-One problem with this method, especially if you are using it in `Word`, is that to the end, the product you made is a picture. Please make sure your reader be aware that they cannot select/edit the table. 
+One problem with this method, especially if you are using it in `Word`, is that to the end, the product you made is a picture. Please let your readers know that they cannot select/edit the tables. :P
