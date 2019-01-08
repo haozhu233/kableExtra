@@ -21,8 +21,9 @@ kable(mtcars, "latex") %>%
   save_kable("inst/test.png")
 ```
 
-# Picturizing Tables for cross-formating support
-`kableExtra` only supports `HTML` and `LaTeX`. One way to get it work with `Word` is to render the table `as_image`. This example below shows you how to render a LaTeX table in HTML document. 
+# Turn your tables into images for cross-formating support
+`kableExtra` only supports `HTML` and `LaTeX`. One way to get it work with `Word` is to render the table `as_image`. This example below shows you how to render a LaTeX table in HTML document. Same rules applies when you use them in `rmarkdown::word_document`.
+
 ```{r}
 library(kableExtra)
 
