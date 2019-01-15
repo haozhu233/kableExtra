@@ -92,7 +92,6 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
     "\\usepackage{ifxetex,ifluatex}",
     "\\usepackage{fixltx2e}",
     "\\usepackage{polyglossia}",
-    "\\setmainlanguage{$mainlang$}",
     latex_pkg_list(),
     "\\usepackage{graphicx}",
     "\\usepackage{xltxtra,xunicode}",
@@ -123,10 +122,9 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
                          density = 300), silent = T)
     if (class(table_img_pdf) == "try-error") {
       stop("We hit an error when trying to use magick to read the generated ",
-           "PDF file. If you are using Windows, it could be possible that you",
-           " had not installed ghostscript (https://ghostscript.com/). ",
-           "Otherwise, you may check your magick installation and try to ",
-           "use magick::image_read to read the PDF file manually. ")
+           "PDF file. You may check your magick installation and try to ",
+           "use magick::image_read to read the PDF file manually. It's also ",
+           "possible that you didn't have ghostscript installed.")
     }
     unlink(paste0(file_no_ext, ".pdf"))
     table_img <- magick::image_convert(table_img_pdf,

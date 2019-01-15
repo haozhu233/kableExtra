@@ -21,6 +21,16 @@ kable(mtcars, "latex") %>%
   save_kable("inst/test.png")
 ```
 
+# Feature Dependencies
+To get it work, you need to make sure you have the following things installed.
+```{r, eval = F}
+install.packages("magick")
+install.packages("webshot")
+webshot::install_phantomjs()
+```
+
+In the end, please make sure you can use `magick::read_image()` function properly for a PDF. On some system (not only windows), it's possible that GhostScript was not setup properly so even if you have `magick` installed, `magick::read_image()` still cannot read PDF properly. That said, although `save_kable` and `as_image` provide really attractive feature, they may not work on every computer. 
+
 # Turn your tables into images for cross-formating support
 `kableExtra` only supports `HTML` and `LaTeX`. One way to get it work with `Word` is to render the table `as_image`. This example below shows you how to render a LaTeX table in HTML document. Same rules applies when you use them in `rmarkdown::word_document`.
 
@@ -43,6 +53,7 @@ kable(mtcars, "latex", booktabs = T) %>%
 ```
 
 `as_image` also works for HTML tables. It means that you can also put in a bootstrap flavored table (image) in Word or PDF.
+
 ```{r}
 kable(mtcars, "html") %>%
   kable_styling("striped") %>%
