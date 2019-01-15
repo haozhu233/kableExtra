@@ -7,6 +7,11 @@
 #' @param x kable input. Either HTML or LaTeX
 #' @param width Image width in inches. (1 inch = 2.54 cm)
 #' @param height Image height in inches. (1 inch = 2.54 cm)
+#' @param file By default, as_image saves to an temp file, which works for
+#' normal rmarkdown. However if you are using things like xaringan, which can't
+#' be a standalone html, you can specify this file be the path you need, eg.
+#' "img/something.png"
+#'
 #' @param ... Additional arguments passed to save_kable.
 #'
 #'

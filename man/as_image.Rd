@@ -14,6 +14,11 @@ as_image(x, width = NULL, height = NULL, ...)
 \item{height}{Image height in inches. (1 inch = 2.54 cm)}
 
 \item{...}{Additional arguments passed to save_kable.}
+
+\item{file}{By default, as_image saves to an temp file, which works for
+normal rmarkdown. However if you are using things like xaringan, which can't
+be a standalone html, you can specify this file be the path you need, eg.
+"img/something.png"}
 }
 \description{
 This function generates a temporary png file using \code{save_kable}
