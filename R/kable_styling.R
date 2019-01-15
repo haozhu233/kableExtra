@@ -38,10 +38,13 @@
 #' @param row_label_position A character string determining the justification
 #' of the row labels in a table.  Possible values inclued `l` for left, `c` for
 #' center, and `r` for right.  The default value is `l` for left justifcation.
-#' @param repeat_header_method LaTeX option, can either be `append`(default) or
-#' `replace`
 #' @param repeat_header_text LaTeX option. A text string you want to append on
 #' or replace the caption.
+#' @param repeat_header_method LaTeX option, can either be `append`(default) or
+#' `replace`
+#' @param repeat_header_continued T/F or a text string. Whether or not to put
+#' a continued mark on the second page of longtable. If you put in text, we will
+#' use this text as the "continued" mark.
 #' @param stripe_color LaTeX option allowing users to pick a different color
 #' for their strip lines. This option is not available in HTML
 #' @param stripe_index LaTeX option allowing users to customize which rows

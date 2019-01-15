@@ -2,4 +2,4 @@
 library(testthat)
 library(kableExtra)
 
-testthat::test_check("kableExtra")
+# testthat::test_check("kableExtra")

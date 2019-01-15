@@ -60,6 +60,10 @@ or replace the caption.}
 \item{repeat_header_method}{LaTeX option, can either be \code{append}(default) or
 \code{replace}}
 
+\item{repeat_header_continued}{T/F or a text string. Whether or not to put
+a continued mark on the second page of longtable. If you put in text, we will
+use this text as the "continued" mark.}
+
 \item{stripe_color}{LaTeX option allowing users to pick a different color
 for their strip lines. This option is not available in HTML}
 

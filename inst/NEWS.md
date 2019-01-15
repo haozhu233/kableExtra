@@ -5,7 +5,7 @@ kableExtra 1.0.0
 webshot automatically. 
 * Removed `xcolor` dependency for recent updates in fancyvrb, which causes a
 `xcolor` option clash.
-* Added formatting options to add_header_above
+* Added formatting options to `add_header_above`.
 * Exported `kable_as_xml` and `xml_as_kable`.
 
 # Minor Features
@@ -15,6 +15,7 @@ sequence of symbols in footnote.
 # Bug Fixes
 * Fixed an issue that prevents linebreak works with factor
 * Moved a lot LaTeX function options to the top level for easier selection. 
+* ...
 
 kableExtra 0.9.0
 --------------------------------------------------------------------------------
