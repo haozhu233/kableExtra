@@ -453,3 +453,13 @@ Since the structure of `kable` is relatively simple, it shouldn't be too difficu
 
 ## `tables`
 The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
+
+## `xtable`
+For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. 
+
+```{r, eval=F}
+# Not evaluating
+xtable::xtable(mtcars[1:4, 1:4], caption = "Hello xtable") %>%
+  xtable2kable() %>%
+  column_spec(1, color = "red")
+```

@@ -33,3 +33,4 @@
 \contentsline {subsection}{Use LaTeX table in HTML or Word}{23}{section*.34}
 \contentsline {section}{From other packages}{23}{section*.35}
 \contentsline {subsection}{\texttt {tables}}{23}{section*.36}
+\contentsline {subsection}{\texttt {xtable}}{23}{section*.37}
