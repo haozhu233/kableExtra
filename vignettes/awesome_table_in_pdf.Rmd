@@ -11,7 +11,6 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -21,6 +20,7 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,7 +37,7 @@ vignette: >
 \end{wrapfigure}
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalizes all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`.
 
-To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
+To learn how to generate complex tables in HTML, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
 # Installation
 ```r
@@ -50,6 +50,10 @@ devtools::install_github("haozhu233/kableExtra")
 
 # Getting Started
 Here we are using the first few columns and rows from dataset `mtcars`
+```{r, echo = F}
+options(kableExtra.latex.load_packages = F)
+```
+
 ```{r}
 library(knitr)
 library(kableExtra)
@@ -87,7 +91,6 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -97,7 +100,10 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 ```
+
+Note: `kableExtra` was using `xcolor` for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. If you experience any issues, please report on github. 
 
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.
@@ -371,7 +377,7 @@ kable(collapse_rows_dt, "latex", booktabs = T, align = "c") %>%
   collapse_rows(columns = 1:2, latex_hline = "major", valign = "middle")
 ```
 
-Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only documenting it here if you want to give it a try. 
+Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only document it here if you want to give it a try. 
 ```{r}
 kable(collapse_rows_dt[-1], "latex", align = "c", booktabs = T) %>%
   column_spec(1, bold = T, width = "5em") %>%
@@ -398,7 +404,7 @@ kable(collapse_rows_dt, "latex",
   collapse_rows(1:3, row_group_label_position = 'stack') 
 ```
 
-To better distinguish different layers, you can format each layer using `row_group_label_fonts`. You can also customize the hlines to better differentiate groups.
+To better distinguish different layers, you can format the each layer using `row_group_label_fonts`. You can also customize the hlines to better differentiate groups.
 
 ```{r}
 row_group_label_fonts <- list(

@@ -16,14 +16,19 @@
 #'
 #'
 #' @export
-as_image <- function(x, width = NULL, height = NULL,
-                     ...) {
+as_image <- function(x, width = NULL, height = NULL, file = NULL, ...) {
   if (is.null(width) + is.null(height) == 0) {
     message("Both width and height were defined. Use width only by default. ")
     height <- NULL
   }
 
-  temp_png <- tempfile(fileext = ".png")
+  if (is.null(file)) {
+    temp_png <- tempfile(fileext = ".png")
+  } else {
+    temp_png <- file
+  }
+
+
   temp_img <- save_kable(x = x, file = temp_png, ...)
 
   img_dpi <- 300
