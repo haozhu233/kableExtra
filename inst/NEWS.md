@@ -7,6 +7,7 @@ webshot automatically.
 `xcolor` option clash.
 * Added formatting options to `add_header_above`.
 * Exported `kable_as_xml` and `xml_as_kable`.
+* Added a `xtable2kable` function to support most xtable output.
 
 # Minor Features
 * Added symbol_manual to footnote so that users can manually customize the 
