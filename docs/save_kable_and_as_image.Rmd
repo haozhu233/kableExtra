@@ -62,3 +62,4 @@ kable(mtcars, "html") %>%
 ```
 
 Note that, by default, as_image saves to an temp file, which works for normal rmarkdown. However if you are using things like xaringan, which can't be a standalone html, you can specify the `file` option in `as_image` be the path you need, eg. "img/something.png"
+

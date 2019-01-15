@@ -1,0 +1,33 @@
+---
+title: "Use kableExtra and xml2 in the HARD way"
+author: "Hao"
+date: "1/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Behind the scene, for HTML tables, `kableExtra` uses `xml2` to add styles and new contents to existing table. `kableExtra` is trying its best to get you the result in a literal way but in some rare case, I hope you can have the ability to freedom to be a HTML Ninja (quoting @yihui's xaringan). :) 
+
+In `kableExtra` 1.0, I exported two functions that were previously used internally in this package: `kable_as_xml` and `xml_as_kable`. Here is an example for how to use these 2 function and xml2 to hack your table and do something `kableExtra` is not capable to do (at least right now).
+
+```{r}
+library(kableExtra)
+library(xml2)
+
+demo <- kable(mtcars[1:5, 1:5]) %>%  # As always, mtcars ;)
+  kable_styling(full_width = F) %>%
+  kable_as_xml() 
+
+demo %>%                     # Transform to xml
+  xml_child(2) %>%           # Select <tbody> (1 is <thead>)
+  xml_child(2) %>%           # Select 2nd row <tr> in <tbody>
+  xml_child(1) %>%           # Select 1st cell in 2nd row <td>
+  xml_set_attr("style", "background: red; color: white;")   # Add attribute to style
+
+xml_as_kable(demo)             # Render that xml back as kable
+```
+
+For those `%>%` fans, keep in mind that since `xml2` makes modification to an external xml object. Although it looks like you can put everything in one pipe, the reality is that you will have to save the entire xml first, run the `xml2` code and then get it rendered. 

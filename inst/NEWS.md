@@ -5,6 +5,8 @@ kableExtra 1.0.0
 webshot automatically. 
 * Removed `xcolor` dependency for recent updates in fancyvrb, which causes a
 `xcolor` option clash.
+* Added formatting options to add_header_above
+* Exported `kable_as_xml` and `xml_as_kable`.
 
 # Minor Features
 * Added symbol_manual to footnote so that users can manually customize the 
