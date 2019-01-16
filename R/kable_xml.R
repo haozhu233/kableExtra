@@ -17,5 +17,7 @@ kable_as_xml <- function(x) {
 #'
 #' @export
 xml_as_kable <- function(x) {
-  as_kable_xml(x)
+  out <- as_kable_xml(x)
+  class(out) <- "kableExtra"
+  return(out)
 }
