@@ -36,14 +36,13 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = bs_theme),
-    rmarkdown::html_dependency_font_awesome(),
     html_dependency_kePrint()
   )
   if (!is.null(extra_dependencies)) {
     dependencies <- append(dependencies, extra_dependencies)
   }
 
-  html_header <- htmltools::tag("head", dependencies)
+  html_header <- htmltools::tags$head(dependencies)
   html_table <- htmltools::HTML(as.character(x))
   html_result <- htmltools::tagList(html_header, html_table)
 
@@ -75,12 +74,18 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
     file <- normalizePath(file)
     htmltools::save_html(html_result, file = file)
     if (self_contained) {
+      remove_html_doc(file)
       rmarkdown::pandoc_self_contained_html(file, file)
-      unlink("lib", recursive = TRUE)
+      unlink(file.path(dirname(file), "lib"), recursive = TRUE)
     }
   }
 
   return(invisible(file))
+}
+
+remove_html_doc <- function(x){
+  out <- paste(readLines(x)[-1], collapse = "\n")
+  writeLines(out, x)
 }
 
 save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
