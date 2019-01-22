@@ -117,6 +117,20 @@ latex_pkg_list <- function() {
 
 # Fix duplicated rows in LaTeX tables
 fix_duplicated_rows_latex <- function(kable_input, table_info) {
+  # dup_items <- table(table_info$contents)
+  # dup_items <- dup_items[dup_items != 1]
+  #
+  # for (di in seq(length(dup_items))) {
+  #   dup_row <- names(dup_items[di])
+  #   di_index <- which(table_info$contents == dup_row)
+  #   for (i in seq(dup_items[di])) {
+  #     new_row <- str_replace(
+  #       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
+  #       paste0("\\\\\\\\vphantom\\\\{", i, "\\\\} \\1"))
+  #     kable_input <- sub(dup_row, new_row, kable_input)
+  #     table_info$contents[di_index[i]] <- new_row
+  #   }
+  # }
   # Since sub/string_replace start from beginning, we count unique value from
   # behind.
   rev_contents <- rev(table_info$contents)
