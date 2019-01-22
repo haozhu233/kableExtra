@@ -20,6 +20,13 @@ kable(dt[1:5,], format = "latex", booktabs = T) %>%
 ```
 
 ```{r}
+kable(rbind(dt, dt), format = "latex", booktabs = T) %>%
+  kable_styling() %>%
+  add_indent(c(3, 5)) %>%
+  add_indent(5:12)
+```
+
+```{r}
 kable(dt, format = "latex", booktabs = T) %>%
   kable_styling() %>%
   group_rows(index = c(" ", "Group A" = 4, "Group B" = 5))

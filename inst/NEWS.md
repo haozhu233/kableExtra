@@ -1,3 +1,11 @@
+kableExtra 1.0.1
+--------------------------------------------------------------------------------
+
+# Bug Fixes
+* Fix issue where HTML results cannot be displayed inline (#330)
+
+* Fix extra texts with save_kable for HTML (#310)
+
 kableExtra 1.0.0
 --------------------------------------------------------------------------------
 # Major Changes
