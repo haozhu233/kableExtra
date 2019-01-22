@@ -8,103 +8,99 @@
 #' @export
 
 magic_mirror <- function(kable_input){
-  if (!"knitr_kable" %in% attr(kable_input, "class")) {
-    warning("magic_mirror may not be able to produce correct result if the",
-            " input table is not rendered by knitr::kable. ")
-  }
   if ("kable_meta" %in% names(attributes(kable_input))) {
     return(attr(kable_input, "kable_meta"))
   }
   kable_format <- attr(kable_input, "format")
   if (kable_format == "latex") {
-    kable_info <- magic_mirror_latex(kable_input)
+    table_info <- magic_mirror_latex(kable_input)
   }
   if (kable_format == "html") {
-    kable_info <- magic_mirror_html(kable_input)
+    table_info <- magic_mirror_html(kable_input)
   }
-  return(kable_info)
+  return(table_info)
 }
 
 # Magic mirror for latex tables --------------
 magic_mirror_latex <- function(kable_input){
-  kable_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
+  table_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
                      valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
                      rownames = NULL, caption = NULL, caption.short = NULL,
                      contents = NULL,
                      centering = FALSE, table_env = FALSE)
   # Tabular
-  kable_info$tabular <- ifelse(
+  table_info$tabular <- ifelse(
     grepl("\\\\begin\\{tabular\\}", kable_input),
     "tabular", "longtable"
   )
   # Booktabs
-  kable_info$booktabs <- grepl("\\\\toprule", kable_input)
+  table_info$booktabs <- grepl("\\\\toprule", kable_input)
   # Align
-  kable_info$align <- gsub("\\|", "", str_match(
+  table_info$align <- gsub("\\|", "", str_match(
     kable_input, paste0("\\\\begin\\{",
-                        kable_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
-  kable_info$align_vector <- unlist(strsplit(kable_info$align, ""))
-  kable_info$align_vector_origin <- kable_info$align_vector
+                        table_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
+  table_info$align_vector <- unlist(strsplit(table_info$align, ""))
+  table_info$align_vector_origin <- table_info$align_vector
   # valign
-  kable_info$valign <- gsub("\\|", "", str_match(
-    kable_input, paste0("\\\\begin\\{", kable_info$tabular,"\\}(.*)\\{.*?\\}"))[2])
-  kable_info$valign2 <- sub("\\[", "\\\\[", kable_info$valign)
-  kable_info$valign2 <- sub("\\]", "\\\\]", kable_info$valign2)
-  kable_info$valign3 <- sub("\\[", "", kable_info$valign)
-  kable_info$valign3 <- sub("\\]", "", kable_info$valign3)
-  kable_info$begin_tabular <- paste0("\\\\begin\\{", kable_info$tabular, "\\}",
-                                     kable_info$valign2)
-  kable_info$end_tabular <- paste0("\\\\end\\{", kable_info$tabular, "\\}")
+  table_info$valign <- gsub("\\|", "", str_match(
+    kable_input, paste0("\\\\begin\\{", table_info$tabular,"\\}(.*)\\{.*?\\}"))[2])
+  table_info$valign2 <- sub("\\[", "\\\\[", table_info$valign)
+  table_info$valign2 <- sub("\\]", "\\\\]", table_info$valign2)
+  table_info$valign3 <- sub("\\[", "", table_info$valign)
+  table_info$valign3 <- sub("\\]", "", table_info$valign3)
+  table_info$begin_tabular <- paste0("\\\\begin\\{", table_info$tabular, "\\}",
+                                     table_info$valign2)
+  table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
   # N of columns
-  kable_info$ncol <- nchar(kable_info$align)
+  table_info$ncol <- nchar(table_info$align)
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
     caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]
-    kable_info$caption.short <- str_match(caption_line, "\\[(.*?)\\]")[2]
-    kable_info$caption <- substr(caption_line,
-                                 nchar(kable_info$caption.short) + 4,
+    table_info$caption.short <- str_match(caption_line, "\\[(.*?)\\]")[2]
+    table_info$caption <- substr(caption_line,
+                                 nchar(table_info$caption.short) + 4,
                                  nchar(caption_line))
   } else {
-    kable_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
+    table_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
   }
-  if (kable_info$tabular == "longtable") {
-    kable_info$caption <- str_sub(kable_info$caption, 1, -4)
+  if (table_info$tabular == "longtable") {
+    table_info$caption <- str_sub(table_info$caption, 1, -4)
   } else {
-    kable_info$caption <- str_sub(kable_info$caption, 1, -2)
+    table_info$caption <- str_sub(table_info$caption, 1, -2)
   }
   # Contents
-  kable_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
-  kable_info$contents <- regex_escape(kable_info$contents, T)
-  if (kable_info$tabular == "longtable" & !is.na(kable_info$caption) &
+  table_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
+  table_info$contents <- regex_escape(table_info$contents, T)
+  if (table_info$tabular == "longtable" & !is.na(table_info$caption) &
       !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption")) {
-    kable_info$contents <- kable_info$contents[-1]
+    table_info$contents <- table_info$contents[-1]
   }
   if (!is.null(attr(kable_input, "n_head"))) {
     n_head <- attr(kable_input, "n_head")
-    kable_info$new_header_row <- kable_info$contents[seq(n_head - 1, 1)]
-    kable_info$contents <- kable_info$contents[-seq(1, n_head - 1)]
-    kable_info$header_df <- extra_header_to_header_df(kable_info$new_header_row)
-    kable_info$new_header_row <- paste0(kable_info$new_header_row, "\\\\\\\\")
+    table_info$new_header_row <- table_info$contents[seq(n_head - 1, 1)]
+    table_info$contents <- table_info$contents[-seq(1, n_head - 1)]
+    table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)
+    table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
   }
-  kable_info$nrow <- length(kable_info$contents)
-  kable_info$duplicated_rows <- (sum(duplicated(kable_info$contents)) != 0)
+  table_info$nrow <- length(table_info$contents)
+  table_info$duplicated_rows <- (sum(duplicated(table_info$contents)) != 0)
   # Column names
-  if (kable_info$booktabs & !grepl("\\\\midrule", kable_input)) {
-    kable_info$colnames <- NULL
-    kable_info$position_offset <- 0
+  if (table_info$booktabs & !grepl("\\\\midrule", kable_input)) {
+    table_info$colnames <- NULL
+    table_info$position_offset <- 0
   } else {
-    kable_info$colnames <- str_split(kable_info$contents[1], " \\& ")[[1]]
-    kable_info$position_offset <- 1
+    table_info$colnames <- str_split(table_info$contents[1], " \\& ")[[1]]
+    table_info$position_offset <- 1
   }
   # Row names
-  kable_info$rownames <- str_extract(kable_info$contents, "^[^ &]*")
+  table_info$rownames <- str_extract(table_info$contents, "^[^ &]*")
 
-  kable_info$centering <- grepl("\\\\centering", kable_input)
+  table_info$centering <- grepl("\\\\centering", kable_input)
 
-  kable_info$table_env <- (!is.na(kable_info$caption) &
-                             kable_info$tabular != "longtable")
+  table_info$table_env <- (!is.na(table_info$caption) &
+                             table_info$tabular != "longtable")
 
-  return(kable_info)
+  return(table_info)
 }
 
 extra_header_to_header_df <- function(extra_header_rows) {
@@ -123,23 +119,23 @@ extra_header_to_header_df_ <- function(x) {
 
 # Magic Mirror for html table --------
 magic_mirror_html <- function(kable_input){
-  kable_info <- list()
+  table_info <- list()
   kable_xml <- read_kable_as_xml(kable_input)
   # Caption
-  kable_info$caption <- xml_text(xml_child(kable_xml, "caption"))
+  table_info$caption <- xml_text(xml_child(kable_xml, "caption"))
   # Contents
-  # kable_info$contents <- html_table(read_html(as.character(kable_input)))[[1]]
+  # table_info$contents <- html_table(read_html(as.character(kable_input)))[[1]]
   # colnames
-  kable_info$colnames <- lapply(xml_children(xml_child(kable_xml, "thead")),
+  table_info$colnames <- lapply(xml_children(xml_child(kable_xml, "thead")),
                                 xml_children)
-  kable_info$colnames <- kable_info$colnames[[length(kable_info$colnames)]]
-  kable_info$colnames <- trimws(xml_text(kable_info$colnames))
-  kable_info$ncol <- length(kable_info$colnames)
-  kable_info$nrow_header <- length(xml_children(xml_child(kable_xml, "thead")))
-  kable_info$nrow_body <- nrow(kable_info$contents)
-  kable_info$table_class <- xml_attr(kable_xml, "class")
-  kable_info$table_style <- xml_attr(kable_xml, "style")
-  return(kable_info)
+  table_info$colnames <- table_info$colnames[[length(table_info$colnames)]]
+  table_info$colnames <- trimws(xml_text(table_info$colnames))
+  table_info$ncol <- length(table_info$colnames)
+  table_info$nrow_header <- length(xml_children(xml_child(kable_xml, "thead")))
+  table_info$nrow_body <- nrow(table_info$contents)
+  table_info$table_class <- xml_attr(kable_xml, "class")
+  table_info$table_style <- xml_attr(kable_xml, "style")
+  return(table_info)
 }
 
 
