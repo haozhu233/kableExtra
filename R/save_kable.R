@@ -46,37 +46,59 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
   html_table <- htmltools::HTML(as.character(x))
   html_result <- htmltools::tagList(html_header, html_table)
 
-  # Use webshot if necessary
+
+  # Check if we are generating an image and use webshot to do that
   if (tools::file_ext(file) %in% c("png", "jpg", "jpeg", "pdf")) {
-    file_html <- paste0(tools::file_path_sans_ext(file), ".html")
-    file.create(file_html)
-    file_html <- normalizePath(file_html)
-    file <- paste0(tools::file_path_sans_ext(file_html), ".",
-                   tools::file_ext(file))
-    htmltools::save_html(html_result, file = file_html)
-    webshot::webshot(file_html, file, ...)
-    if (tools::file_ext(file) == "pdf") {
-      message("Note that HTML color may not be displayed on PDF properly.")
-    }
-    unlink(file_html)
-    unlink(file.path(dirname(file_html), "lib"), recursive = TRUE)
-    if (requireNamespace("magick", quietly = TRUE)) {
-      img_rework <- magick::image_read(file)
-      img_rework <- magick::image_trim(img_rework)
-      img_info <- magick::image_info(img_rework)
-      magick::image_write(img_rework, file)
-      attr(file, "info") <- img_info
+    file_temp_html <- tempfile(pattern = tools::file_path_sans_ext(file), tmpdir = '.', fileext = ".html")
+
+    file.create(file_temp_html)
+    file_temp_html <- normalizePath(file_temp_html)
+    file.create(file)
+    file <- normalizePath(file)
+
+    # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
+    temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+    htmltools::save_html(html_result, file = file_temp_html, libdir = temp_dir)
+
+    result <- webshot::webshot(file_temp_html, file, ...)
+    if (is.null(result)) {
+      # A webshot could not be created. Delete newly created files and issue msg
+      file.remove(file)
+      file.remove(file_temp_html)
+      message('save_kable could not create image with webshot package. Please check for any webshot messages')
     } else {
-      message("save_kable will have the best result with magick installed. ")
+      if (tools::file_ext(file) == "pdf") {
+        message("Note that HTML color may not be displayed on PDF properly.")
+      }
+      # Remove temp html file and temp lib directory
+      file.remove(file_temp_html)
+      unlink(file.path(dirname(file_temp_html), temp_dir), recursive = TRUE)
+
+      if (requireNamespace("magick", quietly = TRUE)) {
+        img_rework <- magick::image_read(file)
+        img_rework <- magick::image_trim(img_rework)
+        img_info <- magick::image_info(img_rework)
+        magick::image_write(img_rework, file)
+        attr(file, "info") <- img_info
+      } else {
+        message("save_kable will have the best result with magick installed. ")
+      }
     }
+
   } else {
     file.create(file)
     file <- normalizePath(file)
-    htmltools::save_html(html_result, file = file)
+
     if (self_contained) {
-      remove_html_doc(file)
+      # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
+      temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+      htmltools::save_html(html_result, file = file, libdir = temp_dir)
+      #remove_html_doc(file)
       rmarkdown::pandoc_self_contained_html(file, file)
-      unlink(file.path(dirname(file), "lib"), recursive = TRUE)
+      unlink(file.path(dirname(file), temp_dir), recursive = TRUE)
+    } else {
+      # Simply use the htmltools::save_html to write out the files. Dependencies go to the standard lib folder
+      htmltools::save_html(html_result, file = file)
     }
   }
 
