@@ -7,10 +7,14 @@ print.kableExtra <- function(x, ...) {
   )
   html_table <- htmltools::HTML(as.character(x))
   html_result <- htmltools::tagList(html_header, html_table)
+  x <- as.character(html_result)
   if (interactive() & rstudioapi::isAvailable()) {
     htmltools::html_print(html_result, viewer = rstudioapi::viewer)
+  } else {
+    cat(x, "\n", sep = "")
   }
-  print(html_result)
+  # Return invisible
+  invisible(x)
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message
