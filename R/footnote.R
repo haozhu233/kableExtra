@@ -27,7 +27,6 @@
 #' @param fixed_small_size T/F When you want to keep the footnote small after
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes). 
-#' keeping the footnote small. 
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
