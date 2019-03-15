@@ -216,7 +216,8 @@ column_spec_latex <- function(kable_input, column, width,
     message("Usually it is recommended to use column_spec before collapse_rows,",
             " especially in LaTeX, to get a desired result. ")
   }
-  align_collapse <- ifelse(table_info$booktabs, "", "\\|")
+  align_collapse <- ifelse(table_info$booktabs | !is.null(table_info$xtable),
+                           "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- unlist(lapply(
