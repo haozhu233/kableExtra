@@ -36,7 +36,7 @@
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
-#' group_rows(x, "Group A", 2, 5)
+#' pack_rows(x, "Group A", 2, 5)
 #'
 #' @export
 group_rows <- function(kable_input, group_label = NULL,
@@ -220,3 +220,7 @@ auto_index <- function(x) {
   names(index) <- x_rle$values
   return(index)
 }
+
+#' @rdname group_rows
+#' @export
+pack_rows <- group_rows

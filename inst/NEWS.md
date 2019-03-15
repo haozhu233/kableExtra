@@ -1,3 +1,26 @@
+kableExtra 1.1.0
+--------------------------------------------------------------------------------
+
+# Major Changes
+
+* `pack_rows` was added as an alias to `group_rows` and is now the preferred 
+term for this feature as `dplyr` 0.8.0 instroduced a function with the same 
+name. 
+
+* HTML Font and Background Colors now gets a "!important" tag so they can be
+printed out under bootstrap
+
+# Minor Changes
+
+* Added a `fixed_header` option to `kable_styling`. (Similar with the same option in `scroll_box`)
+
+# Bug Fixes
+
+* LaTeX packages now only loaded in latex environment so there won't be 
+memory leaking issues in html_notebook. 
+
+* Fixed an typo in stripe_index
+
 kableExtra 1.0.1
 --------------------------------------------------------------------------------
 

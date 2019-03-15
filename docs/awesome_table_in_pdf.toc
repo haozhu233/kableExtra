@@ -19,18 +19,18 @@
 \contentsline {subsection}{Header Rows}{10}{section*.20}
 \contentsline {section}{Cell/Text Specification}{11}{section*.21}
 \contentsline {subsection}{Conditional logic}{11}{section*.22}
-\contentsline {subsection}{Visualize data with Viridis Color}{11}{section*.23}
+\contentsline {subsection}{Visualize data with Viridis Color}{12}{section*.23}
 \contentsline {subsection}{Text Specification}{12}{section*.24}
 \contentsline {section}{Grouped Columns / Rows}{13}{section*.25}
 \contentsline {subsection}{Add header rows to group columns}{13}{section*.26}
-\contentsline {subsection}{Group rows via labeling}{13}{section*.27}
+\contentsline {subsection}{Group rows via labeling}{14}{section*.27}
 \contentsline {subsection}{Row indentation}{15}{section*.28}
-\contentsline {subsection}{Group rows via multi-row cell}{15}{section*.29}
-\contentsline {section}{Table Footnote}{18}{section*.30}
-\contentsline {section}{LaTeX Only Features}{20}{section*.31}
-\contentsline {subsection}{Linebreak processor}{20}{section*.32}
-\contentsline {subsection}{Table on a Landscape Page}{21}{section*.33}
-\contentsline {subsection}{Use LaTeX table in HTML or Word}{23}{section*.34}
-\contentsline {section}{From other packages}{23}{section*.35}
-\contentsline {subsection}{\texttt {tables}}{23}{section*.36}
-\contentsline {subsection}{\texttt {xtable}}{23}{section*.37}
+\contentsline {subsection}{Group rows via multi-row cell}{16}{section*.29}
+\contentsline {section}{Table Footnote}{19}{section*.30}
+\contentsline {section}{LaTeX Only Features}{21}{section*.31}
+\contentsline {subsection}{Linebreak processor}{21}{section*.32}
+\contentsline {subsection}{Table on a Landscape Page}{22}{section*.33}
+\contentsline {subsection}{Use LaTeX table in HTML or Word}{24}{section*.34}
+\contentsline {section}{From other packages}{24}{section*.35}
+\contentsline {subsection}{\texttt {tables}}{24}{section*.36}
+\contentsline {subsection}{\texttt {xtable}}{24}{section*.37}

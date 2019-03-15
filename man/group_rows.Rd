@@ -2,9 +2,17 @@
 % Please edit documentation in R/group_rows.R
 \name{group_rows}
 \alias{group_rows}
+\alias{pack_rows}
 \title{Put a few rows of a table into one category}
 \usage{
 group_rows(kable_input, group_label = NULL, start_row = NULL,
+  end_row = NULL, index = NULL,
+  label_row_css = "border-bottom: 1px solid;",
+  latex_gap_space = "0.3em", escape = TRUE, latex_align = "l",
+  colnum = NULL, bold = TRUE, italic = FALSE, hline_before = FALSE,
+  hline_after = FALSE, extra_latex_after = NULL, indent = TRUE)
+
+pack_rows(kable_input, group_label = NULL, start_row = NULL,
   end_row = NULL, index = NULL,
   label_row_css = "border-bottom: 1px solid;",
   latex_gap_space = "0.3em", escape = TRUE, latex_align = "l",
@@ -65,6 +73,6 @@ Group a few rows in a table together under a label.
 \examples{
 x <- knitr::kable(head(mtcars), "html")
 # Put Row 2 to Row 5 into a Group and label it as "Group A"
-group_rows(x, "Group A", 2, 5)
+pack_rows(x, "Group A", 2, 5)
 
 }

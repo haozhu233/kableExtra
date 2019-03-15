@@ -26,7 +26,7 @@
 #' long paragraph of footnotes.
 #' @param fixed_small_size T/F When you want to keep the footnote small after
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
-#' and table content with small font in footnotes). 
+#' and table content with small font in footnotes).
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -111,7 +111,7 @@ footnote <- function(kable_input,
   }
   if (kable_format == "latex") {
     return(footnote_latex(kable_input, footnote_table, footnote_as_chunk,
-                          threeparttable))
+                          threeparttable, fixed_small_size))
   }
 }
 
@@ -245,7 +245,7 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
-                           threeparttable) {
+                           threeparttable, fixed_small_size) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 

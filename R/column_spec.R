@@ -185,12 +185,14 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
   }
   if (!is.null(color)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                             "color: ", color, ";")
+                                             "color: ", html_color(color),
+                                             " !important;")
   }
   if (!is.null(background)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                              "background-color: ",
-                                             background, ";")
+                                             html_color(background),
+                                             " !important;")
   }
   if (border_left) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),

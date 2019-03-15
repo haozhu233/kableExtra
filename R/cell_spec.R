@@ -93,14 +93,15 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
   cell_style <- paste(cell_style,
                       ifelse(strikeout, "text-decoration: line-through;", ""))
   if (!is.null(color)) {
-    cell_style <- paste0(cell_style, "color: ", html_color(color), ";")
+    cell_style <- paste0(cell_style, "color: ", html_color(color),
+                         " !important;")
   }
   if (!is.null(background)) {
     cell_style <- paste0(
       cell_style,
       ifelse(background_as_tile, "border-radius: 4px; ", ""),
       "padding-right: 4px; padding-left: 4px; ",
-      "background-color: ", html_color(background), ";"
+      "background-color: ", html_color(background), " !important;"
     )
   }
   if (!is.null(extra_css)) {

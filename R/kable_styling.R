@@ -58,6 +58,8 @@
 #' a plain no-caption table in a `table` environment in order to center the
 #' table. You can specify this option to things like `table*` or `float*` based
 #'  on your need.
+#' @param fixed_thead HTML table option so table header row is fixed at top.
+#' Values can be either T/F or `list(enabled = T/F, background = "anycolor")`.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -91,7 +93,8 @@ kable_styling <- function(kable_input,
                           stripe_index = NULL,
                           latex_table_env = NULL,
                           protect_latex = TRUE,
-                          table.envir = "table") {
+                          table.envir = "table",
+                          fixed_thead = FALSE) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -125,7 +128,8 @@ kable_styling <- function(kable_input,
                              full_width = full_width,
                              position = position,
                              font_size = font_size,
-                             protect_latex = protect_latex))
+                             protect_latex = protect_latex,
+                             fixed_thead = fixed_thead))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -182,7 +186,8 @@ htmlTable_styling <- function(kable_input,
                               position = c("center", "left", "right",
                                            "float_left", "float_right"),
                               font_size = NULL,
-                              protect_latex = TRUE) {
+                              protect_latex = TRUE,
+                              fixed_thead = FALSE) {
   if (protect_latex) {
     kable_input <- extract_latex_from_kable(kable_input)
   }
@@ -240,6 +245,19 @@ htmlTable_styling <- function(kable_input,
 
   if (length(kable_xml_style) != 0) {
     xml_attr(kable_xml, "style") <- paste(kable_xml_style, collapse = " ")
+  }
+
+  fixed_thead <- get_fixed_thead(fixed_thead)
+  if (fixed_thead$enabled) {
+    all_header_cells <- xml2::xml_find_all(kable_xml, "//thead//th")
+    if (is.null(fixed_thead$background))  fixed_thead$background <- "#FFFFFF"
+    for (i in seq(length(all_header_cells))) {
+      xml_attr(all_header_cells[i], "style") <- paste0(
+        xml_attr(all_header_cells[i], "style"),
+        "position: sticky; top:0; background-color: ",
+        fixed_thead$background, ";"
+      )
+    }
   }
 
   out <- as_kable_xml(kable_xml)
@@ -347,9 +365,9 @@ pdfTable_styling <- function(kable_input,
 
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
-    striped_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
+    stripe_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
   }
-  row_spec(x, striped_index, background = color)
+  row_spec(x, stripe_index, background = color)
 }
 
 styling_latex_hold_position <- function(x) {

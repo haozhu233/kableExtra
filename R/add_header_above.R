@@ -149,13 +149,13 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
     ifelse(strikeout, "text-decoration: line-through; ", "")
   )
   if (!is.null(color)) {
-    row_style <- paste0(row_style, "color: ", html_color(color), ";")
+    row_style <- paste0(row_style, "color: ", html_color(color), " !important;")
   }
   if (!is.null(background)) {
     row_style <- paste0(
       row_style,
       "padding-right: 4px; padding-left: 4px; ",
-      "background-color: ", html_color(background), ";"
+      "background-color: ", html_color(background), " !important;"
     )
   }
   if (!is.null(font_size)) {
