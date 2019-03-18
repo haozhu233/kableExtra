@@ -11,7 +11,8 @@ kable_styling(kable_input, bootstrap_options = "basic",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE, stripe_color = "gray!6",
   stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE,
-  table.envir = "table", table_css = NULL)
+  table.envir = "table", fixed_thead = FALSE, table_css = NULL)
+
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -82,8 +83,12 @@ a plain no-caption table in a \code{table} environment in order to center the
 table. You can specify this option to things like \code{table*} or \code{float*} based
 on your need.}
 
+\item{fixed_thead}{HTML table option so table header row is fixed at top.
+Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
+
 \item{table_css}{A character string for any customized css used for the
 table. Only useful for HTML documents.}
+
 }
 \description{
 This function provides a cleaner approach to modify the style

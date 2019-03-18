@@ -29,7 +29,7 @@ html_color_ <- function(color) {
 }
 
 html_color <- function(colors) {
-  colors <- as.character(colors)
+  colors <- trimws(gsub("\\!important", "", as.character(colors)))
   sapply(colors, html_color_)
 }
 

@@ -185,12 +185,14 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
   }
   if (!is.null(color)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                             "color: ", color, ";")
+                                             "color: ", html_color(color),
+                                             " !important;")
   }
   if (!is.null(background)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                              "background-color: ",
-                                             background, ";")
+                                             html_color(background),
+                                             " !important;")
   }
   if (border_left) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
@@ -216,7 +218,8 @@ column_spec_latex <- function(kable_input, column, width,
     message("Usually it is recommended to use column_spec before collapse_rows,",
             " especially in LaTeX, to get a desired result. ")
   }
-  align_collapse <- ifelse(table_info$booktabs, "", "\\|")
+  align_collapse <- ifelse(table_info$booktabs | !is.null(table_info$xtable),
+                           "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- unlist(lapply(

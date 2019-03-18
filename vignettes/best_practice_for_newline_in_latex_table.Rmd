@@ -75,7 +75,7 @@ header-includes:
 ```
 
 ### Linebreak in other kableExtra functions
-If you have a need to put a linebreak in `kableExtra` functions such as `add_header_above` and `group_rows`, just go ahead and use `\n` directly (in kableExtra >= 0.8.0) and it will be automatically converted. Note that this feature is also controlled by the `escape` option in those functions. 
+If you have a need to put a linebreak in `kableExtra` functions such as `add_header_above` and `pack_rows`, just go ahead and use `\n` directly (in kableExtra >= 0.8.0) and it will be automatically converted. Note that this feature is also controlled by the `escape` option in those functions. 
 
 ```{r}
 dt2 %>%
@@ -83,6 +83,6 @@ dt2 %>%
   kable("latex", booktabs = T, escape = F,
         col.names = linebreak(c("Item\n(Name)", "Value\n(Number)"), align = "c")) %>%
   add_header_above(c("Combined\nTitle" = 2)) %>%
-  group_rows("Group\n1", 2, 2)
+  pack_rows("Group\n1", 2, 2)
 ```
 

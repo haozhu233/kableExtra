@@ -51,6 +51,7 @@ xtable2kable <- function(x, ...) {
   if ("tabular.environment" %in% names(xtable_print_options)) {
     out_meta$tabular <- xtable_print_options$tabular.environment
   }
+  out_meta$xtable <- TRUE
   attr(out, "kable_meta") <- out_meta
   return(out)
 }
