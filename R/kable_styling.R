@@ -58,6 +58,8 @@
 #' a plain no-caption table in a `table` environment in order to center the
 #' table. You can specify this option to things like `table*` or `float*` based
 #'  on your need.
+#' @param table_css A character string for any customized css used for the
+#' table. Only useful for HTML documents.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -91,7 +93,8 @@ kable_styling <- function(kable_input,
                           stripe_index = NULL,
                           latex_table_env = NULL,
                           protect_latex = TRUE,
-                          table.envir = "table") {
+                          table.envir = "table",
+                          table_css = NULL) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -125,7 +128,8 @@ kable_styling <- function(kable_input,
                              full_width = full_width,
                              position = position,
                              font_size = font_size,
-                             protect_latex = protect_latex))
+                             protect_latex = protect_latex,
+                             table_css = table_css))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -182,7 +186,8 @@ htmlTable_styling <- function(kable_input,
                               position = c("center", "left", "right",
                                            "float_left", "float_right"),
                               font_size = NULL,
-                              protect_latex = TRUE) {
+                              protect_latex = TRUE,
+                              table_css = NULL) {
   if (protect_latex) {
     kable_input <- extract_latex_from_kable(kable_input)
   }
@@ -237,6 +242,11 @@ htmlTable_styling <- function(kable_input,
     float_right = "float: right; margin-left: 10px;"
   )
   kable_xml_style <- c(kable_xml_style, position_style)
+
+  if (!is.null(table_css)) {
+    # Check to see if style ends with comma (;) and perhaps needs a
+    kable_xml_style <- c(kable_xml_style, table_css)
+  }
 
   if (length(kable_xml_style) != 0) {
     xml_attr(kable_xml, "style") <- paste(kable_xml_style, collapse = " ")
