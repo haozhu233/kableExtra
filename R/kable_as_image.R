@@ -21,20 +21,6 @@
 #' @param keep_tex A T/F option to control if the latex file that is initially created
 #' should be kept. Default is `FALSE`.
 #'
-#' @examples
-#' \dontrun{
-#' library(kableExtra)
-#'
-#' kable(mtcars[1:5, ], "html") %>%
-#'   kable_styling("striped") %>%
-#'   row_spec(1, color = "red") %>%
-#'   save_kable("inst/test.pdf")
-#'
-#' kable(mtcars, "latex", booktabs = T) %>%
-#' kable_styling(latex_options = c("striped", "scale_down")) %>%
-#' row_spec(1, color = "red") %>%
-#' as_image()
-#' }
 #' @export
 kable_as_image <- function(kable_input, filename = NULL,
                            file_format = "png",

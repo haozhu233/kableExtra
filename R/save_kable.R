@@ -18,7 +18,15 @@
 #' table, such as `\\\\usepackage[magyar]{babel}`.
 #' @param keep_tex A T/F option to control if the latex file that is initially created
 #' should be kept. Default is `FALSE`.
+#' @examples
+#' \dontrun{
+#' library(kableExtra)
 #'
+#' kable(mtcars[1:5, ], "html") %>%
+#'   kable_styling("striped") %>%
+#'   row_spec(1, color = "red") %>%
+#'   save_kable("inst/test.pdf")
+#' }
 #' @export
 save_kable <- function(x, file,
                        bs_theme = "simplex", self_contained = TRUE,
