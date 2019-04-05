@@ -14,7 +14,15 @@
 #'
 #' @param ... Additional arguments passed to save_kable.
 #'
+#' @examples
+#' \dontrun{
+#' library(kableExtra)
 #'
+#' kable(mtcars, "latex", booktabs = T) %>%
+#' kable_styling(latex_options = c("striped", "scale_down")) %>%
+#' row_spec(1, color = "red") %>%
+#' as_image()
+#' }
 #' @export
 as_image <- function(x, width = NULL, height = NULL, file = NULL, ...) {
   if (is.null(width) + is.null(height) == 0) {
