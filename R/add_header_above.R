@@ -41,6 +41,8 @@
 #' td cell.
 #' @param include_empty Whether empty cells in HTML should also be styled.
 #' Default is FALSE.
+#' @param border_left T/F option for border on the left side in latex.
+#' @param border_right T/F option for border on the right side in latex.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -54,7 +56,8 @@ add_header_above <- function(kable_input, header = NULL,
                              align = "c", color = NULL, background = NULL,
                              font_size = NULL, angle = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
-                             extra_css = NULL, include_empty = FALSE) {
+                             extra_css = NULL, include_empty = FALSE,
+                             border_left = FALSE, border_right = FALSE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -72,7 +75,8 @@ add_header_above <- function(kable_input, header = NULL,
   if (kable_format == "latex") {
     return(pdfTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
-      align, color, background, font_size, angle, escape, line, line_sep))
+      align, color, background, font_size, angle, escape, line, line_sep,
+      border_left, border_right))
   }
 }
 
@@ -209,7 +213,8 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
 pdfTable_add_header_above <- function(kable_input, header, bold, italic,
                                       monospace, underline, strikeout, align,
                                       color, background, font_size, angle,
-                                      escape, line, line_sep) {
+                                      escape, line, line_sep,
+                                      border_left, border_right) {
   table_info <- magic_mirror(kable_input)
   header <- standardize_header_input(header)
 
@@ -222,7 +227,8 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(
     header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
-    align, color, background, font_size, angle, line_sep)
+    align, color, background, font_size, angle, line_sep,
+    border_left, border_right)
   if (line) {
     new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   } else {
@@ -254,7 +260,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
                                           bold, italic, monospace,
                                           underline, strikeout, align,
                                           color, background, font_size, angle,
-                                          line_sep) {
+                                          line_sep, border_left, border_right) {
   n <- nrow(header_df)
   bold <- ez_rep(bold, n)
   italic <- ez_rep(italic, n)
@@ -266,9 +272,16 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   background <- ez_rep(background, n)
   font_size <- ez_rep(font_size, n)
   angle <- ez_rep(angle, n)
-  if (!booktabs) {
+  if (!booktabs & n != 1) {
     align[1:(n - 1)] <- paste0(align[1:(n - 1)], "|")
   }
+  if (border_left) {
+    align[1] <- paste0("|", align[1])
+  }
+  if (border_right) {
+    align[n] <- paste0(align[n], "|")
+  }
+
   header <- header_df$header
   colspan <- header_df$colspan
 
