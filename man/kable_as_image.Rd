@@ -37,3 +37,18 @@ should be kept. Default is \code{FALSE}.}
 \description{
 deprecated
 }
+\examples{
+\dontrun{
+library(kableExtra)
+
+kable(mtcars[1:5, ], "html") \%>\%
+  kable_styling("striped") \%>\%
+  row_spec(1, color = "red") \%>\%
+  save_kable("inst/test.pdf")
+
+kable(mtcars, "latex", booktabs = T) \%>\%
+kable_styling(latex_options = c("striped", "scale_down")) \%>\%
+row_spec(1, color = "red") \%>\%
+as_image()
+}
+}
