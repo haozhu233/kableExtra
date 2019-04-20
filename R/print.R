@@ -1,16 +1,20 @@
 #' @export
 print.kableExtra <- function(x, ...) {
-  html_header <- htmltools::tags$head(
+  dep <- list(
     rmarkdown::html_dependency_jquery(),
-    rmarkdown::html_dependency_bootstrap(theme = "simplex"),
+    rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
     html_dependency_kePrint()
   )
-  html_table <- htmltools::HTML(as.character(x))
-  html_result <- htmltools::tagList(html_header, html_table)
-  if (interactive() & rstudioapi::isAvailable()) {
-    htmltools::html_print(html_result, viewer = rstudioapi::viewer)
-  }
-  print(html_result)
+  html_kable <- htmltools::browsable(
+    htmltools::HTML(as.character(x))
+  )
+  htmlDependencies(html_kable) <- dep
+  class(html_kable) <- "shiny.tag.list"
+  print(html_kable)
+  # if (interactive() & rstudioapi::isAvailable()) {
+  #   htmltools::html_print(html_result, viewer = rstudioapi::viewer)
+  # }
+  # print(html_result)
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message
