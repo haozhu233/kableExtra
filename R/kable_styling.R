@@ -437,7 +437,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
     x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*")
 
     if (repeat_header_continued == FALSE) {
-      bottom_part <- "\\\n\\endfoot\n\\bottomrule\n\\endlastfoot"
+      bottom_part <- "\n\\endfoot\n\\bottomrule\n\\endlastfoot"
     } else {
       if (repeat_header_continued == TRUE) {
         bottom_text <- "\\textit{(continued \\ldots)}"
