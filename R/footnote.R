@@ -24,6 +24,9 @@
 #' threeparttable. Threeparttable will force the width of caption and
 #' footnotes be the width of the original table. It's useful when you have
 #' long paragraph of footnotes.
+#' @param fixed_small_size T/F When you want to keep the footnote small after
+#' specifying large font size with the kable_styling() (e.g. ideal font for headers
+#' and table content with small font in footnotes).
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -48,6 +51,7 @@ footnote <- function(kable_input,
                      footnote_as_chunk = FALSE,
                      escape = TRUE,
                      threeparttable = FALSE,
+                     fixed_small_size = FALSE,
                      general_title = "Note: ",
                      number_title = "",
                      alphabet_title = "",
@@ -107,7 +111,7 @@ footnote <- function(kable_input,
   }
   if (kable_format == "latex") {
     return(footnote_latex(kable_input, footnote_table, footnote_as_chunk,
-                          threeparttable))
+                          threeparttable, fixed_small_size))
   }
 }
 
@@ -241,7 +245,7 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
-                           threeparttable) {
+                           threeparttable, fixed_small_size) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -252,7 +256,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{ThreePartTable}\n\\\\begin{TableNotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
-                        "\n", footnote_text,
+                        ifelse(fixed_small_size,"\n\\\\small\n","\n"), footnote_text,
                         "\n\\\\end{TableNotes}\n\\\\begin{",
                         table_info$tabular, "}"),
                  out)
@@ -280,7 +284,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  paste0("\\\\end{", table_info$tabular,
                         "}\n\\\\begin{tablenotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
-                        "\n", footnote_text,
+                        ifelse(fixed_small_size,"\n\\\\small\n","\n"), footnote_text,
                         "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
                  out)
     }

@@ -1,6 +1,44 @@
+kableExtra 1.1.0
+--------------------------------------------------------------------------------
+
+# Major Changes
+
+* `pack_rows` was added as an alias to `group_rows` and is now the preferred 
+term for this feature as `dplyr` 0.8.0 instroduced a function with the same 
+name. 
+
+* HTML Font and Background Colors now gets a "!important" tag so they can be
+printed out under bootstrap
+
+# Minor Changes
+
+* Added a `fixed_header` option to `kable_styling`. (Similar with the same option in `scroll_box`)
+
+# Bug Fixes
+
+* LaTeX packages now only loaded in latex environment so there won't be 
+memory leaking issues in html_notebook. 
+
+* Fixed an typo in stripe_index
+
+kableExtra 1.0.1
+--------------------------------------------------------------------------------
+
+# Bug Fixes
+* Fix issue where HTML results cannot be displayed inline (#330)
+
+* Fix extra texts with save_kable for HTML (#310)
+
 kableExtra 1.0.0
 --------------------------------------------------------------------------------
 # Major Changes
+* `save_table` will be able to save HTML tables to png, jpg and PDF using 
+webshot automatically. 
+* Removed `xcolor` dependency for recent updates in fancyvrb, which causes a
+`xcolor` option clash.
+* Added formatting options to `add_header_above`.
+* Exported `kable_as_xml` and `xml_as_kable`.
+* Added a `xtable2kable` function to support most xtable output.
 
 # Minor Features
 * Added symbol_manual to footnote so that users can manually customize the 
@@ -8,6 +46,8 @@ sequence of symbols in footnote.
 
 # Bug Fixes
 * Fixed an issue that prevents linebreak works with factor
+* Moved a lot LaTeX function options to the top level for easier selection. 
+* ...
 
 kableExtra 0.9.0
 --------------------------------------------------------------------------------

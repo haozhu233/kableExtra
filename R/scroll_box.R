@@ -8,8 +8,8 @@
 #' @param width A character string indicating the width of the box, e.g. "100px"
 #' @param box_css CSS text for the box
 #' @param extra_css Extra CSS styles
-#' @param fixed_thead A list of two named element. enabled and background.
-#' Default is F and white, e.g. "list(enabled = T, background = "#fff")"
+#' @param fixed_thead HTML table option so table header row is fixed at top.
+#' Values can be either T/F or `list(enabled = T/F, background = "anycolor")`.
 #'
 #' @export
 #'
@@ -25,23 +25,27 @@
 #'     kable_styling() %>%
 #'     scroll_box(width = "100%", height = "200px")
 #' }
-
 scroll_box <- function(kable_input, height = NULL, width = NULL,
                        box_css = "border: 1px solid #ddd; padding: 5px; ",
-                       extra_css = NULL, fixed_thead = list(enabled = F, background = "#fff")) {
+                       extra_css = NULL,
+                       fixed_thead = TRUE
+                       ) {
 
   kable_attrs <- attributes(kable_input)
+  fixed_thead <- get_fixed_thead(fixed_thead)
+  if (is.null(height)) fixed_thead$enabled <- FALSE
 
   if (fixed_thead$enabled) {
     box_css = "border: 1px solid #ddd; padding: 0px; "
     kable_xml <- read_kable_as_xml(kable_input)
-    kable_thead <- xml_tpart(kable_xml, "thead")
-    original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
-    for (theader_i in 1:length(xml_children(original_header_row))) {
-      target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_attr(target_header_cell, "style") <- paste0(xml_attr(target_header_cell, "style"),
-                                                      "position: sticky; top:0; background: ",
-                                                      fixed_thead$background,";")
+    all_header_cells <- xml2::xml_find_all(kable_xml, "//thead//th")
+    if (is.null(fixed_thead$background))  fixed_thead$background <- "#FFFFFF"
+    for (i in seq(length(all_header_cells))) {
+      xml_attr(all_header_cells[i], "style") <- paste0(
+        xml_attr(all_header_cells[i], "style"),
+        "position: sticky; top:0; background-color: ",
+        fixed_thead$background, ";"
+      )
     }
     out <- as.character(as_kable_xml(kable_xml))
   } else {
@@ -69,4 +73,12 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
 
   return(out)
+}
+
+get_fixed_thead <- function(x) {
+  if (is.logical(x)) {
+    if (x) return(list(enabled = TRUE, background = "#FFFFFF"))
+    return(list(enabled = FALSE))
+  }
+  return(x)
 }

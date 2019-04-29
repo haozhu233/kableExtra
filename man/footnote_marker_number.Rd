@@ -20,7 +20,7 @@ return "b" in HTML.}
 default value from global option \code{knitr.table.format}.}
 
 \item{double_escape}{T/F if output is in LaTeX, whether it should be double
-escaped. If you are using footnote_marker in \code{group_rows`` labeling row or}add_header_above\code{, you need to set this to be}TRUE`.}
+escaped. If you are using footnote_marker in \code{group_rows`` labeling row or }add_header_above\code{, you need to set this to be }TRUE`.}
 }
 \description{
 Put footnote mark in superscription in table. Unless you are

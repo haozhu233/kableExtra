@@ -147,12 +147,12 @@ xml_cell_style <- function(x, bold, italic, monospace,
   }
   if (!is.null(color)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                   "color: ", color, ";")
+                                   "color: ", html_color(color), " !important;")
   }
   if (!is.null(background)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "background-color: ",
-                                   background, ";")
+                                   html_color(background), " !important;")
   }
   if (!is.null(align)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),

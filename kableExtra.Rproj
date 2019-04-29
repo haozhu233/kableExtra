@@ -10,7 +10,7 @@ NumSpacesForTab: 2
 Encoding: UTF-8
 
 RnwWeave: knitr
-LaTeX: pdfLaTeX
+LaTeX: XeLaTeX
 
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
@@ -18,7 +18,7 @@ StripTrailingWhitespace: Yes
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageBuildArgs: --compact-vignettes="gs+qpdf"
+PackageBuildArgs: --compact-vignettes=both
 PackageBuildBinaryArgs: --md5
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace

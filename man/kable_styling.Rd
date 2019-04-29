@@ -10,7 +10,8 @@ kable_styling(kable_input, bootstrap_options = "basic",
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE, stripe_color = "gray!6",
-  latex_table_env = NULL, protect_latex = TRUE)
+  stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE,
+  table.envir = "table", fixed_thead = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -59,8 +60,15 @@ or replace the caption.}
 \item{repeat_header_method}{LaTeX option, can either be \code{append}(default) or
 \code{replace}}
 
+\item{repeat_header_continued}{T/F or a text string. Whether or not to put
+a continued mark on the second page of longtable. If you put in text, we will
+use this text as the "continued" mark.}
+
 \item{stripe_color}{LaTeX option allowing users to pick a different color
 for their strip lines. This option is not available in HTML}
+
+\item{stripe_index}{LaTeX option allowing users to customize which rows
+should have stripe color.}
 
 \item{latex_table_env}{LaTeX option. A character string to define customized
 table environment such as tabu or tabularx.You shouldn't expect all features
@@ -68,6 +76,14 @@ could be supported in self-defined environments.}
 
 \item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs
 will be protected from HTML escaping.}
+
+\item{table.envir}{LaTeX floating table environment. \code{kable_style} will put
+a plain no-caption table in a \code{table} environment in order to center the
+table. You can specify this option to things like \code{table*} or \code{float*} based
+on your need.}
+
+\item{fixed_thead}{HTML table option so table header row is fixed at top.
+Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
 }
 \description{
 This function provides a cleaner approach to modify the style

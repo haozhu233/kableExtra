@@ -119,6 +119,14 @@ kable(dt) %>%
   kable_styling(bootstrap_options = "striped", font_size = 7)
 ```
 
+## Fixed Table Header Row
+If you happened to have a very long table, you may consider to use this `fixed_header` option to fix the header row on top as your readers scroll. By default, the background is set to white. If you need a different color, you can set `fixed_header = list(enabled = T, background = "red")`. 
+
+```{r}
+kable(mtcars[1:10, 1:5]) %>%
+  kable_styling(fixed_thead = T)
+```
+
 # Column / Row Specification
 ## Column spec
 When you have a table with lots of explanatory texts, you may want to specified the column width for different column, since the auto adjust in HTML may not work in its best way while basic LaTeX table is really bad at handling text wrapping. Also, sometimes, you may want to highlight a column (e.g. a "Total" column) by making it bold. In these scenario, you can use `column_spec()`. You can find an example below. 
@@ -173,7 +181,6 @@ Currently, `cell_spec` supports features including bold, italic, monospace, text
 It is very easy to use `cell_spec` with conditional logic. Here is an example.
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
-options(knitr.table.format = "html") 
 mtcars[1:10, 1:2] %>%
   mutate(
     car = row.names(.),
@@ -323,31 +330,49 @@ kable(dt) %>%
 ```
 
 ## Group rows via labeling
-Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
+Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the function `group_rows()`/`pack_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
 kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
-  group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10)
+  pack_rows("Group 1", 4, 7) %>%
+  pack_rows("Group 2", 8, 10)
 ```
 
-Another way to use `group_rows` is to provide an grouping index, similar with `add_header_above()`. This feature is only available in kableExtra > 0.5.2.
+Another way to use `pack_rows` is to provide an grouping index, similar with `add_header_above()`. This feature is only available in kableExtra > 0.5.2.
 ```{r, eval = F}
 # Not evaluated. This example generates the same table as above.
 kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
-  group_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
+  pack_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 ```
 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kable(dt) %>%
   kable_styling("striped", full_width = F) %>%
-  group_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
+  pack_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
+```
+
+`r text_spec("Important Note!", bold = T, color = "#D7261E")`
+
+Note that `dplyr` 0.8.0+ introduced a `group_rows` function as well for a trivial feature. Therefore, I'm create this `pack_rows` function as an alias to the original `group_rows`. In the future, **I recommend all kableExtra users to use `pack_rows` instead of `group_rows` to get rid of the NAMESPACE conflict.** 
+
+Alternatively, for pre-existing codes, you have two ways to solve this. You can either load `kableExtra` after `dplyr` or `tidyverse`, or to use the `conflicted` package. Here is an example. 
+
+```{r, eval=F}
+# Method 1
+pack_rows() # instead of group_rows()
+
+# Method 2
+library(dplyr)
+library(kableExtra)
+
+# Method 3
+conflicted::conflict_prefer("group_rows", "kableExtra", "dplyr")
 ```
 
 ## Row indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
+Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kable(dt) %>%
@@ -356,7 +381,7 @@ kable(dt) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical allignment of the cell is controlled by `valign` with default as "top". 
+Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical allignment of the cell is controlled by `valign` with default as "top". 
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -437,9 +462,12 @@ You can also specify width using a percentage.
 
 ```{r}
 kable(cbind(mtcars, mtcars)) %>%
+  add_header_above(c("a" = 5, "b" = 18)) %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "200px")
 ```
+
+Starting from version 1.1.0, if you have a fixed-height box, the header row is fixed 
 
 ## Save HTML table directly
 If you need to save those HTML tables but you don't want to generate them through rmarkdown, you can try to use the `save_kable()` function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many. 
@@ -454,3 +482,13 @@ Since the structure of `kable` is relatively simple, it shouldn't be too difficu
 
 ## `tables`
 The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
+
+## `xtable`
+For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. 
+
+```{r, eval=F}
+# Not evaluating
+xtable::xtable(mtcars[1:4, 1:4], caption = "Hello xtable") %>%
+  xtable2kable() %>%
+  column_spec(1, color = "red")
+```
