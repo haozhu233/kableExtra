@@ -37,10 +37,17 @@
 #' that it's not for the whole column but to each individual cells
 #' @param include_thead T/F. A HTML only feature to contoll whether the
 #' header row will be manipulated. Default is `FALSE`.
+#' @param latex_column_spec Only for LaTeX tables.  Code to replace the column
+#' specification.  If not `NULL`, will override all other arguments.
+#'
+#' @details Use `latex_column_spec` in a LaTeX table to change or
+#' customize the column specification.  Because of the way it is handled
+#' internally, any backslashes must be escaped.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
-#'
+#' x <- knitr::kable(head(mtcars), "latex", booktabs = TRUE)
+#' column_spec(x, 1, latex_column_spec = ">{\\\\color{red}}c")
 #' @export
 column_spec <- function(kable_input, column,
                         width = NULL, bold = FALSE, italic = FALSE,
@@ -48,7 +55,8 @@ column_spec <- function(kable_input, column,
                         color = NULL, background = NULL,
                         border_left = FALSE, border_right = FALSE,
                         width_min = NULL, width_max = NULL,
-                        extra_css = NULL, include_thead = FALSE) {
+                        extra_css = NULL, include_thead = FALSE,
+                        latex_column_spec = NULL) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -73,7 +81,8 @@ column_spec <- function(kable_input, column,
                              bold, italic, monospace,
                              underline, strikeout,
                              color, background,
-                             border_left, border_right))
+                             border_left, border_right,
+                             latex_column_spec = latex_column_spec))
   }
 }
 
@@ -212,7 +221,8 @@ column_spec_latex <- function(kable_input, column, width,
                               bold, italic, monospace,
                               underline, strikeout,
                               color, background,
-                              border_left, border_right) {
+                              border_left, border_right,
+                              latex_column_spec) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -227,7 +237,7 @@ column_spec_latex <- function(kable_input, column, width,
     function(x) {
       latex_column_align_builder(
         x, width, bold, italic, monospace, underline, strikeout,
-        color, background, border_left, border_right)
+        color, background, border_left, border_right, latex_column_spec)
     }
   ))
 
@@ -260,7 +270,8 @@ column_spec_latex <- function(kable_input, column, width,
 latex_column_align_builder <- function(x, width, bold, italic, monospace,
                                        underline, strikeout,
                                        color, background,
-                                       border_left, border_right) {
+                                       border_left, border_right,
+                                       latex_column_spec) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
@@ -293,6 +304,8 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
   if (border_right) {
     x <- paste0(x, "\\|")
   }
+  if (!is.null(latex_column_spec))
+  x <- latex_column_spec
 
   return(x)
 }

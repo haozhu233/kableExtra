@@ -8,7 +8,8 @@ column_spec(kable_input, column, width = NULL, bold = FALSE,
   italic = FALSE, monospace = FALSE, underline = FALSE,
   strikeout = FALSE, color = NULL, background = NULL,
   border_left = FALSE, border_right = FALSE, width_min = NULL,
-  width_max = NULL, extra_css = NULL, include_thead = FALSE)
+  width_max = NULL, extra_css = NULL, include_thead = FALSE,
+  latex_column_spec = NULL)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -60,13 +61,22 @@ that it's not for the whole column but to each individual cells}
 
 \item{include_thead}{T/F. A HTML only feature to contoll whether the
 header row will be manipulated. Default is \code{FALSE}.}
+
+\item{latex_column_spec}{Only for LaTeX tables.  Code to replace the column
+specification.  If not \code{NULL}, will override all other arguments.}
 }
 \description{
 This function allows users to select a column and then specify
 its look.
 }
+\details{
+Use \code{latex_column_spec} in a LaTeX table to change or
+customize the column specification.  Because of the way it is handled
+internally, any backslashes must be escaped.
+}
 \examples{
 x <- knitr::kable(head(mtcars), "html")
 column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
-
+x <- knitr::kable(head(mtcars), "latex", booktabs = TRUE)
+column_spec(x, 1, latex_column_spec = ">{\\\\\\\\color{red}}c")
 }
