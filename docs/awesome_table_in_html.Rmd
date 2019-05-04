@@ -310,7 +310,6 @@ mtcars[1:5, 1:4] %>%
   add_header_above(c(" ", "Hello" = 2, "World" = 2))
 ```
 
-
 # Grouped Columns / Rows
 ## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
