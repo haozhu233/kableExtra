@@ -172,6 +172,7 @@ kable(dt) %>%
 
 # Cell/Text Specification
 Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
+
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
 
