@@ -23,7 +23,8 @@
   if (!is.null(rmarkdown::metadata$output) &&
       rmarkdown::metadata$output %in% c(
         "ioslides_presentation", "slidy_presentation",
-        "gitbook", "radix_article"
+        "gitbook", "radix_article",
+        "distill_article"
       )) {
     options(kableExtra.html.bsTable = TRUE)
   }
