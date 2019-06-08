@@ -170,6 +170,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
     row_style <- paste0(row_style, extra_css)
   }
 
+  if (is.null(angle)) {angle = 0}
   if (!is.null(angle)) {
     angle <- paste0("-webkit-transform: rotate(", angle,
                     "deg); -moz-transform: rotate(", angle,
