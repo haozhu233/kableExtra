@@ -78,7 +78,7 @@ You can disable this behavior by setting `options(kableExtra.auto_format = FALSE
 If you are using a recent version of rmarkdown, you are recommended to load this package entirely via `library(kableExtra)` or `require(kableExtra)` because this package will load all necessary LaTeX packages, such as `booktabs` or `multirow`, for you automatically. Note that, if you are calling functions from `kableExtra` via `kableExtra::kable_styling()` or if you put `library(kableExtra)` in a separate R file that is **sourced** by the rmarkdown document, these packages won't be loaded. Furthermore, you can suppress this auto-loading behavior by setting a global option `kableExtra.latex.load_packages` to be `FALSE` before you load `kableExtra`.
 
 ```{r, eval = FALSE}
-# Not evaluated. Ilustration purpose
+# Not evaluated. Illustration purpose
 options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
