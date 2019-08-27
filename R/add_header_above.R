@@ -65,6 +65,14 @@ add_header_above <- function(kable_input, header = NULL,
             "for details.")
     return(kable_input)
   }
+  if ((length(align) != 1L) & (length(align) != length(header))) {
+    warning("Length of align vector supplied to add_header_above must either be 1 ",
+            "or the same length as the header supplied. The length of the align ",
+            sprintf("vector supplied is %i and the header length is %i.",
+                    length(align), length(header)),
+            "Using default of centering each element of row.")
+    align <- 'c'
+  }
   if (kable_format == "html") {
     return(htmlTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
@@ -141,11 +149,10 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                                            color, background, font_size,
                                            angle, line, line_sep, extra_css,
                                            include_empty) {
-  if (align %in% c("l", "c", "r")) {
-    align <- switch(align, r = "right", c = "center", l = "left")
-  }
+  align <- vapply(align, switch_align, 'x', USE.NAMES = FALSE)
+
   row_style <- paste0(
-    paste0("text-align: ", align, "; "),
+    "text-align: %s; ",
     ifelse(bold, "font-weight: bold; ", ""),
     ifelse(italic, "font-style: italic; ", ""),
     ifelse(monospace, "font-family: monospace; ", ""),
@@ -194,6 +201,8 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
   line_sep <- ez_rep(line_sep, nrow(header_df))
   line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
 
+  row_style <- sprintf(row_style, align)
+
   header_items <- ifelse(
     trimws(header_df$header) == "",
     paste0('<th style="border-bottom:hidden" colspan="', header_df$colspan,
@@ -222,7 +231,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
     header$header <- input_escape(header$header, align)
   }
 
-  align <- match.arg(align, c("c", "l", "r"))
+  align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
 
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(
@@ -330,4 +339,10 @@ cline_gen <- function(header_df, booktabs, line_sep) {
   return(cline)
 }
 
+switch_align <- function(x) {
+  if (x %in% c('l', 'c', 'r')) {
+    return(switch(x, l = 'left', c = 'center', r = 'right'))
+  }
+  return(x)
+}
 

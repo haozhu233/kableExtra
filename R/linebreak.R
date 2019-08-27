@@ -14,7 +14,7 @@ linebreak <- function(x, align = c("l", "c", "r"), double_escape = F,
                       linebreaker = "\n") {
   if (is.numeric(x) | is.logical(x)) return(x)
   x <- as.character(x)
-  align <- match.arg(align, c("l", "c", "r"))
+  align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
   if (double_escape) {
     ifelse(str_detect(x, linebreaker),
            paste0("\\\\makecell[", align, "]{",
