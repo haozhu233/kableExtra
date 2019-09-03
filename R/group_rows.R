@@ -64,12 +64,14 @@ group_rows <- function(kable_input, group_label = NULL,
             "for details.")
     return(kable_input)
   }
+
   if (is.null(index)) {
     if (kable_format == "html") {
       if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
-                             label_row_css, escape, colnum, indent))
+                             label_row_css, escape, colnum, indent,
+                             bold, italic))
     }
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
@@ -86,7 +88,8 @@ group_rows <- function(kable_input, group_label = NULL,
                                     use label_row_css instead.")
         out <- group_rows_html(out, index$header[i],
                                index$start[i], index$end[i],
-                               label_row_css, escape, colnum, indent)
+                               label_row_css, escape, colnum, indent,
+                               bold, italic)
       }
     }
     if (kable_format == "latex") {
@@ -112,7 +115,8 @@ group_row_index_translator <- function(index) {
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
-                            label_row_css, escape, colnum, indent) {
+                            label_row_css, escape, colnum, indent, 
+                            bold = T, italic = F) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -133,11 +137,14 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   kable_ncol <- ifelse(is.null(colnum),
                        length(xml_children(starting_node)),
                        colnum)
+
+  if (bold) group_label <- paste0("<strong>", group_label, "</strong>")
+  if (italic) group_label <- paste0("<em>", group_label, "</em>")
+
   group_header_row_text <- paste0(
     '<tr groupLength="', length(group_seq), '"><td colspan="', kable_ncol,
-    '" style="', label_row_css, '"><strong>', group_label,
-    "</strong></td></tr>"
-  )
+    '" style="', label_row_css, '">', group_label, "</td></tr>")
+
   group_header_row <- read_xml(group_header_row_text, options = "COMPACT")
   xml_add_sibling(starting_node, group_header_row, .where = "before")
 
