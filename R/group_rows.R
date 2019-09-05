@@ -139,8 +139,8 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
                        colnum)
   group_header_row_text <- paste0(
     '<tr groupLength="', length(group_seq), '"><td colspan="', kable_ncol,
-    '" style="', label_row_css, '">', group_label,
-    "</td></tr>"
+    '" style="', label_row_css, '"><strong>', group_label,
+    "</strong></td></tr>"
   )
   group_header_row <- read_xml(group_header_row_text, options = "COMPACT")
   xml_add_sibling(starting_node, group_header_row, .where = "before")
