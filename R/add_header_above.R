@@ -98,7 +98,8 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
   
   if (is.data.frame(header)){
     if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
-      header <- data.frame(header = header[[1]], colspan = header[[2]])
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
     }
     else {
       stop("If header input is provided as a data frame instead of a named vector ",
@@ -238,7 +239,8 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   
   if (is.data.frame(header)){
     if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
-      header <- data.frame(header = header[[1]], colspan = header[[2]])
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
     }
     else {
       stop("If header input is provided as a data frame instead of a named vector ",
