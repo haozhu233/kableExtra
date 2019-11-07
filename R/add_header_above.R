@@ -97,7 +97,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
   
   if (is.data.frame(header)){
-    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]]){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
       header <- data.frame(header = header[[1]], colspan = header[[2]])
     }
     else {
@@ -237,7 +237,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   table_info <- magic_mirror(kable_input)
   
   if (is.data.frame(header)){
-    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]]){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
       header <- data.frame(header = header[[1]], colspan = header[[2]])
     }
     else {
