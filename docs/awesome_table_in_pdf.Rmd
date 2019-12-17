@@ -189,7 +189,7 @@ kable(dt, "latex", booktabs = T) %>%
   kable_styling(position = "center")
 ```
 
-Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires rmarkdown 1.4.0 +. If you rmarkdown version < 1.4.0, you need to load the package through a customed LaTeX template file. 
+Besides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires rmarkdown 1.4.0 +. If you rmarkdown version < 1.4.0, you need to load the package through a customed LaTeX template file. 
 ```{r}
 kable(dt, "latex", booktabs = T) %>%
   kable_styling(position = "float_right")
