@@ -59,7 +59,7 @@ add_indent_latex <- function(kable_input, positions, no_of_indent) {
 }
 
 latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace\\{",no_of_indent*2,"em\\}", rowtext)
+  paste0("\\\\hspace\\{",no_of_indent,"em\\}", rowtext)
 }
 
 # Add indentation for HTML
