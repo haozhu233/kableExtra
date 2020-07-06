@@ -32,6 +32,8 @@ add_indent <- function(kable_input, positions, no_of_indent) {
 add_indent_latex <- function(kable_input, positions, no_of_indent) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
+  no_of_indent<-as.numeric(no_of_indent)
+
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
@@ -56,11 +58,15 @@ add_indent_latex <- function(kable_input, positions, no_of_indent) {
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
+
+
 }
 
 latex_indent_unit <- function(rowtext) {
   paste0("\\\\hspace\\{",no_of_indent,"em\\}", rowtext)
 }
+
+
 
 # Add indentation for HTML
 add_indent_html <- function(kable_input, positions, no_of_indent) {
