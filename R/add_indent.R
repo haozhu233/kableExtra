@@ -9,7 +9,7 @@
 #' add_indent(x, c(2, 4))
 #'
 #' @export
-add_indent <- function(kable_input, positions, no_of_indent) {
+add_indent <- function(kable_input, positions, level_of_indent) {
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
@@ -21,18 +21,18 @@ add_indent <- function(kable_input, positions, no_of_indent) {
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(add_indent_html(kable_input, positions, no_of_indent))
+    return(add_indent_html(kable_input, positions, level_of_indent))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions, no_of_indent))
+    return(add_indent_latex(kable_input, positions, level_of_indent))
   }
 }
 
 # Add indentation for LaTeX
-add_indent_latex <- function(kable_input, positions, no_of_indent) {
+add_indent_latex <- function(kable_input, positions, level_of_indent) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
-  no_of_indent<-as.numeric(no_of_indent)
+  level_of_indent<-as.numeric(level_of_indent)
 
 
   if (table_info$duplicated_rows) {
@@ -63,13 +63,13 @@ add_indent_latex <- function(kable_input, positions, no_of_indent) {
 }
 
 latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace\\{",no_of_indent,"em\\}", rowtext)
+  paste0("\\\\hspace\\{",level_of_indent,"em\\}", rowtext)
 }
 
 
 
 # Add indentation for HTML
-add_indent_html <- function(kable_input, positions, no_of_indent) {
+add_indent_html <- function(kable_input, positions, level_of_indent) {
   kable_attrs <- attributes(kable_input)
 
   kable_xml <- read_kable_as_xml(kable_input)
@@ -85,7 +85,7 @@ add_indent_html <- function(kable_input, positions, no_of_indent) {
     node_to_edit <- xml_child(xml_children(kable_tbody)[[i]], 1)
     if (!xml_has_attr(node_to_edit, "indentlevel")) {
       xml_attr(node_to_edit, "style") <- paste(
-        xml_attr(node_to_edit, "style"), "padding-left: ",paste0(no_of_indent*2,"em;")
+        xml_attr(node_to_edit, "style"), "padding-left: ",paste0(level_of_indent*2,"em;")
       )
       xml_attr(node_to_edit, "indentlevel") <- 1
     } else {
