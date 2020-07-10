@@ -3,13 +3,14 @@
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param positions A vector of numeric row numbers for the rows that need to
 #' be indented.
+#' @param level_of_indent a numeric value for the indent level
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add indentations to the 2nd & 4th row
-#' add_indent(x, c(2, 4))
+#' add_indent(x, c(2, 4), level_of_indent = 1)
 #'
 #' @export
-add_indent <- function(kable_input, positions) {
+add_indent <- function(kable_input, positions, level_of_indent) {
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
@@ -21,17 +22,19 @@ add_indent <- function(kable_input, positions) {
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(add_indent_html(kable_input, positions))
+    return(add_indent_html(kable_input, positions, level_of_indent))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions))
+    return(add_indent_latex(kable_input, positions, level_of_indent))
   }
 }
 
 # Add indentation for LaTeX
-add_indent_latex <- function(kable_input, positions) {
+add_indent_latex <- function(kable_input, positions, level_of_indent) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
+  level_of_indent<-as.numeric(level_of_indent)
+
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
@@ -56,14 +59,18 @@ add_indent_latex <- function(kable_input, positions) {
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
+
+
 }
 
 latex_indent_unit <- function(rowtext) {
-  paste0("\\\\hspace\\{1em\\}", rowtext)
+  paste0("\\\\hspace\\{",level_of_indent,"em\\}", rowtext)
 }
 
+
+
 # Add indentation for HTML
-add_indent_html <- function(kable_input, positions) {
+add_indent_html <- function(kable_input, positions, level_of_indent) {
   kable_attrs <- attributes(kable_input)
 
   kable_xml <- read_kable_as_xml(kable_input)
@@ -79,7 +86,7 @@ add_indent_html <- function(kable_input, positions) {
     node_to_edit <- xml_child(xml_children(kable_tbody)[[i]], 1)
     if (!xml_has_attr(node_to_edit, "indentlevel")) {
       xml_attr(node_to_edit, "style") <- paste(
-        xml_attr(node_to_edit, "style"), "padding-left: 2em;"
+        xml_attr(node_to_edit, "style"), "padding-left: ",paste0(level_of_indent*2,"em;")
       )
       xml_attr(node_to_edit, "indentlevel") <- 1
     } else {
