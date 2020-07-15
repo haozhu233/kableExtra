@@ -11,6 +11,13 @@
 #'
 #' @export
 add_indent <- function(kable_input, positions, level_of_indent) {
+
+  if(missing(level_of_indent)){
+    level_of_indent = 1
+    }else{
+    level_of_indent = level_of_indent
+    }
+
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
@@ -35,6 +42,11 @@ add_indent_latex <- function(kable_input, positions, level_of_indent) {
   out <- solve_enc(kable_input)
   level_of_indent<-as.numeric(level_of_indent)
 
+  if(missing(level_of_indent)){
+    level_of_indent = 1
+  }else{
+    level_of_indent = level_of_indent
+  }
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
@@ -71,6 +83,13 @@ latex_indent_unit <- function(rowtext) {
 
 # Add indentation for HTML
 add_indent_html <- function(kable_input, positions, level_of_indent) {
+
+  if(missing(level_of_indent)){
+    level_of_indent = 1
+  }else{
+    level_of_indent = level_of_indent
+  }
+
   kable_attrs <- attributes(kable_input)
 
   kable_xml <- read_kable_as_xml(kable_input)
