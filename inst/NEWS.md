@@ -12,6 +12,9 @@ should be applied to the first column or all columns. Default is False. (#488)
 * `collapse_rows` has a new option `target` to choose the target column in 
 `collapse_rows` (#484)
 
+* Fixed a bug with `group_rows` when used with `repeat_header` on the last row
+(#476)
+
 
 kableExtra 1.1.0
 --------------------------------------------------------------------------------

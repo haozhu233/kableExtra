@@ -208,9 +208,17 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                       regex_escape(extra_latex_after, double_backslash = TRUE))
   }
   new_rowtext <- paste0(pre_rowtext, rowtext)
-  out <- sub(paste0(rowtext, "\\\\\\\\\n"),
-  	         paste0(new_rowtext, "\\\\\\\\\n"),
-  	         out)
+  if (start_row + 1 == table_info$nrow &
+      !is.null(table_info$repeat_header_latex)) {
+    out <- sub(paste0(rowtext, "\\\\\\\\\\*\n"),
+               paste0(new_rowtext, "\\\\\\\\\\*\n"),
+               out)
+  } else {
+    out <- sub(paste0(rowtext, "\\\\\\\\\n"),
+               paste0(new_rowtext, "\\\\\\\\\n"),
+               out)
+  }
+
   out <- gsub("\\\\addlinespace\n", "", out)
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE

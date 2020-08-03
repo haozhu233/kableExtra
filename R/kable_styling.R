@@ -317,6 +317,7 @@ pdfTable_styling <- function(kable_input,
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
     out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
                                        repeat_header_method, repeat_header_continued)
+    table_info$repeat_header_latex <- TRUE
   }
 
   if (full_width) {
