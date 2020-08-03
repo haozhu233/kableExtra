@@ -15,6 +15,8 @@ should be applied to the first column or all columns. Default is False. (#488)
 * Fixed a bug with `group_rows` when used with `repeat_header` on the last row
 (#476)
 
+* Added mathjax to preview (#473)
+
 
 kableExtra 1.1.0
 --------------------------------------------------------------------------------

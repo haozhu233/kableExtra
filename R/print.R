@@ -6,7 +6,10 @@ print.kableExtra <- function(x, ...) {
     html_dependency_kePrint()
   )
   html_kable <- htmltools::browsable(
-    htmltools::HTML(as.character(x))
+    htmltools::HTML(
+      as.character(x),
+      '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"], ["\\(","\\)"]]}})</script>;<script async src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>'
+      )
   )
   htmlDependencies(html_kable) <- dep
   class(html_kable) <- "shiny.tag.list"
