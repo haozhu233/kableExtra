@@ -9,6 +9,10 @@ should be applied to the first column or all columns. Default is False. (#488)
 
 * Removed xcolor from latex dependency list
 
+* `collapse_rows` has a new option `target` to choose the target column in 
+`collapse_rows` (#484)
+
+
 kableExtra 1.1.0
 --------------------------------------------------------------------------------
 
