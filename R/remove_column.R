@@ -56,7 +56,7 @@ remove_column_html <- function (kable_input, columns) {
     
     for(i in 1:body_nrows){
         target_row <- xml2::xml_child(kable_tbody, i)
-        for(j in columns){
+        for(j in rev(columns)){
             target_cell <- xml2::xml_child(target_row, j)
             if(rowspan[i,j]==1)
             xml2::xml_remove(target_cell)
