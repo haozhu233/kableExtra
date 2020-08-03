@@ -9,7 +9,7 @@
 #' mtcars %>% 
 #' kable() %>% 
 #'     remove_column(2:3)
-function (kable_input, columns) {
+remove_column <- function (kable_input, columns) {
     kable_format <- attr(kable_input, "format")
     if (!kable_format %in% c("html", "latex")) {
         warning("Please specify format in kable. kableExtra can customize either ", 
