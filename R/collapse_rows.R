@@ -59,7 +59,7 @@ collapse_rows <- function(kable_input, columns = NULL,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
-      headers_to_remove))
+      headers_to_remove, target))
   }
 }
 
@@ -146,7 +146,7 @@ collapse_row_matrix <- function(kable_dt, columns, html = T, target = NULL)  {
 
 collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 row_group_label_position, row_group_label_fonts,
-                                custom_latex_hline, headers_to_remove) {
+                                custom_latex_hline, headers_to_remove, target) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -164,8 +164,10 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   contents <- table_info$contents
   kable_dt <- kable_dt_latex(contents)
 
-  collapse_matrix_rev <- collapse_row_matrix(kable_dt, columns, html = TRUE)
-  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = FALSE)
+  collapse_matrix_rev <- collapse_row_matrix(kable_dt, columns, html = TRUE,
+                                             target)
+  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = FALSE,
+                                         target)
 
   new_kable_dt <- kable_dt
   for (j in seq_along(columns)) {
@@ -188,7 +190,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   }
 
   midrule_matrix <- collapse_row_matrix(kable_dt, seq(1, table_info$ncol),
-                                        html = F)
+                                        html = FALSE, target)
   midrule_matrix[setdiff(seq(1, table_info$ncol), columns)] <- 1
 
   ex_bottom <- length(contents) - 1
