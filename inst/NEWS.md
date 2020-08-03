@@ -1,3 +1,14 @@
+kableExtra 1.2.0
+--------------------------------------------------------------------------------
+
+* `add_indent` has a new option `level_of_indent` to control the width of the
+indentation. (thanks @samiaab1990 #479)
+
+* `add_indent` has a new option `all_cols` to control whether the indentation
+should be applied to the first column or all columns. Default is False. (#488)
+
+* Removed xcolor from latex dependency list
+
 kableExtra 1.1.0
 --------------------------------------------------------------------------------
 

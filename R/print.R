@@ -11,10 +11,6 @@ print.kableExtra <- function(x, ...) {
   htmlDependencies(html_kable) <- dep
   class(html_kable) <- "shiny.tag.list"
   print(html_kable)
-  # if (interactive() & rstudioapi::isAvailable()) {
-  #   htmltools::html_print(html_result, viewer = rstudioapi::viewer)
-  # }
-  # print(html_result)
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message
@@ -55,6 +51,8 @@ knit_print.kableExtra <- function(x, ...) {
   }
   asis_output(x, meta = meta_list)
 }
+
+
 
 
 

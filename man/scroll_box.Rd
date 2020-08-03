@@ -4,9 +4,14 @@
 \alias{scroll_box}
 \title{Put a HTML table into a scrollable box}
 \usage{
-scroll_box(kable_input, height = NULL, width = NULL,
-  box_css = "border: 1px solid #ddd; padding: 5px; ", extra_css = NULL,
-  fixed_thead = TRUE)
+scroll_box(
+  kable_input,
+  height = NULL,
+  width = NULL,
+  box_css = "border: 1px solid #ddd; padding: 5px; ",
+  extra_css = NULL,
+  fixed_thead = TRUE
+)
 }
 \arguments{
 \item{kable_input}{A HTML kable object}

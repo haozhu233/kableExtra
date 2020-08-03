@@ -12,7 +12,7 @@ usepackage_latex(name, options = NULL)
 \item{options}{The LaTeX options for the package}
 }
 \description{
-Load a LaTeX package using R code. Just like \code{\\usepackage{}}
+Load a LaTeX package using R code. Just like \verb{\\\\usepackage\{\}}
 in LaTeX
 }
 \examples{

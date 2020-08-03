@@ -363,10 +363,17 @@ LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual
 
 ## Row indentation
 Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate.  
-For advanced users, you can even define your own css for the group labeling.
+
 ```{r}
 kable(dt, "latex", booktabs = T) %>%
   add_indent(c(1, 3, 5))
+```
+
+You can also specify the width of the indentation by the `level_of_indent` option. At the same time, if you want to indent every column, you can choose to turn on `all_cols`. Note that if a column is right aligned, you probably won't be able to see the effect. 
+
+```{r}
+kable(dt, "latex", booktabs = T, align = "l") %>%
+  add_indent(c(1, 3, 5), level_of_indent = 2, all_cols = T)
 ```
 
 ## Group rows via multi-row cell

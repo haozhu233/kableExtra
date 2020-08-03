@@ -15,7 +15,7 @@
       usepackage_latex("threeparttablex")
       usepackage_latex("ulem", "normalem")
       usepackage_latex("makecell")
-      usepackage_latex("xcolor")
+      # usepackage_latex("xcolor")
     }
   }
   auto_format <- getOption("kableExtra.auto_format", default = TRUE)
