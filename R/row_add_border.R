@@ -34,7 +34,7 @@ row_add_border <- function(kable_input, rows, position=c("bottom", "top"), thick
 }
 
 
-row_add_border_html <- function(kable_input, rows, position=c("bottom", "top"), thickness="2px", 
+row_add_border_html <- function(kable_input, rows, position=c("bottom", "top"), thickness="1px", 
                                 color="black", style="solid", collapsed=c("last", "first", "any")){
     
     collapsed <- match.arg(collapsed)
@@ -64,7 +64,7 @@ row_add_border_html <- function(kable_input, rows, position=c("bottom", "top"), 
             if(collapsed!="first" && collapse_matrix[i,j]>1){ #TODO collapsed=="none"
                 next
             } else if(collapse_matrix[i,j]==0){
-                if(collapsed=="last" && i==ncol(collapse_matrix) || collapse_matrix[i+1,j]!=0){
+                if(collapsed=="last" && (i==nrow(collapse_matrix) || collapse_matrix[i+1,j]!=0)){
                     i_up <- which(collapse_matrix[1:i,j]>0)
                     i_up <- max(i_up, na.rm=TRUE)
                     target_row_up <- xml2::xml_child(kable_tbody, i_up)
