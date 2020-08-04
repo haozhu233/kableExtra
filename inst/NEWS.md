@@ -17,6 +17,11 @@ should be applied to the first column or all columns. Default is False. (#488)
 
 * Added mathjax to preview (#473)
 
+* Fixed a bug with `repeat_header` when the header row is customized (#480)
+
+* Fixed a bug with `collapse_rows` when text is too long. (#464)
+
+
 
 kableExtra 1.1.0
 --------------------------------------------------------------------------------

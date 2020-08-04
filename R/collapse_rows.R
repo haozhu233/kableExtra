@@ -238,7 +238,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
       )
       new_contents[i] <- paste0(new_contents[i], "\\\\\\\\\n", row_midrule)
     }
-    out <- sub(contents[i + 1], new_contents[i], out)
+    out <- sub(contents[i + 1], new_contents[i], out, perl=TRUE)
   }
   out <- gsub("\\\\addlinespace\n", "", out)
 
