@@ -198,7 +198,9 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    temp_sub <- ifelse(i == 1 & table_info$tabular == "longtable", gsub, sub)
+    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
+                                   !is.null(table_info$repeat_header_latex)),
+                       gsub, sub)
     if (length(new_row) == 1) {
       out <- temp_sub(target_row, new_row, out, perl = T)
       table_info$contents[i] <- new_row
