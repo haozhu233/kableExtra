@@ -1,19 +1,24 @@
 #' @export
 print.kableExtra <- function(x, ...) {
-  dep <- list(
-    rmarkdown::html_dependency_jquery(),
-    rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
-    html_dependency_kePrint()
-  )
-  html_kable <- htmltools::browsable(
-    htmltools::HTML(
-      as.character(x),
-      '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"], ["\\(","\\)"]]}})</script>;<script async src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>'
+  view_html <- getOption("kableExtra_view_html", TRUE)
+  if (view_html) {
+    dep <- list(
+      rmarkdown::html_dependency_jquery(),
+      rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
+      html_dependency_kePrint()
+    )
+    html_kable <- htmltools::browsable(
+      htmltools::HTML(
+        as.character(x),
+        '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"], ["\\(","\\)"]]}})</script><script async src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>'
       )
-  )
-  htmlDependencies(html_kable) <- dep
-  class(html_kable) <- "shiny.tag.list"
-  print(html_kable)
+    )
+    htmlDependencies(html_kable) <- dep
+    class(html_kable) <- "shiny.tag.list"
+    print(html_kable)
+  } else {
+    print(as.character(x))
+  }
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message
