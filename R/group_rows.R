@@ -126,6 +126,10 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   if (!is.null(group_header_rows)) {
     group_seq <- positions_corrector(group_seq, group_header_rows,
                                      length(xml_children(kable_tbody)))
+    # Update the old group_header_rows attribute with their new positions
+    kable_attrs$group_header_rows <- ifelse(kable_attrs$group_header_rows > group_seq[1],
+                                            kable_attrs$group_header_rows+1,
+                                            kable_attrs$group_header_rows)
   }
 
   # Insert a group header row
