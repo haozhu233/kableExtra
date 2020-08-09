@@ -24,6 +24,10 @@ should be applied to the first column or all columns. Default is False. (#488)
 * Added a new function `remove_column` for html. The latex part hasn't been 
 implemented yet. (#490, thanks @DanChaltiel)
 
+* `add_header_above` now can take a data.frame as input. (#440, thanks @jokorn)
+
+* Fixed a bug when using UTF-8 on non-UTF-8 system. (#440, thanks @jokorn)
+
 
 
 kableExtra ]
