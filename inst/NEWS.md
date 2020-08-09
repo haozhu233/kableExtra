@@ -21,9 +21,13 @@ should be applied to the first column or all columns. Default is False. (#488)
 
 * Fixed a bug with `collapse_rows` when text is too long. (#464)
 
+* Added a new function `remove_column` for html. The latex part hasn't been 
+implemented yet. (#490, thanks @DanChaltiel)
 
 
-kableExtra 1.1.0
+
+kableExtra ]
+1.1.0
 --------------------------------------------------------------------------------
 
 # Major Changes
