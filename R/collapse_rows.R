@@ -82,7 +82,6 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
     kable_dt <- kable_dt[-(1:kable_attrs$header_above),]
     names(kable_dt) <- kable_dt_col_names
   }
-  # kable_dt$row_id <- seq(nrow(kable_dt))
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, target = target)
 
   for (i in 1:nrow(collapse_matrix)) {
@@ -107,6 +106,7 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
   }
 
   out <- as_kable_xml(kable_xml)
+  kable_attrs$collapse_matrix <- collapse_matrix
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)

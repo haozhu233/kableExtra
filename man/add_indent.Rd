@@ -4,7 +4,7 @@
 \alias{add_indent}
 \title{Add indentations to row headers}
 \usage{
-add_indent(kable_input, positions, level_of_indent = 1, all_cols = F)
+add_indent(kable_input, positions, level_of_indent = 1, all_cols = FALSE)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}

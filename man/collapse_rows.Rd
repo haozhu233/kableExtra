@@ -12,7 +12,8 @@ collapse_rows(
   row_group_label_position = c("identity", "stack"),
   custom_latex_hline = NULL,
   row_group_label_fonts = NULL,
-  headers_to_remove = NULL
+  headers_to_remove = NULL,
+  target = NULL
 )
 }
 \arguments{
