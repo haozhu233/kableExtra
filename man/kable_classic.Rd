@@ -6,18 +6,18 @@
 \alias{kable_material}
 \title{Alternative HTML themes}
 \usage{
-kable_classic(kable_input, striped = FALSE, hover = FALSE, ...)
+kable_classic(kable_input, lightable_options = "basic", ...)
 
-kable_minimal(kable_input, striped = FALSE, hover = FALSE, ...)
+kable_minimal(kable_input, lightable_options = "basic", ...)
 
-kable_material(kable_input, striped = FALSE, hover = FALSE, ...)
+kable_material(kable_input, lightable_options = "basic", ...)
 }
 \arguments{
 \item{kable_input}{A HTML kable object.}
 
-\item{striped}{T/F for adding striped rows.}
-
-\item{hover}{T/F for adding hover effects.}
+\item{lightable_options}{Options to customize lightable. Similar with
+\code{bootstrap_options} in \code{kable_styling}. Choices include \code{basic}, \code{striped}
+and \code{hover}.}
 
 \item{...}{Everything else you need to specify in \code{kable_styling}.}
 }

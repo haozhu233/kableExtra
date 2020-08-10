@@ -32,7 +32,10 @@ implemented yet. (#490, thanks @DanChaltiel)
 viewer. If you want to disable the default behavior, try to set 
 `options(kableExtra_view_html = F)`. (#455)
 
+* Added a few alternative HTML table themes. See https://haozhu233.github.io/kableExtra/awesome_table_in_html.html#Alternative_themes
 
+* Added a `new_tab` option to `cell_spec` to control whether to open up links 
+in new tab. (#454)
 
 
 kableExtra 1.1.0

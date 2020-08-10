@@ -21,6 +21,7 @@ cell_spec(
   tooltip = NULL,
   popover = NULL,
   link = NULL,
+  new_tab = FALSE,
   extra_css = NULL,
   escape = TRUE,
   background_as_tile = TRUE,
@@ -43,6 +44,7 @@ text_spec(
   tooltip = NULL,
   popover = NULL,
   link = NULL,
+  new_tab = FALSE,
   extra_css = NULL,
   escape = TRUE,
   background_as_tile = TRUE,
@@ -98,6 +100,8 @@ bootstrap module manually. Read the package vignette to see how.}
 
 \item{link}{A vector of strings for url links. Can be used together with
 tooltip and popover.}
+
+\item{new_tab}{T/F for whether to open up the new link in new tab.}
 
 \item{extra_css}{Extra css text to be passed into the cell}
 
