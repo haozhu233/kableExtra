@@ -7,18 +7,21 @@
 #' `hover` and `striped` options.
 #'
 #' @param kable_input A HTML kable object.
-#' @param striped T/F for adding striped rows.
-#' @param hover T/F for adding hover effects.
+#' @param lightable_options Options to customize lightable. Similar with
+#' `bootstrap_options` in `kable_styling`. Choices include `basic`, `striped`
+#' and `hover`.
 #' @param ... Everything else you need to specify in `kable_styling`.
 #'
 #' @export
-kable_classic <- function(kable_input, striped = FALSE,
-                          hover = FALSE, ...) {
+kable_classic <- function(kable_input, lightable_options = "basic", ...) {
   light_class <- "lightable-classic"
-  if (striped) {
+  lightable_options <- match.arg(lightable_options,
+                                 choices = c("basic", "striped", "hover"),
+                                 several.ok = TRUE)
+  if ("striped" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-striped")
   }
-  if (hover) {
+  if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
   kable_styling(kable_input, "none", lightable_class = light_class, ...)
@@ -26,13 +29,15 @@ kable_classic <- function(kable_input, striped = FALSE,
 
 #' @rdname kable_classic
 #' @export
-kable_minimal <- function(kable_input, striped = FALSE,
-                          hover = FALSE, ...) {
+kable_minimal <- function(kable_input, lightable_options = "basic", ...) {
   light_class <- "lightable-minimal"
-  if (striped) {
+  lightable_options <- match.arg(lightable_options,
+                                 choices = c("basic", "striped", "hover"),
+                                 several.ok = TRUE)
+  if ("striped" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-striped")
   }
-  if (hover) {
+  if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
   kable_styling(kable_input, "none", lightable_class = light_class, ...)
@@ -40,13 +45,15 @@ kable_minimal <- function(kable_input, striped = FALSE,
 
 #' @rdname kable_classic
 #' @export
-kable_material <- function(kable_input, striped = FALSE,
-                           hover = FALSE, ...) {
+kable_material <- function(kable_input, lightable_options = "basic", ...) {
   light_class <- "lightable-material"
-  if (striped) {
+  lightable_options <- match.arg(lightable_options,
+                                 choices = c("basic", "striped", "hover"),
+                                 several.ok = TRUE)
+  if ("striped" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-striped")
   }
-  if (hover) {
+  if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
   kable_styling(kable_input, "none", lightable_class = light_class, ...)

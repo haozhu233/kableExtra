@@ -8,6 +8,7 @@
   border-collapse: separate;
   border-spacing: 16px 1px;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .lightable-minimal thead tr th {
@@ -31,6 +32,7 @@
   border-top: 2px solid #111111;
   border-bottom: 2px solid #111111;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .lightable-classic thead tr:last-child th {
@@ -52,6 +54,7 @@
   font-family: Roboto, sans-serif;
   border: 1px solid #EEE;
   border-collapse: collapse;
+  margin-bottom: 10px;
 }
 
 .lightable-material th {
