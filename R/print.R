@@ -5,7 +5,8 @@ print.kableExtra <- function(x, ...) {
     dep <- list(
       rmarkdown::html_dependency_jquery(),
       rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
-      html_dependency_kePrint()
+      html_dependency_kePrint(),
+      html_dependency_lightable()
     )
     html_kable <- htmltools::browsable(
       htmltools::HTML(
@@ -17,7 +18,7 @@ print.kableExtra <- function(x, ...) {
     class(html_kable) <- "shiny.tag.list"
     print(html_kable)
   } else {
-    print(as.character(x))
+    cat(as.character(x))
   }
 }
 
@@ -43,6 +44,17 @@ html_dependency_bsTable <- function() {
                  stylesheet = "bootstrapTable.min.css")
 }
 
+#' HTML dependency for lightable
+#'
+#' @export
+html_dependency_lightable <- function() {
+  htmlDependency(name = "lightable",
+                 version = "0.0.1",
+                 src = system.file("lightable-0.0.1",
+                                   package = "kableExtra"),
+                 stylesheet = "lightable.css")
+}
+
 #' @export
 knit_print.kableExtra <- function(x, ...) {
   x <- paste0(x, "\n\n")
@@ -50,9 +62,10 @@ knit_print.kableExtra <- function(x, ...) {
                              default = TRUE)
   if (kp_dependency) {
     meta_list <- list(html_dependency_kePrint())
+    meta_list[[2]] <- html_dependency_lightable()
     bs <- getOption("kableExtra.html.bsTable", default = FALSE)
     if (bs) {
-      meta_list[[2]] <- html_dependency_bsTable()
+      meta_list[[3]] <- html_dependency_bsTable()
     }
   } else {
     meta_list <- NULL

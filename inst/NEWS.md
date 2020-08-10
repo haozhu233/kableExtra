@@ -28,10 +28,14 @@ implemented yet. (#490, thanks @DanChaltiel)
 
 * Fixed a bug when using UTF-8 on non-UTF-8 system. (#440, thanks @jokorn)
 
+* Added a global option to control whether to preview HTML tables in RStudio 
+viewer. If you want to disable the default behavior, try to set 
+`options(kableExtra_view_html = F)`. (#455)
 
 
-kableExtra ]
-1.1.0
+
+
+kableExtra 1.1.0
 --------------------------------------------------------------------------------
 
 # Major Changes

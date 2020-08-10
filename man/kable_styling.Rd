@@ -20,7 +20,8 @@ kable_styling(
   latex_table_env = NULL,
   protect_latex = TRUE,
   table.envir = "table",
-  fixed_thead = FALSE
+  fixed_thead = FALSE,
+  lightable_class = NULL
 )
 }
 \arguments{
@@ -30,7 +31,7 @@ kable_styling(
 Please see package vignette or visit the w3schools'
 \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 for more information. Possible options include \code{basic}, \code{striped},
-\code{bordered}, \code{hover}, \code{condensed} and \code{responsive}.}
+\code{bordered}, \code{hover}, \code{condensed}, \code{responsive} and \code{none}.}
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
@@ -94,6 +95,10 @@ on your need.}
 
 \item{fixed_thead}{HTML table option so table header row is fixed at top.
 Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
+
+\item{lightable_class}{Options to use the in-house lightable themes.
+Choices include \code{lightable-minimal}, \code{lightable-classic},
+\code{lightable-material}, \code{lightable-striped} and \code{lightable-hover}.}
 }
 \description{
 This function provides a cleaner approach to modify the style
