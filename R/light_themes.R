@@ -14,39 +14,22 @@
 #'
 #' @export
 kable_classic <- function(kable_input, lightable_options = "basic", ...) {
-  light_class <- "lightable-classic"
-  lightable_options <- match.arg(lightable_options,
-                                 choices = c("basic", "striped", "hover"),
-                                 several.ok = TRUE)
-  if ("striped" %in% lightable_options) {
-    light_class <- paste(light_class, "lightable-striped")
-  }
-  if ("hover" %in% lightable_options) {
-    light_class <- paste(light_class, "lightable-hover")
-  }
-  kable_styling(kable_input, "none", lightable_class = light_class, ...)
+  kable_light(kable_input, "lightable-classic", lightable_options, ...)
 }
 
 #' @rdname kable_classic
 #' @export
 kable_minimal <- function(kable_input, lightable_options = "basic", ...) {
-  light_class <- "lightable-minimal"
-  lightable_options <- match.arg(lightable_options,
-                                 choices = c("basic", "striped", "hover"),
-                                 several.ok = TRUE)
-  if ("striped" %in% lightable_options) {
-    light_class <- paste(light_class, "lightable-striped")
-  }
-  if ("hover" %in% lightable_options) {
-    light_class <- paste(light_class, "lightable-hover")
-  }
-  kable_styling(kable_input, "none", lightable_class = light_class, ...)
+  kable_light(kable_input, "lightable-minimal", lightable_options, ...)
 }
 
 #' @rdname kable_classic
 #' @export
 kable_material <- function(kable_input, lightable_options = "basic", ...) {
-  light_class <- "lightable-material"
+  kable_light(kable_input, "lightable-material", lightable_options, ...)
+}
+
+kable_light <- function(kable_input, light_class, lightable_options, ...) {
   lightable_options <- match.arg(lightable_options,
                                  choices = c("basic", "striped", "hover"),
                                  several.ok = TRUE)
@@ -56,5 +39,8 @@ kable_material <- function(kable_input, lightable_options = "basic", ...) {
   if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
-  kable_styling(kable_input, "none", lightable_class = light_class, ...)
+  out <- kable_styling(kable_input, "none", lightable_class = light_class, ...)
+  attr(out, "lightable") <- TRUE
+  attr(out, "lightable_class") <- light_class
+  return(out)
 }
