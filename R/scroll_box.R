@@ -30,7 +30,10 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
                        extra_css = NULL,
                        fixed_thead = TRUE
                        ) {
-
+  kable_format <- attr(kable_input, "format")
+  if (kable_format != "html") {
+    return(kable_input)
+  }
   kable_attrs <- attributes(kable_input)
   fixed_thead <- get_fixed_thead(fixed_thead)
   if (is.null(height)) fixed_thead$enabled <- FALSE
