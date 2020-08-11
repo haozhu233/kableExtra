@@ -41,7 +41,8 @@ html_dependency_bsTable <- function() {
                  version = "3.3.7",
                  src = system.file("bootstrapTable-3.3.7",
                                    package = "kableExtra"),
-                 stylesheet = "bootstrapTable.min.css")
+                 stylesheet = "bootstrapTable.min.css",
+                 script = "bootstrapTable.js")
 }
 
 #' HTML dependency for lightable

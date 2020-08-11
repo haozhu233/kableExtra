@@ -3,7 +3,7 @@
 \contentsline {section}{Getting Started}{2}{section*.4}%
 \contentsline {subsection}{LaTeX packages used in this package}{3}{section*.5}%
 \contentsline {subsection}{Plain LaTeX}{3}{section*.6}%
-\contentsline {subsection}{LaTeX table with booktabs}{4}{section*.7}%
+\contentsline {subsection}{LaTeX table with booktabs}{3}{section*.7}%
 \contentsline {section}{Table Styles}{4}{section*.8}%
 \contentsline {subsection}{LaTeX options}{4}{section*.9}%
 \contentsline {subsubsection}{Striped}{4}{section*.10}%

@@ -110,8 +110,7 @@ latex_pkg_list <- function() {
     "\\usepackage[normalem]{ulem}",
     "\\usepackage[normalem]{ulem}",
     "\\usepackage[utf8]{inputenc}",
-    "\\usepackage{makecell}",
-    "\\usepackage{xcolor}"
+    "\\usepackage{makecell}"
   ))
 }
 
