@@ -4,6 +4,7 @@
 \alias{kable_classic}
 \alias{kable_minimal}
 \alias{kable_material}
+\alias{kable_material_dark}
 \title{Alternative HTML themes}
 \usage{
 kable_classic(kable_input, lightable_options = "basic", ...)
@@ -11,6 +12,8 @@ kable_classic(kable_input, lightable_options = "basic", ...)
 kable_minimal(kable_input, lightable_options = "basic", ...)
 
 kable_material(kable_input, lightable_options = "basic", ...)
+
+kable_material_dark(kable_input, lightable_options = "basic", ...)
 }
 \arguments{
 \item{kable_input}{A HTML kable object.}

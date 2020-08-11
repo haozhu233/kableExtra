@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2020-08-10" />
+<meta name="date" content="2020-08-11" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -1362,11 +1362,14 @@ border-collapse: collapse;
 margin-bottom: 10px;
 }
 .lightable-material th {
-padding: 0.8em;
-background-color: #f5f5f5;
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
 }
 .lightable-material td {
-padding: 0.8em;
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
 border-top: 1px solid #eeeeee;
 }
 .lightable-material.lightable-hover tbody tr:hover {
@@ -1376,10 +1379,45 @@ background-color: #f5f5f5;
 background-color: #f5f5f5;
 }
 .lightable-material.lightable-striped td {
-border: 0px;
+border: 0;
 }
 .lightable-material.lightable-striped thead tr:last-child th {
 border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
 }
 </style>
 
@@ -1611,7 +1649,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author">Hao Zhu</h4>
-<h4 class="date">2020-08-10</h4>
+<h4 class="date">2020-08-11</h4>
 
 </div>
 
@@ -1946,7 +1984,7 @@ Hornet Sportabout
 </div>
 <div id="alternative-themes" class="section level2">
 <h2>Alternative themes</h2>
-<p><code>kableExtra</code> also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are three of them: <code>kable_classic</code>, <code>kable_minimal</code> and <code>kable_material</code>. These functions are alternatives to <code>kable_styling</code>, which means that you can specify any additional formatting options in <code>kable_styling</code> in these functions too. The only difference is that <code>bootstrap_options</code> (as discussed in the next section) is replaced with <code>lightable_options</code> at the same location with only two choices <code>striped</code> and <code>hover</code> available.</p>
+<p><code>kableExtra</code> also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are three of them: <code>kable_classic</code>, <code>kable_minimal</code>, <code>kable_material</code> and <code>kable_material_dark</code>. These functions are alternatives to <code>kable_styling</code>, which means that you can specify any additional formatting options in <code>kable_styling</code> in these functions too. The only difference is that <code>bootstrap_options</code> (as discussed in the next section) is replaced with <code>lightable_options</code> at the same location with only two choices <code>striped</code> and <code>hover</code> available.</p>
 <pre class="r"><code>dt %&gt;%
   kable() %&gt;%
   kable_classic()</code></pre>
@@ -2243,6 +2281,152 @@ Hornet Sportabout
   kable() %&gt;%
   kable_material(c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
 <table class=" lightable-material lightable-striped lightable-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.620
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+2.320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;">
+3.215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet Sportabout
+</td>
+<td style="text-align:right;">
+18.7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+3.15
+</td>
+<td style="text-align:right;">
+3.440
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>dt %&gt;%
+  kable() %&gt;%
+  kable_material_dark()</code></pre>
+<table class=" lightable-material-dark" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -5640,7 +5824,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -5648,7 +5832,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -5656,7 +5840,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -5664,7 +5848,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -5732,7 +5916,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
