@@ -60,9 +60,11 @@
 #'  on your need.
 #' @param fixed_thead HTML table option so table header row is fixed at top.
 #' Values can be either T/F or `list(enabled = T/F, background = "anycolor")`.
-#' @param lightable_class Options to use the in-house lightable themes.
+#' @param htmltable_class Options to use the in-house lightable themes.
 #' Choices include `lightable-minimal`, `lightable-classic`,
-#' `lightable-material`, `lightable-striped` and `lightable-hover`.
+#' `lightable-classic-2`, `lightable-material`, `lightable-striped` and
+#' `lightable-hover`. If you have your customized style sheet loaded which
+#' defines your own table class, you can also load it here.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -98,7 +100,7 @@ kable_styling <- function(kable_input,
                           protect_latex = TRUE,
                           table.envir = "table",
                           fixed_thead = FALSE,
-                          lightable_class = NULL) {
+                          htmltable_class = NULL) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -134,7 +136,7 @@ kable_styling <- function(kable_input,
                              font_size = font_size,
                              protect_latex = protect_latex,
                              fixed_thead = fixed_thead,
-                             lightable_class = lightable_class))
+                             htmltable_class = htmltable_class))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -193,7 +195,7 @@ htmlTable_styling <- function(kable_input,
                               font_size = NULL,
                               protect_latex = TRUE,
                               fixed_thead = FALSE,
-                              lightable_class = NULL) {
+                              htmltable_class = NULL) {
   if (protect_latex) {
     kable_input <- extract_latex_from_kable(kable_input)
   }
@@ -213,9 +215,9 @@ htmlTable_styling <- function(kable_input,
     kable_xml_class <- xml_attr(kable_xml, "class")
   }
 
-  if (!is.null(lightable_class)) {
+  if (!is.null(htmltable_class)) {
     bootstrap_options <- "none"
-    xml_attr(kable_xml, "class") <- paste(kable_xml_class, lightable_class)
+    xml_attr(kable_xml, "class") <- paste(kable_xml_class, htmltable_class)
   }
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "none") {

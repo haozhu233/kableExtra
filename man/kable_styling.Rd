@@ -21,7 +21,7 @@ kable_styling(
   protect_latex = TRUE,
   table.envir = "table",
   fixed_thead = FALSE,
-  lightable_class = NULL
+  htmltable_class = NULL
 )
 }
 \arguments{
@@ -96,9 +96,11 @@ on your need.}
 \item{fixed_thead}{HTML table option so table header row is fixed at top.
 Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
 
-\item{lightable_class}{Options to use the in-house lightable themes.
+\item{htmltable_class}{Options to use the in-house lightable themes.
 Choices include \code{lightable-minimal}, \code{lightable-classic},
-\code{lightable-material}, \code{lightable-striped} and \code{lightable-hover}.}
+\code{lightable-classic-2}, \code{lightable-material}, \code{lightable-striped} and
+\code{lightable-hover}. If you have your customized style sheet loaded which
+defines your own table class, you can also load it here.}
 }
 \description{
 This function provides a cleaner approach to modify the style

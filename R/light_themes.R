@@ -51,7 +51,7 @@ kable_light <- function(kable_input, light_class, lightable_options, ...) {
   if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
-  out <- kable_styling(kable_input, "none", lightable_class = light_class, ...)
+  out <- kable_styling(kable_input, "none", htmltable_class = light_class, ...)
   attr(out, "lightable") <- TRUE
   attr(out, "lightable_class") <- light_class
   return(out)
