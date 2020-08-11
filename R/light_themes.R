@@ -19,6 +19,12 @@ kable_classic <- function(kable_input, lightable_options = "basic", ...) {
 
 #' @rdname kable_classic
 #' @export
+kable_classic_2 <- function(kable_input, lightable_options = "basic", ...) {
+  kable_light(kable_input, "lightable-classic-2", lightable_options, ...)
+}
+
+#' @rdname kable_classic
+#' @export
 kable_minimal <- function(kable_input, lightable_options = "basic", ...) {
   kable_light(kable_input, "lightable-minimal", lightable_options, ...)
 }

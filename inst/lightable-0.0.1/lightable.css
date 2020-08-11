@@ -47,6 +47,25 @@
   background-color: #f5f5f5;
 }
 
+.lightable-classic-2 {
+  border-top: 3px double #111111;
+  border-bottom: 3px double #111111;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.lightable-classic-2 thead tr:last-child th {
+  border-bottom: 1px solid #111111;
+}
+
+.lightable-classic-2.lightable-hover tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.lightable-classic-2.lightable-striped tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
 .lightable-material {
   min-width: 100%;
   white-space: nowrap;

@@ -1352,6 +1352,21 @@ background-color: #f5f5f5;
 .lightable-classic.lightable-striped tr:nth-child(even) {
 background-color: #f5f5f5;
 }
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-classic-2.lightable-striped tr:nth-child(even) {
+background-color: #f5f5f5;
+}
 .lightable-material {
 min-width: 100%;
 white-space: nowrap;
@@ -1984,11 +1999,157 @@ Hornet Sportabout
 </div>
 <div id="alternative-themes" class="section level2">
 <h2>Alternative themes</h2>
-<p><code>kableExtra</code> also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are three of them: <code>kable_classic</code>, <code>kable_minimal</code>, <code>kable_material</code> and <code>kable_material_dark</code>. These functions are alternatives to <code>kable_styling</code>, which means that you can specify any additional formatting options in <code>kable_styling</code> in these functions too. The only difference is that <code>bootstrap_options</code> (as discussed in the next section) is replaced with <code>lightable_options</code> at the same location with only two choices <code>striped</code> and <code>hover</code> available.</p>
+<p><code>kableExtra</code> also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 5 of them: <code>kable_classic</code>, <code>kable_classic_2</code>, <code>kable_minimal</code>, <code>kable_material</code> and <code>kable_material_dark</code>. These functions are alternatives to <code>kable_styling</code>, which means that you can specify any additional formatting options in <code>kable_styling</code> in these functions too. The only difference is that <code>bootstrap_options</code> (as discussed in the next section) is replaced with <code>lightable_options</code> at the same location with only two choices <code>striped</code> and <code>hover</code> available.</p>
 <pre class="r"><code>dt %&gt;%
   kable() %&gt;%
   kable_classic()</code></pre>
 <table class=" lightable-classic" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mpg
+</th>
+<th style="text-align:right;">
+cyl
+</th>
+<th style="text-align:right;">
+disp
+</th>
+<th style="text-align:right;">
+hp
+</th>
+<th style="text-align:right;">
+drat
+</th>
+<th style="text-align:right;">
+wt
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mazda RX4
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.620
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mazda RX4 Wag
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.90
+</td>
+<td style="text-align:right;">
+2.875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Datsun 710
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+2.320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet 4 Drive
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+3.08
+</td>
+<td style="text-align:right;">
+3.215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hornet Sportabout
+</td>
+<td style="text-align:right;">
+18.7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+3.15
+</td>
+<td style="text-align:right;">
+3.440
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>dt %&gt;%
+  kable() %&gt;%
+  kable_classic_2()</code></pre>
+<table class=" lightable-classic-2" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -5824,7 +5985,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -5832,7 +5993,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -5875,7 +6036,7 @@ d
 9
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -5883,7 +6044,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -5897,7 +6058,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -5916,7 +6077,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>

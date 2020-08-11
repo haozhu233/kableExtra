@@ -68,12 +68,18 @@ dt %>%
 ```
 
 ## Alternative themes
-`kableExtra` also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are three of them: `kable_classic`, `kable_minimal`, `kable_material` and `kable_material_dark`. These functions are alternatives to `kable_styling`, which means that you can specify any additional formatting options in `kable_styling` in these functions too. The only difference is that `bootstrap_options` (as discussed in the next section) is replaced with `lightable_options` at the same location with only two choices `striped` and `hover` available.
+`kableExtra` also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 5 of them: `kable_classic`, `kable_classic_2`, `kable_minimal`, `kable_material` and `kable_material_dark`. These functions are alternatives to `kable_styling`, which means that you can specify any additional formatting options in `kable_styling` in these functions too. The only difference is that `bootstrap_options` (as discussed in the next section) is replaced with `lightable_options` at the same location with only two choices `striped` and `hover` available.
 
 ```{r}
 dt %>%
   kable() %>%
   kable_classic()
+```
+
+```{r}
+dt %>%
+  kable() %>%
+  kable_classic_2()
 ```
 
 ```{r}

@@ -2,12 +2,15 @@
 % Please edit documentation in R/light_themes.R
 \name{kable_classic}
 \alias{kable_classic}
+\alias{kable_classic_2}
 \alias{kable_minimal}
 \alias{kable_material}
 \alias{kable_material_dark}
 \title{Alternative HTML themes}
 \usage{
 kable_classic(kable_input, lightable_options = "basic", ...)
+
+kable_classic_2(kable_input, lightable_options = "basic", ...)
 
 kable_minimal(kable_input, lightable_options = "basic", ...)
 
@@ -28,6 +31,6 @@ and \code{hover}.}
 kableExtra uses the built-in bootstrap themes by default in
 \code{kable_styling()}. Alternatively, you can use a customized table themes for
 your table. This \code{lightable} table style sheet comes with three formats,
-namely \code{lightable-minimal}, \code{lightable-classic} and \code{lightable-material} with
-\code{hover} and \code{striped} options.
+namely \code{lightable-minimal}, \code{lightable-classic}, \code{lightable-material} and
+\code{lightable-material-dark} with \code{hover} and \code{striped} options.
 }
