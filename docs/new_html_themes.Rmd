@@ -1,0 +1,18 @@
+---
+title: "Contributing Additional HTML Table Themes to kableExtra"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The latest version of `kableExtra` allows users to use some alternative 
+table themes, in addition to the default `bootstrap 3` theme. See the [Alternative themes](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html#Alternative_themes) section for details. Here is a simple guide on how to add new themes to this package. 
+
+To add a new theme, you only need to do two things:
+
+1. Design some CSS for tables using frontend playground tools such as [jsfiddle](http://jsfiddle.net) and import them to [this file](https://github.com/haozhu233/kableExtra/blob/master/inst/lightable-0.0.1/lightable.css)
+2. Create a corresponding function in [R/light_themes.R](https://github.com/haozhu233/kableExtra/blob/master/R/light_themes.R)
+
+Why it works? `kable_styling` works by adding corresponding bootstrap table classes to the html object. This time, instead of adding a bootstrap table class, we can choose to add a css class we defined. On the other hand, our css file gets loaded to either the rmarkdown environment or R console as a regular `htmlDependency()` when the tables get printed. 

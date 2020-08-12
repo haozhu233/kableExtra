@@ -110,27 +110,12 @@ latex_pkg_list <- function() {
     "\\usepackage[normalem]{ulem}",
     "\\usepackage[normalem]{ulem}",
     "\\usepackage[utf8]{inputenc}",
-    "\\usepackage{makecell}",
-    "\\usepackage{xcolor}"
+    "\\usepackage{makecell}"
   ))
 }
 
 # Fix duplicated rows in LaTeX tables
 fix_duplicated_rows_latex <- function(kable_input, table_info) {
-  # dup_items <- table(table_info$contents)
-  # dup_items <- dup_items[dup_items != 1]
-  #
-  # for (di in seq(length(dup_items))) {
-  #   dup_row <- names(dup_items[di])
-  #   di_index <- which(table_info$contents == dup_row)
-  #   for (i in seq(dup_items[di])) {
-  #     new_row <- str_replace(
-  #       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
-  #       paste0("\\\\\\\\vphantom\\\\{", i, "\\\\} \\1"))
-  #     kable_input <- sub(dup_row, new_row, kable_input)
-  #     table_info$contents[di_index[i]] <- new_row
-  #   }
-  # }
   # Since sub/string_replace start from beginning, we count unique value from
   # behind.
   rev_contents <- rev(table_info$contents)
@@ -142,7 +127,7 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
     # insert empty_times before last non whitespace characters
     new_row <- str_replace(
       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
-      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
+      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\}\\1"))
     kable_input <- sub(dup_row, new_row, kable_input)
     table_info$contents[i] <- new_row
   }
@@ -152,8 +137,12 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
 
 # Solve enc issue for LaTeX tables
 solve_enc <- function(x) {
+  if (Encoding(x) == "UTF-8"){
+    out <- x
+  } else {
   #may behave differently based on Sys.setlocale settings with respect to characters
-  out <- enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+    out <- enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+  }
   mostattributes(out) <- attributes(x)
   return(out)
 }

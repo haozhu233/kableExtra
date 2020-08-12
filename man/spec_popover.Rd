@@ -4,8 +4,12 @@
 \alias{spec_popover}
 \title{Setup bootstrap popover}
 \usage{
-spec_popover(content = NULL, title = NULL, trigger = "hover",
-  position = "right")
+spec_popover(
+  content = NULL,
+  title = NULL,
+  trigger = "hover",
+  position = "right"
+)
 }
 \arguments{
 \item{content}{content for pop-over message}

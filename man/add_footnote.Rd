@@ -4,8 +4,13 @@
 \alias{add_footnote}
 \title{Add footnote}
 \usage{
-add_footnote(input, label = NULL, notation = "alphabet",
-  threeparttable = FALSE, escape = TRUE)
+add_footnote(
+  input,
+  label = NULL,
+  notation = "alphabet",
+  threeparttable = FALSE,
+  escape = TRUE
+)
 }
 \arguments{
 \item{input}{The direct output of your \code{kable} function or your last

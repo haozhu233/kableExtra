@@ -4,12 +4,25 @@
 \alias{column_spec}
 \title{Specify the look of the selected column}
 \usage{
-column_spec(kable_input, column, width = NULL, bold = FALSE,
-  italic = FALSE, monospace = FALSE, underline = FALSE,
-  strikeout = FALSE, color = NULL, background = NULL,
-  border_left = FALSE, border_right = FALSE, width_min = NULL,
-  width_max = NULL, extra_css = NULL, include_thead = FALSE,
-  latex_column_spec = NULL)
+column_spec(
+  kable_input,
+  column,
+  width = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  border_left = FALSE,
+  border_right = FALSE,
+  width_min = NULL,
+  width_max = NULL,
+  extra_css = NULL,
+  include_thead = FALSE,
+  latex_column_spec = NULL
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}

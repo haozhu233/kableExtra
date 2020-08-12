@@ -1,20 +1,25 @@
 #' @export
 print.kableExtra <- function(x, ...) {
-  dep <- list(
-    rmarkdown::html_dependency_jquery(),
-    rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
-    html_dependency_kePrint()
-  )
-  html_kable <- htmltools::browsable(
-    htmltools::HTML(as.character(x))
-  )
-  htmlDependencies(html_kable) <- dep
-  class(html_kable) <- "shiny.tag.list"
-  print(html_kable)
-  # if (interactive() & rstudioapi::isAvailable()) {
-  #   htmltools::html_print(html_result, viewer = rstudioapi::viewer)
-  # }
-  # print(html_result)
+  view_html <- getOption("kableExtra_view_html", TRUE)
+  if (view_html) {
+    dep <- list(
+      rmarkdown::html_dependency_jquery(),
+      rmarkdown::html_dependency_bootstrap(theme = "cosmo"),
+      html_dependency_kePrint(),
+      html_dependency_lightable()
+    )
+    html_kable <- htmltools::browsable(
+      htmltools::HTML(
+        as.character(x),
+        '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"], ["\\(","\\)"]]}})</script><script async src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>'
+      )
+    )
+    htmlDependencies(html_kable) <- dep
+    class(html_kable) <- "shiny.tag.list"
+    print(html_kable)
+  } else {
+    cat(as.character(x))
+  }
 }
 
 #' HTML dependency for js script to enable bootstrap tooltip and popup message
@@ -36,7 +41,19 @@ html_dependency_bsTable <- function() {
                  version = "3.3.7",
                  src = system.file("bootstrapTable-3.3.7",
                                    package = "kableExtra"),
-                 stylesheet = "bootstrapTable.min.css")
+                 stylesheet = "bootstrapTable.min.css",
+                 script = "bootstrapTable.js")
+}
+
+#' HTML dependency for lightable
+#'
+#' @export
+html_dependency_lightable <- function() {
+  htmlDependency(name = "lightable",
+                 version = "0.0.1",
+                 src = system.file("lightable-0.0.1",
+                                   package = "kableExtra"),
+                 stylesheet = "lightable.css")
 }
 
 #' @export
@@ -46,15 +63,18 @@ knit_print.kableExtra <- function(x, ...) {
                              default = TRUE)
   if (kp_dependency) {
     meta_list <- list(html_dependency_kePrint())
+    meta_list[[2]] <- html_dependency_lightable()
     bs <- getOption("kableExtra.html.bsTable", default = FALSE)
     if (bs) {
-      meta_list[[2]] <- html_dependency_bsTable()
+      meta_list[[3]] <- html_dependency_bsTable()
     }
   } else {
     meta_list <- NULL
   }
   asis_output(x, meta = meta_list)
 }
+
+
 
 
 

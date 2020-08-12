@@ -4,14 +4,25 @@
 \alias{kable_styling}
 \title{HTML table attributes}
 \usage{
-kable_styling(kable_input, bootstrap_options = "basic",
-  latex_options = "basic", full_width = NULL, position = "center",
-  font_size = NULL, row_label_position = "l",
+kable_styling(
+  kable_input,
+  bootstrap_options = "basic",
+  latex_options = "basic",
+  full_width = NULL,
+  position = "center",
+  font_size = NULL,
+  row_label_position = "l",
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
-  repeat_header_continued = FALSE, stripe_color = "gray!6",
-  stripe_index = NULL, latex_table_env = NULL, protect_latex = TRUE,
-  table.envir = "table", fixed_thead = FALSE)
+  repeat_header_continued = FALSE,
+  stripe_color = "gray!6",
+  stripe_index = NULL,
+  latex_table_env = NULL,
+  protect_latex = TRUE,
+  table.envir = "table",
+  fixed_thead = FALSE,
+  htmltable_class = NULL
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -20,7 +31,7 @@ kable_styling(kable_input, bootstrap_options = "basic",
 Please see package vignette or visit the w3schools'
 \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 for more information. Possible options include \code{basic}, \code{striped},
-\code{bordered}, \code{hover}, \code{condensed} and \code{responsive}.}
+\code{bordered}, \code{hover}, \code{condensed}, \code{responsive} and \code{none}.}
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
@@ -30,14 +41,14 @@ package vignette for more information. Possible options include
 table to the exact position. It is useful when the \code{LaTeX} table is contained
 in a \code{table} environment after you specified captions in \code{kable()}. It will
 force the table to stay in the position where it was created in the document.
-A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \code{[H]}.
+A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \verb{[H]}.
 \code{scale_down} is useful for super wide table. It will automatically adjust
 the table to page width. \code{repeat_header} in only meaningful in a longtable
 environment. It will let the header row repeat on every page in that long
 table.}
 
 \item{full_width}{A \code{TRUE} or \code{FALSE} variable controlling whether the HTML
-table should have 100\% width. Since HTML and pdf have different flavors on
+table should have 100\\% width. Since HTML and pdf have different flavors on
 the preferable format for \code{full_width}. If not specified, a HTML table will
 have full width by default but this option will be set to \code{FALSE} for a
 LaTeX table}
@@ -45,7 +56,7 @@ LaTeX table}
 \item{position}{A character string determining how to position the table
 on a page. Possible values include \code{left}, \code{center}, \code{right}, \code{float_left}
 and \code{float_right}. Please see the package doc site for demonstrations. For
-a \code{LaTeX} table, if \code{float_*} is selected, \code{LaTeX} package \code{wrapfig} will be
+a \code{LaTeX} table, if \verb{float_*} is selected, \code{LaTeX} package \code{wrapfig} will be
 imported.}
 
 \item{font_size}{A numeric input for table font size}
@@ -79,11 +90,17 @@ will be protected from HTML escaping.}
 
 \item{table.envir}{LaTeX floating table environment. \code{kable_style} will put
 a plain no-caption table in a \code{table} environment in order to center the
-table. You can specify this option to things like \code{table*} or \code{float*} based
+table. You can specify this option to things like \verb{table*} or \verb{float*} based
 on your need.}
 
 \item{fixed_thead}{HTML table option so table header row is fixed at top.
 Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
+
+\item{htmltable_class}{Options to use the in-house lightable themes.
+Choices include \code{lightable-minimal}, \code{lightable-classic},
+\code{lightable-classic-2}, \code{lightable-material}, \code{lightable-striped} and
+\code{lightable-hover}. If you have your customized style sheet loaded which
+defines your own table class, you can also load it here.}
 }
 \description{
 This function provides a cleaner approach to modify the style

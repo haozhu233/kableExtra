@@ -25,3 +25,13 @@ This function generates a temporary png file using \code{save_kable}
 and then try to put it in an rmarkdown document using
 \code{knitr::include_graphics}.
 }
+\examples{
+\dontrun{
+library(kableExtra)
+
+kable(mtcars, "latex", booktabs = T) \%>\%
+kable_styling(latex_options = c("striped", "scale_down")) \%>\%
+row_spec(1, color = "red") \%>\%
+as_image()
+}
+}

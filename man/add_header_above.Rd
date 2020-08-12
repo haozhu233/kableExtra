@@ -4,11 +4,27 @@
 \alias{add_header_above}
 \title{Add a header row on top of current header}
 \usage{
-add_header_above(kable_input, header = NULL, bold = FALSE,
-  italic = FALSE, monospace = FALSE, underline = FALSE,
-  strikeout = FALSE, align = "c", color = NULL, background = NULL,
-  font_size = NULL, angle = NULL, escape = TRUE, line = TRUE,
-  line_sep = 3, extra_css = NULL, include_empty = FALSE)
+add_header_above(
+  kable_input,
+  header = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  align = "c",
+  color = NULL,
+  background = NULL,
+  font_size = NULL,
+  angle = NULL,
+  escape = TRUE,
+  line = TRUE,
+  line_sep = 3,
+  extra_css = NULL,
+  include_empty = FALSE,
+  border_left = FALSE,
+  border_right = FALSE
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -16,8 +32,12 @@ add_header_above(kable_input, header = NULL, bold = FALSE,
 \item{header}{A (named) character vector with \code{colspan} as values. For
 example, \code{c(" " = 1, "title" = 2)} can be used to create a new header row
 for a 3-column table with "title" spanning across column 2 and 3. For
-convenience, when \code{colspan} equals to 1, users can drop the \code{ = 1} part.
-As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" = 2)}.}
+convenience, when \code{colspan} equals to 1, users can drop the \verb{ = 1} part.
+As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" = 2)}.
+Alternatively, a data frame with two columns can be provided: The first
+column should contain the header names (character vector) and the second
+column should contain the colspan (numeric vector). This input can be used
+if there are problems with unicode characters in the headers.}
 
 \item{bold}{A T/F value to control whether the text should be bolded.}
 
@@ -64,6 +84,10 @@ td cell.}
 
 \item{include_empty}{Whether empty cells in HTML should also be styled.
 Default is FALSE.}
+
+\item{border_left}{T/F option for border on the left side in latex.}
+
+\item{border_right}{T/F option for border on the right side in latex.}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful

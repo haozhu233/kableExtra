@@ -10,7 +10,7 @@
 #' Please see package vignette or visit the w3schools'
 #' \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 #' for more information. Possible options include `basic`, `striped`,
-#' `bordered`, `hover`, `condensed` and `responsive`.
+#' `bordered`, `hover`, `condensed`, `responsive` and `none`.
 #' @param latex_options A character vector for LaTeX table options. Please see
 #' package vignette for more information. Possible options include
 #' `basic`, `striped`, `hold_position`, `HOLD_position`, `scale_down` & `repeat_header`.
@@ -60,6 +60,11 @@
 #'  on your need.
 #' @param fixed_thead HTML table option so table header row is fixed at top.
 #' Values can be either T/F or `list(enabled = T/F, background = "anycolor")`.
+#' @param htmltable_class Options to use the in-house lightable themes.
+#' Choices include `lightable-minimal`, `lightable-classic`,
+#' `lightable-classic-2`, `lightable-material`, `lightable-striped` and
+#' `lightable-hover`. If you have your customized style sheet loaded which
+#' defines your own table class, you can also load it here.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -94,7 +99,8 @@ kable_styling <- function(kable_input,
                           latex_table_env = NULL,
                           protect_latex = TRUE,
                           table.envir = "table",
-                          fixed_thead = FALSE) {
+                          fixed_thead = FALSE,
+                          htmltable_class = NULL) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -129,7 +135,8 @@ kable_styling <- function(kable_input,
                              position = position,
                              font_size = font_size,
                              protect_latex = protect_latex,
-                             fixed_thead = fixed_thead))
+                             fixed_thead = fixed_thead,
+                             htmltable_class = htmltable_class))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -187,7 +194,8 @@ htmlTable_styling <- function(kable_input,
                                            "float_left", "float_right"),
                               font_size = NULL,
                               protect_latex = TRUE,
-                              fixed_thead = FALSE) {
+                              fixed_thead = FALSE,
+                              htmltable_class = NULL) {
   if (protect_latex) {
     kable_input <- extract_latex_from_kable(kable_input)
   }
@@ -197,7 +205,8 @@ htmlTable_styling <- function(kable_input,
   # Modify class
   bootstrap_options <- match.arg(
     bootstrap_options,
-    c("basic", "striped", "bordered", "hover", "condensed", "responsive"),
+    c("basic", "striped", "bordered", "hover", "condensed", "responsive",
+      "none"),
     several.ok = T
   )
 
@@ -205,15 +214,24 @@ htmlTable_styling <- function(kable_input,
   if (xml_has_attr(kable_xml, "class")) {
     kable_xml_class <- xml_attr(kable_xml, "class")
   }
-  if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
-    bootstrap_options <- "table"
-  } else {
-    bootstrap_options <- bootstrap_options[bootstrap_options != "basic"]
-    bootstrap_options <- paste0("table-", bootstrap_options)
-    bootstrap_options <- c("table", bootstrap_options)
+
+  if (!is.null(htmltable_class)) {
+    bootstrap_options <- "none"
+    xml_attr(kable_xml, "class") <- paste(kable_xml_class, htmltable_class)
   }
-  xml_attr(kable_xml, "class") <- paste(c(kable_xml_class, bootstrap_options),
-                                        collapse = " ")
+
+  if (length(bootstrap_options) == 1 && bootstrap_options == "none") {
+  }else {
+    if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
+      bootstrap_options <- "table"
+    } else {
+      bootstrap_options <- bootstrap_options[bootstrap_options != "basic"]
+      bootstrap_options <- paste0("table-", bootstrap_options)
+      bootstrap_options <- c("table", bootstrap_options)
+    }
+    xml_attr(kable_xml, "class") <- paste(c(kable_xml_class, bootstrap_options),
+                                          collapse = " ")
+  }
 
   # Modify style
   kable_xml_style <- NULL
@@ -317,6 +335,7 @@ pdfTable_styling <- function(kable_input,
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
     out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
                                        repeat_header_method, repeat_header_continued)
+    table_info$repeat_header_latex <- TRUE
   }
 
   if (full_width) {

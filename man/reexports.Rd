@@ -14,6 +14,6 @@ below to see their documentation.
 \describe{
   \item{knitr}{\code{\link[knitr]{kable}}}
 
-  \item{magrittr}{\code{\link[magrittr]{\%>\%}}}
+  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
 }}
 

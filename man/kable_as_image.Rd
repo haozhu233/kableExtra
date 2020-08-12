@@ -4,9 +4,15 @@
 \alias{kable_as_image}
 \title{Deprecated}
 \usage{
-kable_as_image(kable_input, filename = NULL, file_format = "png",
-  latex_header_includes = NULL, keep_pdf = FALSE, density = 300,
-  keep_tex = FALSE)
+kable_as_image(
+  kable_input,
+  filename = NULL,
+  file_format = "png",
+  latex_header_includes = NULL,
+  keep_pdf = FALSE,
+  density = 300,
+  keep_tex = FALSE
+)
 }
 \arguments{
 \item{kable_input}{Raw LaTeX code to generate a table. It doesn't have to
@@ -21,9 +27,9 @@ here.}
 
 \item{latex_header_includes}{A character vector of extra LaTeX header stuff.
 Each element is a row. You can have things like
-\code{c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")}  You could
+\code{c("\\\\\\\\usepackage{threeparttable}", "\\\\\\\\usepackage{icons}")}  You could
 probably add your language package here if you use non-English text in your
-table, such as \code{\\\\usepackage[magyar]{babel}}.}
+table, such as \verb{\\\\\\\\usepackage[magyar]\{babel\}}.}
 
 \item{keep_pdf}{A T/F option to control if the mid-way standalone pdf should
 be kept. Default is \code{FALSE}.}
@@ -36,19 +42,4 @@ should be kept. Default is \code{FALSE}.}
 }
 \description{
 deprecated
-}
-\examples{
-\dontrun{
-library(kableExtra)
-
-kable(mtcars[1:5, ], "html") \%>\%
-  kable_styling("striped") \%>\%
-  row_spec(1, color = "red") \%>\%
-  save_kable("inst/test.pdf")
-
-kable(mtcars, "latex", booktabs = T) \%>\%
-kable_styling(latex_options = c("striped", "scale_down")) \%>\%
-row_spec(1, color = "red") \%>\%
-as_image()
-}
 }

@@ -10,6 +10,10 @@
 #' for a 3-column table with "title" spanning across column 2 and 3. For
 #' convenience, when `colspan` equals to 1, users can drop the ` = 1` part.
 #' As a result, `c(" ", "title" = 2)` is the same as `c(" " = 1, "title" = 2)`.
+#' Alternatively, a data frame with two columns can be provided: The first
+#' column should contain the header names (character vector) and the second
+#' column should contain the colspan (numeric vector). This input can be used
+#' if there are problems with unicode characters in the headers.
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
@@ -58,6 +62,8 @@ add_header_above <- function(kable_input, header = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
                              extra_css = NULL, include_empty = FALSE,
                              border_left = FALSE, border_right = FALSE) {
+  if (is.null(header)) return(kable_input)
+
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -72,6 +78,23 @@ add_header_above <- function(kable_input, header = NULL,
                     length(align), length(header)),
             "Using default of centering each element of row.")
     align <- 'c'
+  }
+  if (is.null(header)) return(kable_input)
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named",
+           "vector it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
   }
   if (kable_format == "html") {
     return(htmlTable_add_header_above(
@@ -94,20 +117,30 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        align, color, background, font_size,
                                        angle, escape, line, line_sep,
                                        extra_css, include_empty) {
-  if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
-
-  header <- standardize_header_input(header)
 
   if (escape) {
     header$header <- escape_html(header$header)
   }
 
-  header_rows <- xml_children(kable_xml_thead)
-  bottom_header_row <- header_rows[[length(header_rows)]]
-  kable_ncol <- length(xml_children(bottom_header_row))
+  # If there is no existing header, add one
+  if (is.null(kable_xml_thead)) {
+    # Add thead node as first child
+    xml_add_child(kable_xml, 'thead', .where = 0)
+    kable_xml_thead <- xml_tpart(kable_xml, 'thead')
+
+    # To check the number of columns in the new header, compare it to body
+    kable_xml_tbody <- xml_tpart(kable_xml, 'tbody')
+    body_rows <- xml_children(kable_xml_tbody)
+    kable_ncol <- max(xml_length(body_rows))
+  } else {
+    header_rows <- xml_children(kable_xml_thead)
+    bottom_header_row <- header_rows[[length(header_rows)]]
+    kable_ncol <- length(xml_children(bottom_header_row))
+  }
+
   if (sum(header$colspan) != kable_ncol) {
     stop("The new header row you provided has a different total number of ",
          "columns with the original kable output.")
@@ -225,7 +258,23 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
                                       escape, line, line_sep,
                                       border_left, border_right) {
   table_info <- magic_mirror(kable_input)
-  header <- standardize_header_input(header)
+
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named vector ",
+           "it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
+  }
 
   if (escape) {
     header$header <- input_escape(header$header, align)
