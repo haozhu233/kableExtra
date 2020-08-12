@@ -62,6 +62,8 @@ add_header_above <- function(kable_input, header = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
                              extra_css = NULL, include_empty = FALSE,
                              border_left = FALSE, border_right = FALSE) {
+  if (is.null(header)) return(kable_input)
+
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
