@@ -115,8 +115,8 @@ group_row_index_translator <- function(index) {
 }
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
-                            label_row_css, escape, colnum, indent, 
-                            bold = T, italic = F) {
+                            label_row_css, escape, colnum, indent,
+                            bold = TRUE, italic = FALSE) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
