@@ -115,9 +115,21 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
     header$header <- escape_html(header$header)
   }
 
-  header_rows <- xml_children(kable_xml_thead)
-  bottom_header_row <- header_rows[[length(header_rows)]]
-  kable_ncol <- length(xml_children(bottom_header_row))
+  # If there is no existing header, add one
+  if (is.null(kable_xml_thead)) {
+    xml_add_child(kable_xml, 'thead', .where = 0)  # Add thead node as first child
+    kable_xml_thead <- xml_tpart(kable_xml, 'thead')
+
+    # To check the number of colums in the new header, compare it to body
+    kable_xml_tbody <- xml_tpart(kable_xml, 'tbody')
+    body_rows <- xml_children(kable_xml_tbody)
+    kable_ncol <- max(xml_length(body_rows))
+  } else {
+    header_rows <- xml_children(kable_xml_thead)
+    bottom_header_row <- header_rows[[length(header_rows)]]
+    kable_ncol <- length(xml_children(bottom_header_row))
+  }
+
   if (sum(header$colspan) != kable_ncol) {
     stop("The new header row you provided has a different total number of ",
          "columns with the original kable output.")
