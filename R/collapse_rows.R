@@ -66,7 +66,7 @@ collapse_rows <- function(kable_input, columns = NULL,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
-      headers_to_remove, target, no_col_names))
+      headers_to_remove, target, col_names))
   }
 }
 
