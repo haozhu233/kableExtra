@@ -41,6 +41,12 @@ in new tab. (#454)
 
 * Fixed a bug in `collapse_rows` when there is no column names (#459)
 
+* Fixed a bug for `add_header_rows` when there isn't thead in HTML (#246, #423,
+thanks @kbrevoort)
+
+* Fixed inconsistent behavior for `add_header_rows` in HTML and latex (#387, 
+#422, thanks @kbrevoort)
+
 
 kableExtra 1.1.0
 --------------------------------------------------------------------------------
