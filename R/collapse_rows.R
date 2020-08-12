@@ -252,6 +252,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE
+  table_info$collapse_matrix <- collapse_matrix
   attr(out, "kable_meta") <- table_info
   if(row_group_label_position == 'stack'){
     group_row_index_list <- collapse_rows_index(kable_dt, head(columns, -1))

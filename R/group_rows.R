@@ -35,7 +35,7 @@
 #' @param hline_after A replicate of `hline.after` in xtable. It
 #' addes a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
-#' @param indent A T?F value to control whether list items are indented.
+#' @param indent A T/F value to control whether list items are indented.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
