@@ -39,6 +39,8 @@ in new tab. (#454)
 
 * Improved the behavior of `scroll_box` so it will skip non-html tables. (#450)
 
+* Fixed a bug in `collapse_rows` when there is no column names (#459)
+
 
 kableExtra 1.1.0
 --------------------------------------------------------------------------------
