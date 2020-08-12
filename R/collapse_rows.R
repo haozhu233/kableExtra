@@ -23,6 +23,12 @@
 #' `row_group_label_position` is `stack`
 #' @param headers_to_remove Numeric column positions where headers should be
 #' removed when they are stacked.
+#' @param target If multiple columns are selected to do collapsing and a target
+#' column is specified, this target column will be used to collapse other
+#' columns based on the groups of this target column.
+#' @param col_names T/F. A LaTeX specific option. If you set `col.names` be
+#' `NULL` in your `kable` call, you need to set this option false to let
+#' everything work properly.
 #'
 #' @examples dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
 #' x <- knitr::kable(dt, "html")
@@ -36,7 +42,8 @@ collapse_rows <- function(kable_input, columns = NULL,
                           custom_latex_hline = NULL,
                           row_group_label_fonts = NULL,
                           headers_to_remove = NULL,
-                          target = NULL) {
+                          target = NULL,
+                          col_names = TRUE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -59,7 +66,7 @@ collapse_rows <- function(kable_input, columns = NULL,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
-      headers_to_remove, target))
+      headers_to_remove, target, no_col_names))
   }
 }
 
@@ -146,7 +153,8 @@ collapse_row_matrix <- function(kable_dt, columns, html = T, target = NULL)  {
 
 collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 row_group_label_position, row_group_label_fonts,
-                                custom_latex_hline, headers_to_remove, target) {
+                                custom_latex_hline, headers_to_remove, target,
+                                col_names) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -162,7 +170,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   }
 
   contents <- table_info$contents
-  kable_dt <- kable_dt_latex(contents)
+  kable_dt <- kable_dt_latex(contents, col_names)
 
   collapse_matrix_rev <- collapse_row_matrix(kable_dt, columns, html = TRUE,
                                              target)
@@ -252,8 +260,11 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   return(out)
 }
 
-kable_dt_latex <- function(x) {
-  data.frame(do.call(rbind, str_split(x[-1], " & ")), stringsAsFactors = FALSE)
+kable_dt_latex <- function(x, col_names) {
+  if (col_names) {
+    x <- x[-1]
+  }
+  data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
 }
 
 collapse_new_dt_item <- function(x, span, width = NULL, align, valign) {
