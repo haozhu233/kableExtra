@@ -13,7 +13,7 @@
 #' "top" is not default is that the multirow package on CRAN win-builder is
 #' not up to date.
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
-#' Choose from `major`, `full`, `none`, `custom`. We changed the default from
+#' Choose from `major`, `full`, `none`, `custom` and `linespace`. We changed the default from
 #' `full` to `major` in version 1.2.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
 #' be separated by hlines.
@@ -67,7 +67,8 @@ collapse_rows <- function(kable_input, columns = NULL,
     return(collapse_rows_html(kable_input, columns, valign, target))
   }
   if (kable_format == "latex") {
-    latex_hline <- match.arg(latex_hline, c("major", "full", "none", "custom"))
+    latex_hline <- match.arg(latex_hline, c(
+      "major", "full", "none", "custom", "linespace"))
     row_group_label_position <- match.arg(row_group_label_position,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
@@ -163,6 +164,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 col_names, longtable_clean_cut) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
+  out <- gsub("\\\\addlinespace\n", "", out)
 
   valign <- switch(
     valign,
@@ -253,13 +255,17 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
           midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
                          table_info$booktabs),
           ""
-         )
+         ),
+        "linespace"= ifelse(
+          sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
+          "\\\\addlinespace\n",
+          ""
+        )
       )
       new_contents[i] <- paste0(new_contents[i], "\\\\\\\\\n", row_midrule)
     }
     out <- sub(contents[i + 1], new_contents[i], out, perl=TRUE)
   }
-  out <- gsub("\\\\addlinespace\n", "", out)
 
   if (table_info$tabular == "longtable" & longtable_clean_cut) {
     if (max(collapse_matrix) > 50) {
@@ -320,6 +326,16 @@ midline_groups <- function(x, booktabs = T) {
   } else {
     out <- paste0("\\\\cline{", ranges, "}")
   }
+  out <- paste0(out, collapse = "\n")
+  return(out)
+}
+
+linespace_groups <- function(x) {
+  diffs <- c(1, diff(x))
+  start_indexes <- c(1, which(diffs > 1))
+  end_indexes <- c(start_indexes - 1, length(x))
+  ranges <- paste0(x[start_indexes], "-", x[end_indexes])
+  out <- paste0("\\\\addlinespace")
   out <- paste0(out, collapse = "\n")
   return(out)
 }
