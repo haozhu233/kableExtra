@@ -13,7 +13,8 @@
 #' "top" is not default is that the multirow package on CRAN win-builder is
 #' not up to date.
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
-#' Choose from `full`, `major`, `none`, `custom`.
+#' Choose from `major`, `full`, `none`, `custom`. We changed the default from
+#' `full` to `major` in version 1.2.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
 #' be separated by hlines.
 #' @param row_group_label_position Option controlling positions of row group
@@ -29,6 +30,10 @@
 #' @param col_names T/F. A LaTeX specific option. If you set `col.names` be
 #' `NULL` in your `kable` call, you need to set this option false to let
 #' everything work properly.
+#' @param longtable_clean_cut T/F with default T. Multirow cell sometimes are
+#' displayed incorrectly around pagebreak. This option forces groups to cut
+#' before the end of a page. If you have a group that is longer than 1 page,
+#' you need to turn off this option.
 #'
 #' @examples dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
 #' x <- knitr::kable(dt, "html")
@@ -37,13 +42,14 @@
 #' @export
 collapse_rows <- function(kable_input, columns = NULL,
                           valign = c("middle", "top", "bottom"),
-                          latex_hline = c("full", "major", "none", "custom"),
+                          latex_hline = c("major", "full", "none", "custom"),
                           row_group_label_position = c('identity', 'stack'),
                           custom_latex_hline = NULL,
                           row_group_label_fonts = NULL,
                           headers_to_remove = NULL,
                           target = NULL,
-                          col_names = TRUE) {
+                          col_names = TRUE,
+                          longtable_clean_cut = TRUE) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -61,12 +67,12 @@ collapse_rows <- function(kable_input, columns = NULL,
     return(collapse_rows_html(kable_input, columns, valign, target))
   }
   if (kable_format == "latex") {
-    latex_hline <- match.arg(latex_hline, c("full", "major", "none", "custom"))
+    latex_hline <- match.arg(latex_hline, c("major", "full", "none", "custom"))
     row_group_label_position <- match.arg(row_group_label_position,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
-      headers_to_remove, target, col_names))
+      headers_to_remove, target, col_names, longtable_clean_cut))
   }
 }
 
@@ -154,7 +160,7 @@ collapse_row_matrix <- function(kable_dt, columns, html = T, target = NULL)  {
 collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 row_group_label_position, row_group_label_fonts,
                                 custom_latex_hline, headers_to_remove, target,
-                                col_names) {
+                                col_names, longtable_clean_cut) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -229,8 +235,13 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
       row_midrule <- switch(
         latex_hline,
         "none" = "",
-        "full" = midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
-                                table_info$booktabs),
+        "full" = ifelse(
+          sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
+          midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                         table_info$booktabs),
+          midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                         FALSE)
+        ),
         "major" = ifelse(
           sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
           midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
@@ -250,6 +261,21 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   }
   out <- gsub("\\\\addlinespace\n", "", out)
 
+  if (table_info$tabular == "longtable" & longtable_clean_cut) {
+    if (max(collapse_matrix) > 50) {
+      warning("It seems that you have a group larger than 50 rows and span ",
+              "over a page. You probably want to set longtable_clean_cut to ",
+              "be FALSE.")
+    }
+    if (latex_hline == "full") {
+      warning("kableExtra 1.2 adds a clean_cut feature to provide better page",
+              " breaking in collapse_rows. It only works when latex_hline = ",
+              "'major'. It looks like you have longtable_clean_cut = T while ",
+              "latex_hline = 'full'. Please change either one of them.")
+    }
+    out <- gsub("\\\\\\\\($|\n)", "\\\\\\\\\\\\nopagebreak\\1", out)
+    out <- gsub("(\\\\cmidrule[{][^}]*[}])", "\\1\\\\pagebreak[0]", out)
+  }
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE
   table_info$collapse_matrix <- collapse_matrix
