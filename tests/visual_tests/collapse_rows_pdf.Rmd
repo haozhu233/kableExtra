@@ -9,11 +9,8 @@ output:
 library(knitr)
 library(dplyr)
 library(kableExtra)
-collapse_rows_dt <- data.frame(C1 = c(rep("aaaaaa aaaaaa", 10), rep("bbbbb bbbbbb", 5)),
-                 C2 = c(rep("c", 7), rep("d", 3), rep("c", 3), rep("d", 2)),
-                 C3 = 1:15,
-                 C4 = sample(c(0,1), 15, replace = TRUE))
-kable(bind_rows(collapse_rows_dt), "latex", align = "c", booktabs = T, longtable= T) %>%
-  column_spec(1, bold = T, width = "5em") %>%
-  collapse_rows(1:2, latex_hline = "linespace") 
+mtcars %>%
+  kable("latex") %>%
+  kable_styling(latex_options = "striped", full_width = T) %>%
+  magic_mirror()
 ```

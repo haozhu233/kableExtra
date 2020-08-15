@@ -21,7 +21,8 @@ column_spec(
   width_max = NULL,
   extra_css = NULL,
   include_thead = FALSE,
-  latex_column_spec = NULL
+  latex_column_spec = NULL,
+  latex_valign = "p"
 )
 }
 \arguments{
@@ -77,6 +78,9 @@ header row will be manipulated. Default is \code{FALSE}.}
 
 \item{latex_column_spec}{Only for LaTeX tables.  Code to replace the column
 specification.  If not \code{NULL}, will override all other arguments.}
+
+\item{latex_valign}{vertical alignment. Only works when you specified column
+width. Choose among \code{p}, \code{m}, \code{b}.}
 }
 \description{
 This function allows users to select a column and then specify

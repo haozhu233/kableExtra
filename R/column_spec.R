@@ -39,6 +39,8 @@
 #' header row will be manipulated. Default is `FALSE`.
 #' @param latex_column_spec Only for LaTeX tables.  Code to replace the column
 #' specification.  If not `NULL`, will override all other arguments.
+#' @param latex_valign vertical alignment. Only works when you specified column
+#'  width. Choose among `p`, `m`, `b`.
 #'
 #' @details Use `latex_column_spec` in a LaTeX table to change or
 #' customize the column specification.  Because of the way it is handled
@@ -56,7 +58,7 @@ column_spec <- function(kable_input, column,
                         border_left = FALSE, border_right = FALSE,
                         width_min = NULL, width_max = NULL,
                         extra_css = NULL, include_thead = FALSE,
-                        latex_column_spec = NULL) {
+                        latex_column_spec = NULL, latex_valign = 'p') {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -82,7 +84,8 @@ column_spec <- function(kable_input, column,
                              underline, strikeout,
                              color, background,
                              border_left, border_right,
-                             latex_column_spec = latex_column_spec))
+                             latex_column_spec = latex_column_spec,
+                             latex_valign = latex_valign))
   }
 }
 
@@ -222,7 +225,7 @@ column_spec_latex <- function(kable_input, column, width,
                               underline, strikeout,
                               color, background,
                               border_left, border_right,
-                              latex_column_spec) {
+                              latex_column_spec, latex_valign) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -237,7 +240,8 @@ column_spec_latex <- function(kable_input, column, width,
     function(x) {
       latex_column_align_builder(
         x, width, bold, italic, monospace, underline, strikeout,
-        color, background, border_left, border_right, latex_column_spec)
+        color, background, border_left, border_right, latex_column_spec,
+        latex_valign)
     }
   ))
 
@@ -271,14 +275,14 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
                                        underline, strikeout,
                                        color, background,
                                        border_left, border_right,
-                                       latex_column_spec) {
+                                       latex_column_spec, latex_valign) {
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
                           "l" = "\\\\raggedright\\\\arraybackslash",
                           "c" = "\\\\centering\\\\arraybackslash",
                           "r" = "\\\\raggedleft\\\\arraybackslash")
-    x <- paste0("p\\{", width, "\\}")
+    x <- paste0(latex_valign, "\\{", width, "\\}")
   }
 
   if (!is.null(color)) {

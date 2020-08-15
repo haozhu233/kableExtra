@@ -95,7 +95,7 @@ addes a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row.}
 
-\item{indent}{A T?F value to control whether list items are indented.}
+\item{indent}{A T/F value to control whether list items are indented.}
 }
 \description{
 Group a few rows in a table together under a label.
