@@ -145,6 +145,25 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   if (bold) group_label <- paste0("<strong>", group_label, "</strong>")
   if (italic) group_label <- paste0("<em>", group_label, "</em>")
 
+  if (label_row_css == "border-bottom: 1px solid;") {
+    if (!is.null(attr(kable_input, "lightable_class"))) {
+      lightable_class <- attr(kable_input, "lightable_class")
+      if (lightable_class %in% c(
+        "lightable-classic", "lightable-classic-2", "lightable-minimal")) {
+        label_row_css <- "border-bottom: 0;"
+      }
+      if (lightable_class %in% c("lightable-paper")) {
+        label_row_css <- "border-bottom: 1px solid #00000020;"
+      }
+      if (lightable_class %in% c("lightable-material")) {
+        label_row_css <- "border-bottom: 1px solid #eee; "
+      }
+      if (lightable_class %in% c("lightable-material-dark")) {
+        label_row_css <- "border-bottom: 1px solid #FFFFFF12; color: #FFFFFF60;"
+      }
+    }
+  }
+
   group_header_row_text <- paste0(
     '<tr groupLength="', length(group_seq), '"><td colspan="', kable_ncol,
     '" style="', label_row_css, '">', group_label, "</td></tr>")

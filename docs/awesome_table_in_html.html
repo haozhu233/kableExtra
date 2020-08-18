@@ -1332,8 +1332,8 @@ margin-right: 5px;
 margin-left: 5px;
 margin-right: 5px;
 }
-.lightable-minimal thead tr th {
-border-bottom: 2px solid black;
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
 empty-cells: hide;
 }
 .lightable-minimal tbody tr:first-child td {
@@ -1342,12 +1342,11 @@ padding-top: 0.5em;
 .lightable-minimal.lightable-hover tbody tr:hover {
 background-color: #f5f5f5;
 }
-.lightable-minimal.lightable-striped tr:nth-child(even) {
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
 background-color: #f5f5f5;
 }
 .lightable-classic {
 border-top: 2px solid #111111;
-border-bottom: 2px solid #111111;
 width: 100%;
 margin-bottom: 10px;
 }
@@ -1362,15 +1361,17 @@ padding-right: 5px;
 .lightable-classic thead tr:last-child th {
 border-bottom: 1px solid #111111;
 }
+.lightable-classic tbody tr:last-child td {
+border-bottom: 2px solid #111111;
+}
 .lightable-classic.lightable-hover tbody tr:hover {
 background-color: #F9EEC1;
 }
-.lightable-classic.lightable-striped tr:nth-child(even) {
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
 background-color: #f5f5f5;
 }
 .lightable-classic-2 {
 border-top: 3px double #111111;
-border-bottom: 3px double #111111;
 width: 100%;
 margin-bottom: 10px;
 }
@@ -1382,13 +1383,16 @@ padding-right: 5px;
 padding-left: 5px;
 padding-right: 5px;
 }
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
 .lightable-classic-2 thead tr:last-child th {
 border-bottom: 1px solid #111111;
 }
 .lightable-classic-2.lightable-hover tbody tr:hover {
 background-color: #F9EEC1;
 }
-.lightable-classic-2.lightable-striped tr:nth-child(even) {
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
 background-color: #f5f5f5;
 }
 .lightable-material {
@@ -1414,10 +1418,10 @@ border-top: 1px solid #eeeeee;
 .lightable-material.lightable-hover tbody tr:hover {
 background-color: #f5f5f5;
 }
-.lightable-material.lightable-striped tr:nth-child(even) {
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
 background-color: #f5f5f5;
 }
-.lightable-material.lightable-striped td {
+.lightable-material.lightable-striped tbody td {
 border: 0;
 }
 .lightable-material.lightable-striped thead tr:last-child th {
@@ -1449,10 +1453,10 @@ border-top: 1px solid #FFFFFF12;
 .lightable-material-dark.lightable-hover tbody tr:hover {
 background-color: #FFFFFF12;
 }
-.lightable-material-dark.lightable-striped tr:nth-child(even) {
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
 background-color: #FFFFFF12;
 }
-.lightable-material-dark.lightable-striped td {
+.lightable-material-dark.lightable-striped tbody td {
 border: 0;
 }
 .lightable-material-dark.lightable-striped thead tr:last-child th {
@@ -1462,7 +1466,7 @@ border-bottom: 1px solid #FFFFFF12;
 width: 100%;
 margin-bottom: 10px;
 }
-.lightable-paper th {
+.lightable-paper thead tr:last-child th {
 color: #999;
 vertical-align: bottom;
 border-bottom: 1px solid #00000020;
@@ -1478,10 +1482,10 @@ padding: 7px 5px;
 .lightable-paper.lightable-hover tbody tr:hover {
 background-color: #F9EEC1;
 }
-.lightable-paper.lightable-striped tr:nth-child(even) {
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
 background-color: #00000008;
 }
-.lightable-material-dark.lightable-striped td {
+.lightable-paper.lightable-striped tbody td {
 border: 0;
 }
 </style>
@@ -1746,23 +1750,19 @@ devtools::install_github(&quot;haozhu233/kableExtra&quot;)</code></pre>
 <h1>Getting Started</h1>
 <p>Here we are using the first few columns and rows from dataset <code>mtcars</code></p>
 <pre class="r"><code>library(knitr)
-library(kableExtra)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;kableExtra&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:knitr&#39;:
-## 
-##     kable</code></pre>
-<pre class="r"><code>dt &lt;- mtcars[1:5, 1:6]</code></pre>
-<p>When you are using <code>kable()</code>, if you don’t specify <code>format</code>, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don’t need to change anything in your code. However, markdown doesn’t support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should <strong>define <code>format</code> in <code>kable()</code></strong> as either “html” or “latex”. <em>You can also define a global option at the beginning using <code>options(knitr.table.format = &quot;html&quot;)</code> so you don’t repeat the step everytime.</em></p>
-<p><strong>Starting from <code>kableExtra</code> 0.9.0</strong>, when you load this package (<code>library(kableExtra)</code>), <span style=" font-weight: bold;    color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d9230f !important;">it will automatically set up the global option ‘knitr.table.format’ based on your current environment</span>. Unless you are rendering a PDF, <code>kableExtra</code> will try to render a HTML table for you. <strong>You no longer need to manually set either the global option or the <code>format</code> option in each <code>kable()</code> function</strong>. I’m still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in <code>kable()</code> whenever you want. I just hope you can enjoy a peace of mind in most of your time.</p>
-<p>You can disable this behavior by setting <code>options(kableExtra.auto_format = FALSE)</code> before you load <code>kableExtra</code>.</p>
+library(kableExtra)
+dt &lt;- mtcars[1:5, 1:6]</code></pre>
+<blockquote>
+<p><strong>Key Update:</strong> In the latest version of this package (1.2+), we provide a wrapper funciton <code>kbl</code> to the original <code>kable</code> function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environement variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new <code>kbl</code> function for all its convenience but the support for the original <code>kable</code> function is still there. In this doc, we will use <code>kbl</code> instead of <code>kable</code>.</p>
+</blockquote>
+<p><strong>This paragraph is a little outdated. It’s here only for education purpose because it’s helpful to understand how <code>kable</code> works under the hood</strong>. When you are using <code>kable()</code>, if you don’t specify <code>format</code>, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don’t need to change anything in your code. However, markdown doesn’t support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should <strong>define <code>format</code> in <code>kable()</code></strong> as either “html” or “latex”. <em>You can also define a global option at the beginning using <code>options(knitr.table.format = &quot;html&quot;)</code> so you don’t repeat the step everytime.</em> <strong>Starting from <code>kableExtra</code> 0.9.0</strong>, when you load this package (<code>library(kableExtra)</code>), it will automatically set up the global option ‘knitr.table.format’ based on your current environment. Unless you are rendering a PDF, <code>kableExtra</code> will try to render a HTML table for you. <strong>You no longer need to manually set either the global option or the <code>format</code> option in each <code>kable()</code> function</strong>. I’m still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in <code>kable()</code> whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting <code>options(kableExtra.auto_format = FALSE)</code> before you load <code>kableExtra</code>.</p>
 <pre class="r"><code># If you are using kableExtra &lt; 0.9.0, you are recommended to set a global option first.
 # options(knitr.table.format = &quot;html&quot;) 
 ## If you don&#39;t define format here, you&#39;ll need put `format = &quot;html&quot;` in every kable function.</code></pre>
 <div id="basic-html-table" class="section level2">
 <h2>Basic HTML table</h2>
 <p>Basic HTML output of <code>kable</code> looks very crude. To the end, it’s just a plain HTML table without any love from css.</p>
-<pre class="r"><code>kable(dt)</code></pre>
+<pre class="r"><code>kbl(dt)</code></pre>
 <table>
 <thead>
 <tr>
@@ -1909,9 +1909,9 @@ Hornet Sportabout
 </div>
 <div id="bootstrap-theme" class="section level2">
 <h2>Bootstrap theme</h2>
-<p>When used on a HTML table, <code>kable_styling()</code> will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don’t specify <code>format</code> in <code>kable()</code>) but this time, you are controlling it.</p>
+<p>When used on a HTML table, <code>kable_styling()</code> will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don’t specify <code>format</code> in <code>kbl()</code>) but this time, you are controlling it.</p>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -2061,7 +2061,7 @@ Hornet Sportabout
 <h2>Alternative themes</h2>
 <p><code>kableExtra</code> also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 6 of them: <code>kable_paper</code>, <code>kable_classic</code>, <code>kable_classic_2</code>, <code>kable_minimal</code>, <code>kable_material</code> and <code>kable_material_dark</code>. These functions are alternatives to <code>kable_styling</code>, which means that you can specify any additional formatting options in <code>kable_styling</code> in these functions too. The only difference is that <code>bootstrap_options</code> (as discussed in the next section) is replaced with <code>lightable_options</code> at the same location with only two choices <code>striped</code> and <code>hover</code> available.</p>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_paper(&quot;hover&quot;)</code></pre>
 <table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2207,7 +2207,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_classic()</code></pre>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2353,7 +2353,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_classic_2()</code></pre>
 <table class=" lightable-classic-2" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2499,9 +2499,9 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_minimal()</code></pre>
-<table class=" lightable-minimal" style="font-family: calibri, cambria, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<table class=" lightable-minimal" style="font-family: &quot;Trebuchet MS&quot;, verdana, calibri, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -2645,7 +2645,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_material(c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
 <table class=" lightable-material lightable-striped lightable-hover" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2791,7 +2791,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_material_dark()</code></pre>
 <table class=" lightable-material-dark" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2945,7 +2945,7 @@ Hornet Sportabout
 <h2>Bootstrap table classes</h2>
 <p>If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including <code>striped</code>, <code>bordered</code>, <code>hover</code>, <code>condensed</code> and <code>responsive</code>. If you are not familiar, no worries, you can take a look at their <a href="http://getbootstrap.com/css/#tables">documentation site</a> to get a sense of how they look like. All of these options are available here.</p>
 <p>For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
 <table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -3091,7 +3091,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <p>The option <code>condensed</code> can also be handy in many cases when you don’t want your table to be too large. It has slightly shorter row height.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))</code></pre>
 <table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -3237,7 +3237,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <p>Tables with option <code>responsive</code> looks the same with others on a large screen. However, on a small screen like phone, they are horizontally scrollable. Please resize your window to see the result.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -3386,7 +3386,7 @@ Hornet Sportabout
 <div id="full-width" class="section level2">
 <h2>Full width?</h2>
 <p>By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don’t want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have <code>full_width</code> or not in <code>kable_styling</code>. By default, <code>full_width</code> is set to be <code>TRUE</code> for HTML tables (note that for LaTeX, the default is <code>FALSE</code> since I don’t want to change the “common” looks unless you specified it.)</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_paper(bootstrap_options = &quot;striped&quot;, full_width = F)</code></pre>
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -3535,7 +3535,7 @@ Hornet Sportabout
 <div id="position" class="section level2">
 <h2>Position</h2>
 <p>Table Position only matters when the table doesn’t have <code>full_width</code>. You can choose to align the table to <code>center</code>, <code>left</code> or <code>right</code> side of the page</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F, position = &quot;left&quot;)</code></pre>
 <table class="table table-striped" style="width: auto !important; ">
 <thead>
@@ -3681,7 +3681,7 @@ Hornet Sportabout
 </tbody>
 </table>
 <p>Becides these three common options, you can also wrap text around the table using the <code>float-left</code> or <code>float-right</code> options.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F, position = &quot;float_right&quot;)</code></pre>
 <table class="table table-striped" style="width: auto !important; float: right; margin-left: 10px;">
 <thead>
@@ -3831,7 +3831,7 @@ Hornet Sportabout
 <div id="font-size" class="section level2">
 <h2>Font size</h2>
 <p>If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the <code>font_size</code> option.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 7)</code></pre>
 <table class="table table-striped" style="font-size: 7px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -3980,7 +3980,7 @@ Hornet Sportabout
 <div id="fixed-table-header-row" class="section level2">
 <h2>Fixed Table Header Row</h2>
 <p>If you happened to have a very long table, you may consider to use this <code>fixed_header</code> option to fix the header row on top as your readers scroll. By default, the background is set to white. If you need a different color, you can set <code>fixed_header = list(enabled = T, background = &quot;red&quot;)</code>.</p>
-<pre class="r"><code>kable(mtcars[1:10, 1:5]) %&gt;%
+<pre class="r"><code>kbl(mtcars[1:10, 1:5]) %&gt;%
   kable_styling(fixed_thead = T)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -4224,7 +4224,7 @@ Merc 280
   )
 )
 
-kable(text_tbl) %&gt;%
+kbl(text_tbl) %&gt;%
   kable_styling(full_width = F) %&gt;%
   column_spec(1, bold = T, border_right = T) %&gt;%
   column_spec(2, width = &quot;30em&quot;, background = &quot;yellow&quot;)</code></pre>
@@ -4270,7 +4270,7 @@ Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie 
 <p><strong>Key Update</strong>: I understand the need of doing conditional formatting and the previous solution <code>cell_spec</code> is relatively hard to use. Therefore in kableExtra 1.2, I improved the functionality of <code>column_spec</code> so it can take vectorized input for most of its arguments (except <code>width</code>, <code>border_left</code> and <code>border_right</code>). It is really easy right now to format a column based on other values.</p>
 </blockquote>
 <pre class="r"><code>mtcars[1:8, 1:8] %&gt;%
-  kable() %&gt;%
+  kbl() %&gt;%
   kable_paper(full_width = F) %&gt;%
   column_spec(2, color = spec_color(mtcars$mpg[1:8]),
               link = &quot;https://haozhu233.github.io/kableExtra&quot;) %&gt;%
@@ -4548,7 +4548,7 @@ Merc 240D
 <div id="row-spec" class="section level2">
 <h2>Row spec</h2>
 <p>Similar with <code>column_spec</code>, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar with other row-related functions in <code>kableExtra</code>, for the position of the target row, you don’t need to count in header rows or the group labeling rows.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   column_spec(5:7, bold = T) %&gt;%
   row_spec(3:5, bold = T, color = &quot;white&quot;, background = &quot;#D7261E&quot;)</code></pre>
@@ -4699,7 +4699,7 @@ Hornet Sportabout
 <div id="header-rows" class="section level2">
 <h2>Header Rows</h2>
 <p>One special case of <code>row_spec</code> is that you can specify the format of the header row via <code>row_spec(row = 0, ...)</code>.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   row_spec(0, angle = -45)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -4867,7 +4867,7 @@ mtcars[1:10, 1:2] %&gt;%
                                         c(&quot;#666666&quot;, &quot;#999999&quot;, &quot;#BBBBBB&quot;)))
   ) %&gt;%
   select(car, mpg, cyl) %&gt;%
-  kable(format = &quot;html&quot;, escape = F) %&gt;%
+  kbl(format = &quot;html&quot;, escape = F) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -5010,7 +5010,7 @@ Merc 280
     Species, color = &quot;white&quot;, bold = T,
     background = spec_color(1:10, end = 0.9, option = &quot;A&quot;, direction = -1)
   )) %&gt;%
-  kable(escape = F, align = &quot;c&quot;) %&gt;%
+  kbl(escape = F, align = &quot;c&quot;) %&gt;%
   kable_styling(c(&quot;striped&quot;, &quot;condensed&quot;), full_width = F)</code></pre>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -5254,7 +5254,7 @@ popover_dt$`Hover over these items` &lt;- cell_spec(
     title = NULL,                           # title will add a Title Panel on top
     position = popover_dt$position
   ))
-kable(popover_dt, escape = FALSE) %&gt;%
+kbl(popover_dt, escape = FALSE) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = FALSE)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -5323,21 +5323,21 @@ mtcars[1:5, 1:4] %&gt;%
     hp = color_bar(&quot;lightgreen&quot;)(hp)
   ) %&gt;%
   select(car, everything()) %&gt;%
-  kable(escape = F) %&gt;%
+  kbl(escape = F) %&gt;%
   kable_styling(&quot;hover&quot;, full_width = F) %&gt;%
   column_spec(5, width = &quot;3cm&quot;) %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Hello&quot; = 2, &quot;World&quot; = 2))</code></pre>
 <table class="table table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
 Hello
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
 World
 </div>
@@ -5456,26 +5456,26 @@ Hornet Sportabout
 <div id="add-header-rows-to-group-columns" class="section level2">
 <h2>Add header rows to group columns</h2>
 <p>Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into <code>add_header_above()</code>. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the <code>=1</code> part so the function below can be written as `add_header_above(c(&quot; “,”Group 1&quot; = 2, “Group 2” = 2, “Group 3” = 2)).</p>
-<pre class="r"><code>kable(dt) %&gt;%
-  kable_styling(&quot;striped&quot;) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
+  kable_classic() %&gt;%
   add_header_above(c(&quot; &quot; = 1, &quot;Group 1&quot; = 2, &quot;Group 2&quot; = 2, &quot;Group 3&quot; = 2))</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
+<th style="empty-cells: hide;" colspan="1">
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #111111; margin-bottom: -1px; ">
 Group 1
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #111111; margin-bottom: -1px; ">
 Group 2
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #111111; margin-bottom: -1px; ">
 Group 3
 </div>
 </th>
@@ -5622,51 +5622,51 @@ Hornet Sportabout
 </tbody>
 </table>
 <p>In fact, if you want to add another row of header on top, please feel free to do so.</p>
-<pre class="r"><code>kable(dt) %&gt;%
-  kable_styling(c(&quot;striped&quot;, &quot;bordered&quot;)) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
+  kable_paper() %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Group 1&quot; = 2, &quot;Group 2&quot; = 2, &quot;Group 3&quot; = 2)) %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Group 4&quot; = 4, &quot;Group 5&quot; = 2)) %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Group 6&quot; = 6))</code></pre>
-<table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
+<th style="empty-cells: hide;" colspan="1">
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 6
 </div>
 </th>
 </tr>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
+<th style="empty-cells: hide;" colspan="1">
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 4
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 5
 </div>
 </th>
 </tr>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
+<th style="empty-cells: hide;" colspan="1">
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 1
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 2
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; ">
 Group 3
 </div>
 </th>
@@ -5816,7 +5816,7 @@ Hornet Sportabout
 <div id="group-rows-via-labeling" class="section level2">
 <h2>Group rows via labeling</h2>
 <p>Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age &lt; 40, age &gt; 40). With the function <code>group_rows()</code>/<code>pack_rows()</code> in <code>kableExtra</code>, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don’t need to count for the header rows nor other group label rows. You only need to think about the row numbers in the “original R dataframe”.</p>
-<pre class="r"><code>kable(mtcars[1:10, 1:6], caption = &quot;Group Rows&quot;) %&gt;%
+<pre class="r"><code>kbl(mtcars[1:10, 1:6], caption = &quot;Group Rows&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   pack_rows(&quot;Group 1&quot;, 4, 7) %&gt;%
   pack_rows(&quot;Group 2&quot;, 8, 10)</code></pre>
@@ -6093,11 +6093,11 @@ Merc 280
 </table>
 <p>Another way to use <code>pack_rows</code> is to provide an grouping index, similar with <code>add_header_above()</code>. This feature is only available in kableExtra &gt; 0.5.2.</p>
 <pre class="r"><code># Not evaluated. This example generates the same table as above.
-kable(mtcars[1:10, 1:6], caption = &quot;Group Rows&quot;) %&gt;%
+kbl(mtcars[1:10, 1:6], caption = &quot;Group Rows&quot;) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   pack_rows(index = c(&quot; &quot; = 3, &quot;Group 1&quot; = 4, &quot;Group 2&quot; = 3))</code></pre>
 <p>For advanced users, you can even define your own css for the group labeling.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   pack_rows(&quot;Group 1&quot;, 3, 5, label_row_css = &quot;background-color: #666; color: #fff;&quot;)</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -6264,7 +6264,7 @@ conflicted::conflict_prefer(&quot;group_rows&quot;, &quot;kableExtra&quot;, &quo
 <div id="row-indentation" class="section level2">
 <h2>Row indentation</h2>
 <p>Unlike <code>pack_rows()</code>, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, <code>add_indent()</code> is probably more apporiate. For advanced users, you can even define your own css for the group labeling.</p>
-<pre class="r"><code>kable(dt) %&gt;%
+<pre class="r"><code>kbl(dt) %&gt;%
   kable_styling(&quot;striped&quot;, full_width = F) %&gt;%
   add_indent(c(1, 3, 5))</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -6418,7 +6418,7 @@ Hornet Sportabout
                  C2 = c(rep(&quot;c&quot;, 7), rep(&quot;d&quot;, 3), rep(&quot;c&quot;, 2), rep(&quot;d&quot;, 3)),
                  C3 = 1:15,
                  C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, align = &quot;c&quot;) %&gt;%
+kbl(collapse_rows_dt, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   column_spec(1, bold = T) %&gt;%
   collapse_rows(columns = 1:2, valign = &quot;top&quot;)</code></pre>
@@ -6451,7 +6451,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6475,7 +6475,7 @@ c
 4
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6483,7 +6483,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6548,7 +6548,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6559,7 +6559,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6589,14 +6589,14 @@ d
 </blockquote>
 <p>Documentations for <code>add_footnote</code> can be found <a href="http://haozhu233.github.io/kableExtra/legacy_features#add_footnote">here</a>.</p>
 <p>There are four notation systems in <code>footnote</code>, namely <code>general</code>, <code>number</code>, <code>alphabet</code> and <code>symbol</code>. The last three types of footnotes will be labeled with corresponding marks while <code>general</code> won’t be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements.</p>
-<pre class="r"><code>kable(dt, align = &quot;c&quot;) %&gt;%
-  kable_styling(full_width = F) %&gt;%
+<pre class="r"><code>kbl(dt, align = &quot;c&quot;) %&gt;%
+  kable_classic(full_width = F) %&gt;%
   footnote(general = &quot;Here is a general comments of the table. &quot;,
            number = c(&quot;Footnote 1; &quot;, &quot;Footnote 2; &quot;),
            alphabet = c(&quot;Footnote A; &quot;, &quot;Footnote B; &quot;),
            symbol = c(&quot;Footnote Symbol 1; &quot;, &quot;Footnote Symbol 2&quot;)
            )</code></pre>
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -6782,7 +6782,7 @@ Hornet Sportabout
 </tfoot>
 </table>
 <p>You can also specify title for each category by using the <code>***_title</code> arguments. Default value for <code>general_title</code> is “Note:” and &quot;&quot; for the rest three. You can also change the order using <code>footnote_order</code>. You can even display footnote as chunk texts (default is as a list) using <code>footnote_as_chunk</code>. The font format of the titles are controlled by <code>title_format</code> with options including “italic” (default), “bold” and “underline”.</p>
-<pre class="r"><code>kable(dt, align = &quot;c&quot;) %&gt;%
+<pre class="r"><code>kbl(dt, align = &quot;c&quot;) %&gt;%
   kable_styling(full_width = F) %&gt;%
   footnote(general = &quot;Here is a general comments of the table. &quot;,
            number = c(&quot;Footnote 1; &quot;, &quot;Footnote 2; &quot;),
@@ -6960,12 +6960,10 @@ Hornet Sportabout
 <p>If you need to add footnote marks in table, you need to do it manually (no fancy) using <code>footnote_mark_***()</code>. Remember that similar with <code>cell_spec</code>, you need to tell this function whether you want it to do it in <code>HTML</code> (default) or <code>LaTeX</code>. You can set it for all using the <code>knitr.table.format</code> global option. ALso, if you have ever use <code>footnote_mark_***()</code>, you need to put <code>escape = F</code> in your <code>kable</code> function to avoid escaping of special characters.</p>
 <pre class="r"><code>dt_footnote &lt;- dt
 names(dt_footnote)[2] &lt;- paste0(names(dt_footnote)[2], 
-                                footnote_marker_symbol(1))</code></pre>
-<pre><code>## Setting footnote_marker_symbol format as html</code></pre>
-<pre class="r"><code>row.names(dt_footnote)[4] &lt;- paste0(row.names(dt_footnote)[4], 
-                                footnote_marker_alphabet(1))</code></pre>
-<pre><code>## Setting footnote_marker_alphabet format as html</code></pre>
-<pre class="r"><code>kable(dt_footnote, align = &quot;c&quot;, 
+                                footnote_marker_symbol(1))
+row.names(dt_footnote)[4] &lt;- paste0(row.names(dt_footnote)[4], 
+                                footnote_marker_alphabet(1))
+kbl(dt_footnote, align = &quot;c&quot;, 
       # Remember this escape = F
       escape = F) %&gt;%
   kable_styling(full_width = F) %&gt;%
@@ -7135,7 +7133,7 @@ Hornet Sportabout
 <h2>Scroll box</h2>
 <p>If you have a huge table and you don’t want to reduce the font size to unreadable, you may want to put your HTML table in a scroll box, of which users can pick the part they like to read. Note that scroll box isn’t printer friendly, so be aware of that when you use this feature.</p>
 <p>When you use <code>scroll_box</code>, you can specify either <code>height</code> or <code>width</code>. When you specify <code>height</code>, you will get a vertically scrollable box and vice versa. If you specify both, you will get a two-way scrollable box.</p>
-<pre class="r"><code>kable(cbind(mtcars, mtcars)) %&gt;%
+<pre class="r"><code>kbl(cbind(mtcars, mtcars)) %&gt;%
   kable_styling() %&gt;%
   scroll_box(width = &quot;500px&quot;, height = &quot;200px&quot;)</code></pre>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:500px; ">
@@ -9490,7 +9488,7 @@ Volvo 142E
 </div>
 <p><br></p>
 <p>You can also specify width using a percentage.</p>
-<pre class="r"><code>kable(cbind(mtcars, mtcars)) %&gt;%
+<pre class="r"><code>kbl(cbind(mtcars, mtcars)) %&gt;%
   add_header_above(c(&quot;a&quot; = 5, &quot;b&quot; = 18)) %&gt;%
   kable_styling() %&gt;%
   scroll_box(width = &quot;100%&quot;, height = &quot;200px&quot;)</code></pre>
@@ -9498,12 +9496,12 @@ Volvo 142E
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; position: sticky; top:0; background-color: #FFFFFF;" colspan="5">
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; position: sticky; top:0; background-color: #FFFFFF;" colspan="5">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
 a
 </div>
 </th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; position: sticky; top:0; background-color: #FFFFFF;" colspan="18">
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; position: sticky; top:0; background-color: #FFFFFF;" colspan="18">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
 b
 </div>
@@ -11861,7 +11859,7 @@ Volvo 142E
 <div id="save-html-table-directly" class="section level2">
 <h2>Save HTML table directly</h2>
 <p>If you need to save those HTML tables but you don’t want to generate them through rmarkdown, you can try to use the <code>save_kable()</code> function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many.</p>
-<pre class="r"><code>kable(mtcars) %&gt;%
+<pre class="r"><code>kbl(mtcars) %&gt;%
   kable_styling() %&gt;%
   save_kable(file = &quot;table1.html&quot;, self_contained = T)</code></pre>
 </div>

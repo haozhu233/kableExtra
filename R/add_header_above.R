@@ -148,7 +148,8 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
 
   new_header_row <- htmlTable_new_header_generator(
     header, bold, italic, monospace, underline, strikeout, align,
-    color, background, font_size, angle, line, line_sep, extra_css, include_empty
+    color, background, font_size, angle, line, line_sep, extra_css,
+    include_empty, attr(kable_input, 'lightable_class')
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
@@ -181,7 +182,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                                            underline, strikeout, align,
                                            color, background, font_size,
                                            angle, line, line_sep, extra_css,
-                                           include_empty) {
+                                           include_empty, lightable_class) {
   align <- vapply(align, switch_align, 'x', USE.NAMES = FALSE)
 
   row_style <- paste0(
@@ -229,8 +230,34 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
     }
   }
 
-  line <- ifelse(ez_rep(line, nrow(header_df)),
-                 "border-bottom: 1px solid #ddd; padding-bottom: 5px; ", "")
+  if (is.null(lightable_class)) {
+    border_hidden <- 'border-bottom:hidden;'
+    line <- ifelse(ez_rep(line, nrow(header_df)),
+                   "border-bottom: 1px solid #ddd; padding-bottom: 5px; ", "")
+  } else {
+    border_hidden <- ''
+    if (lightable_class %in% c("lightable-classic", "lightable-classic-2")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #111111; margin-bottom: -1px; ", "")
+    }
+    if (lightable_class %in% c("lightable-minimal")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 2px solid #00000050; ", "")
+    }
+    if (lightable_class %in% c("lightable-paper")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #00000020; padding-bottom: 5px; ", "")
+    }
+    if (lightable_class %in% c("lightable-material")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #eee; padding-bottom: 16px; padding-top: 16px; height: 56px;", "")
+    }
+    if (lightable_class %in% c("lightable-material-dark")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #FFFFFF12; padding-bottom: 16px; padding-top: 16px; height: 56px;", "")
+    }
+  }
+
   line_sep <- ez_rep(line_sep, nrow(header_df))
   line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
 
@@ -238,10 +265,10 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
 
   header_items <- ifelse(
     trimws(header_df$header) == "",
-    paste0('<th style="border-bottom:hidden" colspan="', header_df$colspan,
+    paste0('<th style="empty-cells: hide;', border_hidden, '" colspan="', header_df$colspan,
            '"></th>'),
     paste0(
-      '<th style="border-bottom:hidden; padding-bottom:0; ',
+      '<th style="', border_hidden, 'padding-bottom:0; ',
       line_sep, row_style, '" colspan="',
       header_df$colspan, '"><div style="', line, '">', header_df$header,
       '</div></th>')
