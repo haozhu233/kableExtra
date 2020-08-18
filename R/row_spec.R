@@ -249,7 +249,14 @@ latex_new_row_builder <- function(target_row, table_info,
   }
   if (!is.null(color)) {
     new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex(x)
       paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
+    })
+  }
+  if (!is.null(background)) {
+    new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex(x, background = TRUE)
+      paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}")
     })
   }
   if (!is.null(font_size)) {
@@ -284,9 +291,9 @@ latex_new_row_builder <- function(target_row, table_info,
 
   new_row <- paste(unlist(new_row), collapse = " & ")
 
-  if (!is.null(background)) {
-    new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
-  }
+  # if (!is.null(background)) {
+  #   new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
+  # }
 
   if (!hline_after & is.null(extra_latex_after)) {
     return(new_row)
@@ -303,3 +310,5 @@ latex_new_row_builder <- function(target_row, table_info,
     return(c(new_row, latex_after))
   }
 }
+
+

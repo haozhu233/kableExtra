@@ -516,8 +516,9 @@ latex_cell_builder <- function(target_row, column, table_info,
     new_row[column] <- paste0("\\\\sout\\{", new_row[column], "\\}")
   }
   if (!is.null(color)) {
+    clean_columns <- unlist(lapply(new_row[column], clear_color_latex))
     new_row[column] <- paste0("\\\\textcolor", latex_color(color), "\\{",
-                              new_row[column], "\\}")
+                              clean_columns, "\\}")
   }
   # if (!is.null(font_size)) {
   #   new_row[column] <- paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
@@ -529,8 +530,9 @@ latex_cell_builder <- function(target_row, column, table_info,
   #                             new_row[column], "\\}")
   # }
   if (!is.null(background)) {
+    clean_columns <- unlist(lapply(new_row[column], clear_color_latex, TRUE))
     new_row[column] <- paste0("\\\\cellcolor", latex_color(background), "\\{",
-                              new_row[column], "\\}")
+                              clean_columns, "\\}")
   }
 
   if (!is.null(link)) {

@@ -152,3 +152,17 @@ input_escape <- function(x, latex_align) {
   x <- linebreak(x, align = latex_align, double_escape = TRUE)
 }
 
+clear_color_latex <- function(x, background = F) {
+  term <- if (background) "cellcolor" else "textcolor"
+  regex_1 <- sprintf(
+    "\\\\\\\\%s\\\\\\[HTML\\\\\\]\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
+  )
+  regex_2 <- sprintf(
+    "\\\\\\\\%s\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
+  )
+  origin_len <- nchar(x)
+  x <- stringr::str_remove(x, regex_1)
+  x <- stringr::str_remove(x, regex_2)
+  return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
+}
+
