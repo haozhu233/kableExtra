@@ -85,3 +85,6 @@ NULL
 
 #' @export
 magrittr::`%>%`
+
+#' @export
+knitr::kable

@@ -46,20 +46,20 @@
 #'
 #' @inheritParams knitr::kable
 #' @export
-kable <- function(x, format, digits = getOption("digits"),
-                  row.names = NA, col.names = NA, align,
-                  caption = NULL, label = NULL, format.args = list(),
-                  escape = TRUE,
-                  table.attr = '',
-                  booktabs = FALSE, longtable = FALSE,
-                  valign = 't', position = '', centering = TRUE,
-                  vline = getOption('knitr.table.vline', if (booktabs) '' else '|'),
-                  toprule = getOption('knitr.table.toprule', if (booktabs) '\\toprule' else '\\hline'),
-                  bottomrule = getOption('knitr.table.bottomrule', if (booktabs) '\\bottomrule' else '\\hline'),
-                  midrule = getOption('knitr.table.midrule', if (booktabs) '\\midrule' else '\\hline'),
-                  linesep = if (booktabs) c('', '', '', '', '\\addlinespace') else '\\hline',
-                  caption.short = '',
-                  table.envir = if (!is.null(caption)) 'table', ...) {
+kbl <- function(x, format, digits = getOption("digits"),
+                row.names = NA, col.names = NA, align,
+                caption = NULL, label = NULL, format.args = list(),
+                escape = TRUE,
+                table.attr = '',
+                booktabs = FALSE, longtable = FALSE,
+                valign = 't', position = '', centering = TRUE,
+                vline = getOption('knitr.table.vline', if (booktabs) '' else '|'),
+                toprule = getOption('knitr.table.toprule', if (booktabs) '\\toprule' else '\\hline'),
+                bottomrule = getOption('knitr.table.bottomrule', if (booktabs) '\\bottomrule' else '\\hline'),
+                midrule = getOption('knitr.table.midrule', if (booktabs) '\\midrule' else '\\hline'),
+                linesep = if (booktabs) c('', '', '', '', '\\addlinespace') else '\\hline',
+                caption.short = '',
+                table.envir = if (!is.null(caption)) 'table', ...) {
   if (!missing(align) && length(align) == 1L && !grepl('[^lcr]', align)) {
     align <- strsplit(align, '')[[1]]
   }
@@ -131,6 +131,4 @@ kable <- function(x, format, digits = getOption("digits"),
       escape = escape, ...
     ))
   }
-
-
 }

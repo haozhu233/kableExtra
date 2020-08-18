@@ -47,9 +47,11 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
+> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper funciton to the original 
+
 When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* 
 
-**Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), `r text_spec("it will automatically set up the global option 'knitr.table.format' based on your current environment", bold = T, color = "white", background = "#d9230f")`. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. 
+**Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. 
 
 You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
 
