@@ -59,13 +59,12 @@ cell_spec <- function(x, format,
                       latex_background_in_cell = TRUE) {
 
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
-  if (is.null(format)) {
-    message("Setting cell_spec format as html")
-    format <- "html"
-  }
-
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
                           color, background, align, font_size, angle,
@@ -174,11 +173,11 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
   x <- sprintf(ifelse(underline, "\\underline{%s}", "%s"), x)
   x <- sprintf(ifelse(strikeout, "\\sout{%s}", "%s"), x)
   if (!is.null(color)) {
-    color <- latex_color(color)
+    color <- latex_color(color, escape = FALSE)
     x <- paste0("\\textcolor", color, "{", x, "}")
   }
   if (!is.null(background)) {
-    background <- latex_color(background)
+    background <- latex_color(background, escape = FALSE)
     background_env <- ifelse(latex_background_in_cell, "cellcolor", "colorbox")
     x <- paste0("\\", background_env, background, "{", x, "}")
   }

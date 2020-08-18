@@ -13,35 +13,60 @@
 #' @param ... Everything else you need to specify in `kable_styling`.
 #'
 #' @export
-kable_classic <- function(kable_input, lightable_options = "basic", ...) {
-  kable_light(kable_input, "lightable-classic", lightable_options, ...)
+kable_classic <- function(
+  kable_input, lightable_options = "basic",
+  html_font = '"Arial Narrow", "Source Sans Pro", sans-serif', ...) {
+  kable_light(kable_input, "lightable-classic",
+              lightable_options, html_font, ...)
 }
 
 #' @rdname kable_classic
 #' @export
-kable_classic_2 <- function(kable_input, lightable_options = "basic", ...) {
-  kable_light(kable_input, "lightable-classic-2", lightable_options, ...)
+kable_classic_2 <- function(
+  kable_input, lightable_options = "basic",
+  html_font = '"Arial Narrow", "Source Sans Pro", sans-serif', ...) {
+  kable_light(kable_input, "lightable-classic-2",
+              lightable_options, html_font, ...)
 }
 
 #' @rdname kable_classic
 #' @export
-kable_minimal <- function(kable_input, lightable_options = "basic", ...) {
-  kable_light(kable_input, "lightable-minimal", lightable_options, ...)
+kable_minimal <- function(
+  kable_input, lightable_options = "basic",
+  html_font = 'calibri, cambria, "Source Sans Pro", sans-serif', ...) {
+  kable_light(kable_input, "lightable-minimal",
+              lightable_options, html_font, ...)
 }
 
 #' @rdname kable_classic
 #' @export
-kable_material <- function(kable_input, lightable_options = "basic", ...) {
-  kable_light(kable_input, "lightable-material", lightable_options, ...)
+kable_material <- function(
+  kable_input, lightable_options = "basic",
+  html_font = '"Source Sans Pro", helvetica, sans-serif', ...) {
+  kable_light(kable_input, "lightable-material",
+              lightable_options, html_font, ...)
 }
 
 #' @rdname kable_classic
 #' @export
-kable_material_dark <- function(kable_input, lightable_options = "basic", ...) {
-  kable_light(kable_input, "lightable-material-dark", lightable_options, ...)
+kable_material_dark <- function(
+  kable_input, lightable_options = "basic",
+  html_font = '"Source Sans Pro", helvetica, sans-serif', ...) {
+  kable_light(kable_input, "lightable-material-dark",
+              lightable_options, html_font, ...)
 }
 
-kable_light <- function(kable_input, light_class, lightable_options, ...) {
+#' @rdname kable_classic
+#' @export
+kable_paper <- function(
+  kable_input, lightable_options = "basic",
+  html_font = '"Arial Narrow", arial, helvetica, sans-serif', ...) {
+  kable_light(kable_input, "lightable-paper", lightable_options,
+              html_font, ...)
+}
+
+kable_light <- function(kable_input, light_class, lightable_options,
+                        html_font = NULL, ...) {
   lightable_options <- match.arg(lightable_options,
                                  choices = c("basic", "striped", "hover"),
                                  several.ok = TRUE)
@@ -51,7 +76,8 @@ kable_light <- function(kable_input, light_class, lightable_options, ...) {
   if ("hover" %in% lightable_options) {
     light_class <- paste(light_class, "lightable-hover")
   }
-  out <- kable_styling(kable_input, "none", htmltable_class = light_class, ...)
+  out <- kable_styling(kable_input, "none", htmltable_class = light_class,
+                       html_font = html_font, ...)
   attr(out, "lightable") <- TRUE
   attr(out, "lightable_class") <- light_class
   return(out)

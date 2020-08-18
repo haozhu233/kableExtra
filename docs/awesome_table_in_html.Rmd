@@ -14,6 +14,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+});
+</script>
+
 <img src="kableExtra_sm.png" align="right" alt="logo" width="80" height = "93" style = "border: none; float: right;">
 
 > Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
@@ -68,7 +74,13 @@ dt %>%
 ```
 
 ## Alternative themes
-`kableExtra` also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 5 of them: `kable_classic`, `kable_classic_2`, `kable_minimal`, `kable_material` and `kable_material_dark`. These functions are alternatives to `kable_styling`, which means that you can specify any additional formatting options in `kable_styling` in these functions too. The only difference is that `bootstrap_options` (as discussed in the next section) is replaced with `lightable_options` at the same location with only two choices `striped` and `hover` available.
+`kableExtra` also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 6 of them: `kable_paper`, `kable_classic`, `kable_classic_2`, `kable_minimal`, `kable_material` and `kable_material_dark`. These functions are alternatives to `kable_styling`, which means that you can specify any additional formatting options in `kable_styling` in these functions too. The only difference is that `bootstrap_options` (as discussed in the next section) is replaced with `lightable_options` at the same location with only two choices `striped` and `hover` available.
+
+```{r}
+dt %>%
+  kable() %>%
+  kable_paper("hover")
+```
 
 ```{r}
 dt %>%
@@ -130,7 +142,7 @@ kable(dt) %>%
 By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
 ```{r}
 kable(dt) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F)
+  kable_paper(bootstrap_options = "striped", full_width = F)
 ```
 
 ## Position
@@ -184,9 +196,23 @@ kable(text_tbl) %>%
   column_spec(2, width = "30em", background = "yellow")
 ```
 
+> **Key Update**: I understand the need of doing conditional formatting and the previous solution `cell_spec` is relatively hard to use. Therefore in kableExtra 1.2, I improved the functionality of `column_spec` so it can take vectorized input for most of its arguments (except `width`, `border_left` and `border_right`). It is really easy right now to format a column based on other values. 
+
+```{r}
+mtcars[1:8, 1:8] %>%
+  kable() %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, color = spec_color(mtcars$mpg[1:8]),
+              link = "https://haozhu233.github.io/kableExtra") %>%
+  column_spec(6, color = "white",
+              background = spec_color(mtcars$drat[1:8], end = 0.7),
+              popover = paste("am:", mtcars$am[1:8]))
+```
+
+You can still use the `spec_***` helper functions to help you define color. See the documentation [below](#visualize-data-with-viridis-color). 
 
 ## Row spec
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 
 ```{r}
 kable(dt) %>%
@@ -206,6 +232,9 @@ kable(dt) %>%
 ```
 
 # Cell/Text Specification
+
+>**Key Update: As said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**. 
+
 Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
@@ -230,7 +259,7 @@ mtcars[1:10, 1:2] %>%
 ```
 
 ## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impactful representation in a tabular format. 
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
 
 ```{r}
 iris[1:10, ] %>%
@@ -295,12 +324,6 @@ $(document).ready(function(){
 });
 </script>
 ```
-
-<script>
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
-});
-</script>
 
 ```{r}
 popover_dt <- data.frame(

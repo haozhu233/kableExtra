@@ -6,17 +6,50 @@
 \alias{kable_minimal}
 \alias{kable_material}
 \alias{kable_material_dark}
+\alias{kable_paper}
 \title{Alternative HTML themes}
 \usage{
-kable_classic(kable_input, lightable_options = "basic", ...)
+kable_classic(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "\\"Arial Narrow\\", \\"Source Sans Pro\\", sans-serif",
+  ...
+)
 
-kable_classic_2(kable_input, lightable_options = "basic", ...)
+kable_classic_2(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "\\"Arial Narrow\\", \\"Source Sans Pro\\", sans-serif",
+  ...
+)
 
-kable_minimal(kable_input, lightable_options = "basic", ...)
+kable_minimal(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "calibri, cambria, \\"Source Sans Pro\\", sans-serif",
+  ...
+)
 
-kable_material(kable_input, lightable_options = "basic", ...)
+kable_material(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "\\"Source Sans Pro\\", helvetica, sans-serif",
+  ...
+)
 
-kable_material_dark(kable_input, lightable_options = "basic", ...)
+kable_material_dark(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "\\"Source Sans Pro\\", helvetica, sans-serif",
+  ...
+)
+
+kable_paper(
+  kable_input,
+  lightable_options = "basic",
+  html_font = "\\"Arial Narrow\\", arial, helvetica, sans-serif",
+  ...
+)
 }
 \arguments{
 \item{kable_input}{A HTML kable object.}

@@ -7,19 +7,19 @@
 #' @param column A numeric value or vector indicating which column(s) to be selected.
 #' @param width A character string telling HTML & LaTeX how wide the column
 #' needs to be, e.g. "10cm", "3in" or "30em".
-#' @param bold A T/F value to control whether the text of the selected column
-#' need to be bolded.
-#' @param italic A T/F value to control whether the text of the selected column
-#' need to be emphasized.
-#' @param monospace A T/F value to control whether the text of the selected column
-#' need to be monospaced (verbatim)
-#' @param underline A T/F value to control whether the text of the selected row
-#' need to be underlined
-#' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be stricked out.
-#' @param color A character string for column text color. Here please pay
-#' attention to the differences in color codes between HTML and LaTeX.
-#' @param background A character string for column background color. Here please
+#' @param bold T/F value or vector to control whether the text of the selected
+#' column need to be bolded.
+#' @param italic T/F value or vector to control whether the text of the
+#' selected column need to be emphasized.
+#' @param monospace T/F value or vector to control whether the text of the
+#' selected column need to be monospaced (verbatim)
+#' @param underline T/F value or vector to control whether the text of the
+#' selected row need to be underlined
+#' @param strikeout T/F value or vector to control whether the text of the
+#' selected row need to be striked out.
+#' @param color A character string or vector for column text color. Here please
+#' pay attention to the differences in color codes between HTML and LaTeX.
+#' @param background A character string or vector for column background color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param border_left A logical variable indicating whether there should be a
 #' border line on the left of the selected column. In HTML, you can also pass
@@ -33,14 +33,24 @@
 #' window is not wide enough.
 #' @param width_max Only for HTML table. `width_max` defines the maximum width
 #' of table columns.
-#' @param extra_css Extra css text to be passed into the cells of the row. Note
-#' that it's not for the whole column but to each individual cells
+#' @param extra_css A vector of extra css text to be passed into the cells of
+#' the column.
 #' @param include_thead T/F. A HTML only feature to contoll whether the
 #' header row will be manipulated. Default is `FALSE`.
 #' @param latex_column_spec Only for LaTeX tables.  Code to replace the column
 #' specification.  If not `NULL`, will override all other arguments.
 #' @param latex_valign vertical alignment. Only works when you specified column
 #'  width. Choose among `p`, `m`, `b`.
+#' @param link A vector of strings for url links.
+#' @param new_tab T/F for whether to open up the new link in new tab
+#' @param tooltip A vector of strings to be displayed as tooltip.
+#' Obviously, this feature is only available in HTML. Read the package
+#' vignette to see how to use bootstrap tooltip css to improve the loading
+#' speed and look.
+#' @param popover Similar with tooltip but can hold more contents. The best way
+#' to build a popover is through `spec_popover()`. If you only provide a text
+#' string, it will be used as content. Note that You have to enable this
+#' bootstrap module manually. Read the package vignette to see how.
 #'
 #' @details Use `latex_column_spec` in a LaTeX table to change or
 #' customize the column specification.  Because of the way it is handled
@@ -58,7 +68,9 @@ column_spec <- function(kable_input, column,
                         border_left = FALSE, border_right = FALSE,
                         width_min = NULL, width_max = NULL,
                         extra_css = NULL, include_thead = FALSE,
-                        latex_column_spec = NULL, latex_valign = 'p') {
+                        latex_column_spec = NULL, latex_valign = 'p',
+                        link = NULL, new_tab = TRUE,
+                        tooltip = NULL, popover = NULL) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -76,7 +88,8 @@ column_spec <- function(kable_input, column,
                             color, background,
                             border_left, border_right,
                             width_min, width_max,
-                            extra_css, include_thead))
+                            extra_css, include_thead,
+                            link, new_tab, tooltip, popover))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
@@ -84,8 +97,8 @@ column_spec <- function(kable_input, column,
                              underline, strikeout,
                              color, background,
                              border_left, border_right,
-                             latex_column_spec = latex_column_spec,
-                             latex_valign = latex_valign))
+                             latex_column_spec, latex_valign, include_thead,
+                             link))
   }
 }
 
@@ -95,7 +108,8 @@ column_spec_html <- function(kable_input, column, width,
                              color, background,
                              border_left, border_right,
                              width_min, width_max,
-                             extra_css, include_thead) {
+                             extra_css, include_thead,
+                             link, new_tab, tooltip, popover) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -120,19 +134,6 @@ column_spec_html <- function(kable_input, column, width,
     border_right <- T
   }
 
-  for (i in all_contents_rows) {
-    for (j in column) {
-      target_cell <- xml_child(xml_child(kable_tbody, i), j)
-      column_spec_html_cell(
-        target_cell, width, width_min, width_max,
-        bold, italic, monospace, underline, strikeout,
-        color, background, border_left, border_right,
-        border_l_css, border_r_css,
-        extra_css
-      )
-    }
-  }
-
   if (include_thead) {
     kable_thead <- xml_tpart(kable_xml, "thead")
     nrow_thead <- length(xml_children(kable_thead))
@@ -140,10 +141,39 @@ column_spec_html <- function(kable_input, column, width,
       target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
       column_spec_html_cell(
         target_cell, width, width_min, width_max,
-        bold, italic, monospace, underline, strikeout,
-        color, background, border_left, border_right,
+        bold[1], italic[1], monospace[1], underline[1], strikeout[1],
+        color[1], background[1], border_left, border_right,
         border_l_css, border_r_css,
-        extra_css
+        extra_css[1], link[1], new_tab[1], tooltip[1], popover[1]
+      )
+    }
+  }
+
+  nrows <- length(all_contents_rows)
+  off <- 0
+
+  bold <- ensure_len_html(bold, nrows, "bold")
+  italic <- ensure_len_html(italic, nrows, "italic")
+  monospace <- ensure_len_html(monospace, nrows, "monospace")
+  underline <- ensure_len_html(underline, nrows, "underline")
+  strikeout <- ensure_len_html(strikeout, nrows, "strikeout")
+  color <- ensure_len_html(color, nrows, "color")
+  background <- ensure_len_html(background, nrows,"background")
+  link <- ensure_len_html(link, nrows, "link")
+  new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
+  tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
+  popover <- ensure_len_html(popover, nrows, "popover")
+
+  for (i in all_contents_rows) {
+    for (j in column) {
+      target_cell <- xml_child(xml_child(kable_tbody, i), j)
+      column_spec_html_cell(
+        target_cell, width, width_min, width_max,
+        bold[i], italic[i], monospace[i], underline[i], strikeout[i],
+        color[i], background[i], border_left, border_right,
+        border_l_css, border_r_css,
+        extra_css,
+        link[i], new_tab[i], tooltip[i], popover[i]
       )
     }
   }
@@ -154,12 +184,22 @@ column_spec_html <- function(kable_input, column, width,
   return(out)
 }
 
+ensure_len_html <- function(x, l, name) {
+  if (is.null(x)) return(NULL)
+  if (length(x) == 1) return(rep(x, l))
+  if (length(x) == l) return(x)
+  warning("The number of provided values in ", name, " does not equal to the ",
+          "number of rows. ")
+  return(rep(x, ceiling(l / length(x)))[seq(1, l)])
+}
+
 column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                   bold, italic, monospace, underline, strikeout,
                                   color, background,
                                   border_left, border_right,
                                   border_l_css, border_r_css,
-                                  extra_css) {
+                                  extra_css,
+                                  link, new_tab, tooltip, popover) {
   if (is.na(xml_attr(target_cell, "style"))) {
     xml_attr(target_cell, "style") <- ""
   }
@@ -218,6 +258,56 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
                                              extra_css)
   }
+
+  # favor popover over tooltip
+  if (!is.null(popover)) {
+    if (class(popover) != "ke_popover") popover <- spec_popover(popover)
+    popover_list <- attr(popover, 'list')
+    for (p in names(popover_list)) {
+      xml_attr(target_cell, p) <- popover_list[p]
+    }
+  } else if (!is.null(tooltip)) {
+    if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
+    tooltip_list <- attr(tooltip, 'list')
+    for (t in names(tooltip_list)) {
+      xml_attr(target_cell, t) <- tooltip_list[t]
+    }
+  }
+  # if (!is.null(popover)) {
+  #   if (class(popover) != "ke_popover") popover <- spec_popover(popover)
+  #   popover_list <- attr(popover, 'list')
+  #   span_node <- xml2::read_xml(paste0(
+  #     '<span>', xml_text(target_cell), '</span>'
+  #   ))
+  #   for (p in names(popover_list)) {
+  #     xml_attr(span_node, p) <- popover_list[p]
+  #   }
+  #   xml_add_child(target_cell, span_node)
+  #   xml_text(target_cell) <- ""
+  # } else if (!is.null(tooltip)) {
+  #   if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
+  #   tooltip_list <- attr(tooltip, 'list')
+  #   span_node <- xml2::read_xml(paste0(
+  #     '<span>', xml_text(target_cell), '</span>'
+  #   ))
+  #   for (t in names(tooltip_list)) {
+  #     xml_attr(span_node, t) <- tooltip_list[t]
+  #   }
+  #   xml_add_child(target_cell, span_node)
+  #   xml_text(target_cell) <- ""
+  # }
+
+  if (!is.null(link)) {
+    href_node <- xml2::read_xml(paste0(
+      '<a href="', link, '">', xml_text(target_cell), '</a>'
+    ))
+    if (!is.null(color)) {
+      xml_attr(href_node, "style") <- paste0("color: ", html_color(color),
+                                        " !important;")
+    }
+    xml_add_child(target_cell, href_node)
+    xml_text(target_cell) <- ""
+  }
 }
 
 column_spec_latex <- function(kable_input, column, width,
@@ -225,7 +315,8 @@ column_spec_latex <- function(kable_input, column, width,
                               underline, strikeout,
                               color, background,
                               border_left, border_right,
-                              latex_column_spec, latex_valign) {
+                              latex_column_spec, latex_valign, include_thead,
+                              link) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -239,9 +330,7 @@ column_spec_latex <- function(kable_input, column, width,
     table_info$align_vector_origin[column],
     function(x) {
       latex_column_align_builder(
-        x, width, bold, italic, monospace, underline, strikeout,
-        color, background, border_left, border_right, latex_column_spec,
-        latex_valign)
+        x, width, border_left, border_right, latex_column_spec, latex_valign)
     }
   ))
 
@@ -258,6 +347,49 @@ column_spec_latex <- function(kable_input, column, width,
     table_info <- fix_newline[[2]]
   }
 
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
+
+  nrows <- length(table_info$contents)
+  off <- table_info$position_offset
+
+  bold <- ensure_len_latex(bold, nrows, off, include_thead, FALSE, "bold")
+  italic <- ensure_len_latex(italic, nrows, off, include_thead, FALSE, "italic")
+  monospace <- ensure_len_latex(monospace, nrows, off, include_thead, FALSE,
+                             "monospace")
+  underline <- ensure_len_latex(underline, nrows, off, include_thead, FALSE,
+                             "underline")
+  strikeout <- ensure_len_latex(strikeout, nrows, off, include_thead, FALSE,
+                             "strikeout")
+  color <- ensure_len_latex(color, nrows, off, include_thead, "black", "color")
+  background <- ensure_len_latex(background, nrows, off, include_thead, "white",
+                              "background")
+  link <- ensure_len_latex(link, nrows, off, include_thead, "#", "link")
+
+  if (include_thead) {
+    rows <- seq(1, nrows)
+  } else {
+    rows <- seq(1 + off, nrows)
+  }
+
+  for (i in rows) {
+    target_row <- table_info$contents[i]
+    new_row <- latex_cell_builder(
+      target_row, column, table_info,
+      bold[i], italic[i], monospace[i], underline[i],
+      strikeout[i], color[i], background[i], link[i]
+      # font_size, angle
+      )
+    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
+                                   !is.null(table_info$repeat_header_latex)),
+                       gsub, sub)
+    out <- temp_sub(target_row, new_row, out, perl = T)
+    table_info$contents[i] <- new_row
+  }
+
   out <- structure(out, format = "latex", class = "knitr_kable")
   if (!is.null(width)) {
     if (is.null(table_info$column_width)) {
@@ -271,9 +403,24 @@ column_spec_latex <- function(kable_input, column, width,
   return(out)
 }
 
-latex_column_align_builder <- function(x, width, bold, italic, monospace,
-                                       underline, strikeout,
-                                       color, background,
+ensure_len_latex <- function(x, l, off, include_thead, def, name) {
+  if (is.null(x)) return(NULL)
+  if (length(x) == 1) return(rep(x, l))
+  if (include_thead) {
+    if (length(x) == l) return(x)
+    warning("The number of provided values in ", name, " does not equal to the ",
+            "number of rows. ")
+    return(rep(x, ceiling(l / length(x)))[seq(1, l)])
+  } else {
+    l_ = l - off
+    if (length(x) == l_) return(c(def, x))
+    warning("The number of provided values in ", name, " does not equal to the ",
+            "number of rows. ")
+    return(c(def, rep(x, ceiling(l_ / length(x)))[seq(1, l_)]))
+  }
+}
+
+latex_column_align_builder <- function(x, width,
                                        border_left, border_right,
                                        latex_column_spec, latex_valign) {
   extra_align <- ""
@@ -284,24 +431,23 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
                           "r" = "\\\\raggedleft\\\\arraybackslash")
     x <- paste0(latex_valign, "\\{", width, "\\}")
   }
-
-  if (!is.null(color)) {
-    color <- paste0("\\\\leavevmode\\\\color", latex_color(color))
-  }
-
-  if (!is.null(background)) {
-    background <- paste0("\\\\columncolor", latex_color(background))
-  }
-
-  latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily",
-                           "\\\\underline", "\\\\sout")[
-                             c(bold, italic, monospace, underline, strikeout)]
-  latex_array_options <- c(latex_array_options, extra_align,
-                           color, background)
-  latex_array_options <- paste0(
-    "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
-  )
-  x <- paste0(latex_array_options, x)
+  # if (!is.null(color)) {
+  #   color <- paste0("\\\\leavevmode\\\\color", latex_color(color))
+  # }
+  #
+  # if (!is.null(background)) {
+  #   background <- paste0("\\\\columncolor", latex_color(background))
+  # }
+  #
+  # latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily",
+  #                          "\\\\underline", "\\\\sout")[
+  #                            c(bold, italic, monospace, underline, strikeout)]
+  # latex_array_options <- c(latex_array_options, extra_align,
+  #                          color, background)
+  # latex_array_options <- paste0(
+  #   "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
+  # )
+  # x <- paste0(latex_array_options, x)
   if (border_left) {
     x <- paste0("\\|", x)
   }
@@ -309,7 +455,7 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
     x <- paste0(x, "\\|")
   }
   if (!is.null(latex_column_spec))
-  x <- latex_column_spec
+    x <- latex_column_spec
 
   return(x)
 }
@@ -317,8 +463,8 @@ latex_column_align_builder <- function(x, width, bold, italic, monospace,
 replace_makecell_with_newline <- function(kable_input, table_info, column) {
   if (!str_detect(kable_input, "makecell")) return(list(kable_input, table_info))
   contents_table <- data.frame(sapply(table_info$contents,
-                           function(x) {str_split(x, " \\& ")[[1]]}),
-                           stringsAsFactors = F)
+                                      function(x) {str_split(x, " \\& ")[[1]]}),
+                               stringsAsFactors = F)
   names(contents_table) <- paste0("x", 1:table_info$nrow)
   rows_check_makecell <- str_detect(contents_table[column, ], "makecell")
   if (sum(rows_check_makecell) == 0) return(list(kable_input, table_info))
@@ -345,4 +491,54 @@ replace_makecell_with_newline <- function(kable_input, table_info, column) {
   }
 
   return(list(kable_input, table_info))
+}
+
+latex_cell_builder <- function(target_row, column, table_info,
+                               bold, italic, monospace,
+                               underline, strikeout,
+                               color, background, link
+                               # font_size, angle
+                               ) {
+  new_row <- latex_row_cells(target_row)[[1]]
+  if (bold) {
+    new_row[column] <- paste0("\\\\textbf\\{", new_row[column], "\\}")
+  }
+  if (italic) {
+    new_row[column] <- paste0("\\\\em\\{", new_row[column], "\\}")
+  }
+  if (monospace) {
+    new_row[column] <- paste0("\\\\ttfamily\\{", new_row[column], "\\}")
+  }
+  if (underline) {
+    new_row[column] <- paste0("\\\\underline\\{", new_row[column], "\\}")
+  }
+  if (strikeout) {
+    new_row[column] <- paste0("\\\\sout\\{", new_row[column], "\\}")
+  }
+  if (!is.null(color)) {
+    new_row[column] <- paste0("\\\\textcolor", latex_color(color), "\\{",
+                              new_row[column], "\\}")
+  }
+  # if (!is.null(font_size)) {
+  #   new_row[column] <- paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
+  #            as.numeric(font_size) + 2,
+  #            "\\}\\\\selectfont ", new_row[column], "\\\\endgroup")
+  # }
+  # if (!is.null(angle)) {
+  #   new_row[column] <- paste0("\\\\rotatebox\\{", angle, "\\}\\{",
+  #                             new_row[column], "\\}")
+  # }
+  if (!is.null(background)) {
+    new_row[column] <- paste0("\\\\cellcolor", latex_color(background), "\\{",
+                              new_row[column], "\\}")
+  }
+
+  if (!is.null(link)) {
+    new_row[column] <- paste0("\\\\href\\{", escape_latex(link), "\\}\\{",
+                              new_row[column], "\\}")
+  }
+
+  new_row <- paste(new_row, collapse = " & ")
+
+  return(new_row)
 }

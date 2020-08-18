@@ -57,7 +57,7 @@ collapse_rows <- function(kable_input, columns = NULL,
             "for details.")
     return(kable_input)
   }
-  valign <- match.arg(valign, c("middle", "top", "bottom"))
+  valign <- match.arg(valign)
   if (!is.null(target)) {
     if (length(target) > 1 && is.integer(target)) {
       stop("target can only be a length 1 integer")
@@ -67,8 +67,7 @@ collapse_rows <- function(kable_input, columns = NULL,
     return(collapse_rows_html(kable_input, columns, valign, target))
   }
   if (kable_format == "latex") {
-    latex_hline <- match.arg(latex_hline, c(
-      "major", "full", "none", "custom", "linespace"))
+    latex_hline <- match.arg(latex_hline)
     row_group_label_position <- match.arg(row_group_label_position,
                                           c('identity', 'stack'))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,

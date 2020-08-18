@@ -65,6 +65,8 @@
 #' `lightable-classic-2`, `lightable-material`, `lightable-striped` and
 #' `lightable-hover`. If you have your customized style sheet loaded which
 #' defines your own table class, you can also load it here.
+#' @param html_font A string for HTML css font. For example,
+#' `html_font = '"Arial Narrow", arial, helvetica, sans-serif'`.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -100,7 +102,8 @@ kable_styling <- function(kable_input,
                           protect_latex = TRUE,
                           table.envir = "table",
                           fixed_thead = FALSE,
-                          htmltable_class = NULL) {
+                          htmltable_class = NULL,
+                          html_font = NULL) {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -136,7 +139,8 @@ kable_styling <- function(kable_input,
                              font_size = font_size,
                              protect_latex = protect_latex,
                              fixed_thead = fixed_thead,
-                             htmltable_class = htmltable_class))
+                             htmltable_class = htmltable_class,
+                             html_font = html_font))
   }
   if (kable_format == "latex") {
     if (is.null(full_width)) {
@@ -195,7 +199,8 @@ htmlTable_styling <- function(kable_input,
                               font_size = NULL,
                               protect_latex = TRUE,
                               fixed_thead = FALSE,
-                              htmltable_class = NULL) {
+                              htmltable_class = NULL,
+                              html_font = NULL) {
   if (protect_latex) {
     kable_input <- extract_latex_from_kable(kable_input)
   }
@@ -245,6 +250,11 @@ htmlTable_styling <- function(kable_input,
     if (!is.null(kable_caption_node)) {
       xml_attr(kable_caption_node, "style") <- "font-size: initial !important;"
     }
+  }
+  if (!is.null(html_font)) {
+    kable_xml_style <- c(kable_xml_style, paste0(
+      'font-family: ', html_font, ';'
+    ))
   }
   if (!full_width) {
     kable_xml_style <- c(kable_xml_style, "width: auto !important;")

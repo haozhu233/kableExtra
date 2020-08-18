@@ -21,7 +21,8 @@ kable_styling(
   protect_latex = TRUE,
   table.envir = "table",
   fixed_thead = FALSE,
-  htmltable_class = NULL
+  htmltable_class = NULL,
+  html_font = NULL
 )
 }
 \arguments{
@@ -101,6 +102,9 @@ Choices include \code{lightable-minimal}, \code{lightable-classic},
 \code{lightable-classic-2}, \code{lightable-material}, \code{lightable-striped} and
 \code{lightable-hover}. If you have your customized style sheet loaded which
 defines your own table class, you can also load it here.}
+
+\item{html_font}{A string for HTML css font. For example,
+\code{html_font = '"Arial Narrow", arial, helvetica, sans-serif'}.}
 }
 \description{
 This function provides a cleaner approach to modify the style

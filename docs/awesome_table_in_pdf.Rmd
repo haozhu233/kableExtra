@@ -54,7 +54,6 @@ options(kableExtra.latex.load_packages = F)
 ```
 
 ```{r}
-library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
@@ -220,6 +219,26 @@ kable(text_tbl, "latex", booktabs = T) %>%
   column_spec(2, width = "30em")
 ```
 
+
+> **Key Update**: I understand the need of doing conditional formatting and the previous solution `cell_spec` is relatively hard to use. Therefore in kableExtra 1.2, I improved the functionality of `column_spec` so it can take vectorized input for most of its arguments (except `width`, `border_left` and `border_right`). It is really easy right now to format a column based on other values. 
+
+```{r}
+that_cell <- c(rep(F, 7), T)
+mtcars[1:8, 1:8] %>%
+  kable(booktabs = T, linesep = "") %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, color = spec_color(mtcars$mpg[1:8]),
+              link = "https://haozhu233.github.io/kableExtra") %>%
+  column_spec(6, color = "white", 
+              background = spec_color(mtcars$drat[1:8], end = 0.7),
+              popover = paste("am:", mtcars$am[1:8])) %>%
+  column_spec(9, strikeout = that_cell, bold = that_cell,
+              color = c(rep("black", 7), "red"))
+```
+
+You can still use the `spec_***` helper functions to help you define color. See the documentation [below](#visualize-data-with-viridis-color). 
+
+
 ## Row spec
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar to other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 
@@ -242,6 +261,9 @@ kable(dt, "latex", booktabs = T, align = "c") %>%
 
 
 # Cell/Text Specification
+
+>**Key Update: As said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**. 
+
 Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimensional indexes for targeted cells, this design is way easier to learn and use, and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 

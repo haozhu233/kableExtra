@@ -1,6 +1,19 @@
 kableExtra 1.2.0
 --------------------------------------------------------------------------------
 
+# Major Change
+
+* Added a `kable` function as a wrapper of the original `kable` but provides better documentation and auto-complete. We also moved the automatic format 
+setup piece into the `kable` function call instead of changing global option 
+during package start-up. 
+
+* Added a few alternative HTML table themes. See https://haozhu233.github.io/kableExtra/awesome_table_in_html.html#Alternative_themes. (#451)
+
+* `column_spec` now takes vectorized input so it's easier to do conditional 
+formatting without using `cell_spec`
+
+# Minor Change
+
 * `add_indent` has a new option `level_of_indent` to control the width of the
 indentation. (thanks @samiaab1990 #479)
 
@@ -12,32 +25,35 @@ should be applied to the first column or all columns. Default is False. (#488)
 * `collapse_rows` has a new option `target` to choose the target column in 
 `collapse_rows` (#484)
 
-* Fixed a bug with `group_rows` when used with `repeat_header` on the last row
-(#476)
-
-* Added mathjax to preview (#473)
-
-* Fixed a bug with `repeat_header` when the header row is customized (#480)
-
-* Fixed a bug with `collapse_rows` when text is too long. (#464)
+* Added mathjax to HTML preview (#473)
 
 * Added a new function `remove_column` for html. The latex part hasn't been 
 implemented yet. (#490, thanks @DanChaltiel)
-
-* `add_header_above` now can take a data.frame as input. (#440, thanks @jokorn)
-
-* Fixed a bug when using UTF-8 on non-UTF-8 system. (#440, thanks @jokorn)
 
 * Added a global option to control whether to preview HTML tables in RStudio 
 viewer. If you want to disable the default behavior, try to set 
 `options(kableExtra_view_html = F)`. (#455)
 
-* Added a few alternative HTML table themes. See https://haozhu233.github.io/kableExtra/awesome_table_in_html.html#Alternative_themes. (#451)
-
 * Added a `new_tab` option to `cell_spec` to control whether to open up links 
 in new tab. (#454)
 
 * Improved the behavior of `scroll_box` so it will skip non-html tables. (#450)
+
+* Added a `html_font` option to `kable_styling` and its variants.
+
+
+# Bug Fix
+
+* Fixed a bug with `group_rows` when used with `repeat_header` on the last row
+(#476)
+
+* Fixed a bug with `repeat_header` when the header row is customized (#480)
+
+* Fixed a bug with `collapse_rows` when text is too long. (#464)
+
+* `add_header_above` now can take a data.frame as input. (#440, thanks @jokorn)
+
+* Fixed a bug when using UTF-8 on non-UTF-8 system. (#440, thanks @jokorn)
 
 * Fixed a bug in `collapse_rows` when there is no column names (#459)
 
@@ -46,6 +62,10 @@ thanks @kbrevoort)
 
 * Fixed inconsistent behavior for `add_header_rows` in HTML and latex (#387, 
 #422, thanks @kbrevoort)
+
+
+
+ 
 
 
 kableExtra 1.1.0

@@ -63,10 +63,10 @@ kable <- function(x, format, digits = getOption("digits"),
   if (!missing(align) && length(align) == 1L && !grepl('[^lcr]', align)) {
     align <- strsplit(align, '')[[1]]
   }
-  if (missing(format) | is.null(format)) {
+  if (missing(format) || is.null(format)) {
     if (knitr::is_latex_output()) {
       format <- "latex"
-      return(knitr::kable(
+      out <- knitr::kable(
         x = x, format = format, digits = digits,
         row.names = row.names, col.names = col.names, align = align,
         caption = caption, label = label, format.args = format.args,
@@ -76,28 +76,59 @@ kable <- function(x, format, digits = getOption("digits"),
         vline = vline, toprule = toprule, bottomrule = bottomrule,
         midrule = midrule, linesep = linesep, caption.short = caption.short,
         table.envir = table.envir, ...
-      ))
+      )
+      table_info <- magic_mirror(out)
+      if (is.null(col.names)) {
+        table_info$position_offset <- 0
+      }
+      return(out)
     } else {
       format <- "html"
-      return(knitr::kable(
+      out <- knitr::kable(
         x = x, format = format, digits = digits,
         row.names = row.names, col.names = col.names, align = align,
         caption = caption, label = label, format.args = format.args,
         escape = escape,
         table.attr = table.attr, ...
-      ))
+      )
+      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
+      return(out)
     }
   } else {
+    if (format == "latex") {
+      out <- knitr::kable(
+        x = x, format = format, digits = digits,
+        row.names = row.names, col.names = col.names, align = align,
+        caption = caption, label = label, format.args = format.args,
+        escape = escape,
+        booktabs = booktabs, longtable = longtable,
+        valign = valign, position = position, centering = centering,
+        vline = vline, toprule = toprule, bottomrule = bottomrule,
+        midrule = midrule, linesep = linesep, caption.short = caption.short,
+        table.envir = table.envir, ...
+      )
+      table_info <- magic_mirror(out)
+      if (is.null(col.names)) {
+        table_info$position_offset <- 0
+      }
+      return(out)
+    }
+    if (format == "html") {
+      out <- knitr::kable(
+        x = x, format = format, digits = digits,
+        row.names = row.names, col.names = col.names, align = align,
+        caption = caption, label = label, format.args = format.args,
+        escape = escape,
+        table.attr = table.attr, ...
+      )
+      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
+      return(out)
+    }
     return(knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
       caption = caption, label = label, format.args = format.args,
-      escape = escape, table.attr = table.attr,
-      booktabs = booktabs, longtable = longtable,
-      valign = valign, position = position, centering = centering,
-      vline = vline, toprule = toprule, bottomrule = bottomrule,
-      midrule = midrule, linesep = linesep, caption.short = caption.short,
-      table.envir = table.envir, ...
+      escape = escape, ...
     ))
   }
 
