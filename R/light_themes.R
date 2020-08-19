@@ -10,6 +10,8 @@
 #' @param lightable_options Options to customize lightable. Similar with
 #' `bootstrap_options` in `kable_styling`. Choices include `basic`, `striped`
 #' and `hover`.
+#' @param html_font A string for HTML css font. For example,
+#' `html_font = '"Arial Narrow", arial, helvetica, sans-serif'`.
 #' @param ... Everything else you need to specify in `kable_styling`.
 #'
 #' @export

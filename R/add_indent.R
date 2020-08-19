@@ -4,6 +4,7 @@
 #' @param positions A vector of numeric row numbers for the rows that need to
 #' be indented.
 #' @param level_of_indent a numeric value for the indent level. Default is 1.
+#' @param all_cols T/F whether to apply indentation to all columns
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add indentations to the 2nd & 4th row
