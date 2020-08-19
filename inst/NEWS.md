@@ -43,6 +43,11 @@ in new tab. (#454)
 
 * Added a `wraptable_width` to `kable_styling` (#414)
 
+* Added `monospace`, `underline`, `strikeout`, `color` and `background` to 
+`pack_rows()`. (#412)
+
+
+
 
 # Bug Fix
 

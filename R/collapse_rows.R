@@ -189,7 +189,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
     column_align <- table_info$align_vector_origin[columns[j]]
     column_width <- ifelse(
       is.null(table_info$column_width[[paste0("column_", columns[j])]]),
-      "*", table_info$column_width[paste0("column_", columns[j])])
+      "\\*", table_info$column_width[paste0("column_", columns[j])])
     for (i in seq(1:nrow(collapse_matrix))) {
       if(row_group_label_position == 'stack'){
         if(columns[j] < ncol(collapse_matrix) || collapse_matrix_rev[i, j] == 0){

@@ -27,6 +27,8 @@ $(document).ready(function(){
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
 
+For users who are not very familiar with the pipe operator `%>%` in R, it is the R version of the [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface). The ides is to pass the result along the chain for a more literal coding experience. Basically when we say `A %>% B`, technically it means sending the results of A to B as B's first argument.
+
 To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
 There is also a Chinese version of this vignette. You can find it [here](http://haozhu233.github.io/kableExtra/awesome_table_in_html_cn.html)

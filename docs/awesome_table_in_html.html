@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hao Zhu" />
 
-<meta name="date" content="2020-08-18" />
+<meta name="date" content="2020-08-19" />
 
 <title>Create Awesome HTML Table with knitr::kable and kableExtra</title>
 
@@ -6290,7 +6290,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Create Awesome HTML Table with knitr::kable and kableExtra</h1>
 <h4 class="author">Hao Zhu</h4>
-<h4 class="date">2020-08-18</h4>
+<h4 class="date">2020-08-19</h4>
 
 </div>
 
@@ -6307,6 +6307,7 @@ $(document).ready(function(){
 <div id="overview" class="section level1">
 <h1>Overview</h1>
 <p>The goal of <code>kableExtra</code> is to help you build common complex tables and manipulate table styles. It imports the pipe <code>%&gt;%</code> symbol from <code>magrittr</code> and verbalize all the functions, so basically you can add “layers” to a kable output in a way that is similar with <code>ggplot2</code> and <code>plotly</code>.</p>
+<p>For users who are not very familiar with the pipe operator <code>%&gt;%</code> in R, it is the R version of the <a href="https://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a>. The ides is to pass the result along the chain for a more literal coding experience. Basically when we say <code>A %&gt;% B</code>, technically it means sending the results of A to B as B’s first argument.</p>
 <p>To learn how to generate complex tables in LaTeX, please visit <a href="http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf">http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf</a></p>
 <p>There is also a Chinese version of this vignette. You can find it <a href="http://haozhu233.github.io/kableExtra/awesome_table_in_html_cn.html">here</a></p>
 </div>
@@ -11023,7 +11024,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11031,7 +11032,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -11055,7 +11056,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11063,7 +11064,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11082,7 +11083,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11098,7 +11099,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -11112,7 +11113,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11120,7 +11121,7 @@ c
 12
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11131,7 +11132,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -11139,7 +11140,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -16440,8 +16441,8 @@ Volvo 142E
 <p>Well, this is not a feature but rather a documentation of how to use the <code>sparkline</code> package together with this package. The easiest way is sort of a hack. You can call <code>sparkline::sparkline(0)</code> somewhere on your document where no one would mind so its dependencies could be loaded without any hurdles. Then you use <code>sparkline::spk_chr()</code> to generate the text. Here is another example: <a href="https://cranky-chandrasekhar-cfefcd.netlify.app/">Chinese names in US babynames</a></p>
 <pre class="r"><code>library(sparkline)
 sparkline(0)</code></pre>
-<span id="htmlwidget-749226e66b9fa596d145" class="sparkline html-widget"></span>
-<script type="application/json" data-for="htmlwidget-749226e66b9fa596d145">{"x":{"values":0,"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
+<span id="htmlwidget-fe2aeadaaa92a48c86ee" class="sparkline html-widget"></span>
+<script type="application/json" data-for="htmlwidget-fe2aeadaaa92a48c86ee">{"x":{"values":0,"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>spk_dt &lt;- data.frame(
   var = c(&quot;mpg&quot;, &quot;wt&quot;),
   sparkline = c(spk_chr(mtcars$mpg), spk_chr(mtcars$wt))
@@ -16466,8 +16467,8 @@ sparkline
 mpg
 </td>
 <td style="text-align:left;">
-<span id="htmlwidget-01f5d4d060b2fac4517e" class="sparkline html-widget"></span>
-<script type="application/json" data-for="htmlwidget-01f5d4d060b2fac4517e">{"x":{"values":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
+<span id="htmlwidget-fdddfe62cb83547210eb" class="sparkline html-widget"></span>
+<script type="application/json" data-for="htmlwidget-fdddfe62cb83547210eb">{"x":{"values":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
@@ -16475,8 +16476,8 @@ mpg
 wt
 </td>
 <td style="text-align:left;">
-<span id="htmlwidget-78061f9e6c3128c1d82d" class="sparkline html-widget"></span>
-<script type="application/json" data-for="htmlwidget-78061f9e6c3128c1d82d">{"x":{"values":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
+<span id="htmlwidget-da7e098e9f570e71333f" class="sparkline html-widget"></span>
+<script type="application/json" data-for="htmlwidget-da7e098e9f570e71333f">{"x":{"values":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"options":{"height":20,"width":60},"width":60,"height":20},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </tbody>

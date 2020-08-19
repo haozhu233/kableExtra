@@ -24,7 +24,7 @@
 \contentsline {section}{Grouped Columns / Rows}{13}{section*.25}%
 \contentsline {subsection}{Add header rows to group columns}{13}{section*.26}%
 \contentsline {subsection}{Group rows via labeling}{14}{section*.27}%
-\contentsline {subsection}{Row indentation}{15}{section*.28}%
+\contentsline {subsection}{Row indentation}{16}{section*.28}%
 \contentsline {subsection}{Group rows via multi-row cell}{16}{section*.29}%
 \contentsline {section}{Table Footnote}{19}{section*.30}%
 \contentsline {section}{LaTeX Only Features}{22}{section*.31}%
