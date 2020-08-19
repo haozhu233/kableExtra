@@ -12,7 +12,8 @@ save_kable(
   extra_dependencies = NULL,
   ...,
   latex_header_includes = NULL,
-  keep_tex = FALSE
+  keep_tex = FALSE,
+  density = 300
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ table, such as \verb{\\\\\\\\usepackage[magyar]\{babel\}}.}
 
 \item{keep_tex}{A T/F option to control if the latex file that is initially created
 should be kept. Default is \code{FALSE}.}
+
+\item{density}{density argument passed to magick if needed. Default is 300.}
 }
 \description{
 Save kable to files

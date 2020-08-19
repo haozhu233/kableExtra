@@ -18,6 +18,7 @@
 #' table, such as `\\\\usepackage[magyar]{babel}`.
 #' @param keep_tex A T/F option to control if the latex file that is initially created
 #' should be kept. Default is `FALSE`.
+#' @param density density argument passed to magick if needed. Default is 300.
 #' @examples
 #' \dontrun{
 #' library(kableExtra)
@@ -31,19 +32,21 @@
 save_kable <- function(x, file,
                        bs_theme = "simplex", self_contained = TRUE,
                        extra_dependencies = NULL, ...,
-                       latex_header_includes = NULL, keep_tex = FALSE) {
+                       latex_header_includes = NULL, keep_tex = FALSE,
+                       density = 300) {
   if (!is.null(attr(x, "format")) && attr(x, "format") == "latex") {
-    return(save_kable_latex(x, file, latex_header_includes, keep_tex))
+    return(save_kable_latex(x, file, latex_header_includes, keep_tex, density))
   }
   return(save_kable_html(x, file, bs_theme, self_contained,
-                         extra_dependencies, ...))
+                         extra_dependencies, density, ...))
 }
 
 save_kable_html <- function(x, file, bs_theme, self_contained,
-                            extra_dependencies, ...) {
+                            extra_dependencies, density, ...) {
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = bs_theme),
+    html_dependency_lightable(),
     html_dependency_kePrint()
   )
   if (!is.null(extra_dependencies)) {
@@ -83,10 +86,10 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
       unlink(file.path(dirname(file_temp_html), temp_dir), recursive = TRUE)
 
       if (requireNamespace("magick", quietly = TRUE)) {
-        img_rework <- magick::image_read(file)
+        img_rework <- magick::image_read(file, density = density)
         img_rework <- magick::image_trim(img_rework)
         img_info <- magick::image_info(img_rework)
-        magick::image_write(img_rework, file)
+        magick::image_write(img_rework, file, density = density)
         attr(file, "info") <- img_info
       } else {
         message("save_kable will have the best result with magick installed. ")
@@ -118,7 +121,7 @@ remove_html_doc <- function(x){
   writeLines(out, x)
 }
 
-save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
+save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) {
   temp_tex <- c(
     "\\documentclass[border=1mm, preview]{standalone}",
     "\\usepackage[active,tightpage]{preview}",
@@ -155,7 +158,7 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
   if (tools::file_ext(file) != "pdf") {
     table_img_pdf <- try(
       magick::image_read(paste0(file_no_ext, ".pdf"),
-                         density = 300), silent = T)
+                         density = density), silent = T)
     if (class(table_img_pdf) == "try-error") {
       stop("We hit an error when trying to use magick to read the generated ",
            "PDF file. You may check your magick installation and try to ",
@@ -167,7 +170,8 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
                                        tools::file_ext(file))
     table_img_info <- magick::image_info(table_img)
     magick::image_write(table_img,
-                        paste0(file_no_ext, ".", tools::file_ext(file)))
+                        paste0(file_no_ext, ".", tools::file_ext(file)),
+                        density = density)
   }
 
   setwd(owd)
