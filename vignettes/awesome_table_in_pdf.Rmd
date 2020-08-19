@@ -11,7 +11,6 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -21,6 +20,7 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,7 +37,7 @@ vignette: >
 \end{wrapfigure}
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalizes all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`.
 
-To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
+To learn how to generate complex tables in HTML, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_html.html](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
 # Installation
 ```r
@@ -50,6 +50,10 @@ devtools::install_github("haozhu233/kableExtra")
 
 # Getting Started
 Here we are using the first few columns and rows from dataset `mtcars`
+```{r, echo = F}
+options(kableExtra.latex.load_packages = F)
+```
+
 ```{r}
 library(knitr)
 library(kableExtra)
@@ -74,7 +78,7 @@ You can disable this behavior by setting `options(kableExtra.auto_format = FALSE
 If you are using a recent version of rmarkdown, you are recommended to load this package entirely via `library(kableExtra)` or `require(kableExtra)` because this package will load all necessary LaTeX packages, such as `booktabs` or `multirow`, for you automatically. Note that, if you are calling functions from `kableExtra` via `kableExtra::kable_styling()` or if you put `library(kableExtra)` in a separate R file that is **sourced** by the rmarkdown document, these packages won't be loaded. Furthermore, you can suppress this auto-loading behavior by setting a global option `kableExtra.latex.load_packages` to be `FALSE` before you load `kableExtra`.
 
 ```{r, eval = FALSE}
-# Not evaluated. Ilustration purpose
+# Not evaluated. Illustration purpose
 options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
@@ -87,7 +91,6 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
-  - \usepackage[table]{xcolor}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \usepackage{colortbl}
@@ -97,14 +100,17 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 ```
+
+Note: `kableExtra` was using `xcolor` for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. If you experience any issues, please report on github. 
 
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.
 ```{r}
 # Again, with kableExtra >= 0.9.0, `format = "latex"` is automatically defined
 # when this package gets loaded. Otherwise, you still need to define formats
-kable(dt)
+kable(dt, "latex")
 # Same: kable(dt, "latex")
 ```
 
@@ -126,6 +132,13 @@ Even though in the LaTeX world, people usually call it `alternative row colors` 
 ```{r}
 kable(dt, "latex", booktabs = T) %>%
   kable_styling(latex_options = "striped")
+```
+
+You can also specify which rows you want to striped on via `stripe_index`. In most case, you might want to turn off the default 5 rows + a space setting in `knitr::kable()` by setting `linesep = ""`. See this SO answer for details. https://stackoverflow.com/questions/45409750/get-rid-of-addlinespace-in-kable.
+
+```{r}
+kable(mtcars[1:8, 1:4], "latex", booktabs = T, linesep = "") %>%
+  kable_styling(latex_options = "striped", stripe_index = c(1,2, 5:6))
 ```
 
 ### Hold position
@@ -311,25 +324,25 @@ kable(dt, "latex", booktabs = T) %>%
 ```
 
 ## Group rows via labeling
-Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the new function `group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
+Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the function `pack_rows`/`group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
 kable(mtcars[1:10, 1:6], "latex", caption = "Group Rows", booktabs = T) %>%
   kable_styling() %>%
-  group_rows("Group 1", 4, 7) %>%
-  group_rows("Group 2", 8, 10)
+  pack_rows("Group 1", 4, 7) %>%
+  pack_rows("Group 2", 8, 10)
 ```
 
 In case some users need it, you can define your own gapping spaces between the group labeling row and previous rows. The default value is `0.5em`.
 ```{r}
 kable(dt, "latex", booktabs = T) %>%
-  group_rows("Group 1", 4, 5, latex_gap_space = "2em")
+  pack_rows("Group 1", 4, 5, latex_gap_space = "2em")
 ```
 
 If you prefer to build multiple groups in one step, you can use the short-hand `index` option. Basically, you can use it in the same way as you use `add_header_above`. However, since `group_row` only support one layer of grouping, you can't add multiple layers of grouping header as you can do in `add_header_above`. 
 ```{r, eval=FALSE}
 kable(mtcars[1:10, 1:6], "latex", caption = "Group Rows", booktabs = T) %>%
   kable_styling() %>%
-  group_rows(index=c(" " = 3, "Group 1" = 4, "Group 2" = 3))
+  pack_rows(index=c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 # Not evaluated. The code above should have the same result as the first example in this section.
 ```
 
@@ -349,7 +362,7 @@ kable(mtcars[1:2, 1:2], "latex", align = c("cl"))
 LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual. As a result, it won't throw an error if you are just using `kable` to make some simple tables. However, when you use `kableExtra` to make some advanced modification, it will start to throw some bugs. As a result, please try to form a habit of using a vector in the `align` argument for `kable` (tip: you can use `rep` function to replicate elements. For example, `c("c", rep("l", 10))`). 
 
 ## Row indentation
-Unlike `group_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate.  
+Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate.  
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kable(dt, "latex", booktabs = T) %>%
@@ -357,7 +370,7 @@ kable(dt, "latex", booktabs = T) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `group_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider using `collapse_rows` instead, which will put repeating cells in columns into multi-row cells.  
+Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider using `collapse_rows` instead, which will put repeating cells in columns into multi-row cells.  
 
 In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`. Vertical alignment of cells is controlled by the `valign` option. You can choose from "top", "middle"(default) and "bottom". Be cautious that the vertical alignment option was only introduced in multirow in 2016. If you are using a legacy LaTeX distribution, you will run into trouble if you set `valign` to be either "top" or "bottom".
 
@@ -444,7 +457,7 @@ kable(dt, "latex", align = "c", booktabs = T) %>%
            )
 ```
 
-If you need to add footnote marks in a table, you need to do it manually (no fancy) using `footnote_marker_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. Also, if you have ever used `footnote_marker_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. Note that if you want to use these `footnote_marker` functions in `kableExtra` functions like `group_rows` (for the row label) or `add_header_above`, you need to set `double_escape = T` and `escape = F` in those functions. I'm trying to find other ways around. Please let me know if you have a good idea and are willing to contribute. 
+If you need to add footnote marks in a table, you need to do it manually (no fancy) using `footnote_marker_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. Also, if you have ever used `footnote_marker_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. Note that if you want to use these `footnote_marker` functions in `kableExtra` functions like `pack_rows` (for the row label) or `add_header_above`, you need to set `double_escape = T` and `escape = F` in those functions. I'm trying to find other ways around. Please let me know if you have a good idea and are willing to contribute. 
 
 ```{r}
 dt_footnote <- dt
@@ -486,7 +499,7 @@ dt_lb %>%
         col.names = linebreak(c("Item\n(Name)", "Value\n(Number)"), align = "c"))
 ```
 
-At the same time, since `kableExtra 0.8.0`, all `kableExtra` functions that have some contents input (such as `footnote` or `group_rows`) will automatically convert `\n` to linebreaks for you in both LaTeX and HTML. 
+At the same time, since `kableExtra 0.8.0`, all `kableExtra` functions that have some contents input (such as `footnote` or `pack_rows`) will automatically convert `\n` to linebreaks for you in both LaTeX and HTML. 
 
 
 ## Table on a Landscape Page
@@ -499,7 +512,7 @@ kable(dt, "latex", caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
                  "Group 1 contains mpg, cyl and disp", 
                  "Group 2 contains hp, drat and wt"), 
                notation = "symbol") %>%
-  group_rows("Group 1", 4, 5) %>%
+  pack_rows("Group 1", 4, 5) %>%
   landscape()
 ```
 
@@ -525,3 +538,13 @@ Since the structure of `kable` is relatively simple, it shouldn't be too difficu
 
 ## `tables`
 The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
+
+## `xtable`
+For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. 
+
+```{r, eval=F}
+# Not evaluating
+xtable::xtable(mtcars[1:4, 1:4], caption = "Hello xtable") %>%
+  xtable2kable() %>%
+  column_spec(1, color = "red")
+```

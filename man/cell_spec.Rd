@@ -5,19 +5,51 @@
 \alias{text_spec}
 \title{Specify Cell/Text format}
 \usage{
-cell_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
-  underline = FALSE, strikeout = FALSE, color = NULL,
-  background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  tooltip = NULL, popover = NULL, link = NULL, extra_css = NULL,
-  escape = TRUE, background_as_tile = TRUE,
-  latex_background_in_cell = TRUE)
+cell_spec(
+  x,
+  format,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  align = NULL,
+  font_size = NULL,
+  angle = NULL,
+  tooltip = NULL,
+  popover = NULL,
+  link = NULL,
+  new_tab = FALSE,
+  extra_css = NULL,
+  escape = TRUE,
+  background_as_tile = TRUE,
+  latex_background_in_cell = TRUE
+)
 
-text_spec(x, format, bold = FALSE, italic = FALSE, monospace = FALSE,
-  underline = FALSE, strikeout = FALSE, color = NULL,
-  background = NULL, align = NULL, font_size = NULL, angle = NULL,
-  tooltip = NULL, popover = NULL, link = NULL, extra_css = NULL,
-  escape = TRUE, background_as_tile = TRUE,
-  latex_background_in_cell = FALSE)
+text_spec(
+  x,
+  format,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  align = NULL,
+  font_size = NULL,
+  angle = NULL,
+  tooltip = NULL,
+  popover = NULL,
+  link = NULL,
+  new_tab = FALSE,
+  extra_css = NULL,
+  escape = TRUE,
+  background_as_tile = TRUE,
+  latex_background_in_cell = FALSE
+)
 }
 \arguments{
 \item{x}{Things to be formated. It could be a vector of numbers or strings.}
@@ -68,6 +100,8 @@ bootstrap module manually. Read the package vignette to see how.}
 
 \item{link}{A vector of strings for url links. Can be used together with
 tooltip and popover.}
+
+\item{new_tab}{T/F for whether to open up the new link in new tab.}
 
 \item{extra_css}{Extra css text to be passed into the cell}
 

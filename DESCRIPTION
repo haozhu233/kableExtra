@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 0.9.0
+Version: 1.1.0.9000
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre'),
     comment = c(ORCID = '0000-0002-3386-6076')),
@@ -15,7 +15,8 @@ Authors@R: c(
     person('Yoni', 'Sidi', role = 'ctb'), 
     person('Brian', 'Salzer', role = 'ctb'),
     person('George', 'Gui', role = 'ctb'),
-    person('Yeliang', 'Fan', role = 'ctb')
+    person('Yeliang', 'Fan', role = 'ctb'),
+    person('Duncan', 'Murdoch', role = 'ctb')
     )
 Description: Build complex HTML or 'LaTeX' tables using 'kable()' from 'knitr' 
     and the piping syntax from 'magrittr'. Function 'kable()' is a light weight 
@@ -45,13 +46,15 @@ Imports:
     rstudioapi,
     glue,
     tools,
-    webshot
+    webshot,
+    digest
 Suggests:
     testthat,
     magick,
     formattable,
-    dplyr
+    dplyr,
+    sparkline
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)

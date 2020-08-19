@@ -4,11 +4,19 @@
 \alias{collapse_rows}
 \title{Collapse repeated rows to multirow cell}
 \usage{
-collapse_rows(kable_input, columns = NULL, valign = c("middle", "top",
-  "bottom"), latex_hline = c("full", "major", "none", "custom"),
+collapse_rows(
+  kable_input,
+  columns = NULL,
+  valign = c("middle", "top", "bottom"),
+  latex_hline = c("major", "full", "none", "custom"),
   row_group_label_position = c("identity", "stack"),
-  custom_latex_hline = NULL, row_group_label_fonts = NULL,
-  headers_to_remove = NULL)
+  custom_latex_hline = NULL,
+  row_group_label_fonts = NULL,
+  headers_to_remove = NULL,
+  target = NULL,
+  col_names = TRUE,
+  longtable_clean_cut = TRUE
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -21,7 +29,8 @@ need to be collapsed.}
 not up to date.}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
-Choose from \code{full}, \code{major}, \code{none}, \code{custom}.}
+Choose from \code{major}, \code{full}, \code{none}, \code{custom} and \code{linespace}. We changed the default from
+\code{full} to \code{major} in version 1.2.}
 
 \item{row_group_label_position}{Option controlling positions of row group
 labels. Choose from \code{identity}, \code{stack}.}
@@ -35,6 +44,19 @@ group_rows function to format the row group label when
 
 \item{headers_to_remove}{Numeric column positions where headers should be
 removed when they are stacked.}
+
+\item{target}{If multiple columns are selected to do collapsing and a target
+column is specified, this target column will be used to collapse other
+columns based on the groups of this target column.}
+
+\item{col_names}{T/F. A LaTeX specific option. If you set \code{col.names} be
+\code{NULL} in your \code{kable} call, you need to set this option false to let
+everything work properly.}
+
+\item{longtable_clean_cut}{T/F with default T. Multirow cell sometimes are
+displayed incorrectly around pagebreak. This option forces groups to cut
+before the end of a page. If you have a group that is longer than 1 page,
+you need to turn off this option.}
 }
 \description{
 Collapse same values in columns into multirow cells. This

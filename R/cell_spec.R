@@ -36,6 +36,7 @@
 #' bootstrap module manually. Read the package vignette to see how.
 #' @param link A vector of strings for url links. Can be used together with
 #' tooltip and popover.
+#' @param new_tab T/F for whether to open up the new link in new tab.
 #' @param extra_css Extra css text to be passed into the cell
 #' @param escape T/F value showing whether special characters should be escaped.
 #' @param background_as_tile T/F value indicating if you want to have round
@@ -52,23 +53,22 @@ cell_spec <- function(x, format,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
-                      extra_css = NULL,
+                      new_tab = FALSE, extra_css = NULL,
                       escape = TRUE,
                       background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
 
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
-  if (is.null(format)) {
-    message("Setting cell_spec format as html")
-    format <- "html"
-  }
-
   if (tolower(format) == "html") {
     return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
                           color, background, align, font_size, angle,
-                          tooltip, popover, link, extra_css,
+                          tooltip, popover, link, new_tab, extra_css,
                           escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
@@ -80,7 +80,7 @@ cell_spec <- function(x, format,
 
 cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle,
-                           tooltip, popover, link, extra_css,
+                           tooltip, popover, link, new_tab, extra_css,
                            escape, background_as_tile) {
   if (escape) x <- escape_html(x)
   cell_style <- NULL
@@ -93,14 +93,15 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
   cell_style <- paste(cell_style,
                       ifelse(strikeout, "text-decoration: line-through;", ""))
   if (!is.null(color)) {
-    cell_style <- paste0(cell_style, "color: ", html_color(color), ";")
+    cell_style <- paste0(cell_style, "color: ", html_color(color),
+                         " !important;")
   }
   if (!is.null(background)) {
     cell_style <- paste0(
       cell_style,
       ifelse(background_as_tile, "border-radius: 4px; ", ""),
       "padding-right: 4px; padding-left: 4px; ",
-      "background-color: ", html_color(background), ";"
+      "background-color: ", html_color(background), " !important;"
     )
   }
   if (!is.null(extra_css)) {
@@ -126,7 +127,12 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
   }
 
   if (!is.null(link)) {
-    x <- paste0('<a href="', link, '" style="', cell_style, '" ',
+    if (new_tab) {
+      target_blank = 'target="_blank" '
+    } else {
+      target_blank = NULL
+    }
+    x <- paste0('<a href="', link, '" style="', cell_style, '" ', target_blank,
                 tooltip_n_popover, '>', x, '</a>')
   } else {
     x <- paste0('<span style="', cell_style, '" ',
@@ -167,11 +173,11 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
   x <- sprintf(ifelse(underline, "\\underline{%s}", "%s"), x)
   x <- sprintf(ifelse(strikeout, "\\sout{%s}", "%s"), x)
   if (!is.null(color)) {
-    color <- latex_color(color)
+    color <- latex_color(color, escape = FALSE)
     x <- paste0("\\textcolor", color, "{", x, "}")
   }
   if (!is.null(background)) {
-    background <- latex_color(background)
+    background <- latex_color(background, escape = FALSE)
     background_env <- ifelse(latex_background_in_cell, "cellcolor", "colorbox")
     x <- paste0("\\", background_env, background, "{", x, "}")
   }
@@ -192,13 +198,13 @@ text_spec <- function(x, format,
                       color = NULL, background = NULL,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
-                      extra_css = NULL,
+                      new_tab = FALSE, extra_css = NULL,
                       escape = TRUE,
                       background_as_tile = TRUE,
                       latex_background_in_cell = FALSE) {
   cell_spec(x, format, bold, italic, monospace, underline, strikeout,
             color, background, align,
-            font_size, angle, tooltip, popover, link,
+            font_size, angle, tooltip, popover, link, new_tab,
             extra_css, escape, background_as_tile,
             latex_background_in_cell)
 }

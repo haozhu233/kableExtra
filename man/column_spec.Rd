@@ -4,11 +4,30 @@
 \alias{column_spec}
 \title{Specify the look of the selected column}
 \usage{
-column_spec(kable_input, column, width = NULL, bold = FALSE,
-  italic = FALSE, monospace = FALSE, underline = FALSE,
-  strikeout = FALSE, color = NULL, background = NULL,
-  border_left = FALSE, border_right = FALSE, width_min = NULL,
-  width_max = NULL, extra_css = NULL, include_thead = FALSE)
+column_spec(
+  kable_input,
+  column,
+  width = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  border_left = FALSE,
+  border_right = FALSE,
+  width_min = NULL,
+  width_max = NULL,
+  extra_css = NULL,
+  include_thead = FALSE,
+  latex_column_spec = NULL,
+  latex_valign = "p",
+  link = NULL,
+  new_tab = TRUE,
+  tooltip = NULL,
+  popover = NULL
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -18,25 +37,25 @@ column_spec(kable_input, column, width = NULL, bold = FALSE,
 \item{width}{A character string telling HTML & LaTeX how wide the column
 needs to be, e.g. "10cm", "3in" or "30em".}
 
-\item{bold}{A T/F value to control whether the text of the selected column
-need to be bolded.}
+\item{bold}{T/F value or vector to control whether the text of the selected
+column need to be bolded.}
 
-\item{italic}{A T/F value to control whether the text of the selected column
-need to be emphasized.}
+\item{italic}{T/F value or vector to control whether the text of the
+selected column need to be emphasized.}
 
-\item{monospace}{A T/F value to control whether the text of the selected column
-need to be monospaced (verbatim)}
+\item{monospace}{T/F value or vector to control whether the text of the
+selected column need to be monospaced (verbatim)}
 
-\item{underline}{A T/F value to control whether the text of the selected row
-need to be underlined}
+\item{underline}{T/F value or vector to control whether the text of the
+selected row need to be underlined}
 
-\item{strikeout}{A T/F value to control whether the text of the selected row
-need to be stricked out.}
+\item{strikeout}{T/F value or vector to control whether the text of the
+selected row need to be striked out.}
 
-\item{color}{A character string for column text color. Here please pay
-attention to the differences in color codes between HTML and LaTeX.}
+\item{color}{A character string or vector for column text color. Here please
+pay attention to the differences in color codes between HTML and LaTeX.}
 
-\item{background}{A character string for column background color. Here please
+\item{background}{A character string or vector for column background color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}
 
 \item{border_left}{A logical variable indicating whether there should be a
@@ -55,18 +74,44 @@ window is not wide enough.}
 \item{width_max}{Only for HTML table. \code{width_max} defines the maximum width
 of table columns.}
 
-\item{extra_css}{Extra css text to be passed into the cells of the row. Note
-that it's not for the whole column but to each individual cells}
+\item{extra_css}{A vector of extra css text to be passed into the cells of
+the column.}
 
 \item{include_thead}{T/F. A HTML only feature to contoll whether the
 header row will be manipulated. Default is \code{FALSE}.}
+
+\item{latex_column_spec}{Only for LaTeX tables.  Code to replace the column
+specification.  If not \code{NULL}, will override all other arguments.}
+
+\item{latex_valign}{vertical alignment. Only works when you specified column
+width. Choose among \code{p}, \code{m}, \code{b}.}
+
+\item{link}{A vector of strings for url links.}
+
+\item{new_tab}{T/F for whether to open up the new link in new tab}
+
+\item{tooltip}{A vector of strings to be displayed as tooltip.
+Obviously, this feature is only available in HTML. Read the package
+vignette to see how to use bootstrap tooltip css to improve the loading
+speed and look.}
+
+\item{popover}{Similar with tooltip but can hold more contents. The best way
+to build a popover is through \code{spec_popover()}. If you only provide a text
+string, it will be used as content. Note that You have to enable this
+bootstrap module manually. Read the package vignette to see how.}
 }
 \description{
 This function allows users to select a column and then specify
 its look.
 }
+\details{
+Use \code{latex_column_spec} in a LaTeX table to change or
+customize the column specification.  Because of the way it is handled
+internally, any backslashes must be escaped.
+}
 \examples{
 x <- knitr::kable(head(mtcars), "html")
 column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
-
+x <- knitr::kable(head(mtcars), "latex", booktabs = TRUE)
+column_spec(x, 1, latex_column_spec = ">{\\\\\\\\color{red}}c")
 }

@@ -147,12 +147,12 @@ xml_cell_style <- function(x, bold, italic, monospace,
   }
   if (!is.null(color)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                   "color: ", color, ";")
+                                   "color: ", html_color(color), " !important;")
   }
   if (!is.null(background)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
                                    "background-color: ",
-                                   background, ";")
+                                   html_color(background), " !important;")
   }
   if (!is.null(align)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -198,7 +198,9 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    temp_sub <- ifelse(i == 1 & table_info$tabular == "longtable", gsub, sub)
+    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
+                                   !is.null(table_info$repeat_header_latex)),
+                       gsub, sub)
     if (length(new_row) == 1) {
       out <- temp_sub(target_row, new_row, out, perl = T)
       table_info$contents[i] <- new_row
@@ -247,7 +249,14 @@ latex_new_row_builder <- function(target_row, table_info,
   }
   if (!is.null(color)) {
     new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex(x)
       paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
+    })
+  }
+  if (!is.null(background)) {
+    new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex(x, background = TRUE)
+      paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}")
     })
   }
   if (!is.null(font_size)) {
@@ -282,9 +291,9 @@ latex_new_row_builder <- function(target_row, table_info,
 
   new_row <- paste(unlist(new_row), collapse = " & ")
 
-  if (!is.null(background)) {
-    new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
-  }
+  # if (!is.null(background)) {
+  #   new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
+  # }
 
   if (!hline_after & is.null(extra_latex_after)) {
     return(new_row)
@@ -301,3 +310,5 @@ latex_new_row_builder <- function(target_row, table_info,
     return(c(new_row, latex_after))
   }
 }
+
+

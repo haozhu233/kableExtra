@@ -4,8 +4,7 @@
 \alias{linebreak}
 \title{Make linebreak in LaTeX Table cells}
 \usage{
-linebreak(x, align = c("l", "c", "r"), double_escape = F,
-  linebreaker = "\\n")
+linebreak(x, align = c("l", "c", "r"), double_escape = F, linebreaker = "\\n")
 }
 \arguments{
 \item{x}{A character vector}
@@ -15,7 +14,7 @@ linebreak(x, align = c("l", "c", "r"), double_escape = F,
 \item{double_escape}{Whether special character should be double escaped.
 Default is FALSE.}
 
-\item{linebreaker}{Symbol for linebreaks to replace. Default is \code{\\n}.}
+\item{linebreaker}{Symbol for linebreaks to replace. Default is \verb{\\\\n}.}
 }
 \description{
 This function generate LaTeX code of \code{makecell} so that users

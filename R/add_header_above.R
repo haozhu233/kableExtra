@@ -10,6 +10,10 @@
 #' for a 3-column table with "title" spanning across column 2 and 3. For
 #' convenience, when `colspan` equals to 1, users can drop the ` = 1` part.
 #' As a result, `c(" ", "title" = 2)` is the same as `c(" " = 1, "title" = 2)`.
+#' Alternatively, a data frame with two columns can be provided: The first
+#' column should contain the header names (character vector) and the second
+#' column should contain the colspan (numeric vector). This input can be used
+#' if there are problems with unicode characters in the headers.
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
@@ -41,6 +45,8 @@
 #' td cell.
 #' @param include_empty Whether empty cells in HTML should also be styled.
 #' Default is FALSE.
+#' @param border_left T/F option for border on the left side in latex.
+#' @param border_right T/F option for border on the right side in latex.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
@@ -54,13 +60,41 @@ add_header_above <- function(kable_input, header = NULL,
                              align = "c", color = NULL, background = NULL,
                              font_size = NULL, angle = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
-                             extra_css = NULL, include_empty = FALSE) {
+                             extra_css = NULL, include_empty = FALSE,
+                             border_left = FALSE, border_right = FALSE) {
+  if (is.null(header)) return(kable_input)
+
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
             "for details.")
     return(kable_input)
+  }
+  if ((length(align) != 1L) & (length(align) != length(header))) {
+    warning("Length of align vector supplied to add_header_above must either be 1 ",
+            "or the same length as the header supplied. The length of the align ",
+            sprintf("vector supplied is %i and the header length is %i.",
+                    length(align), length(header)),
+            "Using default of centering each element of row.")
+    align <- 'c'
+  }
+  if (is.null(header)) return(kable_input)
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named",
+           "vector it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
   }
   if (kable_format == "html") {
     return(htmlTable_add_header_above(
@@ -72,7 +106,8 @@ add_header_above <- function(kable_input, header = NULL,
   if (kable_format == "latex") {
     return(pdfTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
-      align, color, background, font_size, angle, escape, line, line_sep))
+      align, color, background, font_size, angle, escape, line, line_sep,
+      border_left, border_right))
   }
 }
 
@@ -82,20 +117,30 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        align, color, background, font_size,
                                        angle, escape, line, line_sep,
                                        extra_css, include_empty) {
-  if (is.null(header)) return(kable_input)
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
-
-  header <- standardize_header_input(header)
 
   if (escape) {
     header$header <- escape_html(header$header)
   }
 
-  header_rows <- xml_children(kable_xml_thead)
-  bottom_header_row <- header_rows[[length(header_rows)]]
-  kable_ncol <- length(xml_children(bottom_header_row))
+  # If there is no existing header, add one
+  if (is.null(kable_xml_thead)) {
+    # Add thead node as first child
+    xml_add_child(kable_xml, 'thead', .where = 0)
+    kable_xml_thead <- xml_tpart(kable_xml, 'thead')
+
+    # To check the number of columns in the new header, compare it to body
+    kable_xml_tbody <- xml_tpart(kable_xml, 'tbody')
+    body_rows <- xml_children(kable_xml_tbody)
+    kable_ncol <- max(xml_length(body_rows))
+  } else {
+    header_rows <- xml_children(kable_xml_thead)
+    bottom_header_row <- header_rows[[length(header_rows)]]
+    kable_ncol <- length(xml_children(bottom_header_row))
+  }
+
   if (sum(header$colspan) != kable_ncol) {
     stop("The new header row you provided has a different total number of ",
          "columns with the original kable output.")
@@ -103,7 +148,8 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
 
   new_header_row <- htmlTable_new_header_generator(
     header, bold, italic, monospace, underline, strikeout, align,
-    color, background, font_size, angle, line, line_sep, extra_css, include_empty
+    color, background, font_size, angle, line, line_sep, extra_css,
+    include_empty, attr(kable_input, 'lightable_class')
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(kable_xml)
@@ -129,19 +175,18 @@ standardize_header_input <- function(header) {
   header_names <- names(header)
   header <- as.numeric(header)
   names(header) <- header_names
-  return(data.frame(header = names(header), colspan = header, row.names = NULL))
+  return(data.frame(header = names(header), colspan = header, row.names = NULL, stringsAsFactors = F))
 }
 
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                                            underline, strikeout, align,
                                            color, background, font_size,
                                            angle, line, line_sep, extra_css,
-                                           include_empty) {
-  if (align %in% c("l", "c", "r")) {
-    align <- switch(align, r = "right", c = "center", l = "left")
-  }
+                                           include_empty, lightable_class) {
+  align <- vapply(align, switch_align, 'x', USE.NAMES = FALSE)
+
   row_style <- paste0(
-    paste0("text-align: ", align, "; "),
+    "text-align: %s; ",
     ifelse(bold, "font-weight: bold; ", ""),
     ifelse(italic, "font-style: italic; ", ""),
     ifelse(monospace, "font-family: monospace; ", ""),
@@ -149,13 +194,13 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
     ifelse(strikeout, "text-decoration: line-through; ", "")
   )
   if (!is.null(color)) {
-    row_style <- paste0(row_style, "color: ", html_color(color), ";")
+    row_style <- paste0(row_style, "color: ", html_color(color), " !important;")
   }
   if (!is.null(background)) {
     row_style <- paste0(
       row_style,
       "padding-right: 4px; padding-left: 4px; ",
-      "background-color: ", html_color(background), ";"
+      "background-color: ", html_color(background), " !important;"
     )
   }
   if (!is.null(font_size)) {
@@ -173,29 +218,52 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                     "deg); -o-transform: rotate(", angle,
                     "deg); transform: rotate(", angle,
                     "deg); display: inline-block; ")
-    if (include_empty) {
-      header_df$header <- paste0('<span style="', angle, '">',
-                                 header_df$header, '</span>')
-    } else {
       header_df$header <- ifelse(
-        trimws(header_df$header) == "",
+        trimws(header_df$header) == "" | include_empty,
         header_df$header,
         paste0('<span style="', angle, '">', header_df$header, '</span>')
       )
+  }
+
+  if (is.null(lightable_class)) {
+    border_hidden <- 'border-bottom:hidden;'
+    line <- ifelse(ez_rep(line, nrow(header_df)),
+                   "border-bottom: 1px solid #ddd; padding-bottom: 5px; ", "")
+  } else {
+    border_hidden <- ''
+    if (lightable_class %in% c("lightable-classic", "lightable-classic-2")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #111111; margin-bottom: -1px; ", "")
+    }
+    if (lightable_class %in% c("lightable-minimal")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 2px solid #00000050; ", "")
+    }
+    if (lightable_class %in% c("lightable-paper")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #00000020; padding-bottom: 5px; ", "")
+    }
+    if (lightable_class %in% c("lightable-material")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #eee; padding-bottom: 16px; padding-top: 16px; height: 56px;", "")
+    }
+    if (lightable_class %in% c("lightable-material-dark")) {
+      line <- ifelse(ez_rep(line, nrow(header_df)),
+                     "border-bottom: 1px solid #FFFFFF12; padding-bottom: 16px; padding-top: 16px; height: 56px;", "")
     }
   }
 
-  line <- ifelse(ez_rep(line, nrow(header_df)),
-                 "border-bottom: 1px solid #ddd; padding-bottom: 5px; ", "")
   line_sep <- ez_rep(line_sep, nrow(header_df))
   line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
 
+  row_style <- sprintf(row_style, align)
+
   header_items <- ifelse(
-    trimws(header_df$header) == "",
-    paste0('<th style="border-bottom:hidden" colspan="', header_df$colspan,
+    trimws(header_df$header) == "" | include_empty,
+    paste0('<th style="empty-cells: hide;', border_hidden, '" colspan="', header_df$colspan,
            '"></th>'),
     paste0(
-      '<th style="border-bottom:hidden; padding-bottom:0; ',
+      '<th style="', border_hidden, 'padding-bottom:0; ',
       line_sep, row_style, '" colspan="',
       header_df$colspan, '"><div style="', line, '">', header_df$header,
       '</div></th>')
@@ -209,20 +277,38 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
 pdfTable_add_header_above <- function(kable_input, header, bold, italic,
                                       monospace, underline, strikeout, align,
                                       color, background, font_size, angle,
-                                      escape, line, line_sep) {
+                                      escape, line, line_sep,
+                                      border_left, border_right) {
   table_info <- magic_mirror(kable_input)
-  header <- standardize_header_input(header)
+
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named vector ",
+           "it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
+  }
 
   if (escape) {
     header$header <- input_escape(header$header, align)
   }
 
-  align <- match.arg(align, c("c", "l", "r"))
+  align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
 
   hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
   new_header_split <- pdfTable_new_header_generator(
     header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
-    align, color, background, font_size, angle, line_sep)
+    align, color, background, font_size, angle, line_sep,
+    border_left, border_right)
   if (line) {
     new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   } else {
@@ -254,7 +340,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
                                           bold, italic, monospace,
                                           underline, strikeout, align,
                                           color, background, font_size, angle,
-                                          line_sep) {
+                                          line_sep, border_left, border_right) {
   n <- nrow(header_df)
   bold <- ez_rep(bold, n)
   italic <- ez_rep(italic, n)
@@ -266,9 +352,16 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   background <- ez_rep(background, n)
   font_size <- ez_rep(font_size, n)
   angle <- ez_rep(angle, n)
-  if (!booktabs) {
-    align[1:(nrow(header_df) - 1)] <- paste0(align, "|")
+  if (!booktabs & n != 1) {
+    align[1:(n - 1)] <- paste0(align[1:(n - 1)], "|")
   }
+  if (border_left) {
+    align[1] <- paste0("|", align[1])
+  }
+  if (border_right) {
+    align[n] <- paste0(align[n], "|")
+  }
+
   header <- header_df$header
   colspan <- header_df$colspan
 
@@ -317,4 +410,10 @@ cline_gen <- function(header_df, booktabs, line_sep) {
   return(cline)
 }
 
+switch_align <- function(x) {
+  if (x %in% c('l', 'c', 'r')) {
+    return(switch(x, l = 'left', c = 'center', r = 'right'))
+  }
+  return(x)
+}
 

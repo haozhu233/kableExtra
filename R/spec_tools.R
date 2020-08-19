@@ -29,11 +29,21 @@ html_color_ <- function(color) {
 }
 
 html_color <- function(colors) {
-  colors <- as.character(colors)
+  colors <- trimws(gsub("\\!important", "", as.character(colors)))
   sapply(colors, html_color_)
 }
 
 latex_color_ <- function(color) {
+  if (substr(color, 1, 1) != "#") {
+    return(paste0("\\{", color, "\\}"))
+  } else {
+    color <- sub("#", "", color)
+    if (nchar(color) == 8) color <- substr(color, 1, 6)
+    return(paste0("\\[HTML\\]\\{", color, "\\}"))
+  }
+}
+
+latex_color__ <- function(color) {
   if (substr(color, 1, 1) != "#") {
     return(paste0("{", color, "}"))
   } else {
@@ -42,9 +52,14 @@ latex_color_ <- function(color) {
     return(paste0("[HTML]{", color, "}"))
   }
 }
-latex_color <- function(colors) {
+latex_color <- function(colors, escape = TRUE) {
   colors <- as.character(colors)
-  sapply(colors, latex_color_)
+  if (escape) {
+    return(sapply(colors, latex_color_))
+  } else {
+    return(sapply(colors, latex_color__))
+  }
+
 }
 
 #' Generate common font size for continuous values
@@ -98,11 +113,18 @@ spec_tooltip <- function(title, position = "right") {
   position <- match.arg(position, c("right", "bottom", "top", "left", "auto"),
                         several.ok = TRUE)
   tooltip_options <- paste(
-    'data-toggle="tooltip"',
+    'data-toggle="tooltip" data-container="body"',
     paste0('data-placement="', position, '"'),
     # ifelse(as_html, 'data-html="true"', NULL),
     paste0('title="', title, '"'))
+  tooltip_options_list <- list(
+    'data-toggle' = 'tooltip',
+    'data-container' = 'body',
+    'data-placement' = position,
+    'title' = if(is.null(title)) '' else title
+  )
   class(tooltip_options) <- "ke_tooltip"
+  attr(tooltip_options, 'list') <- tooltip_options_list
   return(tooltip_options)
 }
 
@@ -123,11 +145,22 @@ spec_popover <- function(content = NULL, title = NULL,
   position <- match.arg(position, c("bottom", "top", "left", "right", "auto"),
                         several.ok = TRUE)
   popover_options <- paste(
-    'data-toggle="popover"',
+    'data-toggle="popover" data-container="body"',
     paste0('data-trigger="', trigger, '"'),
     paste0('data-placement="', position, '"'),
     ifelse(!is.null(title), paste0('title="', title, '"'), ""),
     paste0('data-content="', content, '"'))
+  popover_options_list <- list(
+    'data-toggle' = 'popover',
+    'data-container' = 'body',
+    'data-trigger' = trigger,
+    'data-placement' = position,
+    'data-content' = content
+  )
+  if (!is.null(title)) {
+    popover_options_list['title'] <- title
+  }
   class(popover_options) <- "ke_popover"
+  attr(popover_options, 'list') <- popover_options_list
   return(popover_options)
 }

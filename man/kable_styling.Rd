@@ -4,9 +4,27 @@
 \alias{kable_styling}
 \title{HTML table attributes}
 \usage{
-kable_styling(kable_input, bootstrap_options = "basic",
-  latex_options = "basic", full_width = NULL, position = "center",
-  font_size = NULL, row_label_position = "l", ...)
+kable_styling(
+  kable_input,
+  bootstrap_options = "basic",
+  latex_options = "basic",
+  full_width = NULL,
+  position = "center",
+  font_size = NULL,
+  row_label_position = "l",
+  repeat_header_text = "\\\\textit{(continued)}",
+  repeat_header_method = c("append", "replace"),
+  repeat_header_continued = FALSE,
+  stripe_color = "gray!6",
+  stripe_index = NULL,
+  latex_table_env = NULL,
+  protect_latex = TRUE,
+  table.envir = "table",
+  fixed_thead = FALSE,
+  htmltable_class = NULL,
+  html_font = NULL,
+  wraptable_width = "0pt"
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -15,7 +33,7 @@ kable_styling(kable_input, bootstrap_options = "basic",
 Please see package vignette or visit the w3schools'
 \href{https://www.w3schools.com/bootstrap/bootstrap_tables.asp}{Bootstrap Page}
 for more information. Possible options include \code{basic}, \code{striped},
-\code{bordered}, \code{hover}, \code{condensed} and \code{responsive}.}
+\code{bordered}, \code{hover}, \code{condensed}, \code{responsive} and \code{none}.}
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
@@ -25,14 +43,14 @@ package vignette for more information. Possible options include
 table to the exact position. It is useful when the \code{LaTeX} table is contained
 in a \code{table} environment after you specified captions in \code{kable()}. It will
 force the table to stay in the position where it was created in the document.
-A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \code{[H]}.
+A stronger version: \code{HOLD_position} requires the \code{float} package and specifies \verb{[H]}.
 \code{scale_down} is useful for super wide table. It will automatically adjust
 the table to page width. \code{repeat_header} in only meaningful in a longtable
 environment. It will let the header row repeat on every page in that long
 table.}
 
 \item{full_width}{A \code{TRUE} or \code{FALSE} variable controlling whether the HTML
-table should have 100\% width. Since HTML and pdf have different flavors on
+table should have 100\\% width. Since HTML and pdf have different flavors on
 the preferable format for \code{full_width}. If not specified, a HTML table will
 have full width by default but this option will be set to \code{FALSE} for a
 LaTeX table}
@@ -40,16 +58,58 @@ LaTeX table}
 \item{position}{A character string determining how to position the table
 on a page. Possible values include \code{left}, \code{center}, \code{right}, \code{float_left}
 and \code{float_right}. Please see the package doc site for demonstrations. For
-a \code{LaTeX} table, if \code{float_*} is selected, \code{LaTeX} package \code{wrapfig} will be
+a \code{LaTeX} table, if \verb{float_*} is selected, \code{LaTeX} package \code{wrapfig} will be
 imported.}
 
 \item{font_size}{A numeric input for table font size}
 
-\item{row_label_position}{A character string determining the justification of the row
-labels in a table.  Possible values inclued \code{l} for left, \code{c} for center, and \code{r} for
-right.  The default value is \code{l} for left justifcation.}
+\item{row_label_position}{A character string determining the justification
+of the row labels in a table.  Possible values inclued \code{l} for left, \code{c} for
+center, and \code{r} for right.  The default value is \code{l} for left justifcation.}
 
-\item{...}{extra options for HTML or LaTeX. See \code{details}.}
+\item{repeat_header_text}{LaTeX option. A text string you want to append on
+or replace the caption.}
+
+\item{repeat_header_method}{LaTeX option, can either be \code{append}(default) or
+\code{replace}}
+
+\item{repeat_header_continued}{T/F or a text string. Whether or not to put
+a continued mark on the second page of longtable. If you put in text, we will
+use this text as the "continued" mark.}
+
+\item{stripe_color}{LaTeX option allowing users to pick a different color
+for their strip lines. This option is not available in HTML}
+
+\item{stripe_index}{LaTeX option allowing users to customize which rows
+should have stripe color.}
+
+\item{latex_table_env}{LaTeX option. A character string to define customized
+table environment such as tabu or tabularx.You shouldn't expect all features
+could be supported in self-defined environments.}
+
+\item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs
+will be protected from HTML escaping.}
+
+\item{table.envir}{LaTeX floating table environment. \code{kable_style} will put
+a plain no-caption table in a \code{table} environment in order to center the
+table. You can specify this option to things like \verb{table*} or \verb{float*} based
+on your need.}
+
+\item{fixed_thead}{HTML table option so table header row is fixed at top.
+Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
+
+\item{htmltable_class}{Options to use the in-house lightable themes.
+Choices include \code{lightable-minimal}, \code{lightable-classic},
+\code{lightable-classic-2}, \code{lightable-material}, \code{lightable-striped} and
+\code{lightable-hover}. If you have your customized style sheet loaded which
+defines your own table class, you can also load it here.}
+
+\item{html_font}{A string for HTML css font. For example,
+\code{html_font = '"Arial Narrow", arial, helvetica, sans-serif'}.}
+
+\item{wraptable_width}{Width of the wraptable area if you specify
+"float_left/right" for latex table. Default is "0pt" for automated
+determination but you may specify it manually.}
 }
 \description{
 This function provides a cleaner approach to modify the style
@@ -58,22 +118,19 @@ that those bootstrap options requires Twitter bootstrap theme, which is not avai
 in some customized template being loaded.
 }
 \details{
-For LaTeX, extra options includes:
-\itemize{
-\item \code{repeat_header_method} can either be \code{append}(default) or \code{replace}
-\item \code{repeat_header_text} is just a text string you want to append on or
-replace the caption.
-\item \code{stripe_color} allows users to pick a different color for their strip lines.
-\item \code{latex_table_env} character string to define customized table environment
-such as tabu or tabularx.You shouldn't expect all features could be
-supported in self-defined environments.
-}
-
 For LaTeX, if you use other than English environment
 \itemize{
 \item all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 characters on a Windows machine, make sure to use
 Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+\item \code{protect_latex = TRUE} has no effect.
+}
+
+For HTML,
+\itemize{
+\item \code{protect_latex = TRUE} is for including complicated math in HTML output.
+The LaTeX may not include dollar signs even if they are escaped.
+Pandoc's rules for recognizing embedded LaTeX are used.
 }
 }
 \examples{

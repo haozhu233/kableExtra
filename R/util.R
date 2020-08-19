@@ -45,7 +45,7 @@ positions_corrector <- function(positions, group_header_rows, n_row) {
 }
 
 latex_row_cells <- function(x) {
-  strsplit(x, " \\& ")
+  stringr::str_split(x, " \\& ")
 }
 
 regex_escape <- function(x, double_backslash = FALSE) {
@@ -100,7 +100,6 @@ latex_pkg_list <- function() {
     "\\usepackage{longtable}",
     "\\usepackage{array}",
     "\\usepackage{multirow}",
-    "\\usepackage[table]{xcolor}",
     "\\usepackage{wrapfig}",
     "\\usepackage{float}",
     "\\usepackage{colortbl}",
@@ -128,7 +127,7 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
     # insert empty_times before last non whitespace characters
     new_row <- str_replace(
       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
-      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
+      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\}\\1"))
     kable_input <- sub(
       paste0(dup_row, "(?=\\s*\\\\\\\\\\*?(\\[.*\\])?)"),
       new_row,
@@ -142,12 +141,32 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
 
 # Solve enc issue for LaTeX tables
 solve_enc <- function(x) {
+  if (Encoding(x) == "UTF-8"){
+    out <- x
+  } else {
   #may behave differently based on Sys.setlocale settings with respect to characters
-  enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+    out <- enc2utf8(as.character(base::format(x, trim = TRUE, justify = 'none')))
+  }
+  mostattributes(out) <- attributes(x)
+  return(out)
 }
 
 input_escape <- function(x, latex_align) {
   x <- escape_latex2(x)
   x <- linebreak(x, align = latex_align, double_escape = TRUE)
+}
+
+clear_color_latex <- function(x, background = F) {
+  term <- if (background) "cellcolor" else "textcolor"
+  regex_1 <- sprintf(
+    "\\\\\\\\%s\\\\\\[HTML\\\\\\]\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
+  )
+  regex_2 <- sprintf(
+    "\\\\\\\\%s\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
+  )
+  origin_len <- nchar(x)
+  x <- stringr::str_remove(x, regex_1)
+  x <- stringr::str_remove(x, regex_2)
+  return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
 }
 

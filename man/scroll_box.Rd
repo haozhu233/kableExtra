@@ -4,8 +4,14 @@
 \alias{scroll_box}
 \title{Put a HTML table into a scrollable box}
 \usage{
-scroll_box(kable_input, height = NULL, width = NULL,
-  box_css = "border: 1px solid #ddd; padding: 5px; ", extra_css = NULL)
+scroll_box(
+  kable_input,
+  height = NULL,
+  width = NULL,
+  box_css = "border: 1px solid #ddd; padding: 5px; ",
+  extra_css = NULL,
+  fixed_thead = TRUE
+)
 }
 \arguments{
 \item{kable_input}{A HTML kable object}
@@ -17,6 +23,9 @@ scroll_box(kable_input, height = NULL, width = NULL,
 \item{box_css}{CSS text for the box}
 
 \item{extra_css}{Extra CSS styles}
+
+\item{fixed_thead}{HTML table option so table header row is fixed at top.
+Values can be either T/F or \code{list(enabled = T/F, background = "anycolor")}.}
 }
 \description{
 This function will put a HTML kable object in a fixed-height,

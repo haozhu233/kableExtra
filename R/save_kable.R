@@ -4,46 +4,174 @@
 #' kableExtra
 #' @param file save to files. If the input table is in HTML and the output file
 #' ends with `.png`, `.pdf` and `.jpeg`, `webshot` will be used to do the
-#' conversion
-#'
+#' conversion.
 #' @param bs_theme Which Bootstrap theme to use
 #' @param self_contained Will the files be self-contained?
-#' @param ... Additional variables being passed to `webshot::webshot`.`
+#' @param extra_dependencies Additional HTML dependencies. For example,
+#' `list(`
+#' @param ... Additional variables being passed to `webshot::webshot`. This
+#' is for HTML only.
+#' @param latex_header_includes A character vector of extra LaTeX header stuff.
+#' Each element is a row. You can have things like
+#' `c("\\\\usepackage{threeparttable}", "\\\\usepackage{icons}")`  You could
+#' probably add your language package here if you use non-English text in your
+#' table, such as `\\\\usepackage[magyar]{babel}`.
+#' @param keep_tex A T/F option to control if the latex file that is initially created
+#' should be kept. Default is `FALSE`.
+#' @examples
+#' \dontrun{
+#' library(kableExtra)
 #'
+#' kable(mtcars[1:5, ], "html") %>%
+#'   kable_styling("striped") %>%
+#'   row_spec(1, color = "red") %>%
+#'   save_kable("inst/test.pdf")
+#' }
 #' @export
 save_kable <- function(x, file,
-                       bs_theme = "simplex", self_contained = TRUE, ...) {
-  if (attr(x, "format") == "latex") {
-    return(save_kable_latex(x, file))
+                       bs_theme = "simplex", self_contained = TRUE,
+                       extra_dependencies = NULL, ...,
+                       latex_header_includes = NULL, keep_tex = FALSE) {
+  if (!is.null(attr(x, "format")) && attr(x, "format") == "latex") {
+    return(save_kable_latex(x, file, latex_header_includes, keep_tex))
   }
-  return(save_kable_html(x, file, bs_theme, self_contained, ...))
+  return(save_kable_html(x, file, bs_theme, self_contained,
+                         extra_dependencies, ...))
 }
 
-save_kable_html <- function(x, file, bs_theme, self_contained, ...) {
-  html_header <- htmltools::tags$head(
+save_kable_html <- function(x, file, bs_theme, self_contained,
+                            extra_dependencies, ...) {
+  dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = bs_theme),
     html_dependency_kePrint()
   )
+  if (!is.null(extra_dependencies)) {
+    dependencies <- append(dependencies, extra_dependencies)
+  }
+
+  html_header <- htmltools::tags$head(dependencies)
   html_table <- htmltools::HTML(as.character(x))
   html_result <- htmltools::tagList(html_header, html_table)
 
-  # Use webshot if necessary
+
+  # Check if we are generating an image and use webshot to do that
   if (tools::file_ext(file) %in% c("png", "jpg", "jpeg", "pdf")) {
-    file_html <- paste0(tools::file_path_sans_ext(file), ".html")
-    htmltools::save_html(html_result, file = file_html)
-    webshot::webshot(file_html, file, ...)
-    unlink(file_html)
-    unlink("lib", recursive = TRUE)
+    file_temp_html <- tempfile(pattern = tools::file_path_sans_ext(file), tmpdir = '.', fileext = ".html")
+
+    file.create(file_temp_html)
+    file_temp_html <- normalizePath(file_temp_html)
+    file.create(file)
+    file <- normalizePath(file)
+
+    # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
+    temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+    htmltools::save_html(html_result, file = file_temp_html, libdir = temp_dir)
+
+    result <- webshot::webshot(file_temp_html, file, ...)
+    if (is.null(result)) {
+      # A webshot could not be created. Delete newly created files and issue msg
+      file.remove(file)
+      file.remove(file_temp_html)
+      message('save_kable could not create image with webshot package. Please check for any webshot messages')
+    } else {
+      if (tools::file_ext(file) == "pdf") {
+        message("Note that HTML color may not be displayed on PDF properly.")
+      }
+      # Remove temp html file and temp lib directory
+      file.remove(file_temp_html)
+      unlink(file.path(dirname(file_temp_html), temp_dir), recursive = TRUE)
+
+      if (requireNamespace("magick", quietly = TRUE)) {
+        img_rework <- magick::image_read(file)
+        img_rework <- magick::image_trim(img_rework)
+        img_info <- magick::image_info(img_rework)
+        magick::image_write(img_rework, file)
+        attr(file, "info") <- img_info
+      } else {
+        message("save_kable will have the best result with magick installed. ")
+      }
+    }
+
   } else {
-    htmltools::save_html(html_result, file = file)
+    file.create(file)
+    file <- normalizePath(file)
+
     if (self_contained) {
+      # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
+      temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+      htmltools::save_html(html_result, file = file, libdir = temp_dir)
+      #remove_html_doc(file)
       rmarkdown::pandoc_self_contained_html(file, file)
-      unlink("lib", recursive = TRUE)
+      unlink(file.path(dirname(file), temp_dir), recursive = TRUE)
+    } else {
+      # Simply use the htmltools::save_html to write out the files. Dependencies go to the standard lib folder
+      htmltools::save_html(html_result, file = file)
     }
   }
+
+  return(invisible(file))
 }
 
-save_kable_latex <- function(x, file) {
+remove_html_doc <- function(x){
+  out <- paste(readLines(x)[-1], collapse = "\n")
+  writeLines(out, x)
+}
 
+save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
+  temp_tex <- c(
+    "\\documentclass[border=1mm, preview]{standalone}",
+    "\\usepackage[active,tightpage]{preview}",
+    "\\usepackage{varwidth}",
+    "\\usepackage{amssymb, amsmath}",
+    "\\usepackage{ifxetex,ifluatex}",
+    "\\usepackage{fixltx2e}",
+    "\\usepackage{polyglossia}",
+    latex_pkg_list(),
+    "\\usepackage{graphicx}",
+    "\\usepackage{xltxtra,xunicode}",
+    latex_header_includes,
+    "\\begin{document}",
+    solve_enc(x),
+    "\\end{document}"
+  )
+  temp_tex <- paste(temp_tex, collapse = "\n")
+
+  temp_tex_file <- paste0(tools::file_path_sans_ext(file), ".tex")
+  writeLines(temp_tex, temp_tex_file, useBytes = T)
+  temp_tex_file <- normalizePath(temp_tex_file)
+  file_no_ext <- tools::file_path_sans_ext(temp_tex_file)
+
+  owd <- setwd(dirname(temp_tex_file))
+
+  system(paste0('xelatex -interaction=batchmode "', temp_tex_file,'"'))
+  if (!keep_tex) {
+    temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
+    unlink(temp_file_delete)
+  }
+
+  table_img_info <- NULL
+  if (tools::file_ext(file) != "pdf") {
+    table_img_pdf <- try(
+      magick::image_read(paste0(file_no_ext, ".pdf"),
+                         density = 300), silent = T)
+    if (class(table_img_pdf) == "try-error") {
+      stop("We hit an error when trying to use magick to read the generated ",
+           "PDF file. You may check your magick installation and try to ",
+           "use magick::image_read to read the PDF file manually. It's also ",
+           "possible that you didn't have ghostscript installed.")
+    }
+    unlink(paste0(file_no_ext, ".pdf"))
+    table_img <- magick::image_convert(table_img_pdf,
+                                       tools::file_ext(file))
+    table_img_info <- magick::image_info(table_img)
+    magick::image_write(table_img,
+                        paste0(file_no_ext, ".", tools::file_ext(file)))
+  }
+
+  setwd(owd)
+
+  out <- paste0(file_no_ext, ".", tools::file_ext(file))
+  attr(out, "info") <- table_img_info
+  return(invisible(out))
 }

@@ -2,14 +2,48 @@
 % Please edit documentation in R/group_rows.R
 \name{group_rows}
 \alias{group_rows}
+\alias{pack_rows}
 \title{Put a few rows of a table into one category}
 \usage{
-group_rows(kable_input, group_label = NULL, start_row = NULL,
-  end_row = NULL, index = NULL,
+group_rows(
+  kable_input,
+  group_label = NULL,
+  start_row = NULL,
+  end_row = NULL,
+  index = NULL,
   label_row_css = "border-bottom: 1px solid;",
-  latex_gap_space = "0.3em", escape = TRUE, latex_align = "l",
-  colnum = NULL, bold = TRUE, italic = FALSE, hline_before = FALSE,
-  hline_after = FALSE, extra_latex_after = NULL, indent = TRUE)
+  latex_gap_space = "0.3em",
+  escape = TRUE,
+  latex_align = "l",
+  latex_wrap_text = FALSE,
+  colnum = NULL,
+  bold = TRUE,
+  italic = FALSE,
+  hline_before = FALSE,
+  hline_after = FALSE,
+  extra_latex_after = NULL,
+  indent = TRUE
+)
+
+pack_rows(
+  kable_input,
+  group_label = NULL,
+  start_row = NULL,
+  end_row = NULL,
+  index = NULL,
+  label_row_css = "border-bottom: 1px solid;",
+  latex_gap_space = "0.3em",
+  escape = TRUE,
+  latex_align = "l",
+  latex_wrap_text = FALSE,
+  colnum = NULL,
+  bold = TRUE,
+  italic = FALSE,
+  hline_before = FALSE,
+  hline_after = FALSE,
+  extra_latex_after = NULL,
+  indent = TRUE
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -42,6 +76,10 @@ centered on row, "r" for right justification, or "l" for left justification. Def
 Value is "l"  If using html, the alignment can be set by using the label_row_css
 parameter.}
 
+\item{latex_wrap_text}{T/F for wrapping long text. Default is off. Whenever
+it is turned on, the table will take up the entire line. It's recommended
+to use this with full_width in kable_styling.}
+
 \item{colnum}{A numeric that determines how many columns the text should span.
 The default setting will have the text span the entire length.}
 
@@ -57,7 +95,7 @@ addes a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row.}
 
-\item{indent}{A T?F value to control whether list items are indented.}
+\item{indent}{A T/F value to control whether list items are indented.}
 }
 \description{
 Group a few rows in a table together under a label.
@@ -65,6 +103,6 @@ Group a few rows in a table together under a label.
 \examples{
 x <- knitr::kable(head(mtcars), "html")
 # Put Row 2 to Row 5 into a Group and label it as "Group A"
-group_rows(x, "Group A", 2, 5)
+pack_rows(x, "Group A", 2, 5)
 
 }
