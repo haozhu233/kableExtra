@@ -218,16 +218,11 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
                     "deg); -o-transform: rotate(", angle,
                     "deg); transform: rotate(", angle,
                     "deg); display: inline-block; ")
-    if (include_empty) {
-      header_df$header <- paste0('<span style="', angle, '">',
-                                 header_df$header, '</span>')
-    } else {
       header_df$header <- ifelse(
-        trimws(header_df$header) == "",
+        trimws(header_df$header) == "" | include_empty,
         header_df$header,
         paste0('<span style="', angle, '">', header_df$header, '</span>')
       )
-    }
   }
 
   if (is.null(lightable_class)) {
@@ -264,7 +259,7 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
   row_style <- sprintf(row_style, align)
 
   header_items <- ifelse(
-    trimws(header_df$header) == "",
+    trimws(header_df$header) == "" | include_empty,
     paste0('<th style="empty-cells: hide;', border_hidden, '" colspan="', header_df$colspan,
            '"></th>'),
     paste0(
