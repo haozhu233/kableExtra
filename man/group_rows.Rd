@@ -108,8 +108,9 @@ addes a hline after the row}
 \item{indent}{A T/F value to control whether list items are indented.}
 
 \item{monospace}{T/F value to control whether the text of the
-selected column need to be monospaced (verbatim)
-#' @param underline T/F value to control whether the text of the
+selected column need to be monospaced (verbatim)}
+
+\item{underline}{T/F value to control whether the text of the
 selected row need to be underlined}
 
 \item{strikeout}{T/F value to control whether the text of the

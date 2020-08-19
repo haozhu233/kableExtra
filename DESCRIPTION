@@ -37,7 +37,6 @@ Imports:
     xml2 (>= 1.1.1),
     rvest,
     rmarkdown (>= 1.6.0),
-    readr,
     scales, 
     viridisLite,
     stats,
@@ -52,8 +51,7 @@ Suggests:
     testthat,
     magick,
     formattable,
-    dplyr,
-    sparkline
+    dplyr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1

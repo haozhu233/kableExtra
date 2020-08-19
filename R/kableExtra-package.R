@@ -66,7 +66,6 @@
 #' html_dependency_jquery pandoc_self_contained_html
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv head capture.output
-#' @importFrom readr read_lines read_file
 #' @importFrom scales rescale
 #' @importFrom viridisLite viridis
 #' @importFrom stats ave

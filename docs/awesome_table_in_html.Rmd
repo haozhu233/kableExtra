@@ -536,14 +536,15 @@ kbl(mtcars) %>%
 ```
 
 ## Use it with sparkline
-Well, this is not a feature but rather a documentation of how to use the `sparkline` package together with this package. The easiest way is sort of a hack. You can call `sparkline::sparkline(0)` somewhere on your document where no one would mind so its dependencies could be loaded without any hurdles. Then you use `sparkline::spk_chr()` to generate the text. Here is another example: [Chinese names in US babynames](https://cranky-chandrasekhar-cfefcd.netlify.app/)
+Well, this is not a feature but rather a documentation of how to use the `sparkline` package together with this package. The easiest way is sort of a hack. You can call `sparkline::sparkline(0)` somewhere on your document where no one would mind so its dependencies could be loaded without any hurdles. Then you use `sparkline::spk_chr()` to generate the text. For a working example, see: [Chinese names in US babynames](https://cranky-chandrasekhar-cfefcd.netlify.app/)
 
-```{r}
+```{r, eval=FALSE}
+# Not evaluated
 library(sparkline)
 sparkline(0)
 ```
 
-```{r}
+```{r,eval=FALSE}
 spk_dt <- data.frame(
   var = c("mpg", "wt"),
   sparkline = c(spk_chr(mtcars$mpg), spk_chr(mtcars$wt))

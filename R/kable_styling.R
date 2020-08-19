@@ -438,7 +438,7 @@ styling_latex_scale_down <- function(x, table_info) {
 styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
                                         repeat_header_method,
                                         repeat_header_continued) {
-  x <- read_lines(x)
+  x <- str_split(x, "\n")[[1]]
   if (table_info$booktabs) {
     header_rows_start <- which(x == "\\toprule")[1]
     if (is.null(table_info$colnames)) {

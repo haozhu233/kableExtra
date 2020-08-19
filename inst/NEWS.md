@@ -46,7 +46,7 @@ in new tab. (#454)
 * Added `monospace`, `underline`, `strikeout`, `color` and `background` to 
 `pack_rows()`. (#412)
 
-
+* Added documentation for how to use `sparkline`.
 
 
 # Bug Fix
@@ -79,7 +79,11 @@ booktabs. (#331)
 * Fixed the `include_empty` option in `add_header_above`. (#367, #393, thanks 
 @trianglegirl)
 
+* Fixed a bug with `pack_rows` when escape is `F`. (#396)
 
+* Fixed a bug with `collapse_rows` when used together with `pack_rows`. (#430)
+
+* Fixed a bug with `pack_rows` when longtable is enabled. (#410)
 
 
  
