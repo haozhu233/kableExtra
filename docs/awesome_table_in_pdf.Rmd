@@ -565,7 +565,7 @@ Since the structure of `kable` is relatively simple, it shouldn't be too difficu
 The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
 
 ## `xtable`
-For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. 
+For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. I personally have been using this function to place table caption below tables and solve some tricky case when I use `tufte_handout`. 
 
 ```{r, eval=F}
 # Not evaluating

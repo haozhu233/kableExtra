@@ -27,6 +27,6 @@ for (i in 1:nrow(mtcars)) {
   mtcars$wt[i] <- paste0(mtcars$wt[i], " &")
   mtcars$mpg[i] <- paste0(mtcars$mpg[i], "%")
 }
-kable(head(iris, n = 20), "latex", caption = "test", booktabs = T,
+kable(head(mtcars, n = 20), "latex", caption = "test", booktabs = T,
       align = c("ccccc"))
 ```

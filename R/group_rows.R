@@ -214,32 +214,29 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
 
+  rowtext <- table_info$contents[start_row + table_info$position_offset]
   if (table_info$booktabs) {
-    rowtext <- table_info$contents[start_row + table_info$position_offset]
-    pre_rowtext <- paste0(
-      "\\\\addlinespace[", gap_space, "]\n",
-      ifelse(hline_before,"\\\\hline\n", ""),
-      "\\\\multicolumn{", ifelse(is.null(colnum),
-                                 table_info$ncol,
-                                 colnum),
-      "}{", latex_align, "}{", group_label,
-      "}\\\\\\\\\n", ifelse(hline_after, "\\\\hline\n", '')
-    )
+    pre_rowtext <- paste0("\\\\addlinespace[", gap_space, "]\n")
   } else {
-    rowtext <- table_info$contents[start_row + 1]
-    rowtext <- paste0("\\\\hline\n", rowtext)
-    pre_rowtext <- paste0(
-      "\\\\hline\n\\\\multicolumn{", table_info$ncol, "}{", latex_align,"}{",
-      group_label, "}\\\\\\\\\n"
-    )
+    pre_rowtext <- ''
+    hline_after <- TRUE
   }
+  pre_rowtext <- paste0(
+    pre_rowtext,
+    ifelse(hline_before,"\\\\hline\n", ""),
+    "\\\\multicolumn{", ifelse(is.null(colnum),
+                               table_info$ncol,
+                               colnum),
+    "}{", latex_align,"}{", group_label,
+    "}\\\\\\\\\n", ifelse(hline_after, "\\\\hline\n", '')
+  )
   if(!is.null(extra_latex_after)){
     pre_rowtext <- paste0(pre_rowtext,
                       regex_escape(extra_latex_after, double_backslash = TRUE))
   }
   new_rowtext <- paste0(pre_rowtext, rowtext)
   if (start_row + 1 == table_info$nrow &
-      !is.null(table_info$repeat_header_latex)) {
+      !is.null(table_info$repeat_header_latex) & table_info$booktabs) {
     out <- sub(paste0(rowtext, "\\\\\\\\\\*\n"),
                paste0(new_rowtext, "\\\\\\\\\\*\n"),
                out)
