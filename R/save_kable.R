@@ -130,6 +130,7 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex) {
     latex_pkg_list(),
     "\\usepackage{graphicx}",
     "\\usepackage{xltxtra,xunicode}",
+    "\\usepackage{xcolor}",
     latex_header_includes,
     "\\begin{document}",
     solve_enc(x),
