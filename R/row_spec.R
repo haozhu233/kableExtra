@@ -248,12 +248,22 @@ latex_new_row_builder <- function(target_row, table_info,
     })
   }
   if (!is.null(color)) {
+    if (table_info$tabular == "tabu") {
+      warning("Setting full_width = TRUE will turn the table into a tabu ",
+              "environment where colors are not really easily configable ",
+              "with this package. Please consider turn off full_width.")
+    }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x)
       paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
     })
   }
   if (!is.null(background)) {
+    if (table_info$tabular == "tabu") {
+      warning("Setting full_width = TRUE will turn the table into a tabu ",
+              "environment where colors are not really easily configable ",
+              "with this package. Please consider turn off full_width.")
+    }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x, background = TRUE)
       paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}")
