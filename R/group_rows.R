@@ -323,6 +323,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
 #'
 #' @export
 auto_index <- function(x) {
+  if (is.factor(x)) x <- as.character(x)
   x_rle <- rle(x)
   index <- x_rle$lengths
   names(index) <- x_rle$values
