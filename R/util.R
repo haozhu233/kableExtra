@@ -170,3 +170,7 @@ clear_color_latex <- function(x, background = F) {
   return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
 }
 
+sim_double_escape <- function(x) {
+  return(sub("\\\\", "\\\\\\\\", x))
+}
+

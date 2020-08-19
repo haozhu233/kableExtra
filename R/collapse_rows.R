@@ -381,7 +381,7 @@ collapse_rows_latex_stack <- function(kable_input, group_row_index_list,
       group_row_args <- merge_lists(group_row_args, row_group_label_fonts[[i]])
     }
     group_row_args <- merge_lists(
-      list(kable_input = out, index = group_row_index_list[[i]]),
+      list(kable_input = out, index = group_row_index_list[[i]], escape = FALSE),
       group_row_args)
     out <- do.call(group_rows, group_row_args)
   }

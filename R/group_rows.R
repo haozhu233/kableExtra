@@ -38,7 +38,7 @@
 #' @param indent A T/F value to control whether list items are indented.
 #' @param monospace T/F value to control whether the text of the
 #' selected column need to be monospaced (verbatim)
-#' #' @param underline T/F value to control whether the text of the
+#' @param underline T/F value to control whether the text of the
 #' selected row need to be underlined
 #' @param strikeout T/F value to control whether the text of the
 #' selected row need to be striked out.
@@ -233,6 +233,8 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
 
   if (escape) {
     group_label <- input_escape(group_label, latex_align)
+  } else {
+    group_label <- sim_double_escape(group_label)
   }
 
   if (bold) {
