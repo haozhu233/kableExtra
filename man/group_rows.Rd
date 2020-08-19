@@ -22,7 +22,12 @@ group_rows(
   hline_before = FALSE,
   hline_after = FALSE,
   extra_latex_after = NULL,
-  indent = TRUE
+  indent = TRUE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL
 )
 
 pack_rows(
@@ -42,7 +47,12 @@ pack_rows(
   hline_before = FALSE,
   hline_after = FALSE,
   extra_latex_after = NULL,
-  indent = TRUE
+  indent = TRUE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL
 )
 }
 \arguments{
@@ -96,6 +106,20 @@ addes a hline after the row}
 \item{extra_latex_after}{Extra LaTeX text to be added after the row.}
 
 \item{indent}{A T/F value to control whether list items are indented.}
+
+\item{monospace}{T/F value to control whether the text of the
+selected column need to be monospaced (verbatim)
+#' @param underline T/F value to control whether the text of the
+selected row need to be underlined}
+
+\item{strikeout}{T/F value to control whether the text of the
+selected row need to be striked out.}
+
+\item{color}{A character string for column text color. Here please
+pay attention to the differences in color codes between HTML and LaTeX.}
+
+\item{background}{A character string for column background color. Here please
+pay attention to the differences in color codes between HTML and LaTeX.}
 }
 \description{
 Group a few rows in a table together under a label.

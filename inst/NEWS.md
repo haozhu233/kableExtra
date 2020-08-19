@@ -41,7 +41,7 @@ in new tab. (#454)
 
 * Added a `html_font` option to `kable_styling` and its variants.
 
-* Added a `wraptable_width` to `kable_styling`
+* Added a `wraptable_width` to `kable_styling` (#414)
 
 
 # Bug Fix
@@ -64,6 +64,16 @@ thanks @kbrevoort)
 
 * Fixed inconsistent behavior for `add_header_rows` in HTML and latex (#387, 
 #422, thanks @kbrevoort)
+
+* Fixed a bug for `group_rows` for longtable with repeated_header but without 
+booktabs. (#331)
+
+* Fixed a bug for `group_rows` with certain duplicated rows input 
+(#303, #304, thanks @tomjemmett)
+
+* Fixed the `include_empty` option in `add_header_above`. (#367, #393, thanks 
+@trianglegirl)
+
 
 
 

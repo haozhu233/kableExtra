@@ -36,6 +36,16 @@
 #' addes a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
 #' @param indent A T/F value to control whether list items are indented.
+#' @param monospace T/F value to control whether the text of the
+#' selected column need to be monospaced (verbatim)
+#' #' @param underline T/F value to control whether the text of the
+#' selected row need to be underlined
+#' @param strikeout T/F value to control whether the text of the
+#' selected row need to be striked out.
+#' @param color A character string for column text color. Here please
+#' pay attention to the differences in color codes between HTML and LaTeX.
+#' @param background A character string for column background color. Here please
+#' pay attention to the differences in color codes between HTML and LaTeX.
 #'
 #' @examples x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
@@ -55,7 +65,9 @@ group_rows <- function(kable_input, group_label = NULL,
                        hline_before = FALSE,
                        hline_after = FALSE,
                        extra_latex_after = NULL,
-                       indent = TRUE) {
+                       indent = TRUE,
+                       monospace = FALSE, underline = FALSE, strikeout = FALSE,
+                       color = NULL, background = NULL) {
 
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
@@ -71,13 +83,15 @@ group_rows <- function(kable_input, group_label = NULL,
                                     use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
                              label_row_css, escape, colnum, indent,
-                             bold, italic))
-    }
+                             bold, italic, monospace, underline, strikeout,
+                             color, background))}
     if (kable_format == "latex") {
       return(group_rows_latex(kable_input, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
                               bold, italic, hline_before, hline_after,
-                              extra_latex_after, indent, latex_wrap_text))
+                              extra_latex_after, indent, latex_wrap_text,
+                              monospace, underline, strikeout,
+                              color, background))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -89,7 +103,8 @@ group_rows <- function(kable_input, group_label = NULL,
         out <- group_rows_html(out, index$header[i],
                                index$start[i], index$end[i],
                                label_row_css, escape, colnum, indent,
-                               bold, italic)
+                               bold, italic, monospace, underline, strikeout,
+                               color, background)
       }
     }
     if (kable_format == "latex") {
@@ -98,7 +113,9 @@ group_rows <- function(kable_input, group_label = NULL,
                                index$start[i], index$end[i],
                                latex_gap_space, escape, latex_align, colnum,
                                bold, italic, hline_before, hline_after,
-                               extra_latex_after, indent, latex_wrap_text)
+                               extra_latex_after, indent, latex_wrap_text,
+                               monospace, underline, strikeout,
+                               color, background)
       }
     }
     return(out)
@@ -116,7 +133,8 @@ group_row_index_translator <- function(index) {
 
 group_rows_html <- function(kable_input, group_label, start_row, end_row,
                             label_row_css, escape, colnum, indent,
-                            bold = TRUE, italic = FALSE) {
+                            bold, italic, monospace, underline, strikeout,
+                            color, background) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -163,6 +181,23 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
       }
     }
   }
+  if (monospace) {
+    label_row_css <- paste0(label_row_css, "font-family: monospace;")
+  }
+  if (underline) {
+    label_row_css <- paste0(label_row_css, "text-decoration: underline;")
+  }
+  if (strikeout) {
+    label_row_css <- paste0(label_row_css, "text-decoration: line-through;")
+  }
+  if (!is.null(color)) {
+    label_row_css <- paste0(label_row_css, "color: ", html_color(color),
+                            " !important;")
+  }
+  if (!is.null(background)) {
+    label_row_css <- paste0(label_row_css, "background-color: ",
+                            html_color(background), " !important;")
+  }
 
   group_header_row_text <- paste0(
     '<tr groupLength="', length(group_seq), '"><td colspan="', kable_ncol,
@@ -184,7 +219,9 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
 group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              gap_space, escape, latex_align, colnum,
                              bold = T, italic = F, hline_before = F, hline_after = F,
-                             extra_latex_after = NULL, indent, latex_wrap_text = F) {
+                             extra_latex_after = NULL, indent, latex_wrap_text = F,
+                             monospace = F, underline = F, strikeout = F,
+                             color = NULL, background = NULL) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -203,6 +240,24 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   if (italic) group_label <- paste0("\\\\textit{", group_label, "}")
+
+  if (monospace) {
+    group_label <- paste0("\\\\ttfamily\\{", group_label, "\\}")
+  }
+  if (underline) {
+    group_label <- paste0("\\\\underline\\{", group_label, "\\}")
+  }
+  if (strikeout) {
+    group_label <- paste0("\\\\sout\\{", group_label, "\\}")
+  }
+  if (!is.null(color)) {
+    group_label <- paste0("\\\\textcolor", latex_color(color), "\\{",
+                              group_label, "\\}")
+  }
+  if (!is.null(background)) {
+    group_label <- paste0("\\\\cellcolor", latex_color(background), "\\{",
+                              group_label, "\\}")
+  }
   # Add group label
   if (latex_wrap_text) {
     latex_align <- switch(
