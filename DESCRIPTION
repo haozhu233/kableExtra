@@ -50,8 +50,7 @@ Imports:
 Suggests:
     testthat,
     magick,
-    formattable,
-    dplyr
+    formattable
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1

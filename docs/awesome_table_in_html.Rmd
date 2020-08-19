@@ -243,41 +243,65 @@ Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `col
 Currently, `cell_spec` supports features including bold, italic, monospace, text color, background color, align, font size & rotation angle. More features may be added in the future. Please see function documentations as reference. 
 
 ## Conditional logic
+>**Key Update: Again, as said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**.
+
 It is very easy to use `cell_spec` with conditional logic. Here is an example.
 ```{r, message=FALSE, warning=FALSE}
-library(dplyr)
-mtcars[1:10, 1:2] %>%
-  mutate(
-    car = row.names(.),
-    mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
-    cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
-                    background = factor(cyl, c(4, 6, 8), 
-                                        c("#666666", "#999999", "#BBBBBB")))
-  ) %>%
-  select(car, mpg, cyl) %>%
-  kbl(format = "html", escape = F) %>%
-  kable_styling("striped", full_width = F)
+cs_dt <- mtcars[1:10, 1:2]
+cs_dt$car = row.names(cs_dt)
+row.names(cs_dt) <- NULL
+cs_dt$mpg = cell_spec(cs_dt$mpg, color = ifelse(cs_dt$mpg > 20, "red", "blue"))
+cs_dt$cyl = cell_spec(
+  cs_dt$cyl, color = "white", align = "c", angle = 45, 
+  background = factor(cs_dt$cyl, c(4, 6, 8), c("#666666", "#999999", "#BBBBBB")))
+cs_dt <- cs_dt[c("car", "mpg", "cyl")]
+
+kbl(cs_dt, escape = F) %>%
+  kable_paper("striped", full_width = F)
+
+# You can also do this with dplyr and use one pipe from top to bottom
+# library(dplyr)
+# mtcars[1:10, 1:2] %>%
+#   mutate(
+#     car = row.names(.),
+#     mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
+#     cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
+#                     background = factor(cyl, c(4, 6, 8), 
+#                                         c("#666666", "#999999", "#BBBBBB")))
+#   ) %>%
+#   select(car, mpg, cyl) %>%
+#   kbl(format = "html", escape = F) %>%
+#   kable_styling("striped", full_width = F)
 ```
 
 ## Visualize data with Viridis Color
 This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
 
 ```{r}
-iris[1:10, ] %>%
-  mutate_if(is.numeric, function(x) {
+vs_dt <- iris[1:10, ]
+vs_dt[1:4] <- lapply(vs_dt[1:4], function(x) {
     cell_spec(x, bold = T, 
               color = spec_color(x, end = 0.9),
               font_size = spec_font_size(x))
-  }) %>%
-  mutate(Species = cell_spec(
-    Species, color = "white", bold = T,
-    background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
-  )) %>%
-  kbl(escape = F, align = "c") %>%
-  kable_styling(c("striped", "condensed"), full_width = F)
+})
+vs_dt[5] <- cell_spec(vs_dt[[5]], color = "white", bold = T,
+    background = spec_color(1:10, end = 0.9, option = "A", direction = -1))
+kbl(vs_dt, escape = F, align = "c") %>%
+  kable_classic("striped", full_width = F)
+# Or dplyr ver
+# iris[1:10, ] %>%
+#   mutate_if(is.numeric, function(x) {
+#     cell_spec(x, bold = T, 
+#               color = spec_color(x, end = 0.9),
+#               font_size = spec_font_size(x))
+#   }) %>%
+#   mutate(Species = cell_spec(
+#     Species, color = "white", bold = T,
+#     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
+#   )) %>%
+#   kable(escape = F, align = "c") %>%
+#   kable_styling(c("striped", "condensed"), full_width = F)
 ```
-
-In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 
 
 ## Text Specification
 If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
@@ -351,19 +375,21 @@ You can add links to text via `text_spec("Google", link = "https://google.com")`
 You can combine the good parts from `kableExtra` & `formattable` together into one piece. Read more at http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html
 ```{r, message = FALSE, warning=FALSE}
 library(formattable)
-mtcars[1:5, 1:4] %>%
-  mutate(
-    car = row.names(.),
-    mpg = color_tile("white", "orange")(mpg),
-    cyl = cell_spec(cyl, angle = (1:5)*60, 
-                    background = "red", color = "white", align = "center"),
-    disp = ifelse(disp > 200,
-                  cell_spec(disp, color = "red", bold = T),
-                  cell_spec(disp, color = "green", italic = T)),
-    hp = color_bar("lightgreen")(hp)
-  ) %>%
-  select(car, everything()) %>%
-  kbl(escape = F) %>%
+ft_dt <- mtcars[1:5, 1:4]
+ft_dt$car <- row.names(ft_dt)
+row.names(ft_dt) <- NULL
+ft_dt$mpg <- color_tile("white", "orange")(ft_dt$mpg)
+ft_dt$cyl <- cell_spec(ft_dt$cyl, angle = (1:5)*60, 
+                      background = "red", color = "white", align = "center")
+ft_dt$disp <- ifelse(
+  ft_dt$disp > 200,
+  cell_spec(ft_dt$disp, color = "red", bold = T),
+  cell_spec(ft_dt$disp, color = "green", italic = T)
+)
+ft_dt$hp <- color_bar("lightgreen")(ft_dt$hp)
+ft_dt <- ft_dt[c("car", "mpg", "cyl", "disp", "hp")]
+
+kbl(ft_dt, escape = F) %>%
   kable_styling("hover", full_width = F) %>%
   column_spec(5, width = "3cm") %>%
   add_header_above(c(" ", "Hello" = 2, "World" = 2))

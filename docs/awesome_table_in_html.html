@@ -4857,20 +4857,22 @@ Hornet Sportabout
 <p>Currently, <code>cell_spec</code> supports features including bold, italic, monospace, text color, background color, align, font size &amp; rotation angle. More features may be added in the future. Please see function documentations as reference.</p>
 <div id="conditional-logic" class="section level2">
 <h2>Conditional logic</h2>
+<blockquote>
+<p><strong>Key Update: Again, as said before, if you are using kableExtra 1.2+, you are now recommended to used <code>column_spec</code> to do conditional formatting</strong>.</p>
+</blockquote>
 <p>It is very easy to use <code>cell_spec</code> with conditional logic. Here is an example.</p>
-<pre class="r"><code>library(dplyr)
-mtcars[1:10, 1:2] %&gt;%
-  mutate(
-    car = row.names(.),
-    mpg = cell_spec(mpg, &quot;html&quot;, color = ifelse(mpg &gt; 20, &quot;red&quot;, &quot;blue&quot;)),
-    cyl = cell_spec(cyl, &quot;html&quot;, color = &quot;white&quot;, align = &quot;c&quot;, angle = 45, 
-                    background = factor(cyl, c(4, 6, 8), 
-                                        c(&quot;#666666&quot;, &quot;#999999&quot;, &quot;#BBBBBB&quot;)))
-  ) %&gt;%
-  select(car, mpg, cyl) %&gt;%
-  kbl(format = &quot;html&quot;, escape = F) %&gt;%
-  kable_styling(&quot;striped&quot;, full_width = F)</code></pre>
-<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<pre class="r"><code>cs_dt &lt;- mtcars[1:10, 1:2]
+cs_dt$car = row.names(cs_dt)
+row.names(cs_dt) &lt;- NULL
+cs_dt$mpg = cell_spec(cs_dt$mpg, color = ifelse(cs_dt$mpg &gt; 20, &quot;red&quot;, &quot;blue&quot;))
+cs_dt$cyl = cell_spec(
+  cs_dt$cyl, color = &quot;white&quot;, align = &quot;c&quot;, angle = 45, 
+  background = factor(cs_dt$cyl, c(4, 6, 8), c(&quot;#666666&quot;, &quot;#999999&quot;, &quot;#BBBBBB&quot;)))
+cs_dt &lt;- cs_dt[c(&quot;car&quot;, &quot;mpg&quot;, &quot;cyl&quot;)]
+
+kbl(cs_dt, escape = F) %&gt;%
+  kable_paper(&quot;striped&quot;, full_width = F)</code></pre>
+<table class=" lightable-paper lightable-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -4997,23 +4999,34 @@ Merc 280
 </tr>
 </tbody>
 </table>
+<pre class="r"><code># You can also do this with dplyr and use one pipe from top to bottom
+# library(dplyr)
+# mtcars[1:10, 1:2] %&gt;%
+#   mutate(
+#     car = row.names(.),
+#     mpg = cell_spec(mpg, &quot;html&quot;, color = ifelse(mpg &gt; 20, &quot;red&quot;, &quot;blue&quot;)),
+#     cyl = cell_spec(cyl, &quot;html&quot;, color = &quot;white&quot;, align = &quot;c&quot;, angle = 45, 
+#                     background = factor(cyl, c(4, 6, 8), 
+#                                         c(&quot;#666666&quot;, &quot;#999999&quot;, &quot;#BBBBBB&quot;)))
+#   ) %&gt;%
+#   select(car, mpg, cyl) %&gt;%
+#   kbl(format = &quot;html&quot;, escape = F) %&gt;%
+#   kable_styling(&quot;striped&quot;, full_width = F)</code></pre>
 </div>
 <div id="visualize-data-with-viridis-color" class="section level2">
 <h2>Visualize data with Viridis Color</h2>
 <p>This package also comes with a few helper functions, including <code>spec_color</code>, <code>spec_font_size</code> &amp; <code>spec_angle</code>. These functions can rescale continuous variables to certain scales. For example, function <code>spec_color</code> would map a continuous variable to any <a href="https://CRAN.R-project.org/package=viridisLite">viridis color palettes</a>. It offers a very visually impressive representation in a tabular format.</p>
-<pre class="r"><code>iris[1:10, ] %&gt;%
-  mutate_if(is.numeric, function(x) {
+<pre class="r"><code>vs_dt &lt;- iris[1:10, ]
+vs_dt[1:4] &lt;- lapply(vs_dt[1:4], function(x) {
     cell_spec(x, bold = T, 
               color = spec_color(x, end = 0.9),
               font_size = spec_font_size(x))
-  }) %&gt;%
-  mutate(Species = cell_spec(
-    Species, color = &quot;white&quot;, bold = T,
-    background = spec_color(1:10, end = 0.9, option = &quot;A&quot;, direction = -1)
-  )) %&gt;%
-  kbl(escape = F, align = &quot;c&quot;) %&gt;%
-  kable_styling(c(&quot;striped&quot;, &quot;condensed&quot;), full_width = F)</code></pre>
-<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+})
+vs_dt[5] &lt;- cell_spec(vs_dt[[5]], color = &quot;white&quot;, bold = T,
+    background = spec_color(1:10, end = 0.9, option = &quot;A&quot;, direction = -1))
+kbl(vs_dt, escape = F, align = &quot;c&quot;) %&gt;%
+  kable_classic(&quot;striped&quot;, full_width = F)</code></pre>
+<table class=" lightable-classic lightable-striped" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:center;">
@@ -5206,7 +5219,6 @@ Species
 </tr>
 </tbody>
 </table>
-<p>In the example above, I’m using the <code>mutate</code> functions from <code>dplyr</code>. You don’t have to use it. Base R solutions like <code>iris$Species &lt;- cell_spec(iris$Species, color = &quot;red&quot;)</code> also works.</p>
 </div>
 <div id="text-specification" class="section level2">
 <h2>Text Specification</h2>
@@ -5312,19 +5324,21 @@ left
 <h2>Integration with <code>formattable</code></h2>
 <p>You can combine the good parts from <code>kableExtra</code> &amp; <code>formattable</code> together into one piece. Read more at <a href="http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html" class="uri">http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html</a></p>
 <pre class="r"><code>library(formattable)
-mtcars[1:5, 1:4] %&gt;%
-  mutate(
-    car = row.names(.),
-    mpg = color_tile(&quot;white&quot;, &quot;orange&quot;)(mpg),
-    cyl = cell_spec(cyl, angle = (1:5)*60, 
-                    background = &quot;red&quot;, color = &quot;white&quot;, align = &quot;center&quot;),
-    disp = ifelse(disp &gt; 200,
-                  cell_spec(disp, color = &quot;red&quot;, bold = T),
-                  cell_spec(disp, color = &quot;green&quot;, italic = T)),
-    hp = color_bar(&quot;lightgreen&quot;)(hp)
-  ) %&gt;%
-  select(car, everything()) %&gt;%
-  kbl(escape = F) %&gt;%
+ft_dt &lt;- mtcars[1:5, 1:4]
+ft_dt$car &lt;- row.names(ft_dt)
+row.names(ft_dt) &lt;- NULL
+ft_dt$mpg &lt;- color_tile(&quot;white&quot;, &quot;orange&quot;)(ft_dt$mpg)
+ft_dt$cyl &lt;- cell_spec(ft_dt$cyl, angle = (1:5)*60, 
+                      background = &quot;red&quot;, color = &quot;white&quot;, align = &quot;center&quot;)
+ft_dt$disp &lt;- ifelse(
+  ft_dt$disp &gt; 200,
+  cell_spec(ft_dt$disp, color = &quot;red&quot;, bold = T),
+  cell_spec(ft_dt$disp, color = &quot;green&quot;, italic = T)
+)
+ft_dt$hp &lt;- color_bar(&quot;lightgreen&quot;)(ft_dt$hp)
+ft_dt &lt;- ft_dt[c(&quot;car&quot;, &quot;mpg&quot;, &quot;cyl&quot;, &quot;disp&quot;, &quot;hp&quot;)]
+
+kbl(ft_dt, escape = F) %&gt;%
   kable_styling(&quot;hover&quot;, full_width = F) %&gt;%
   column_spec(5, width = &quot;3cm&quot;) %&gt;%
   add_header_above(c(&quot; &quot;, &quot;Hello&quot; = 2, &quot;World&quot; = 2))</code></pre>
@@ -6452,7 +6466,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6484,7 +6498,7 @@ c
 5
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6492,7 +6506,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6500,7 +6514,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6511,7 +6525,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6527,7 +6541,7 @@ d
 10
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6541,7 +6555,7 @@ c
 11
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6568,7 +6582,7 @@ d
 14
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6576,7 +6590,7 @@ d
 15
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 </tbody>
