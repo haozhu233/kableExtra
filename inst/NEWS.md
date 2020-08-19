@@ -41,6 +41,8 @@ in new tab. (#454)
 
 * Added a `html_font` option to `kable_styling` and its variants.
 
+* Added a `wraptable_width` to `kable_styling`
+
 
 # Bug Fix
 

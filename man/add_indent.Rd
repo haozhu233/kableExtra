@@ -13,6 +13,8 @@ add_indent(kable_input, positions, level_of_indent = 1, all_cols = FALSE)
 be indented.}
 
 \item{level_of_indent}{a numeric value for the indent level. Default is 1.}
+
+\item{all_cols}{T/F whether to apply indentation to all columns}
 }
 \description{
 Add indentations to row headers

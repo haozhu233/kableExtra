@@ -27,8 +27,8 @@
 \contentsline {subsection}{Row indentation}{15}{section*.28}%
 \contentsline {subsection}{Group rows via multi-row cell}{16}{section*.29}%
 \contentsline {section}{Table Footnote}{19}{section*.30}%
-\contentsline {section}{LaTeX Only Features}{21}{section*.31}%
-\contentsline {subsection}{Linebreak processor}{21}{section*.32}%
+\contentsline {section}{LaTeX Only Features}{22}{section*.31}%
+\contentsline {subsection}{Linebreak processor}{22}{section*.32}%
 \contentsline {subsection}{Table on a Landscape Page}{22}{section*.33}%
 \contentsline {subsection}{Use LaTeX table in HTML or Word}{24}{section*.34}%
 \contentsline {section}{From other packages}{24}{section*.35}%

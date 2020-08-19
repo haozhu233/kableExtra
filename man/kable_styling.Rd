@@ -22,7 +22,8 @@ kable_styling(
   table.envir = "table",
   fixed_thead = FALSE,
   htmltable_class = NULL,
-  html_font = NULL
+  html_font = NULL,
+  wraptable_width = "0pt"
 )
 }
 \arguments{
@@ -105,6 +106,10 @@ defines your own table class, you can also load it here.}
 
 \item{html_font}{A string for HTML css font. For example,
 \code{html_font = '"Arial Narrow", arial, helvetica, sans-serif'}.}
+
+\item{wraptable_width}{Width of the wraptable area if you specify
+"float_left/right" for latex table. Default is "0pt" for automated
+determination but you may specify it manually.}
 }
 \description{
 This function provides a cleaner approach to modify the style

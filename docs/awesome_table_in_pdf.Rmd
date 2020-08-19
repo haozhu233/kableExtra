@@ -170,7 +170,7 @@ kbl(long_dt, longtable = T, booktabs = T, caption = "Longtable") %>%
 ## Full width?
 If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. You can use `column_spec`, which will be explained later, together with `full_width` to achieve the best result.
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling(full_width = T) %>%
   column_spec(1, width = "8cm")
 ```
@@ -180,13 +180,13 @@ Table Position only matters when the table doesn't have `full_width`. You can ch
 
 Note that even though you can select to `right` align your table but the table will actually be centered. Somehow it is very difficult to right align a table in LaTeX (since it's not very useful in the real world?). If you know how to do it, please send out an issue or PR and let me know. 
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling(position = "center")
 ```
 
 Besides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires rmarkdown 1.4.0 +. If you rmarkdown version < 1.4.0, you need to load the package through a customed LaTeX template file. 
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling(position = "float_right")
 ```
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
@@ -194,7 +194,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in
 ## Font Size
 If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling(font_size = 7)
 ```
 
@@ -211,7 +211,7 @@ text_tbl <- data.frame(
   )
 )
 
-kable(text_tbl, booktabs = T) %>%
+kbl(text_tbl, booktabs = T) %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T, color = "red") %>%
   column_spec(2, width = "30em")
@@ -223,7 +223,7 @@ kable(text_tbl, booktabs = T) %>%
 ```{r}
 that_cell <- c(rep(F, 7), T)
 mtcars[1:8, 1:8] %>%
-  kable(booktabs = T, linesep = "") %>%
+  kbl(booktabs = T, linesep = "") %>%
   kable_paper(full_width = F) %>%
   column_spec(2, color = spec_color(mtcars$mpg[1:8]),
               link = "https://haozhu233.github.io/kableExtra") %>%
@@ -241,7 +241,7 @@ You can still use the `spec_***` helper functions to help you define color. See 
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar to other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling("striped", full_width = F) %>%
   column_spec(7, border_left = T, bold = T) %>%
   row_spec(1, strikeout = T) %>%
@@ -251,7 +251,7 @@ kable(dt, booktabs = T) %>%
 ## Header Rows
 One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
 ```{r}
-kable(dt, booktabs = T, align = "c") %>%
+kbl(dt, booktabs = T, align = "c") %>%
   kable_styling(latex_options = "striped", full_width = F) %>%
   row_spec(0, angle = 45)
 ```
@@ -282,7 +282,7 @@ mtcars[1:10, 1:2] %>%
                                         c("#666666", "#999999", "#BBBBBB")))
   ) %>%
   select(car, mpg, cyl) %>%
-  kable("latex", escape = F, booktabs = T, linesep = "")
+  kbl(escape = F, booktabs = T, linesep = "")
 ```
 
 ## Visualize data with Viridis Color
@@ -298,7 +298,7 @@ iris[1:10, ] %>%
     Species, color = "white", bold = T,
     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
   )) %>%
-  kable("latex", escape = F, booktabs = T, linesep = "", align = "c")
+  kbl(escape = F, booktabs = T, linesep = "", align = "c")
 ```
 
 In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 
@@ -327,14 +327,14 @@ text_formatted <- paste(
 ## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling() %>%
   add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
 ```
 
 In fact, if you want to add another row of header on top, please feel free to do so. Also, since kableExtra 0.3.0, you can specify `bold` & `italic` as you do in `row_spec()`.
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   kable_styling(latex_options = "striped") %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)) %>%
   add_header_above(c(" ", "Group 4" = 4, "Group 5" = 2)) %>%
@@ -344,7 +344,7 @@ kable(dt, booktabs = T) %>%
 ## Group rows via labeling
 Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the function `pack_rows`/`group_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
-kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
+kbl(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
   kable_styling() %>%
   pack_rows("Group 1", 4, 7) %>%
   pack_rows("Group 2", 8, 10)
@@ -352,13 +352,13 @@ kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
 
 In case some users need it, you can define your own gapping spaces between the group labeling row and previous rows. The default value is `0.5em`.
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   pack_rows("Group 1", 4, 5, latex_gap_space = "2em")
 ```
 
 If you prefer to build multiple groups in one step, you can use the short-hand `index` option. Basically, you can use it in the same way as you use `add_header_above`. However, since `group_row` only support one layer of grouping, you can't add multiple layers of grouping header as you can do in `add_header_above`. 
 ```{r, eval=FALSE}
-kable(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
+kbl(mtcars[1:10, 1:6], caption = "Group Rows", booktabs = T) %>%
   kable_styling() %>%
   pack_rows(index=c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 # Not evaluated. The code above should have the same result as the first example in this section.
@@ -370,7 +370,7 @@ Note that `kable` has a relatively special feature to handle `align` and it may 
 
 For example, 
 ```{r, eval=F}
-kable(mtcars[1:2, 1:2], align = c("cl"))
+kbl(mtcars[1:2, 1:2], align = c("cl"))
 # \begin{tabular}{l|cl|cl}  # Note the column alignment here
 # \hline
 #   & mpg & cyl\\
@@ -383,14 +383,14 @@ LaTeX, somehow shows surprisingly high tolerance on that, which is quite unusual
 Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate.  
 
 ```{r}
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   add_indent(c(1, 3, 5))
 ```
 
 You can also specify the width of the indentation by the `level_of_indent` option. At the same time, if you want to indent every column, you can choose to turn on `all_cols`. Note that if a column is right aligned, you probably won't be able to see the effect. 
 
 ```{r}
-kable(dt, booktabs = T, align = "l") %>%
+kbl(dt, booktabs = T, align = "l") %>%
   add_indent(c(1, 3, 5), level_of_indent = 2, all_cols = T)
 ```
 
@@ -404,14 +404,14 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
                  C3 = 1:15,
                  C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, booktabs = T, align = "c") %>%
+kbl(collapse_rows_dt, booktabs = T, align = "c") %>%
   column_spec(1, bold=T) %>%
   collapse_rows(columns = 1:2, latex_hline = "major", valign = "middle")
 ```
 
 Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only document it here if you want to give it a try. 
 ```{r}
-kable(collapse_rows_dt[-1], align = "c", booktabs = T) %>%
+kbl(collapse_rows_dt[-1], align = "c", booktabs = T) %>%
   column_spec(1, bold = T, width = "5em") %>%
   row_spec(c(1:7, 11:12) - 1, extra_latex_after = "\\rowcolor{gray!6}") %>%
   collapse_rows(1, latex_hline = "none")
@@ -431,7 +431,7 @@ collapse_rows_dt <- expand.grid(
   mutate(C1 = rnorm(n()),
          C2 = rnorm(n()))
 
-kable(collapse_rows_dt, 
+kbl(collapse_rows_dt, 
       booktabs = T, align = "c", linesep = '') %>%
   collapse_rows(1:3, row_group_label_position = 'stack') 
 ```
@@ -443,7 +443,7 @@ row_group_label_fonts <- list(
   list(bold = T, italic = T), 
   list(bold = F, italic = F)
   )
-kable(collapse_rows_dt, 
+kbl(collapse_rows_dt, 
                      booktabs = T, align = "c", linesep = '') %>%
   column_spec(1, bold=T) %>%
   collapse_rows(1:3, latex_hline = 'custom', custom_latex_hline = 1:3, 
@@ -459,7 +459,7 @@ Documentations for `add_footnote` can be found [here](http://haozhu233.github.io
 
 There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfilling the APA table footnotes requirements.  
 ```{r}
-kable(dt, align = "c") %>%
+kbl(dt, align = "c") %>%
   kable_styling(full_width = F) %>%
   footnote(general = "Here is a general comments of the table. ",
            number = c("Footnote 1; ", "Footnote 2; "),
@@ -471,7 +471,7 @@ kable(dt, align = "c") %>%
 You can also specify title for each category by using the `***_title` arguments. Default value for `general_title` is "Note: " and "" for the rest three. You can also change the order using `footnote_order`. You can even display footnote as chunk texts (default is as a list) using `footnote_as_chunk`. The font format of the titles are controlled by `title_format` with options including "italic" (default), "bold" and "underline".
 
 ```{r}
-kable(dt, align = "c", booktabs = T) %>%
+kbl(dt, align = "c", booktabs = T) %>%
   footnote(general = "Here is a general comments of the table. ",
            number = c("Footnote 1; ", "Footnote 2; "),
            alphabet = c("Footnote A; ", "Footnote B; "),
@@ -491,7 +491,7 @@ names(dt_footnote)[2] <- paste0(names(dt_footnote)[2],
                                 footnote_marker_symbol(1, "latex"))
 row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4], 
                                 footnote_marker_alphabet(1))
-kable(dt_footnote, align = "c", booktabs = T,
+kbl(dt_footnote, align = "c", booktabs = T,
       # Remember this escape = F
       escape = F) %>%
   footnote(alphabet = "Footnote A; ",
@@ -503,7 +503,7 @@ kable(dt_footnote, align = "c", booktabs = T,
 If your table footnote is very long, please consider to put your table in a `ThreePartTable` frame. Note that, in kableExtra version <= 0.7.0, we were using `threeparttable` but since kableExtra 0.8.0, we start to use `ThreePartTable` from `threeparttablex` instead. `ThreePartTable` supports both the `longtable` and `tabu` environments. 
 
 ```{r}
-kable(dt, align = "c", booktabs = T, caption = "s") %>%
+kbl(dt, align = "c", booktabs = T, caption = "s") %>%
   footnote(general = "Here is a very very very very very very very very very very very very very very very very very very very very long footnote", 
            threeparttable = T)
 ```
@@ -520,7 +520,7 @@ dt_lb <- data.frame(
 
 dt_lb %>%
   mutate_all(linebreak) %>%
-  kable("latex", booktabs = T, escape = F,
+  kbl(booktabs = T, escape = F,
         col.names = linebreak(c("Item\n(Name)", "Value\n(Number)"), align = "c"))
 ```
 
@@ -530,7 +530,7 @@ At the same time, since `kableExtra 0.8.0`, all `kableExtra` functions that have
 ## Table on a Landscape Page
 Sometimes when we have a wide table, we want it to sit on a designated landscape page. The new function `landscape()` can help you on that. Unlike other functions, this little function only serves LaTeX and doesn't have a HTML side.
 ```{r}
-kable(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
+kbl(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
   kable_styling(latex_options = c("hold_position")) %>%
   add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3)) %>%
   add_footnote(c("This table is from mtcars", 
@@ -548,12 +548,12 @@ If you want to save a LaTeX table to a image, you may consider using `save_kable
 # Not evaluated. 
 
 # The code below will automatically include the image in the rmarkdown document
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   column_spec(1, bold = T) %>%
   as_image()
 
 # If you want to save the image locally, just provide a name
-kable(dt, booktabs = T) %>%
+kbl(dt, booktabs = T) %>%
   column_spec(1, bold = T) %>%
   save_kable("my_latex_table.png")
 ```

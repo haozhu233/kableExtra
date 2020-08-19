@@ -67,6 +67,9 @@
 #' defines your own table class, you can also load it here.
 #' @param html_font A string for HTML css font. For example,
 #' `html_font = '"Arial Narrow", arial, helvetica, sans-serif'`.
+#' @param wraptable_width Width of the wraptable area if you specify
+#' "float_left/right" for latex table. Default is "0pt" for automated
+#' determination but you may specify it manually.
 #'
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
@@ -103,7 +106,8 @@ kable_styling <- function(kable_input,
                           table.envir = "table",
                           fixed_thead = FALSE,
                           htmltable_class = NULL,
-                          html_font = NULL) {
+                          html_font = NULL,
+                          wraptable_width = '0pt') {
 
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
@@ -159,7 +163,8 @@ kable_styling <- function(kable_input,
                             stripe_color = stripe_color,
                             stripe_index = stripe_index,
                             latex_table_env = latex_table_env,
-                            table.envir = table.envir))
+                            table.envir = table.envir,
+                            wraptable_width = wraptable_width))
   }
 }
 
@@ -311,7 +316,8 @@ pdfTable_styling <- function(kable_input,
                              stripe_color,
                              stripe_index,
                              latex_table_env,
-                             table.envir) {
+                             table.envir,
+                             wraptable_width) {
 
   latex_options <- match.arg(
     latex_options,
@@ -370,7 +376,7 @@ pdfTable_styling <- function(kable_input,
   }
 
   out <- styling_latex_position(out, table_info, position, latex_options,
-                                table.envir)
+                                table.envir, wraptable_width)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
@@ -513,7 +519,7 @@ styling_latex_full_width <- function(x, table_info) {
 }
 
 styling_latex_position <- function(x, table_info, position, latex_options,
-                                   table.envir) {
+                                   table.envir, wraptable_position) {
   hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
   if (length(hold_position) == 0) hold_position <- ""
   switch(
@@ -523,8 +529,10 @@ styling_latex_position <- function(x, table_info, position, latex_options,
     left = styling_latex_position_left(x, table_info),
     right = styling_latex_position_right(x, table_info, hold_position,
                                          table.envir),
-    float_left = styling_latex_position_float(x, table_info, "l", table.envir),
-    float_right = styling_latex_position_float(x, table_info, "r", table.envir)
+    float_left = styling_latex_position_float(x, table_info, "l", table.envir,
+                                              wraptable_position),
+    float_right = styling_latex_position_float(x, table_info, "r", table.envir,
+                                               wraptable_position)
   )
 }
 
@@ -556,7 +564,8 @@ styling_latex_position_right <- function(x, table_info, hold_position,
   styling_latex_position_center(x, table_info, hold_position, table.envir)
 }
 
-styling_latex_position_float <- function(x, table_info, option, table.envir) {
+styling_latex_position_float <- function(x, table_info, option, table.envir,
+                                         wraptable_width) {
   if (table_info$tabular == "longtable") {
     warning("wraptable is not supported for longtable.")
     if (option == "l") return(styling_latex_position_left(x, table_info))
@@ -567,7 +576,7 @@ styling_latex_position_float <- function(x, table_info, option, table.envir) {
   col_max_length <- apply(size_matrix, 1, max) + 4
   if (table_info$table_env) {
     option <- sprintf("\\\\begin\\{wraptable\\}\\{%s\\}", option)
-    option <- paste0(option, "\\{0pt\\}")
+    option <- paste0(option, "\\{", wraptable_width, "\\}")
     x <- sub("\\\\begin\\{table\\}\\[\\!h\\]", "\\\\begin\\{table\\}", x)
     x <- sub("\\\\begin\\{table\\}", option, x)
     x <- sub("\\\\end\\{table\\}", "\\\\end\\{wraptable\\}", x)

@@ -58,6 +58,9 @@ kable_paper(
 \code{bootstrap_options} in \code{kable_styling}. Choices include \code{basic}, \code{striped}
 and \code{hover}.}
 
+\item{html_font}{A string for HTML css font. For example,
+\code{html_font = '"Arial Narrow", arial, helvetica, sans-serif'}.}
+
 \item{...}{Everything else you need to specify in \code{kable_styling}.}
 }
 \description{
