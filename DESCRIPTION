@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 1.1.0.9000
+Version: 1.1.2
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre'),
     comment = c(ORCID = '0000-0002-3386-6076')),

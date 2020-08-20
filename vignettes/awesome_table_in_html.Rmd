@@ -14,12 +14,20 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+});
+</script>
+
 <img src="kableExtra_sm.png" align="right" alt="logo" width="80" height = "93" style = "border: none; float: right;">
 
 > Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
+
+For users who are not very familiar with the pipe operator `%>%` in R, it is the R version of the [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface). The ides is to pass the result along the chain for a more literal coding experience. Basically when we say `A %>% B`, technically it means sending the results of A to B as B's first argument.
 
 To learn how to generate complex tables in LaTeX, please visit [http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
@@ -41,11 +49,10 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
-When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* 
+> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper funciton `kbl` to the original `kable` function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environement variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new `kbl` function for all its convenience but the support for the original `kable` function is still there. In this doc, we will use `kbl` instead of `kable`.
 
-**Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), `r text_spec("it will automatically set up the global option 'knitr.table.format' based on your current environment", bold = T, color = "white", background = "#d9230f")`. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. 
 
-You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
+**This paragraph is a little outdated. It's here only for education purpose because it's helpful to understand how `kable` works under the hood**. When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* **Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
 
 ```{r}
 # If you are using kableExtra < 0.9.0, you are recommended to set a global option first.
@@ -56,16 +63,57 @@ You can disable this behavior by setting `options(kableExtra.auto_format = FALSE
 ## Basic HTML table
 Basic HTML output of `kable` looks very crude. To the end, it's just a plain HTML table without any love from css.
 ```{r}
-kable(dt)
+kbl(dt)
 ```
 
 ## Bootstrap theme
 When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
 ```{r}
 dt %>%
-  kable() %>%
+  kbl() %>%
   kable_styling()
 ```
+
+## Alternative themes
+`kableExtra` also offers a few in-house alternative HTML table themes other than the default bootstrap theme. Right now there are 6 of them: `kable_paper`, `kable_classic`, `kable_classic_2`, `kable_minimal`, `kable_material` and `kable_material_dark`. These functions are alternatives to `kable_styling`, which means that you can specify any additional formatting options in `kable_styling` in these functions too. The only difference is that `bootstrap_options` (as discussed in the next section) is replaced with `lightable_options` at the same location with only two choices `striped` and `hover` available.
+
+```{r}
+dt %>%
+  kbl() %>%
+  kable_paper("hover")
+```
+
+```{r}
+dt %>%
+  kbl(caption = "Recreating booktabs style table") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+```{r}
+dt %>%
+  kbl() %>%
+  kable_classic_2()
+```
+
+```{r}
+dt %>%
+  kbl() %>%
+  kable_minimal()
+```
+
+```{r}
+dt %>%
+  kbl() %>%
+  kable_material(c("striped", "hover"))
+```
+
+```{r}
+dt %>%
+  kbl() %>%
+  kable_material_dark()
+```
+
+
 
 # Table Styles
 `kable_styling` offers a few other ways to customize the look of a HTML table. 
@@ -75,39 +123,39 @@ If you are familiar with twitter bootstrap, you probably have already known its 
 
 For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 The option `condensed` can also be handy in many cases when you don't want your table to be too large. It has slightly shorter row height.
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 Tables with option `responsive` looks the same with others on a large screen. However, on a small screen like phone, they are horizontally scrollable. Please resize your window to see the result.
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 ## Full width?
 By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
 ```{r}
-kable(dt) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F)
+kbl(dt) %>%
+  kable_paper(bootstrap_options = "striped", full_width = F)
 ```
 
 ## Position
 Table Position only matters when the table doesn't have `full_width`. You can choose to align the table to `center`, `left` or `right` side of the page
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. 
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "float_right")
 ```
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
@@ -115,7 +163,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in
 ## Font size
 If one of your tables is huge and you want to use a smaller font size for that specific table, you can use the `font_size` option. 
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling(bootstrap_options = "striped", font_size = 7)
 ```
 
@@ -123,7 +171,7 @@ kable(dt) %>%
 If you happened to have a very long table, you may consider to use this `fixed_header` option to fix the header row on top as your readers scroll. By default, the background is set to white. If you need a different color, you can set `fixed_header = list(enabled = T, background = "red")`. 
 
 ```{r}
-kable(mtcars[1:10, 1:5]) %>%
+kbl(mtcars[1:10, 1:5]) %>%
   kable_styling(fixed_thead = T)
 ```
 
@@ -143,18 +191,32 @@ text_tbl <- data.frame(
   )
 )
 
-kable(text_tbl) %>%
+kbl(text_tbl) %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T, border_right = T) %>%
   column_spec(2, width = "30em", background = "yellow")
 ```
 
-
-## Row spec
-Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italiciz an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labelling rows.
+> **Key Update**: I understand the need of doing conditional formatting and the previous solution `cell_spec` is relatively hard to use. Therefore in kableExtra 1.2, I improved the functionality of `column_spec` so it can take vectorized input for most of its arguments (except `width`, `border_left` and `border_right`). It is really easy right now to format a column based on other values. 
 
 ```{r}
-kable(dt) %>%
+mtcars[1:8, 1:8] %>%
+  kbl() %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, color = spec_color(mtcars$mpg[1:8]),
+              link = "https://haozhu233.github.io/kableExtra") %>%
+  column_spec(6, color = "white",
+              background = spec_color(mtcars$drat[1:8], end = 0.7),
+              popover = paste("am:", mtcars$am[1:8]))
+```
+
+You can still use the `spec_***` helper functions to help you define color. See the documentation [below](#visualize-data-with-viridis-color). 
+
+## Row spec
+Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
+
+```{r}
+kbl(dt) %>%
   kable_styling("striped", full_width = F) %>%
   column_spec(5:7, bold = T) %>%
   row_spec(3:5, bold = T, color = "white", background = "#D7261E")
@@ -165,55 +227,81 @@ kable(dt) %>%
 ## Header Rows
 One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling("striped", full_width = F) %>%
   row_spec(0, angle = -45)
 ```
 
 # Cell/Text Specification
-Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 
+>**Key Update: As said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**. 
+
+Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
 
 Currently, `cell_spec` supports features including bold, italic, monospace, text color, background color, align, font size & rotation angle. More features may be added in the future. Please see function documentations as reference. 
 
 ## Conditional logic
+>**Key Update: Again, as said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**.
+
 It is very easy to use `cell_spec` with conditional logic. Here is an example.
 ```{r, message=FALSE, warning=FALSE}
-library(dplyr)
-mtcars[1:10, 1:2] %>%
-  mutate(
-    car = row.names(.),
-    mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
-    cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
-                    background = factor(cyl, c(4, 6, 8), 
-                                        c("#666666", "#999999", "#BBBBBB")))
-  ) %>%
-  select(car, mpg, cyl) %>%
-  kable(format = "html", escape = F) %>%
-  kable_styling("striped", full_width = F)
+cs_dt <- mtcars[1:10, 1:2]
+cs_dt$car = row.names(cs_dt)
+row.names(cs_dt) <- NULL
+cs_dt$mpg = cell_spec(cs_dt$mpg, color = ifelse(cs_dt$mpg > 20, "red", "blue"))
+cs_dt$cyl = cell_spec(
+  cs_dt$cyl, color = "white", align = "c", angle = 45, 
+  background = factor(cs_dt$cyl, c(4, 6, 8), c("#666666", "#999999", "#BBBBBB")))
+cs_dt <- cs_dt[c("car", "mpg", "cyl")]
+
+kbl(cs_dt, escape = F) %>%
+  kable_paper("striped", full_width = F)
+
+# You can also do this with dplyr and use one pipe from top to bottom
+# library(dplyr)
+# mtcars[1:10, 1:2] %>%
+#   mutate(
+#     car = row.names(.),
+#     mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
+#     cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
+#                     background = factor(cyl, c(4, 6, 8), 
+#                                         c("#666666", "#999999", "#BBBBBB")))
+#   ) %>%
+#   select(car, mpg, cyl) %>%
+#   kbl(format = "html", escape = F) %>%
+#   kable_styling("striped", full_width = F)
 ```
 
 ## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impactful representation in a tabular format. 
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
 
 ```{r}
-iris[1:10, ] %>%
-  mutate_if(is.numeric, function(x) {
+vs_dt <- iris[1:10, ]
+vs_dt[1:4] <- lapply(vs_dt[1:4], function(x) {
     cell_spec(x, bold = T, 
               color = spec_color(x, end = 0.9),
               font_size = spec_font_size(x))
-  }) %>%
-  mutate(Species = cell_spec(
-    Species, color = "white", bold = T,
-    background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
-  )) %>%
-  kable(escape = F, align = "c") %>%
-  kable_styling(c("striped", "condensed"), full_width = F)
+})
+vs_dt[5] <- cell_spec(vs_dt[[5]], color = "white", bold = T,
+    background = spec_color(1:10, end = 0.9, option = "A", direction = -1))
+kbl(vs_dt, escape = F, align = "c") %>%
+  kable_classic("striped", full_width = F)
+# Or dplyr ver
+# iris[1:10, ] %>%
+#   mutate_if(is.numeric, function(x) {
+#     cell_spec(x, bold = T, 
+#               color = spec_color(x, end = 0.9),
+#               font_size = spec_font_size(x))
+#   }) %>%
+#   mutate(Species = cell_spec(
+#     Species, color = "white", bold = T,
+#     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
+#   )) %>%
+#   kable(escape = F, align = "c") %>%
+#   kable_styling(c("striped", "condensed"), full_width = F)
 ```
-
-In the example above, I'm using the `mutate` functions from `dplyr`. You don't have to use it. Base R solutions like `iris$Species <- cell_spec(iris$Species, color = "red")` also works. 
 
 ## Text Specification
 If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
@@ -262,12 +350,6 @@ $(document).ready(function(){
 </script>
 ```
 
-<script>
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
-});
-</script>
-
 ```{r}
 popover_dt <- data.frame(
   position = c("top", "bottom", "right", "left"),
@@ -280,7 +362,7 @@ popover_dt$`Hover over these items` <- cell_spec(
     title = NULL,                           # title will add a Title Panel on top
     position = popover_dt$position
   ))
-kable(popover_dt, escape = FALSE) %>%
+kbl(popover_dt, escape = FALSE) %>%
   kable_styling("striped", full_width = FALSE)
 ```
 
@@ -293,38 +375,39 @@ You can add links to text via `text_spec("Google", link = "https://google.com")`
 You can combine the good parts from `kableExtra` & `formattable` together into one piece. Read more at http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html
 ```{r, message = FALSE, warning=FALSE}
 library(formattable)
-mtcars[1:5, 1:4] %>%
-  mutate(
-    car = row.names(.),
-    mpg = color_tile("white", "orange")(mpg),
-    cyl = cell_spec(cyl, angle = (1:5)*60, 
-                    background = "red", color = "white", align = "center"),
-    disp = ifelse(disp > 200,
-                  cell_spec(disp, color = "red", bold = T),
-                  cell_spec(disp, color = "green", italic = T)),
-    hp = color_bar("lightgreen")(hp)
-  ) %>%
-  select(car, everything()) %>%
-  kable(escape = F) %>%
+ft_dt <- mtcars[1:5, 1:4]
+ft_dt$car <- row.names(ft_dt)
+row.names(ft_dt) <- NULL
+ft_dt$mpg <- color_tile("white", "orange")(ft_dt$mpg)
+ft_dt$cyl <- cell_spec(ft_dt$cyl, angle = (1:5)*60, 
+                      background = "red", color = "white", align = "center")
+ft_dt$disp <- ifelse(
+  ft_dt$disp > 200,
+  cell_spec(ft_dt$disp, color = "red", bold = T),
+  cell_spec(ft_dt$disp, color = "green", italic = T)
+)
+ft_dt$hp <- color_bar("lightgreen")(ft_dt$hp)
+ft_dt <- ft_dt[c("car", "mpg", "cyl", "disp", "hp")]
+
+kbl(ft_dt, escape = F) %>%
   kable_styling("hover", full_width = F) %>%
   column_spec(5, width = "3cm") %>%
   add_header_above(c(" ", "Hello" = 2, "World" = 2))
 ```
 
-
 # Grouped Columns / Rows
 ## Add header rows to group columns
 Tables with multi-row headers can be very useful to demonstrate grouped data. To do that, you can pipe your kable object into `add_header_above()`. The header variable is supposed to be a named character with the names as new column names and values as column span. For your convenience, if column span equals to 1, you can ignore the `=1` part so the function below can be written as `add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)).
 ```{r}
-kable(dt) %>%
-  kable_styling("striped") %>%
+kbl(dt) %>%
+  kable_classic() %>%
   add_header_above(c(" " = 1, "Group 1" = 2, "Group 2" = 2, "Group 3" = 2))
 ```
 
 In fact, if you want to add another row of header on top, please feel free to do so.
 ```{r}
-kable(dt) %>%
-  kable_styling(c("striped", "bordered")) %>%
+kbl(dt) %>%
+  kable_paper() %>%
   add_header_above(c(" ", "Group 1" = 2, "Group 2" = 2, "Group 3" = 2)) %>%
   add_header_above(c(" ", "Group 4" = 4, "Group 5" = 2)) %>%
   add_header_above(c(" ", "Group 6" = 6))
@@ -333,7 +416,7 @@ kable(dt) %>%
 ## Group rows via labeling
 Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the function `group_rows()`/`pack_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
-kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
+kbl(mtcars[1:10, 1:6], caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
   pack_rows("Group 1", 4, 7) %>%
   pack_rows("Group 2", 8, 10)
@@ -342,14 +425,14 @@ kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
 Another way to use `pack_rows` is to provide an grouping index, similar with `add_header_above()`. This feature is only available in kableExtra > 0.5.2.
 ```{r, eval = F}
 # Not evaluated. This example generates the same table as above.
-kable(mtcars[1:10, 1:6], caption = "Group Rows") %>%
+kbl(mtcars[1:10, 1:6], caption = "Group Rows") %>%
   kable_styling("striped", full_width = F) %>%
   pack_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 ```
 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling("striped", full_width = F) %>%
   pack_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
 ```
@@ -376,7 +459,7 @@ conflicted::conflict_prefer("group_rows", "kableExtra", "dplyr")
 Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
-kable(dt) %>%
+kbl(dt) %>%
   kable_styling("striped", full_width = F) %>%
   add_indent(c(1, 3, 5))
 ```
@@ -389,7 +472,7 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
                  C3 = 1:15,
                  C4 = sample(c(0,1), 15, replace = TRUE))
-kable(collapse_rows_dt, align = "c") %>%
+kbl(collapse_rows_dt, align = "c") %>%
   kable_styling(full_width = F) %>%
   column_spec(1, bold = T) %>%
   collapse_rows(columns = 1:2, valign = "top")
@@ -403,8 +486,8 @@ Documentations for `add_footnote` can be found [here](http://haozhu233.github.io
 
 There are four notation systems in `footnote`, namely `general`, `number`, `alphabet` and `symbol`. The last three types of footnotes will be labeled with corresponding marks while `general` won't be labeled. You can pick any one of these systems or choose to display them all for fulfill the APA table footnotes requirements. 
 ```{r}
-kable(dt, align = "c") %>%
-  kable_styling(full_width = F) %>%
+kbl(dt, align = "c") %>%
+  kable_classic(full_width = F) %>%
   footnote(general = "Here is a general comments of the table. ",
            number = c("Footnote 1; ", "Footnote 2; "),
            alphabet = c("Footnote A; ", "Footnote B; "),
@@ -415,7 +498,7 @@ kable(dt, align = "c") %>%
 You can also specify title for each category by using the `***_title` arguments. Default value for `general_title` is "Note: " and "" for the rest three. You can also change the order using `footnote_order`. You can even display footnote as chunk texts (default is as a list) using `footnote_as_chunk`. The font format of the titles are controlled by `title_format` with options including "italic" (default), "bold" and "underline".
 
 ```{r}
-kable(dt, align = "c") %>%
+kbl(dt, align = "c") %>%
   kable_styling(full_width = F) %>%
   footnote(general = "Here is a general comments of the table. ",
            number = c("Footnote 1; ", "Footnote 2; "),
@@ -435,7 +518,7 @@ names(dt_footnote)[2] <- paste0(names(dt_footnote)[2],
                                 footnote_marker_symbol(1))
 row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4], 
                                 footnote_marker_alphabet(1))
-kable(dt_footnote, align = "c", 
+kbl(dt_footnote, align = "c", 
       # Remember this escape = F
       escape = F) %>%
   kable_styling(full_width = F) %>%
@@ -452,7 +535,7 @@ If you have a huge table and you don't want to reduce the font size to unreadabl
 When you use `scroll_box`, you can specify either `height` or `width`. When you specify `height`, you will get a vertically scrollable box and vice versa. If you specify both, you will get a two-way scrollable box. 
 
 ```{r}
-kable(cbind(mtcars, mtcars)) %>%
+kbl(cbind(mtcars, mtcars)) %>%
   kable_styling() %>%
   scroll_box(width = "500px", height = "200px")
 ```
@@ -462,7 +545,7 @@ kable(cbind(mtcars, mtcars)) %>%
 You can also specify width using a percentage.
 
 ```{r}
-kable(cbind(mtcars, mtcars)) %>%
+kbl(cbind(mtcars, mtcars)) %>%
   add_header_above(c("a" = 5, "b" = 18)) %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "200px")
@@ -473,10 +556,31 @@ Starting from version 1.1.0, if you have a fixed-height box, the header row is f
 ## Save HTML table directly
 If you need to save those HTML tables but you don't want to generate them through rmarkdown, you can try to use the `save_kable()` function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many. 
 ```{r, eval=FALSE}
-kable(mtcars) %>%
+kbl(mtcars) %>%
   kable_styling() %>%
   save_kable(file = "table1.html", self_contained = T)
 ```
+
+## Use it with sparkline
+Well, this is not a feature but rather a documentation of how to use the `sparkline` package together with this package. The easiest way is sort of a hack. You can call `sparkline::sparkline(0)` somewhere on your document where no one would mind so its dependencies could be loaded without any hurdles. Then you use `sparkline::spk_chr()` to generate the text. For a working example, see: [Chinese names in US babynames](https://cranky-chandrasekhar-cfefcd.netlify.app/)
+
+```{r, eval=FALSE}
+# Not evaluated
+library(sparkline)
+sparkline(0)
+```
+
+```{r,eval=FALSE}
+spk_dt <- data.frame(
+  var = c("mpg", "wt"),
+  sparkline = c(spk_chr(mtcars$mpg), spk_chr(mtcars$wt))
+)
+
+kbl(spk_dt, escape = F) %>%
+  kable_paper(full_width = F)
+```
+
+
 
 # From other packages
 Since the structure of `kable` is relatively simple, it shouldn't be too difficult to convert HTML or LaTeX tables generated by other packages to a `kable` object and then use `kableExtra` to modify the outputs. If you are a package author, feel free to reach out to me and we can collaborate. 

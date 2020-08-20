@@ -286,7 +286,6 @@ kbl(cs_dt, escape = F) %>%
   kable_paper("striped", full_width = F)
 
 # You can also do this with dplyr and use one pipe from top to bottom
-# library(dplyr)
 # mtcars[1:10, 1:2] %>%
 #   mutate(
 #     car = row.names(.),
@@ -543,7 +542,7 @@ dt_lb <- data.frame(
   Item = c("Hello\nWorld", "This\nis a cat"), 
   Value = c(10, 100)
 )
-dt_lb$Item = linebreak(Item)
+dt_lb$Item = linebreak(dt_lb$Item)
 
 # Or you can use
 # dt_lb <- dt_lb %>%
@@ -569,6 +568,28 @@ kbl(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
                notation = "symbol") %>%
   pack_rows("Group 1", 4, 5) %>%
   landscape()
+```
+
+## Decimal Alignment
+Decimal alignment has been a requested feature by many LaTeX users. However, since the syntax for either `siunitx` or `dcolumn` are a little different, it is sort of difficult to integrate them into the pipeline of this package without breaking other features. If you need this feature, Brandon Bertelsen (@1beb) provided a very nice solution on github (https://github.com/haozhu233/kableExtra/issues/174, thanks). Here is a working example. 
+
+In the `header-includes` section of the yaml header, include the following settings. If you need different rounding options, you can make changes here. 
+
+```
+\usepackage{siunitx}
+\newcolumntype{d}{S[table-format=3.2]}
+```
+
+For your table, you need to modify the column names and use `d` to as the `align` options. 
+
+```{r, eval = FALSE}
+# not evaluated
+k <- mtcars[1:10,1:5]
+names(k) <- paste("{", names(k), "}")
+kableExtra::kable(
+     k, "latex", booktabs = TRUE, longtable = TRUE,  
+     align = c("l", rep("d", 4)), linesep = "", escape = FALSE) %>% 
+  kable_styling(full_width=FALSE)
 ```
 
 ## Use LaTeX table in HTML or Word

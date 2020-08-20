@@ -8,7 +8,7 @@ collapse_rows(
   kable_input,
   columns = NULL,
   valign = c("middle", "top", "bottom"),
-  latex_hline = c("major", "full", "none", "custom"),
+  latex_hline = c("full", "major", "none", "custom", "linespace"),
   row_group_label_position = c("identity", "stack"),
   custom_latex_hline = NULL,
   row_group_label_fonts = NULL,
@@ -29,8 +29,7 @@ need to be collapsed.}
 not up to date.}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
-Choose from \code{major}, \code{full}, \code{none}, \code{custom} and \code{linespace}. We changed the default from
-\code{full} to \code{major} in version 1.2.}
+Choose from \code{full}, \code{major}, \code{none}, \code{custom} and \code{linespace}.}
 
 \item{row_group_label_position}{Option controlling positions of row group
 labels. Choose from \code{identity}, \code{stack}.}
