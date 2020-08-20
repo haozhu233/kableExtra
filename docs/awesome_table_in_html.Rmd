@@ -85,8 +85,8 @@ dt %>%
 
 ```{r}
 dt %>%
-  kbl() %>%
-  kable_classic()
+  kbl(caption = "Recreating booktabs style table") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
 ```
 
 ```{r}

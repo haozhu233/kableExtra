@@ -40,27 +40,35 @@
 }
 
 .lightable-classic {
-  border-top: 2px solid #111111;
+  border-top: 0.16em solid #111111;
   width: 100%;
   margin-bottom: 10px;
+  margin: 10px 5px;
+}
+
+.lightable-classic caption {
+  color: #222222;
 }
 
 .lightable-classic td {
   padding-left: 5px;
   padding-right: 5px;
+  color: #222222;
 }
 
 .lightable-classic th {
   padding-left: 5px;
   padding-right: 5px;
+  font-weight: normal;
+  color: #222222;
 }
 
 .lightable-classic thead tr:last-child th {
-  border-bottom: 1px solid #111111;
+  border-bottom: 0.10em solid #111111;
 }
 
 .lightable-classic tbody tr:last-child td {
-  border-bottom: 2px solid #111111;
+  border-bottom: 0.14em solid #111111;
 }
 
 .lightable-classic.lightable-hover tbody tr:hover {
@@ -77,14 +85,21 @@
   margin-bottom: 10px;
 }
 
+.lightable-classic-2 caption {
+  color: #222222;
+}
+
 .lightable-classic-2 td {
   padding-left: 5px;
   padding-right: 5px;
+  color: #222222;
 }
 
 .lightable-classic-2 th {
   padding-left: 5px;
   padding-right: 5px;
+  font-weight: normal;
+  color: #222222;
 }
 
 .lightable-classic-2 tbody tr:last-child td {

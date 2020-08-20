@@ -1346,23 +1346,30 @@ background-color: #f5f5f5;
 background-color: #f5f5f5;
 }
 .lightable-classic {
-border-top: 2px solid #111111;
+border-top: 0.16em solid #111111;
 width: 100%;
 margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic caption {
+color: #222222;
 }
 .lightable-classic td {
 padding-left: 5px;
 padding-right: 5px;
+color: #222222;
 }
 .lightable-classic th {
 padding-left: 5px;
 padding-right: 5px;
+font-weight: normal;
+color: #222222;
 }
 .lightable-classic thead tr:last-child th {
-border-bottom: 1px solid #111111;
+border-bottom: 0.10em solid #111111;
 }
 .lightable-classic tbody tr:last-child td {
-border-bottom: 2px solid #111111;
+border-bottom: 0.14em solid #111111;
 }
 .lightable-classic.lightable-hover tbody tr:hover {
 background-color: #F9EEC1;
@@ -1375,13 +1382,19 @@ border-top: 3px double #111111;
 width: 100%;
 margin-bottom: 10px;
 }
+.lightable-classic-2 caption {
+color: #222222;
+}
 .lightable-classic-2 td {
 padding-left: 5px;
 padding-right: 5px;
+color: #222222;
 }
 .lightable-classic-2 th {
 padding-left: 5px;
 padding-right: 5px;
+font-weight: normal;
+color: #222222;
 }
 .lightable-classic-2 tbody tr:last-child td {
 border-bottom: 3px double #111111;
@@ -2208,9 +2221,12 @@ Hornet Sportabout
 </tbody>
 </table>
 <pre class="r"><code>dt %&gt;%
-  kbl() %&gt;%
-  kable_classic()</code></pre>
-<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+  kbl(caption = &quot;Recreating booktabs style table&quot;) %&gt;%
+  kable_classic(full_width = F, html_font = &quot;Cambria&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Recreating booktabs style table
+</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -5219,6 +5235,19 @@ Species
 </tr>
 </tbody>
 </table>
+<pre class="r"><code># Or dplyr ver
+# iris[1:10, ] %&gt;%
+#   mutate_if(is.numeric, function(x) {
+#     cell_spec(x, bold = T, 
+#               color = spec_color(x, end = 0.9),
+#               font_size = spec_font_size(x))
+#   }) %&gt;%
+#   mutate(Species = cell_spec(
+#     Species, color = &quot;white&quot;, bold = T,
+#     background = spec_color(1:10, end = 0.9, option = &quot;A&quot;, direction = -1)
+#   )) %&gt;%
+#   kable(escape = F, align = &quot;c&quot;) %&gt;%
+#   kable_styling(c(&quot;striped&quot;, &quot;condensed&quot;), full_width = F)</code></pre>
 </div>
 <div id="text-specification" class="section level2">
 <h2>Text Specification</h2>
@@ -6466,7 +6495,7 @@ c
 1
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6474,7 +6503,7 @@ c
 2
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6482,7 +6511,7 @@ c
 3
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6506,7 +6535,7 @@ c
 6
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6514,7 +6543,7 @@ c
 7
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -6525,7 +6554,7 @@ d
 8
 </td>
 <td style="text-align:center;">
-1
+0
 </td>
 </tr>
 <tr>
@@ -6574,7 +6603,7 @@ d
 13
 </td>
 <td style="text-align:center;">
-0
+1
 </td>
 </tr>
 <tr>
