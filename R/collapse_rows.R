@@ -13,8 +13,7 @@
 #' "top" is not default is that the multirow package on CRAN win-builder is
 #' not up to date.
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
-#' Choose from `major`, `full`, `none`, `custom` and `linespace`. We changed the default from
-#' `full` to `major` in version 1.2.
+#' Choose from `full`, `major`, `none`, `custom` and `linespace`.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
 #' be separated by hlines.
 #' @param row_group_label_position Option controlling positions of row group
@@ -42,7 +41,8 @@
 #' @export
 collapse_rows <- function(kable_input, columns = NULL,
                           valign = c("middle", "top", "bottom"),
-                          latex_hline = c("major", "full", "none", "custom"),
+                          latex_hline = c("full", "major", "none", "custom",
+                                          "linespace"),
                           row_group_label_position = c('identity', 'stack'),
                           custom_latex_hline = NULL,
                           row_group_label_fonts = NULL,
@@ -229,6 +229,22 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
       custom_latex_hline = 1
     }
   }
+
+  if (table_info$tabular == "longtable" & longtable_clean_cut) {
+    if (max(collapse_matrix) > 50) {
+      warning("It seems that you have a group larger than 50 rows and span ",
+              "over a page. You probably want to set longtable_clean_cut to ",
+              "be FALSE.")
+    }
+    pagebreak_hint <- "\\\\pagebreak[0]"
+    nopagebreak <- "\\\\nopagebreak"
+    # out <- gsub("\\\\\\\\($|\n)", "\\\\\\\\\\\\nopagebreak\\1", out)
+    # out <- gsub("(\\\\cmidrule[{][^}]*[}])", "\\1\\\\pagebreak[0]", out)
+  } else {
+    pagebreak_hint <- ""
+    nopagebreak <- ""
+  }
+
   for (i in seq(1:nrow(collapse_matrix))) {
     new_contents[i] <- paste0(new_kable_dt[i, ], collapse = " & ")
     table_info$contents[i + 1] <- new_contents[i]
@@ -236,18 +252,19 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
       row_midrule <- switch(
         latex_hline,
         "none" = "",
-        "full" = ifelse(
-          sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
+        "full" = paste0(
           midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
                          table_info$booktabs),
-          midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
-                         FALSE)
+          ifelse(
+            sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
+            pagebreak_hint, nopagebreak
+          )
         ),
         "major" = ifelse(
           sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
-          midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
-                         table_info$booktabs),
-          ""
+          paste0(midline_groups(which(as.numeric(midrule_matrix[i, ]) > 0),
+                         table_info$booktabs), pagebreak_hint),
+          nopagebreak
         ),
          "custom" = ifelse(
           sum(as.numeric(midrule_matrix[i, custom_latex_hline])) > 0,
@@ -257,29 +274,13 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
          ),
         "linespace"= ifelse(
           sum(as.numeric(midrule_matrix[i, ]) > 0) == ncol(midrule_matrix),
-          "\\\\addlinespace\n",
+          "\\\\addlinespace",
           ""
         )
       )
       new_contents[i] <- paste0(new_contents[i], "\\\\\\\\\n", row_midrule)
     }
     out <- sub(contents[i + 1], new_contents[i], out, perl=TRUE)
-  }
-
-  if (table_info$tabular == "longtable" & longtable_clean_cut) {
-    if (max(collapse_matrix) > 50) {
-      warning("It seems that you have a group larger than 50 rows and span ",
-              "over a page. You probably want to set longtable_clean_cut to ",
-              "be FALSE.")
-    }
-    if (latex_hline == "full") {
-      warning("kableExtra 1.2 adds a clean_cut feature to provide better page",
-              " breaking in collapse_rows. It only works when latex_hline = ",
-              "'major'. It looks like you have longtable_clean_cut = T while ",
-              "latex_hline = 'full'. Please change either one of them.")
-    }
-    out <- gsub("\\\\\\\\($|\n)", "\\\\\\\\\\\\nopagebreak\\1", out)
-    out <- gsub("(\\\\cmidrule[{][^}]*[}])", "\\1\\\\pagebreak[0]", out)
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE

@@ -444,10 +444,8 @@ latex_column_align_builder <- function(x, width,
   #                            c(bold, italic, monospace, underline, strikeout)]
   # latex_array_options <- c(latex_array_options, extra_align,
   #                          color, background)
-  # latex_array_options <- paste0(
-  #   "\\>\\{", paste(latex_array_options, collapse = ""), "\\}"
-  # )
-  # x <- paste0(latex_array_options, x)
+  latex_array_options <- paste0("\\>\\{", extra_align, "\\}")
+  x <- paste0(latex_array_options, x)
   if (border_left) {
     x <- paste0("\\|", x)
   }
