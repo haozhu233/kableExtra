@@ -65,8 +65,10 @@ and make them multirow cells. Note that if you want to use \code{column_spec} to
 specify column styles, you should use \code{column_spec} before \code{collapse_rows}.
 }
 \examples{
+\dontrun{
 dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
 x <- knitr::kable(dt, "html")
 collapse_rows(x)
+}
 
 }

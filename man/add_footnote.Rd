@@ -33,7 +33,9 @@ Default is TRUE.}
 Add footnote to your favorite kable output.
 }
 \examples{
+\dontrun{
 x <- knitr::kable(head(mtcars), "html")
 add_footnote(x, c("footnote 1", "footnote 2"), notation = "symbol")
+}
 
 }

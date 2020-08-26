@@ -78,7 +78,9 @@ also possible to specify footnote section header one by one and print
 footnotes as a chunk of texts.
 }
 \examples{
+\dontrun{
 dt <- mtcars[1:5, 1:5]
 footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+}
 
 }

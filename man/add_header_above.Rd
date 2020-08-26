@@ -95,9 +95,11 @@ to demonstrate grouped data. This function takes the output of a \code{kable()}
 function and adds an header row on top of it.
 }
 \examples{
+\dontrun{
 x <- knitr::kable(head(mtcars), "html")
 # Add a row of header with 3 columns on the top of the table. The column
 # span for the 2nd and 3rd one are 5 & 6.
 add_header_above(x, c(" ", "Group 1" = 5, "Group 2" = 6))
+}
 
 }

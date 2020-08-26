@@ -6,9 +6,12 @@
 #' @param level_of_indent a numeric value for the indent level. Default is 1.
 #' @param all_cols T/F whether to apply indentation to all columns
 #'
-#' @examples x <- knitr::kable(head(mtcars), "html")
+#' @examples
+#' \dontrun{
+#' x <- knitr::kable(head(mtcars), "html")
 #' # Add indentations to the 2nd & 4th row
 #' add_indent(x, c(2, 4), level_of_indent = 1)
+#' }
 #'
 #' @export
 add_indent <- function(kable_input, positions,

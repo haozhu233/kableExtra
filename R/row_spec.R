@@ -34,8 +34,11 @@
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
 #' with `add.to.row` in xtable
 #'
-#' @examples x <- knitr::kable(head(mtcars), "html")
+#' @examples
+#' \dontrun{
+#' x <- knitr::kable(head(mtcars), "html")
 #' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
+#' }
 #'
 #' @export
 row_spec <- function(kable_input, row,

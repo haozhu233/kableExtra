@@ -7,7 +7,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' remove_column(kable(mtcars), 1)
+#' }
 remove_column <- function (kable_input, columns) {
     if (is.null(columns)) return(kable_input)
     kable_format <- attr(kable_input, "format")

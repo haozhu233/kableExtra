@@ -73,7 +73,9 @@ This function allows users to select a row and then specify
 its look. It can also specify the format of the header row when \code{row} = 0.
 }
 \examples{
+\dontrun{
 x <- knitr::kable(head(mtcars), "html")
 row_spec(x, 1:2, bold = TRUE, italic = TRUE)
+}
 
 }

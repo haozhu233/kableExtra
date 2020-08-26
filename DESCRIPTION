@@ -51,7 +51,8 @@ Imports:
 Suggests:
     testthat,
     magick,
-    formattable
+    formattable,
+    sparkline
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1

@@ -126,8 +126,10 @@ pay attention to the differences in color codes between HTML and LaTeX.}
 Group a few rows in a table together under a label.
 }
 \examples{
+\dontrun{
 x <- knitr::kable(head(mtcars), "html")
 # Put Row 2 to Row 5 into a Group and label it as "Group A"
 pack_rows(x, "Group A", 2, 5)
+}
 
 }

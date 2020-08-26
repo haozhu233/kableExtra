@@ -7,7 +7,10 @@
 #' @param margin Customizable page margin for special needs. Values can be
 #' "1cm", "1in" or similar.
 #'
-#' @examples landscape(knitr::kable(head(mtcars), "latex"))
+#' @examples
+#' \dontrun{
+#' landscape(knitr::kable(head(mtcars), "latex"))
+#' }
 #'
 #' @export
 landscape <- function(kable_input, margin = NULL) {

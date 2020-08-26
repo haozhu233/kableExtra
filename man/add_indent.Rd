@@ -20,8 +20,10 @@ be indented.}
 Add indentations to row headers
 }
 \examples{
+\dontrun{
 x <- knitr::kable(head(mtcars), "html")
 # Add indentations to the 2nd & 4th row
 add_indent(x, c(2, 4), level_of_indent = 1)
+}
 
 }

@@ -16,5 +16,7 @@ need to be removed}
 Remove columns
 }
 \examples{
+\dontrun{
 remove_column(kable(mtcars), 1)
+}
 }

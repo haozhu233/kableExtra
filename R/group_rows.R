@@ -47,9 +47,12 @@
 #' @param background A character string for column background color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #'
-#' @examples x <- knitr::kable(head(mtcars), "html")
+#' @examples
+#' \dontrun{
+#' x <- knitr::kable(head(mtcars), "html")
 #' # Put Row 2 to Row 5 into a Group and label it as "Group A"
 #' pack_rows(x, "Group A", 2, 5)
+#' }
 #'
 #' @export
 group_rows <- function(kable_input, group_label = NULL,

@@ -202,10 +202,11 @@
 .lightable-paper {
   width: 100%;
   margin-bottom: 10px;
+  color: #444;
 }
 
 .lightable-paper thead tr:last-child th {
-  color: #999;
+  color: #666;
   vertical-align: bottom;
   border-bottom: 1px solid #00000020;
   line-height: 1.15em;

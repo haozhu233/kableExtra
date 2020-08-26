@@ -14,10 +14,13 @@
 #' escaped. If you are using footnote_marker in `group_rows`` labeling row or
 #' `add_header_above`, you need to set this to be `TRUE`.
 #'
-#' @examples dt <- mtcars[1:5, 1:5]
+#' @examples
+#' \dontrun{
+#' dt <- mtcars[1:5, 1:5]
 #' colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "html"))
 #' rownames(dt)[2] <- paste0(rownames(dt)[2], footnote_marker_alphabet(1, "html"))
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+#' }
 #'
 #' @export
 footnote_marker_number <- function(x, format, double_escape = FALSE) {

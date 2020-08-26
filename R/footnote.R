@@ -37,8 +37,11 @@
 #' @param symbol_manual User can manually supply a vector of either html or
 #' latex symbols. For example, `symbol_manual = c('*', '\\\\dag', '\\\\ddag')`.`
 #'
-#' @examples dt <- mtcars[1:5, 1:5]
+#' @examples
+#' \dontrun{
+#' dt <- mtcars[1:5, 1:5]
 #' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+#' }
 #'
 #' @export
 footnote <- function(kable_input,

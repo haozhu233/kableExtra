@@ -34,9 +34,12 @@
 #' before the end of a page. If you have a group that is longer than 1 page,
 #' you need to turn off this option.
 #'
-#' @examples dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
+#' @examples
+#' \dontrun{
+#' dt <- data.frame(a = c(1, 1, 2, 2), b = c("a", "a", "a", "b"))
 #' x <- knitr::kable(dt, "html")
 #' collapse_rows(x)
+#' }
 #'
 #' @export
 collapse_rows <- function(kable_input, columns = NULL,
