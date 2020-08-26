@@ -1,7 +1,7 @@
 #' kableExtra
 #'
 #' @description When we are talking about table generators in R,
-#' [knitr](https://yihui.name/knitr/)'s `kable()` function wins lots of flavor
+#' [knitr](https://yihui.org/knitr/)'s `kable()` function wins lots of flavor
 #' by its ultimate simplicity. Unlike those powerful table rendering engines
 #' such as [`xtable`](https://CRAN.R-project.org/package=xtable), the philosophy
 #' behind [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) is to
@@ -28,13 +28,13 @@
 #' `kableExtra` cannot solve the problem
 #'
 #' For a full package documentation, please visit the
-#' [package documentation site](http://haozhu233.github.io/kableExtra/)
+#' [package documentation site](https://haozhu233.github.io/kableExtra/)
 #' for more information
 #'
 #' @section Features:
 #' **Pipable syntax:** `kableExtra` is NOT a table generating package. It is a
 #' package that can "add features" to a `kable` output using a syntax
-#' that every useR loves - the [pipe](http://r4ds.had.co.nz/pipes.html).
+#' that every useR loves - the [pipe](https://r4ds.had.co.nz/pipes.html).
 #' We see similar approaches to deal with plots in packages like `ggvis` and
 #' `plotly`. There is no reason why we cannot use it with tables.
 #'

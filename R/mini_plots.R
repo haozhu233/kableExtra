@@ -180,7 +180,7 @@ rmd_files_dir <- function(create = TRUE) {
   curr_file_name <- sub("\\.[^\\.]*$", "", knitr::current_input())
   dir_name <- paste0(curr_file_name, "_files")
   if (!dir.exists(dir_name) & create) dir.create(dir_name)
-  fig_dir_name <- file.path(dir_name, "figure-latex")
+  fig_dir_name <- file.path(dir_name, "figure-latex/")
   if (!dir.exists(fig_dir_name) & create) dir.create(fig_dir_name)
   return(fig_dir_name)
 }

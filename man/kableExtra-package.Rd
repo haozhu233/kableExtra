@@ -7,7 +7,7 @@
 \title{kableExtra}
 \description{
 When we are talking about table generators in R,
-\href{https://yihui.name/knitr/}{knitr}'s \code{kable()} function wins lots of flavor
+\href{https://yihui.org/knitr/}{knitr}'s \code{kable()} function wins lots of flavor
 by its ultimate simplicity. Unlike those powerful table rendering engines
 such as \href{https://CRAN.R-project.org/package=xtable}{\code{xtable}}, the philosophy
 behind \href{https://rdrr.io/cran/knitr/man/kable.html}{\code{knitr::kable()}} is to
@@ -36,7 +36,7 @@ tables in either HTML or LaTeX
 }
 
 For a full package documentation, please visit the
-\href{http://haozhu233.github.io/kableExtra/}{package documentation site}
+\href{https://haozhu233.github.io/kableExtra/}{package documentation site}
 for more information
 }
 \note{
@@ -53,7 +53,7 @@ load related LaTeX packages manually.
 
 \strong{Pipable syntax:} \code{kableExtra} is NOT a table generating package. It is a
 package that can "add features" to a \code{kable} output using a syntax
-that every useR loves - the \href{http://r4ds.had.co.nz/pipes.html}{pipe}.
+that every useR loves - the \href{https://r4ds.had.co.nz/pipes.html}{pipe}.
 We see similar approaches to deal with plots in packages like \code{ggvis} and
 \code{plotly}. There is no reason why we cannot use it with tables.
 

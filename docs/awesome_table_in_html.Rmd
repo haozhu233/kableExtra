@@ -203,7 +203,7 @@ mtcars[1:8, 1:8] %>%
   kbl() %>%
   kable_paper(full_width = F) %>%
   column_spec(2, color = spec_color(mtcars$mpg[1:8]),
-              link = "https://haozhu233.github.io/kableExtra") %>%
+              link = "https://haozhu233.github.io/kableExtra/") %>%
   column_spec(6, color = "white",
               background = spec_color(mtcars$drat[1:8], end = 0.7),
               popover = paste("am:", mtcars$am[1:8]))
