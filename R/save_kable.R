@@ -122,6 +122,14 @@ remove_html_doc <- function(x){
 }
 
 save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) {
+
+  # if file extension is .tex, write to file, return the table as an
+  # invisible string, and do nothing else
+  if (tools::file_ext(file) == "tex") {
+    writeLines(x, file, useBytes = T)
+    return(invisible(x))
+  }
+
   temp_tex <- c(
     "\\documentclass[border=1mm, preview]{standalone}",
     "\\usepackage[active,tightpage]{preview}",
