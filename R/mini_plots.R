@@ -63,7 +63,8 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
   }
 
   if (is.null(file)) {
-    file <- tempfile("hist", dir, paste0('.', file_type))
+    file <- file.path(dir, paste0(
+      "hist_", round(as.numeric(Sys.time()) * 1000), ".", file_type))
   }
 
   if (file_type == "svg") {
@@ -132,7 +133,8 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
   }
 
   if (is.null(file)) {
-    file <- tempfile("hist", dir, paste0('.', file_type))
+    file <- file.path(dir, paste0(
+      "hist_", round(as.numeric(Sys.time()) * 1000), ".", file_type))
   }
 
   if (file_type == "svg") {
