@@ -10,7 +10,9 @@ during package start-up.
 * Added a few alternative HTML table themes. See https://haozhu233.github.io/kableExtra/awesome_table_in_html.html#Alternative_themes. (#451)
 
 * `column_spec` now takes vectorized input so it's easier to do conditional 
-formatting without using `cell_spec`
+formatting without using `cell_spec`.
+
+* Added tools to include images and inline plots in `column_spec`. 
 
 # Minor Change
 

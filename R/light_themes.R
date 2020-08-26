@@ -35,7 +35,7 @@ kable_classic_2 <- function(
 #' @export
 kable_minimal <- function(
   kable_input, lightable_options = "basic",
-  html_font = '"Trebuchet MS", verdana, calibri, sans-serif', ...) {
+  html_font = '"Trebuchet MS", verdana, sans-serif', ...) {
   kable_light(kable_input, "lightable-minimal",
               lightable_options, html_font, ...)
 }

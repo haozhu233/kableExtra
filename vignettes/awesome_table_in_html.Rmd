@@ -22,7 +22,7 @@ $(document).ready(function(){
 
 <img src="kableExtra_sm.png" align="right" alt="logo" width="80" height = "93" style = "border: none; float: right;">
 
-> Please see the package [documentation site](http://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
+> Please see the package [documentation site](https://haozhu233.github.io/kableExtra/) for how to use this package in LaTeX.
 
 # Overview
 The goal of `kableExtra` is to help you build common complex tables and manipulate table styles. It imports the pipe `%>%` symbol from `magrittr` and verbalize all the functions, so basically you can add "layers" to a kable output in a way that is similar with `ggplot2` and `plotly`. 
@@ -44,7 +44,6 @@ devtools::install_github("haozhu233/kableExtra")
 # Getting Started
 Here we are using the first few columns and rows from dataset `mtcars`
 ```{r}
-library(knitr)
 library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
@@ -119,7 +118,7 @@ dt %>%
 `kable_styling` offers a few other ways to customize the look of a HTML table. 
 
 ## Bootstrap table classes
-If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](http://getbootstrap.com/css/#tables) to get a sense of how they look like. All of these options are available here. 
+If you are familiar with twitter bootstrap, you probably have already known its predefined classes, including `striped`, `bordered`, `hover`, `condensed` and `responsive`. If you are not familiar, no worries, you can take a look at their [documentation site](https://getbootstrap.com/css/) to get a sense of how they look like. All of these options are available here. 
 
 For example, to add striped lines (alternative row colors) to your table and you want to highlight the hovered row, you can simply type:
 ```{r}
@@ -192,7 +191,7 @@ text_tbl <- data.frame(
 )
 
 kbl(text_tbl) %>%
-  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
   column_spec(1, bold = T, border_right = T) %>%
   column_spec(2, width = "30em", background = "yellow")
 ```
@@ -212,12 +211,48 @@ mtcars[1:8, 1:8] %>%
 
 You can still use the `spec_***` helper functions to help you define color. See the documentation [below](#visualize-data-with-viridis-color). 
 
+## Insert Images into Columns
+Technically, we are still talking about `column_spec` here. However, since this topic itself contains its own subtopics, we split it out as a separate section. Since `kableExtra` 1.2, we introduced the feature of adding images to columns of tables. Here is a quick example. 
+
+```{r}
+tbl_img <- data.frame(
+  name = c("kableExtra 1", "kableExtra 2"),
+  logo = ""
+)
+tbl_img %>%
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = "kableExtra_sm.png")
+```
+
+If you need to specify the size of the images, you need to do it through `spec_image`. 
+
+```{r}
+tbl_img %>%
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = spec_image(
+    c("kableExtra_sm.png", "kableExtra_sm.png"), 50, 50))
+```
+
+`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist` and `spec_boxplot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. Note that in html, you can also use package `sparkline` to create some jquery based interactive sparklines. Check out the end of this guide for details. 
+
+```{r}
+mpg_list <- split(mtcars$mpg, mtcars$cyl)
+inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "")
+inline_plot %>% 
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = spec_boxplot(mpg_list)) %>%
+  column_spec(3, image = spec_hist(mpg_list))
+```
+
 ## Row spec
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 
 ```{r}
 kbl(dt) %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   column_spec(5:7, bold = T) %>%
   row_spec(3:5, bold = T, color = "white", background = "#D7261E")
 ```
@@ -228,7 +263,7 @@ kbl(dt) %>%
 One special case of `row_spec` is that you can specify the format of the header row via `row_spec(row = 0, ...)`. 
 ```{r}
 kbl(dt) %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   row_spec(0, angle = -45)
 ```
 
@@ -271,7 +306,7 @@ kbl(cs_dt, escape = F) %>%
 #   ) %>%
 #   select(car, mpg, cyl) %>%
 #   kbl(format = "html", escape = F) %>%
-#   kable_styling("striped", full_width = F)
+#   kable_paper("striped", full_width = F)
 ```
 
 ## Visualize data with Viridis Color
@@ -300,7 +335,7 @@ kbl(vs_dt, escape = F, align = "c") %>%
 #     background = spec_color(1:10, end = 0.9, option = "A", direction = -1)
 #   )) %>%
 #   kable(escape = F, align = "c") %>%
-#   kable_styling(c("striped", "condensed"), full_width = F)
+#   kable_paper(c("striped", "condensed"), full_width = F)
 ```
 
 ## Text Specification
@@ -363,11 +398,11 @@ popover_dt$`Hover over these items` <- cell_spec(
     position = popover_dt$position
   ))
 kbl(popover_dt, escape = FALSE) %>%
-  kable_styling("striped", full_width = FALSE)
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ## Links
-You can add links to text via `text_spec("Google", link = "https://google.com")`: `r text_spec("Google", link = "https://google.com")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` (go back to the top of the page) or `javascript:void(0)` (literally do nothing) in the `link` option.
+You can add links to text via `text_spec("kableExtra", link = "https://haozhu233.github.io/kableExtra/")`: `r text_spec("kableExtra", link = "https://haozhu233.github.io/kableExtra/")`. If you want your hover message to be more obvious, it might be a good idea to put a `#` (go back to the top of the page) or `javascript:void(0)` (literally do nothing) in the `link` option.
 `text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`:
 `r text_spec("Hover on me", link = "javascript:void(0)", popover = "Hello")`
 
@@ -390,7 +425,7 @@ ft_dt$hp <- color_bar("lightgreen")(ft_dt$hp)
 ft_dt <- ft_dt[c("car", "mpg", "cyl", "disp", "hp")]
 
 kbl(ft_dt, escape = F) %>%
-  kable_styling("hover", full_width = F) %>%
+  kable_paper("hover", full_width = F) %>%
   column_spec(5, width = "3cm") %>%
   add_header_above(c(" ", "Hello" = 2, "World" = 2))
 ```
@@ -417,7 +452,7 @@ kbl(dt) %>%
 Sometimes we want a few rows of the table being grouped together. They might be items under the same topic (e.g., animals in one species) or just different data groups for a categorical variable (e.g., age < 40, age > 40). With the function `group_rows()`/`pack_rows()` in `kableExtra`, this kind of task can be completed in one line. Please see the example below. Note that when you count for the start/end rows of the group, you don't need to count for the header rows nor other group label rows. You only need to think about the row numbers in the "original R dataframe".
 ```{r}
 kbl(mtcars[1:10, 1:6], caption = "Group Rows") %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   pack_rows("Group 1", 4, 7) %>%
   pack_rows("Group 2", 8, 10)
 ```
@@ -426,14 +461,14 @@ Another way to use `pack_rows` is to provide an grouping index, similar with `ad
 ```{r, eval = F}
 # Not evaluated. This example generates the same table as above.
 kbl(mtcars[1:10, 1:6], caption = "Group Rows") %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   pack_rows(index = c(" " = 3, "Group 1" = 4, "Group 2" = 3))
 ```
 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kbl(dt) %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   pack_rows("Group 1", 3, 5, label_row_css = "background-color: #666; color: #fff;")
 ```
 
@@ -460,7 +495,7 @@ Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to lis
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kbl(dt) %>%
-  kable_styling("striped", full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
   add_indent(c(1, 3, 5))
 ```
 
@@ -473,7 +508,7 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C3 = 1:15,
                  C4 = sample(c(0,1), 15, replace = TRUE))
 kbl(collapse_rows_dt, align = "c") %>%
-  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
   column_spec(1, bold = T) %>%
   collapse_rows(columns = 1:2, valign = "top")
 ```
@@ -499,7 +534,7 @@ You can also specify title for each category by using the `***_title` arguments.
 
 ```{r}
 kbl(dt, align = "c") %>%
-  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
   footnote(general = "Here is a general comments of the table. ",
            number = c("Footnote 1; ", "Footnote 2; "),
            alphabet = c("Footnote A; ", "Footnote B; "),
@@ -521,7 +556,7 @@ row.names(dt_footnote)[4] <- paste0(row.names(dt_footnote)[4],
 kbl(dt_footnote, align = "c", 
       # Remember this escape = F
       escape = F) %>%
-  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
   footnote(alphabet = "Footnote A; ",
            symbol = "Footnote Symbol 1; ",
            alphabet_title = "Type II: ", symbol_title = "Type III: ",
@@ -536,7 +571,7 @@ When you use `scroll_box`, you can specify either `height` or `width`. When you 
 
 ```{r}
 kbl(cbind(mtcars, mtcars)) %>%
-  kable_styling() %>%
+  kable_paper() %>%
   scroll_box(width = "500px", height = "200px")
 ```
 
@@ -547,7 +582,7 @@ You can also specify width using a percentage.
 ```{r}
 kbl(cbind(mtcars, mtcars)) %>%
   add_header_above(c("a" = 5, "b" = 18)) %>%
-  kable_styling() %>%
+  kable_paper() %>%
   scroll_box(width = "100%", height = "200px")
 ```
 
@@ -557,7 +592,7 @@ Starting from version 1.1.0, if you have a fixed-height box, the header row is f
 If you need to save those HTML tables but you don't want to generate them through rmarkdown, you can try to use the `save_kable()` function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many. 
 ```{r, eval=FALSE}
 kbl(mtcars) %>%
-  kable_styling() %>%
+  kable_paper() %>%
   save_kable(file = "table1.html", self_contained = T)
 ```
 

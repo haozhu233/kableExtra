@@ -46,7 +46,8 @@ Imports:
     glue,
     tools,
     webshot,
-    digest
+    digest,
+    graphics
 Suggests:
     testthat,
     magick,

@@ -68,13 +68,14 @@
 #' @importFrom utils read.csv head capture.output
 #' @importFrom scales rescale
 #' @importFrom viridisLite viridis
-#' @importFrom stats ave
-#' @importFrom grDevices col2rgb
+#' @importFrom stats ave density median
+#' @importFrom grDevices col2rgb svg png
 #' @importFrom rstudioapi isAvailable viewer
 #' @importFrom glue glue
 #' @importFrom tools file_ext file_path_sans_ext
 #' @importFrom webshot webshot
 #' @importFrom digest digest
+#' @importFrom graphics par text hist boxplot
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra

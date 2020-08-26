@@ -164,3 +164,36 @@ spec_popover <- function(content = NULL, title = NULL,
   attr(popover_options, 'list') <- popover_options_list
   return(popover_options)
 }
+
+#' Setup image path, size, etc
+#'
+#' @description Users can directly provide image file path to column spec.
+#' However, if you need to specify the size of the image, you will need this
+#' function.
+#'
+#' @param path file path(s)
+#' @param width image width in pixel
+#' @param height image height in pixel
+#' @param res image resolution.
+#' @param svg_text If you have the raw text for SVG. Put them here
+#'
+#' @export
+spec_image <- function(path, width, height, res = 300, svg_text = NULL) {
+  if (length(path) > 1) {
+    return(lapply(path, function(p) {
+      return(spec_image(p, width, height, res, svg_text))
+    }))
+  }
+  if (!is.null(svg_text)) {
+    out <- list(path = NULL, dev = NULL, type = "image",
+                width = NULL, height = NULL, res = NULL,
+                svg_text = svg_text)
+    class(out) <- "kableExtraInlinePlots"
+    return(out)
+  }
+  out <- list(path = path, dev = "external", type = "image",
+              width = width, height = height, res = res,
+              svg_text = svg_text)
+  class(out) <- "kableExtraInlinePlots"
+  return(out)
+}

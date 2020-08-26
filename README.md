@@ -73,4 +73,4 @@ For more information, please check the package vignette.
 
 
 ## Acknowledgement
-I would like to thank colleagues at [Hebrew SeniorLife Institute for Aging Research](https://www.instituteforagingresearch.org/) and the [Boston Pepper Center](http://pepper.bwh.harvard.edu/) for their input. I also would like to appreciate the mentorship from Tom Travison ([@tgt75](https://twitter.com/tgt75)) and all the efforts from the open source community, which help this package keep getting better.
+I would like to thank colleagues at Hebrew SeniorLife [Marcus Institute for Aging Research](https://www.marcusinstituteforaging.org/) and the [Boston Pepper Center](https://pepper.bwh.harvard.edu/) for their input. I also would like to appreciate the mentorship from Tom Travison ([@tgt75](https://twitter.com/tgt75)) and all the efforts from the open source community, which help this package keep getting better.

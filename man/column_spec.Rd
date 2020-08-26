@@ -26,7 +26,8 @@ column_spec(
   link = NULL,
   new_tab = TRUE,
   tooltip = NULL,
-  popover = NULL
+  popover = NULL,
+  image = NULL
 )
 }
 \arguments{
@@ -99,6 +100,8 @@ speed and look.}
 to build a popover is through \code{spec_popover()}. If you only provide a text
 string, it will be used as content. Note that You have to enable this
 bootstrap module manually. Read the package vignette to see how.}
+
+\item{image}{Vector of image paths.}
 }
 \description{
 This function allows users to select a column and then specify

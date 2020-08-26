@@ -26,7 +26,7 @@ kable_classic_2(
 kable_minimal(
   kable_input,
   lightable_options = "basic",
-  html_font = "\\"Trebuchet MS\\", verdana, calibri, sans-serif",
+  html_font = "\\"Trebuchet MS\\", verdana, sans-serif",
   ...
 )
 

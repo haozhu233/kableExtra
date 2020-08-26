@@ -51,6 +51,7 @@
 #' to build a popover is through `spec_popover()`. If you only provide a text
 #' string, it will be used as content. Note that You have to enable this
 #' bootstrap module manually. Read the package vignette to see how.
+#' @param image Vector of image paths.
 #'
 #' @details Use `latex_column_spec` in a LaTeX table to change or
 #' customize the column specification.  Because of the way it is handled
@@ -70,7 +71,7 @@ column_spec <- function(kable_input, column,
                         extra_css = NULL, include_thead = FALSE,
                         latex_column_spec = NULL, latex_valign = 'p',
                         link = NULL, new_tab = TRUE,
-                        tooltip = NULL, popover = NULL) {
+                        tooltip = NULL, popover = NULL, image = NULL) {
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
@@ -89,7 +90,7 @@ column_spec <- function(kable_input, column,
                             border_left, border_right,
                             width_min, width_max,
                             extra_css, include_thead,
-                            link, new_tab, tooltip, popover))
+                            link, new_tab, tooltip, popover, image))
   }
   if (kable_format == "latex") {
     return(column_spec_latex(kable_input, column, width,
@@ -98,7 +99,7 @@ column_spec <- function(kable_input, column,
                              color, background,
                              border_left, border_right,
                              latex_column_spec, latex_valign, include_thead,
-                             link))
+                             link, image))
   }
 }
 
@@ -109,7 +110,7 @@ column_spec_html <- function(kable_input, column, width,
                              border_left, border_right,
                              width_min, width_max,
                              extra_css, include_thead,
-                             link, new_tab, tooltip, popover) {
+                             link, new_tab, tooltip, popover, image) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
@@ -163,6 +164,7 @@ column_spec_html <- function(kable_input, column, width,
   new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
   tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
   popover <- ensure_len_html(popover, nrows, "popover")
+  image <- ensure_len_html(image, nrows, "image")
 
   for (i in all_contents_rows) {
     for (j in column) {
@@ -173,7 +175,7 @@ column_spec_html <- function(kable_input, column, width,
         color[i], background[i], border_left, border_right,
         border_l_css, border_r_css,
         extra_css,
-        link[i], new_tab[i], tooltip[i], popover[i]
+        link[i], new_tab[i], tooltip[i], popover[i], image[i]
       )
     }
   }
@@ -199,7 +201,7 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                   border_left, border_right,
                                   border_l_css, border_r_css,
                                   extra_css,
-                                  link, new_tab, tooltip, popover) {
+                                  link, new_tab, tooltip, popover, image) {
   if (is.na(xml_attr(target_cell, "style"))) {
     xml_attr(target_cell, "style") <- ""
   }
@@ -259,6 +261,24 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                              extra_css)
   }
 
+  if (!is.null(image)) {
+    image <- image[[1]]
+    if (class(image) == "kableExtraInlinePlots") {
+      if (!is.null(image$svg_text)) {
+        xml_add_child(target_cell, xml2::read_xml(image$svg_text))
+      } else {
+        img_text <- paste0('<img src="', image$path, '" width="',
+        image$width / image$res * 96, '" height="',
+        image$height / image$res * 96,
+        '"></img>')
+        xml_add_child(target_cell, xml2::read_html(img_text))
+      }
+    } else {
+      img_text <- paste0('<img src="', image, '"></img>')
+      xml_add_child(target_cell, xml2::read_html(img_text))
+    }
+  }
+
   # favor popover over tooltip
   if (!is.null(popover)) {
     if (class(popover) != "ke_popover") popover <- spec_popover(popover)
@@ -273,29 +293,6 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
       xml_attr(target_cell, t) <- tooltip_list[t]
     }
   }
-  # if (!is.null(popover)) {
-  #   if (class(popover) != "ke_popover") popover <- spec_popover(popover)
-  #   popover_list <- attr(popover, 'list')
-  #   span_node <- xml2::read_xml(paste0(
-  #     '<span>', xml_text(target_cell), '</span>'
-  #   ))
-  #   for (p in names(popover_list)) {
-  #     xml_attr(span_node, p) <- popover_list[p]
-  #   }
-  #   xml_add_child(target_cell, span_node)
-  #   xml_text(target_cell) <- ""
-  # } else if (!is.null(tooltip)) {
-  #   if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
-  #   tooltip_list <- attr(tooltip, 'list')
-  #   span_node <- xml2::read_xml(paste0(
-  #     '<span>', xml_text(target_cell), '</span>'
-  #   ))
-  #   for (t in names(tooltip_list)) {
-  #     xml_attr(span_node, t) <- tooltip_list[t]
-  #   }
-  #   xml_add_child(target_cell, span_node)
-  #   xml_text(target_cell) <- ""
-  # }
 
   if (!is.null(link)) {
     href_node <- xml2::read_xml(paste0(
@@ -316,7 +313,7 @@ column_spec_latex <- function(kable_input, column, width,
                               color, background,
                               border_left, border_right,
                               latex_column_spec, latex_valign, include_thead,
-                              link) {
+                              link, image) {
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -368,6 +365,7 @@ column_spec_latex <- function(kable_input, column, width,
   background <- ensure_len_latex(background, nrows, off, include_thead, "white",
                               "background")
   link <- ensure_len_latex(link, nrows, off, include_thead, "#", "link")
+  image <- ensure_len_latex(image, nrows, off, include_thead, "", "image")
 
   if (include_thead) {
     rows <- seq(1, nrows)
@@ -380,7 +378,7 @@ column_spec_latex <- function(kable_input, column, width,
     new_row <- latex_cell_builder(
       target_row, column, table_info,
       bold[i], italic[i], monospace[i], underline[i],
-      strikeout[i], color[i], background[i], link[i]
+      strikeout[i], color[i], background[i], link[i], image[i]
       # font_size, angle
       )
     temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
@@ -494,7 +492,7 @@ replace_makecell_with_newline <- function(kable_input, table_info, column) {
 latex_cell_builder <- function(target_row, column, table_info,
                                bold, italic, monospace,
                                underline, strikeout,
-                               color, background, link
+                               color, background, link, image
                                # font_size, angle
                                ) {
   new_row <- latex_row_cells(target_row)[[1]]
@@ -536,6 +534,30 @@ latex_cell_builder <- function(target_row, column, table_info,
   if (!is.null(link)) {
     new_row[column] <- paste0("\\\\href\\{", escape_latex(link), "\\}\\{",
                               new_row[column], "\\}")
+  }
+
+  if (!is.null(image)) {
+    image <- image[[1]]
+    if (class(image) == "kableExtraInlinePlots") {
+      new_row[column] <- paste0(
+        new_row[column],
+        '\\\\includegraphics\\[width=',
+        # '\\\\raisebox\\{-\\\\totalheight\\}\\{\\\\includegraphics\\[width=',
+        round(image$width / image$res, 2), 'in, height=',
+        round(image$height / image$res, 2), 'in\\]\\{',
+        image$path,
+        '\\}'
+        # '\\}\\}'
+        )
+    } else {
+      if (!is.null(image) && !is.na(image) && image != "") {
+        new_row[column] <- paste0(
+          new_row[column],
+          '\\\\includegraphics\\{',
+          image, '\\}'
+        )
+      }
+    }
   }
 
   new_row <- paste(new_row, collapse = " & ")

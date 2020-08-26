@@ -20,6 +20,7 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 vignette: >
   %\VignetteIndexEntry{Create Awesome PDF Table with knitr::kable and kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -238,6 +239,41 @@ mtcars[1:8, 1:8] %>%
 
 You can still use the `spec_***` helper functions to help you define color. See the documentation [below](#visualize-data-with-viridis-color). 
 
+## Insert Images into Columns
+Technically, we are still talking about `column_spec` here. However, since this topic itself contains its own subtopics, we split it out as a separate section. Since `kableExtra` 1.2, we introduced the feature of adding images to columns of tables. Here is a quick example. 
+
+```{r}
+tbl_img <- data.frame(
+  name = c("kableExtra 1", "kableExtra 2"),
+  logo = ""
+)
+tbl_img %>%
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = "kableExtra_sm.png")
+```
+
+If you need to specify the size of the images, you need to do it through `spec_image`. 
+
+```{r}
+tbl_img %>%
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = spec_image(
+    c("kableExtra_sm.png", "kableExtra_sm.png"), 50, 50))
+```
+
+`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist` and `spec_boxplot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. 
+
+```{r}
+mpg_list <- split(mtcars$mpg, mtcars$cyl)
+inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "")
+inline_plot %>% 
+  kbl(booktabs = T) %>%
+  kable_paper(full_width = F) %>%
+  column_spec(2, image = spec_boxplot(mpg_list)) %>%
+  column_spec(3, image = spec_hist(mpg_list))
+```
 
 ## Row spec
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar to other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
