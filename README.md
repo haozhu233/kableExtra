@@ -7,7 +7,7 @@
 
 ***
 
-When we are talking about table generators in R, [knitr](https://yihui.name/knitr/)'s `kable()` function is usually a popular choice because of its ultimate simplicity. Unlike those powerful table rendering engines such as [`xtable`](https://CRAN.R-project.org/package=xtable), the philosophy behind [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) is to make it easy for programmers to use. Just as it claimed in its function description,
+When we are talking about table generators in R, [knitr](https://yihui.org/knitr/)'s `kable()` function is usually a popular choice because of its ultimate simplicity. Unlike those powerful table rendering engines such as [`xtable`](https://CRAN.R-project.org/package=xtable), the philosophy behind [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) is to make it easy for programmers to use. Just as it claimed in its function description,
 
 > This is a very simple table generator. It is simple by design. It is not intended to replace any other R packages for making tables. - Yihui
 
