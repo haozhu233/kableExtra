@@ -304,10 +304,10 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
   if (is.null(max)) max <- minmax
 
   expand <- c(
-    if (!is.null(min) && length(min)) 0.96 else 1,
-    if (!is.null(max) && length(max)) 1.04 else 1)
-  xlim <- xlim * expand
-  ylim <- ylim * expand
+    if (!is.null(min) && length(min)) -0.04 else 0,
+    if (!is.null(max) && length(max)) +0.04 else 0)
+  xlim <- xlim + diff(xlim) * expand
+  ylim <- ylim + diff(ylim) * expand
 
   file_type <- match.arg(file_type, c("svg", "png"))
 
@@ -331,18 +331,18 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
   on.exit(grDevices::dev.off(curdev), add = TRUE)
 
   graphics::par(mar = c(0, 0, 0.2, 0), lwd = lwd)
-  graphics::plot(x, y, type = "l", xlim = xlim, ylim = ylim, border = border,
+  graphics::plot(x, y, type = "l", xlim = xlim, ylim = ylim,
                  xaxt = xaxt, yaxt = yaxt, ann = ann, col = col,
                  frame.plot = frame.plot, ...)
 
   if (!is.null(min) && length(min)) {
     ind <- which.min(y)
-    do.call(graphics::points, c(list(x[ind], y[ind]), min))
+    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), min))
   }
 
   if (!is.null(max) && length(max)) {
     ind <- which.max(y)
-    do.call(graphics::points, c(list(x[ind], y[ind]), max))
+    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), max))
   }
 
   grDevices::dev.off(curdev)
