@@ -1,7 +1,7 @@
 #' Helper functions to generate inline sparklines
 #'
 #' @description These functions helps you quickly generate sets of sparkline
-#' style plots using base R plotting system. Currently, we support histogram
+#' style plots using base R plotting system. Currently, we support histogram,
 #' boxplot, and line. You can use them together with `column_spec` to
 #' generate inline plot in tables. By default, this function will save images
 #' in a folder called "kableExtra" and return the address of the file.
