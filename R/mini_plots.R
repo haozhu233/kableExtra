@@ -14,6 +14,7 @@
 #' graphics, one example of controlling this would be to start with:
 #'
 #' ```
+#' graphics::par(mar = c(0, 0, 0.2, 0), lwd=0.5)
 #' plot(..., xaxt = "n", yaxt = "n", ann = FALSE, frame.plot = FALSE)
 #' ```
 #'
