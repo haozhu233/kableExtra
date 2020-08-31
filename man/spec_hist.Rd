@@ -3,6 +3,7 @@
 \name{spec_hist}
 \alias{spec_hist}
 \alias{spec_boxplot}
+\alias{spec_line}
 \title{Helper functions to generate inline sparklines}
 \usage{
 spec_hist(
@@ -46,6 +47,31 @@ spec_boxplot(
   file_type = if (is_latex()) "png" else "svg",
   ...
 )
+
+spec_line(
+  x,
+  y = NULL,
+  width = 200,
+  height = 50,
+  res = 300,
+  same_lim = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  xaxt = "n",
+  yaxt = "n",
+  ann = FALSE,
+  col = "lightgray",
+  border = NULL,
+  frame.plot = FALSE,
+  lwd = 2,
+  minmax = list(pch = ".", cex = lwd, col = "red"),
+  min = minmax,
+  max = minmax,
+  dir = if (is_latex()) rmd_files_dir() else tempdir(),
+  file = NULL,
+  file_type = if (is_latex()) "png" else "svg",
+  ...
+)
 }
 \arguments{
 \item{x}{Vector of values or List of vectors of values.}
@@ -76,7 +102,9 @@ spec_boxplot(
 \item{same_lim}{T/F. If x is a list of vectors, should all the plots be
 plotted in the same range? Default is True.}
 
-\item{lim}{Manually specify plotting range in the form of \code{c(0, 10)}.}
+\item{lim, xlim, ylim}{Manually specify plotting range in the form of
+\code{c(0, 10)}. \code{lim} is used in \code{spec_hist} and \code{spec_boxplot}; \code{xlim}
+and \code{ylim} are used in \code{spec_line}.}
 
 \item{xaxt}{On/Off for xaxis text}
 
@@ -109,11 +137,21 @@ Default is 2.}
 \item{medcol}{Boxplot - median line color}
 
 \item{medlwd}{Boxplot - median line width}
+
+\item{frame.plot}{On/Off for surrounding box (\code{spec_line} only). Default
+is False.}
+
+\item{lwd}{Line width for \code{spec_line}; within \code{spec_line}, the \code{minmax}
+argument defaults to use this value for \code{cex} for points. Default is 2.}
+
+\item{minmax, min, max}{Arguments passed to \code{points} to highlight minimum
+and maximum values in \code{spec_line}. If \code{min} or \code{max} are \code{NULL}, they
+default to the value of \code{minmax}. Set to an empty \code{list()} to disable.}
 }
 \description{
 These functions helps you quickly generate sets of sparkline
-style plots using base R plotting system. Currently, we support histogram
-and boxplot. You can use them together with \code{column_spec} to
+style plots using base R plotting system. Currently, we support histogram,
+boxplot, and line. You can use them together with \code{column_spec} to
 generate inline plot in tables. By default, this function will save images
 in a folder called "kableExtra" and return the address of the file.
 }
