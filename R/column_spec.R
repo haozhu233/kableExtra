@@ -115,7 +115,7 @@ column_spec_html <- function(kable_input, column, width,
                              extra_css, include_thead,
                              link, new_tab, tooltip, popover, image) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  kable_xml <- kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")
@@ -169,9 +169,9 @@ column_spec_html <- function(kable_input, column, width,
   popover <- ensure_len_html(popover, nrows, "popover")
   image <- ensure_len_html(image, nrows, "image")
 
-  for (i in all_contents_rows) {
+  for (i in seq(length(all_contents_rows))) {
     for (j in column) {
-      target_cell <- xml_child(xml_child(kable_tbody, i), j)
+      target_cell <- xml_child(xml_child(kable_tbody, all_contents_rows[i]), j)
       column_spec_html_cell(
         target_cell, width, width_min, width_max,
         bold[i], italic[i], monospace[i], underline[i], strikeout[i],
