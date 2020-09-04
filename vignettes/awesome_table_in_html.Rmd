@@ -235,16 +235,17 @@ tbl_img %>%
     c("kableExtra_sm.png", "kableExtra_sm.png"), 50, 50))
 ```
 
-`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist` and `spec_boxplot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. Note that in html, you can also use package `sparkline` to create some jquery based interactive sparklines. Check out the end of this guide for details. 
+`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist`, `spec_boxplot`, and `spec_line`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. Note that in html, you can also use package `sparkline` to create some jquery based interactive sparklines. Check out the end of this guide for details.
 
 ```{r}
 mpg_list <- split(mtcars$mpg, mtcars$cyl)
-inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "")
+inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "", mpg_line = "")
 inline_plot %>% 
   kbl(booktabs = T) %>%
   kable_paper(full_width = F) %>%
   column_spec(2, image = spec_boxplot(mpg_list)) %>%
-  column_spec(3, image = spec_hist(mpg_list))
+  column_spec(3, image = spec_hist(mpg_list)) %>%
+  column_spec(4, image = spec_line(mpg_list, same_lim = FALSE))
 ```
 
 ## Row spec
