@@ -12,34 +12,19 @@
 #' @param res The resolution of the plot. Default is 300.
 #' @param same_lim T/F. If x is a list of vectors, should all the plots be
 #' plotted in the same range? Default is True.
-#' @param lim,xlim,ylim Manually specify plotting range in the form of
-#' `c(0, 10)`. `lim` is used in `spec_hist` and `spec_boxplot`; `xlim`
-#' and `ylim` are used in `spec_line`.
+#' @param lim Manually specify plotting range in the form of
+#' `c(0, 10)`.
 #' @param xaxt On/Off for xaxis text
 #' @param yaxt On/Off for yaxis text
 #' @param ann On/Off for annotations (titles and axis titles)
 #' @param col Color for the fill of the histogram bar/boxplot box.
 #' @param border Color for the border.
-#' @param frame.plot On/Off for surrounding box (`spec_line` only). Default
-#' is False.
-#' @param lwd Line width for `spec_line`; within `spec_line`, the `minmax`
-#' argument defaults to use this value for `cex` for points. Default is 2.
-#' @param minmax,min,max Arguments passed to `points` to highlight minimum
-#' and maximum values in `spec_line`. If `min` or `max` are `NULL`, they
-#' default to the value of `minmax`. Set to an empty `list()` to disable.
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
 #' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
 #' for HTML output
-#' @param add_label For boxplot. T/F to add labels for min, mean and max.
-#' @param label_digits If T for add_label, rounding digits for the label.
-#' Default is 2.
-#' @param boxlty Boxplot - box boarder type
-#' @param medcol Boxplot - median line color
-#' @param medlwd Boxplot - median line width
+#' @param ... extra parameters sending to `hist()`
 #'
-#' @inheritParams graphics::hist
-#' @inheritParams graphics::boxplot
 #' @export
 spec_hist <- function(x, width = 200, height = 50, res = 300,
                       breaks = "Sturges",
@@ -104,7 +89,40 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
   return(out)
 }
 
-#' @rdname spec_hist
+#' Helper functions to generate inline sparklines
+#'
+#' @description These functions helps you quickly generate sets of sparkline
+#' style plots using base R plotting system. Currently, we support histogram,
+#' boxplot, and line. You can use them together with `column_spec` to
+#' generate inline plot in tables. By default, this function will save images
+#' in a folder called "kableExtra" and return the address of the file.
+#'
+#' @param x Vector of values or List of vectors of values.
+#' @param width The width of the plot in pixel
+#' @param height The height of the plot in pixel
+#' @param res The resolution of the plot. Default is 300.
+#' @param add_label For boxplot. T/F to add labels for min, mean and max.
+#' @param label_digits If T for add_label, rounding digits for the label.
+#' Default is 2.
+#' @param same_lim T/F. If x is a list of vectors, should all the plots be
+#' plotted in the same range? Default is True.
+#' @param lim,xlim,ylim Manually specify plotting range in the form of
+#' `c(0, 10)`. `lim` is used in `spec_hist` and `spec_boxplot`; `xlim`
+#' and `ylim` are used in `spec_line`.
+#' @param xaxt On/Off for xaxis text
+#' @param yaxt On/Off for yaxis text
+#' @param ann On/Off for annotations (titles and axis titles)
+#' @param col Color for the fill of the histogram bar/boxplot box.
+#' @param border Color for the border.
+#' @param boxlty Boxplot - box boarder type
+#' @param medcol Boxplot - median line color
+#' @param medlwd Boxplot - median line width
+#' @param dir Directory of where the images will be saved.
+#' @param file File name. If not provided, a random name will be used
+#' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
+#' for HTML output
+#' @param ... extraparameters passing to boxplot
+#'
 #' @export
 spec_boxplot <- function(x, width = 200, height = 50, res = 300,
                          add_label = FALSE, label_digits = 2,
@@ -196,7 +214,40 @@ rmd_files_dir <- function(create = TRUE) {
   return(fig_dir_name)
 }
 
-#' @rdname spec_hist
+#' Helper functions to generate inline sparklines
+#'
+#' @description These functions helps you quickly generate sets of sparkline
+#' style plots using base R plotting system. Currently, we support histogram,
+#' boxplot, and line. You can use them together with `column_spec` to
+#' generate inline plot in tables. By default, this function will save images
+#' in a folder called "kableExtra" and return the address of the file.
+#'
+#' @param x,y Vector of values or List of vectors of values. y is optional.
+#' @param width The width of the plot in pixel
+#' @param height The height of the plot in pixel
+#' @param res The resolution of the plot. Default is 300.
+#' @param same_lim T/F. If x is a list of vectors, should all the plots be
+#' plotted in the same range? Default is True.
+#' @param xlim,ylim Manually specify plotting range in the form of
+#' `c(0, 10)`.
+#' @param xaxt On/Off for xaxis text
+#' @param yaxt On/Off for yaxis text
+#' @param ann On/Off for annotations (titles and axis titles)
+#' @param col Color for the fill of the histogram bar/boxplot box.
+#' @param border Color for the border.
+#' @param frame.plot On/Off for surrounding box (`spec_line` only). Default
+#' is False.
+#' @param lwd Line width for `spec_line`; within `spec_line`, the `minmax`
+#' argument defaults to use this value for `cex` for points. Default is 2.
+#' @param minmax,min,max Arguments passed to `points` to highlight minimum
+#' and maximum values in `spec_line`. If `min` or `max` are `NULL`, they
+#' default to the value of `minmax`. Set to an empty `list()` to disable.
+#' @param dir Directory of where the images will be saved.
+#' @param file File name. If not provided, a random name will be used
+#' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
+#' for HTML output.
+#' @param ... extra parameters passing to `plot`
+#'
 #' @export
 spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       same_lim = TRUE, xlim = NULL, ylim = NULL,
