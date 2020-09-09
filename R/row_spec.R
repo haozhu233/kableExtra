@@ -313,7 +313,11 @@ latex_new_row_builder <- function(target_row, table_info,
   } else {
     latex_after <- "\\\\\\\\"
     if (hline_after) {
-      latex_after <- paste0(latex_after, "\n\\\\hline")
+      if (table_info$booktabs) {
+        latex_after <- paste0(latex_after, "\n\\\\midrule")
+      } else {
+        latex_after <- paste0(latex_after, "\n\\\\hline")
+      }
     }
     if (!is.null(extra_latex_after)) {
       latex_after <- paste0(latex_after, "\n",
