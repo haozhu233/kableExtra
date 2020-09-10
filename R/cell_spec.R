@@ -117,10 +117,10 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
 
   # favor popover over tooltip
   if (!is.null(popover)) {
-    if (class(popover) != "ke_popover") popover <- spec_popover(popover)
+    if (!inherits(popover, "ke_popover")) popover <- spec_popover(popover)
     tooltip_n_popover <- popover
   } else if (!is.null(tooltip)) {
-    if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
+    if (!inherits(tooltip, "ke_tooltip")) tooltip <- spec_tooltip(tooltip)
     tooltip_n_popover <- tooltip
   } else {
     tooltip_n_popover <- NULL
