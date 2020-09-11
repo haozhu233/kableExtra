@@ -25,7 +25,7 @@
 #'
 #' @export
 xtable2kable <- function(x, ...) {
-  if (!class(x)[1] == "xtable") {
+  if (!inherits(x, "xtable")) {
     warning("x is not an xtable object.")
     return(x)
   }
