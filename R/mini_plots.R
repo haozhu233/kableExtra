@@ -260,28 +260,62 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       file = NULL,
                       file_type = if (is_latex()) "png" else "svg", ...) {
   if (is.list(x)) {
+    lenx <- length(x)
+
     if (same_lim) {
       if (is.null(xlim)) {
-        xlim <- base::range(unlist(x))
+        xlim <- lapply(x, base::range)
       }
       if (is.null(ylim) && !is.null(y)) {
-        ylim <- base::range(unlist(y))
+        ylim <- lapply(y, base::range)
       }
     }
     if (is.null(y)) {
-      y <- replicate(length(x), NULL, simplify = FALSE)
-    } else if (!is.list(y) || length(x) != length(y)) {
+      y <- replicate(lenx, NULL, simplify = FALSE)
+    } else if (!is.list(y) || lenx != length(y)) {
       stop("'x' and 'y' are not the same length")
     }
-    return(Map(function(x_, y_) {
-      spec_line(x = x_, y = y_,
-                width = width, height = height,
-                same_lim = same_lim, xlim = xlim, ylim = ylim,
-                xaxt = xaxt, yaxt = yaxt, ann = ann, col = col, border = border,
-                frame.plot = frame.plot, lwd = lwd,
-                minmax = minmax, min = min, max = max,
-                dir = dir, file = file, file_type = file_type, ...)
-    }, x, y))
+
+    # any of the arguments can be per-plot controlling, but an arg
+    # that is normally not length-1 may be recycled (incorrectly) by
+    # Map, so we have to listify them if not already lists;
+    # enforce a restriction of recycling only length 1 or lenx
+
+    # first, start with the literals (x,y)
+    # same_lim, not a factor anymore
+    dots <- list(x = x, y = y)
+
+    # second, we know these args are likely to be vectors (length > 1)
+    # or lists, so we have to handle them carefully and double-list if
+    # present
+    notlen1 <- list(xlim = xlim, ylim = ylim,
+                    minmax = minmax, min = min, max = max)
+    dots <- c(dots, Map(
+      function(L, nm) {
+        if (is.null(L)) return(list(NULL))
+        if (!is.list(L) || !is.list(L[[1]])) return(list(L))
+        if (!length(L) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        L
+      }, notlen1, names(notlen1)))
+
+    # last, all remaining arguments that we don't already know about
+    # are length-1, so can be easily listified; using 'formals()'
+    # allows us to not hard-code all params, for future expansion?
+    len1args <- mget(setdiff(names(formals()),
+                             c(names(dots), "same_lim", "x", "y", "...")))
+    dots <- c(dots, Map(
+      function(V, nm) {
+        if (is.null(V)) return(list(NULL))
+        if (!length(V) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        V
+      }, len1args, names(len1args)))
+
+    return(do.call(Map, c(list(f = spec_line), dots)))
+
   }
 
   if (is.null(y) || !length(y)) {
@@ -304,10 +338,10 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
   if (is.null(max)) max <- minmax
 
   expand <- c(
-    if (!is.null(min) && length(min)) 0.96 else 1,
-    if (!is.null(max) && length(max)) 1.04 else 1)
-  xlim <- xlim * expand
-  ylim <- ylim * expand
+    if (!is.null(min) && length(min)) -0.04 else 0,
+    if (!is.null(max) && length(max)) +0.04 else 0)
+  xlim <- xlim + diff(xlim) * expand
+  ylim <- ylim + diff(ylim) * expand
 
   file_type <- match.arg(file_type, c("svg", "png"))
 
@@ -331,18 +365,18 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
   on.exit(grDevices::dev.off(curdev), add = TRUE)
 
   graphics::par(mar = c(0, 0, 0.2, 0), lwd = lwd)
-  graphics::plot(x, y, type = "l", xlim = xlim, ylim = ylim, border = border,
+  graphics::plot(x, y, type = "l", xlim = xlim, ylim = ylim,
                  xaxt = xaxt, yaxt = yaxt, ann = ann, col = col,
                  frame.plot = frame.plot, ...)
 
   if (!is.null(min) && length(min)) {
     ind <- which.min(y)
-    do.call(graphics::points, c(list(x[ind], y[ind]), min))
+    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), min))
   }
 
   if (!is.null(max) && length(max)) {
     ind <- which.max(y)
-    do.call(graphics::points, c(list(x[ind], y[ind]), max))
+    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), max))
   }
 
   grDevices::dev.off(curdev)
