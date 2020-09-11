@@ -52,6 +52,7 @@ Suggests:
     testthat,
     magick,
     formattable,
+    ggplot2,
     sparkline
 VignetteBuilder: knitr
 Encoding: UTF-8

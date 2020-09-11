@@ -2,6 +2,9 @@
 % Please edit documentation in R/mini_plots.R
 \name{spec_hist}
 \alias{spec_hist}
+\alias{spec_boxplot}
+\alias{spec_line}
+\alias{spec_plot}
 \title{Helper functions to generate inline sparklines}
 \usage{
 spec_hist(
@@ -21,6 +24,66 @@ spec_hist(
   file = NULL,
   file_type = if (is_latex()) "png" else "svg",
   ...
+)
+
+spec_boxplot(
+  x,
+  width = 200,
+  height = 50,
+  res = 300,
+  add_label = FALSE,
+  label_digits = 2,
+  same_lim = TRUE,
+  lim = NULL,
+  xaxt = "n",
+  yaxt = "n",
+  ann = FALSE,
+  col = "lightgray",
+  border = NULL,
+  boxlty = 0,
+  medcol = "red",
+  medlwd = 1,
+  dir = if (is_latex()) rmd_files_dir() else tempdir(),
+  file = NULL,
+  file_type = if (is_latex()) "png" else "svg",
+  ...
+)
+
+spec_line(
+  x,
+  y = NULL,
+  width = 200,
+  height = 50,
+  res = 300,
+  same_lim = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  xaxt = "n",
+  yaxt = "n",
+  ann = FALSE,
+  col = "lightgray",
+  border = NULL,
+  frame.plot = FALSE,
+  lwd = 2,
+  minmax = list(pch = ".", cex = lwd, col = "red"),
+  min = minmax,
+  max = minmax,
+  dir = if (is_latex()) rmd_files_dir() else tempdir(),
+  file = NULL,
+  file_type = if (is_latex()) "png" else "svg",
+  ...
+)
+
+spec_plot(
+  fun,
+  ...,
+  width = 200,
+  height = 50,
+  res = 300,
+  dir = if (is_latex()) rmd_files_dir() else tempdir(),
+  file = NULL,
+  file_type = if (is_latex()) "png" else "svg",
+  islist = TRUE
 )
 }
 \arguments{
@@ -63,4 +126,31 @@ style plots using base R plotting system. Currently, we support histogram,
 boxplot, and line. You can use them together with \code{column_spec} to
 generate inline plot in tables. By default, this function will save images
 in a folder called "kableExtra" and return the address of the file.
+
+The \code{spec_plot} function is special in that it takes a
+user-generated \emph{function} instead of lists of data. It handles both
+base graphics and \code{ggplot2} graphics similarly. It is up to the
+user to control margins and themes so that the plot will not error
+and that it is reasonably formatted for the page. For base
+graphics, one example of controlling this would be to start with:\preformatted{plot(..., xaxt = "n", yaxt = "n", ann = FALSE, frame.plot = FALSE)
+}
+
+For \code{ggplot2} graphics, the following theme (\code{theme_minimal} plus a
+little extra) mimics the above:\if{html}{\out{<div class="r">}}\preformatted{theme(
+  line = element_blank(),
+  text = element_blank(),
+  axis.ticks = element_blank(),
+  axis.ticks.length = unit(0, "mm"),
+  axis.title = element_blank(),
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  title = element_blank(),
+  panel.grid = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  plot.background = element_blank(),
+  strip.background = element_blank(),
+  plot.margin = unit(rep(0, 4), "mm")
+)
+}\if{html}{\out{</div>}}
 }
