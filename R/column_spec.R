@@ -264,7 +264,7 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                              extra_css)
   }
 
-  if (!is.null(image)) {
+  if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
     image <- image[[1]]
     if (inherits(image, "kableExtraInlinePlots")) {
       if (!is.null(image$svg_text)) {
@@ -539,7 +539,7 @@ latex_cell_builder <- function(target_row, column, table_info,
                               new_row[column], "\\}")
   }
 
-  if (!is.null(image)) {
+  if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
     image <- image[[1]]
     if (inherits(image, "kableExtraInlinePlots")) {
       new_row[column] <- paste0(
