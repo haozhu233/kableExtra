@@ -298,29 +298,64 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       file = NULL,
                       file_type = if (is_latex()) "png" else "svg", ...) {
   if (is.list(x)) {
+    lenx <- length(x)
+
     if (same_lim) {
       if (is.null(xlim)) {
-        xlim <- base::range(unlist(x))
+        xlim <- lapply(a, base::range)
       }
       if (is.null(ylim) && !is.null(y)) {
-        ylim <- base::range(unlist(y))
+        ylim <- lapply(y, base::range)
       }
     }
+
     if (is.null(y)) {
-      y <- replicate(length(x), NULL, simplify = FALSE)
-    } else if (!is.list(y) || length(x) != length(y)) {
+      y <- replicate(lenx, NULL, simplify = FALSE)
+    } else if (!is.list(y) || lenx != length(y)) {
       stop("'x' and 'y' are not the same length")
     }
-    return(Map(function(x_, y_) {
-      spec_line(x = x_, y = y_,
-                width = width, height = height,
-                same_lim = same_lim, xlim = xlim, ylim = ylim,
-                xaxt = xaxt, yaxt = yaxt, ann = ann, col = col, border = border,
-                frame.plot = frame.plot, lwd = lwd,
-                minmax = minmax, min = min, max = max,
-                dir = dir, file = file, file_type = file_type, ...)
-    }, x, y))
+
+    # any of the arguments can be per-plot controlling, but an arg
+    # that is normally not length-1 may be recycled (incorrectly) by
+    # Map, so we have to listify them if not already lists;
+    # enforce a restriction of recycling only length 1 or lenx
+
+    # first, start with the literals (x,y); intentionally ignore
+    # same_lim, not a factor anymore
+    dots <- list(x = x, y = y)
+
+    # second, we know these args are likely to be vectors (length > 1)
+    # or lists, so we have to handle them carefully and double-list if
+    # present
+    notlen1 <- list(xlim = xlim, ylim = ylim,
+                    minmax = minmax, min = min, max = max)
+    dots <- c(dots, Map(
+      function(L, nm) {
+        if (is.null(L)) return(list(NULL))
+        if (!is.list(L) || !is.list(L[[1]])) return(list(L))
+        if (!length(L) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        L
+      }, notlen1, names(notlen1)))
+
+    # last, all remaining arguments that we don't already know about
+    # are length-1, so can be easily listified
+    len1args <- mget(setdiff(names(formals()),
+                             c(names(dots), "same_lim", "x", "y", "...")))
+    dots <- c(dots, Map(
+      function(V, nm) {
+        if (is.null(V) || !is.list(V)) return(list(V))
+        if (!length(V) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        V
+      }, len1args, names(len1args)))
+
+    return(do.call(Map, c(list(f = spec_line), dots)))
   }
+
+  if (is.null(x)) return(NULL) # silently do not attempt to plot
 
   if (is.null(y) || !length(y)) {
     y <- x
@@ -409,12 +444,28 @@ spec_plot <- function(fun, ..., width = 200, height = 50, res = 300,
 
   dots <- list(...)
   if (islist) {
-    out <- do.call(Map, c(list(f = spec_plot, fun = list(fun), islist = list(FALSE),
-                               width = list(width), height = list(height),
-                               res = list(res), dir = list(dir), file = list(file),
-                               file_type = list(file_type)), dots))
+
+    # listified arguments similar to in spec_line, a little simpler
+    # here, though because the user controls the data input
+    # completely, we're not able to enforce recycling (1 or lenx)
+    len1args <- mget(setdiff(names(formals()), c("fun", "islist", "...")))
+    dots <- c(dots, Map(
+      function(V, nm) {
+        if (is.null(V) || !is.list(V)) return(list(V))
+        if (!length(V) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        V
+      }, len1args, names(len1args)))
+
+    out <- do.call(Map, c(list(f = spec_plot, fun = list(fun), islist = FALSE), dots))
+
     return(out)
   }
+
+  # since we don't control the data, it's hard to catch empty unless
+  # 'dots' really is just a list with a null
+  if (length(dots) < 2 && is.null(dots[[1]])) return(NULL)
 
   file_type <- match.arg(file_type, c("svg", "png"))
 
