@@ -465,7 +465,7 @@ spec_plot <- function(fun, ..., width = 200, height = 50, res = 300,
 
   # since we don't control the data, it's hard to catch empty unless
   # 'dots' really is just a list with a null
-  if (length(dots) < 2 && is.null(dots[[1]])) return(NULL)
+  if (is.null(dots[[1]])) return(NULL)
 
   file_type <- match.arg(file_type, c("svg", "png"))
 
