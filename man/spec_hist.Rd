@@ -2,8 +2,6 @@
 % Please edit documentation in R/mini_plots.R
 \name{spec_hist}
 \alias{spec_hist}
-\alias{spec_boxplot}
-\alias{spec_line}
 \alias{spec_plot}
 \title{Helper functions to generate inline sparklines}
 \usage{
@@ -20,54 +18,6 @@ spec_hist(
   ann = FALSE,
   col = "lightgray",
   border = NULL,
-  dir = if (is_latex()) rmd_files_dir() else tempdir(),
-  file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
-  ...
-)
-
-spec_boxplot(
-  x,
-  width = 200,
-  height = 50,
-  res = 300,
-  add_label = FALSE,
-  label_digits = 2,
-  same_lim = TRUE,
-  lim = NULL,
-  xaxt = "n",
-  yaxt = "n",
-  ann = FALSE,
-  col = "lightgray",
-  border = NULL,
-  boxlty = 0,
-  medcol = "red",
-  medlwd = 1,
-  dir = if (is_latex()) rmd_files_dir() else tempdir(),
-  file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
-  ...
-)
-
-spec_line(
-  x,
-  y = NULL,
-  width = 200,
-  height = 50,
-  res = 300,
-  same_lim = TRUE,
-  xlim = NULL,
-  ylim = NULL,
-  xaxt = "n",
-  yaxt = "n",
-  ann = FALSE,
-  col = "lightgray",
-  border = NULL,
-  frame.plot = FALSE,
-  lwd = 2,
-  minmax = list(pch = ".", cex = lwd, col = "red"),
-  min = minmax,
-  max = minmax,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
   file_type = if (is_latex()) "png" else "svg",
@@ -132,7 +82,8 @@ user-generated \emph{function} instead of lists of data. It handles both
 base graphics and \code{ggplot2} graphics similarly. It is up to the
 user to control margins and themes so that the plot will not error
 and that it is reasonably formatted for the page. For base
-graphics, one example of controlling this would be to start with:\preformatted{plot(..., xaxt = "n", yaxt = "n", ann = FALSE, frame.plot = FALSE)
+graphics, one example of controlling this would be to start with:\preformatted{graphics::par(mar = c(0, 0, 0.2, 0), lwd=0.5)
+plot(..., xaxt = "n", yaxt = "n", ann = FALSE, frame.plot = FALSE)
 }
 
 For \code{ggplot2} graphics, the following theme (\code{theme_minimal} plus a
