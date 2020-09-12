@@ -67,7 +67,7 @@ kable_as_image <- function(kable_input, filename = NULL,
     table_img_pdf <- try(magick::image_read(paste0(temp_file, ".pdf"),
                                             density = density),
                          silent = T)
-    if (class(table_img_pdf) == "try-error") {
+    if (inherits(table_img_pdf, "try-error")) {
       stop("Ghostscript is required to read PDF on windows. ",
            "Please download it here: https://ghostscript.com/")
     }

@@ -46,6 +46,8 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
     )}))
   }
 
+  if (is.null(x)) return(NULL)
+
   if (is.null(lim)) {
     lim <- base::range(x)
   }
@@ -146,6 +148,8 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
       dir = dir, file = file, file_type = file_type, ...
     )}))
   }
+
+  if (is.null(x)) return(NULL)
 
   if (is.null(lim)) {
     lim <- base::range(x)
@@ -283,6 +287,8 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
                 dir = dir, file = file, file_type = file_type, ...)
     }, x, y))
   }
+
+  if (is.null(x)) return(NULL)
 
   if (is.null(y) || !length(y)) {
     y <- x
