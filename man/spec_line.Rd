@@ -20,6 +20,10 @@ spec_line(
   border = NULL,
   frame.plot = FALSE,
   lwd = 2,
+  pch = ".",
+  cex = 0.1,
+  type = "l",
+  polymin = NA,
   minmax = list(pch = ".", cex = lwd, col = "red"),
   min = minmax,
   max = minmax,
@@ -59,6 +63,19 @@ is False.}
 
 \item{lwd}{Line width for \code{spec_line}; within \code{spec_line}, the \code{minmax}
 argument defaults to use this value for \code{cex} for points. Default is 2.}
+
+\item{pch, cex}{Shape and size for points (if type is other than "l").}
+
+\item{type}{Passed to \code{plot}, often one of "l", "p", or "b", see
+\code{\link[graphics:plot.default]{graphics::plot.default()}} for more details. Ignored when 'polymin' is
+not 'NA'.}
+
+\item{polymin}{Special argument that converts a "line" to a polygon,
+where the flat portion is this value, and the other side of the polygon
+is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
+this is ignored, otherwise if this is numeric then a polygon is
+created instead (and 'type' is ignored). Note that if 'polymin' is in
+the middle of the 'y' values, it will generate up/down polygons.}
 
 \item{minmax, min, max}{Arguments passed to \code{points} to highlight minimum
 and maximum values in \code{spec_line}. If \code{min} or \code{max} are \code{NULL}, they
