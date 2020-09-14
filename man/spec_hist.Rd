@@ -19,7 +19,7 @@ spec_hist(
   border = NULL,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
+  file_type = if (is_latex()) "pdf" else "svg",
   ...
 )
 }
@@ -52,7 +52,9 @@ plotted in the same range? Default is True.}
 
 \item{file}{File name. If not provided, a random name will be used}
 
-\item{file_type}{Graphic device. Support \code{png} or \code{svg}. SVG is recommended
+\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"})
+or a graphics device function (\code{grDevices::pdf}). This defaults
+to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.
 for HTML output}
 
 \item{...}{extra parameters sending to \code{hist()}}
