@@ -29,7 +29,7 @@ spec_plot(
   max = minmax,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
+  file_type = if (is_latex()) "pdf" else "svg",
   ...
 )
 }
@@ -85,8 +85,9 @@ default to the value of \code{minmax}. Set to an empty \code{list()} to disable.
 
 \item{file}{File name. If not provided, a random name will be used}
 
-\item{file_type}{Graphic device. Support \code{png} or \code{svg}. SVG is recommended
-for HTML output.}
+\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"})
+or a graphics device function (\code{grDevices::pdf}). This defaults
+to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.}
 
 \item{...}{extra parameters passing to \code{plot}}
 }
