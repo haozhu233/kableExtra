@@ -16,7 +16,8 @@ Authors@R: c(
     person('Brian', 'Salzer', role = 'ctb'),
     person('George', 'Gui', role = 'ctb'),
     person('Yeliang', 'Fan', role = 'ctb'),
-    person('Duncan', 'Murdoch', role = 'ctb')
+    person('Duncan', 'Murdoch', role = 'ctb'),
+    person('Bill', 'Evans',  role = 'ctb')
     )
 Description: Build complex HTML or 'LaTeX' tables using 'kable()' from 'knitr' 
     and the piping syntax from 'magrittr'. Function 'kable()' is a light weight 
