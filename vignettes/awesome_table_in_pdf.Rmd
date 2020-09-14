@@ -267,13 +267,20 @@ tbl_img %>%
 
 ```{r}
 mpg_list <- split(mtcars$mpg, mtcars$cyl)
-inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "", mpg_line = "")
-inline_plot %>% 
-  kbl(booktabs = T) %>%
-  kable_paper(full_width = F) %>%
+disp_list <- split(mtcars$disp, mtcars$cyl)
+inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "",
+                          mpg_line1 = "", mpg_line2 = "",
+                          mpg_points1 = "", mpg_points2 = "", mpg_poly = "")
+inline_plot %>%
+  kbl(booktabs = TRUE) %>%
+  kable_paper(full_width = FALSE) %>%
   column_spec(2, image = spec_boxplot(mpg_list)) %>%
   column_spec(3, image = spec_hist(mpg_list)) %>%
-  column_spec(4, image = spec_plot(mpg_list, same_lim = FALSE))
+  column_spec(4, image = spec_plot(mpg_list, same_lim = TRUE)) %>%
+  column_spec(5, image = spec_plot(mpg_list, same_lim = FALSE)) %>%
+  column_spec(6, image = spec_plot(mpg_list, type = "p")) %>%
+  column_spec(7, image = spec_plot(mpg_list, disp_list, type = "p")) %>%
+  column_spec(8, image = spec_plot(mpg_list, polymin = 5))
 ```
 
 ## Row spec
