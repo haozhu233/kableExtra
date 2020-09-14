@@ -110,7 +110,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' plotted in the same range? Default is True.
 #' @param lim,xlim,ylim Manually specify plotting range in the form of
 #' `c(0, 10)`. `lim` is used in `spec_hist` and `spec_boxplot`; `xlim`
-#' and `ylim` are used in `spec_line`.
+#' and `ylim` are used in `spec_plot`.
 #' @param xaxt On/Off for xaxis text
 #' @param yaxt On/Off for yaxis text
 #' @param ann On/Off for annotations (titles and axis titles)
@@ -239,9 +239,9 @@ rmd_files_dir <- function(create = TRUE) {
 #' @param ann On/Off for annotations (titles and axis titles)
 #' @param col Color for the fill of the histogram bar/boxplot box.
 #' @param border Color for the border.
-#' @param frame.plot On/Off for surrounding box (`spec_line` only). Default
+#' @param frame.plot On/Off for surrounding box (`spec_plot` only). Default
 #' is False.
-#' @param lwd Line width for `spec_line`; within `spec_line`, the `minmax`
+#' @param lwd Line width for `spec_plot`; within `spec_plot`, the `minmax`
 #' argument defaults to use this value for `cex` for points. Default is 2.
 #' @param pch,cex Shape and size for points (if type is other than "l").
 #' @param type Passed to `plot`, often one of "l", "p", or "b", see
@@ -254,7 +254,7 @@ rmd_files_dir <- function(create = TRUE) {
 #' created instead (and 'type' is ignored). Note that if 'polymin' is in
 #' the middle of the 'y' values, it will generate up/down polygons.
 #' @param minmax,min,max Arguments passed to `points` to highlight minimum
-#' and maximum values in `spec_line`. If `min` or `max` are `NULL`, they
+#' and maximum values in `spec_plot`. If `min` or `max` are `NULL`, they
 #' default to the value of `minmax`. Set to an empty `list()` to disable.
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
@@ -263,7 +263,7 @@ rmd_files_dir <- function(create = TRUE) {
 #' @param ... extra parameters passing to `plot`
 #'
 #' @export
-spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
+spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       same_lim = TRUE, xlim = NULL, ylim = NULL,
                       xaxt = 'n', yaxt = 'n', ann = FALSE,
                       col = "lightgray", border = NULL,
@@ -342,7 +342,7 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
         V
       }, len1args, names(len1args)))
 
-    return(do.call(Map, c(list(f = spec_line), dots)))
+    return(do.call(Map, c(list(f = spec_plot), dots)))
 
   }
 

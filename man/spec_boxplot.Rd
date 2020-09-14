@@ -46,7 +46,7 @@ plotted in the same range? Default is True.}
 
 \item{lim, xlim, ylim}{Manually specify plotting range in the form of
 \code{c(0, 10)}. \code{lim} is used in \code{spec_hist} and \code{spec_boxplot}; \code{xlim}
-and \code{ylim} are used in \code{spec_line}.}
+and \code{ylim} are used in \code{spec_plot}.}
 
 \item{xaxt}{On/Off for xaxis text}
 
