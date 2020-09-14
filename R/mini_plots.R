@@ -250,9 +250,9 @@ rmd_files_dir <- function(create = TRUE) {
 #' @param polymin Special argument that converts a "line" to a polygon,
 #' where the flat portion is this value, and the other side of the polygon
 #' is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
-#' this is ignored, otherwise if this is numeric then a polygon is
-#' created instead (and 'type' is ignored). Note that if 'polymin' is in
-#' the middle of the 'y' values, it will generate up/down polygons.
+#' this is ignored; otherwise if this is numeric then a polygon is
+#' created (and 'type' is ignored). Note that if 'polymin' is in the middle
+#' of the 'y' values, it will generate up/down polygons around this value.
 #' @param minmax,min,max Arguments passed to `points` to highlight minimum
 #' and maximum values in `spec_plot`. If `min` or `max` are `NULL`, they
 #' default to the value of `minmax`. Set to an empty `list()` to disable.
@@ -268,8 +268,8 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       xaxt = 'n', yaxt = 'n', ann = FALSE,
                       col = "lightgray", border = NULL,
                       frame.plot = FALSE, lwd = 2,
-                      pch = ".", cex = 0.1, type = "l", polymin = NA,
-                      minmax = list(pch = ".", cex = lwd, col = "red"),
+                      pch = ".", cex = 2, type = "l", polymin = NA,
+                      minmax = list(pch = ".", cex = cex, col = "red"),
                       min = minmax, max = minmax,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
                       file = NULL, file_type = if (is_latex()) "png" else "svg", ...) {
@@ -278,19 +278,16 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
 
     if (same_lim) {
       if (is.null(xlim)) {
-        xlim <- lapply(x, function(z) base::range(c(z, if (is.null(y)) polymin), na.rm = TRUE))
+        xlim <- base::range(unlist(x), na.rm = TRUE)
       }
       if (is.null(ylim) && !is.null(y)) {
-        if (is.list(y)) {
-          ylim <- lapply(y, function(z) base::range(c(z, polymin), na.rm = TRUE))
-        } else {
-          ylim <- base::range(c(y, polymin), na.rm = TRUE)
-        }
+        ylim <- base::range(c(unlist(y), polymin), na.rm = TRUE)
       }
     }
+
     if (is.null(y)) {
-      y <- replicate(lenx, NULL, simplify = FALSE)
-    } else if (!is.list(y) || lenx != length(y)) {
+      y <- list(y)
+    } else if (length(y) != lenx) {
       stop("'x' and 'y' are not the same length")
     }
 
@@ -352,13 +349,13 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
     y <- x
     x <- seq_along(y)
     if (!is.null(xlim) && is.null(ylim)) {
-      ylim <- xlim
+      ylim <- range(c(xlim, polymin), na.rm = TRUE)
       xlim <- range(x)
     }
   }
 
   if (is.null(xlim)) {
-    xlim <- base::range(x)
+    xlim <- base::range(x, na.rm = TRUE)
   }
 
   if (is.null(ylim) && !is.null(y)) {
@@ -407,26 +404,26 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
           c(list(x, y, type = if (is.na(polymin)) type else "n",
                  xlim = xlim, ylim = ylim,
                  xaxt = xaxt, yaxt = yaxt, ann = ann, col = col,
-                 frame.plot = frame.plot, xpd = NA,
-                 cex = cex, pch = pch # in case of type="p" or similar
-                 ), dots))
+                 frame.plot = frame.plot, cex = cex, pch = pch),
+            dots))
 
   if (!is.na(polymin)) {
     lty <- if ("lty" %in% names(dots)) dots$lty else graphics::par("lty")
     polygon(c(x[1], x, x[length(x)]), c(polymin, y, polymin),
-            border = NA, col = col, angle = angle,
-            lty = lty,
-            xpd = NA)
+            border = NA, col = col, angle = angle, lty = lty,
+            xpd = if ("xpd" %in% names(dots)) dots$xpd else NA)
   }
 
   if (!is.null(min) && length(min)) {
+    if (!"xpd" %in% names(min)) min$xpd <- NA
     ind <- which.min(y)
-    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), min))
+    do.call(graphics::points, c(list(x[ind], y[ind]), min))
   }
 
   if (!is.null(max) && length(max)) {
+    if (!"xpd" %in% names(max)) max$xpd <- NA
     ind <- which.max(y)
-    do.call(graphics::points, c(list(x[ind], y[ind], xpd = NA), max))
+    do.call(graphics::points, c(list(x[ind], y[ind]), max))
   }
 
   grDevices::dev.off(curdev)
