@@ -110,7 +110,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' plotted in the same range? Default is True.
 #' @param lim,xlim,ylim Manually specify plotting range in the form of
 #' `c(0, 10)`. `lim` is used in `spec_hist` and `spec_boxplot`; `xlim`
-#' and `ylim` are used in `spec_line`.
+#' and `ylim` are used in `spec_plot`.
 #' @param xaxt On/Off for xaxis text
 #' @param yaxt On/Off for yaxis text
 #' @param ann On/Off for annotations (titles and axis titles)
@@ -239,12 +239,22 @@ rmd_files_dir <- function(create = TRUE) {
 #' @param ann On/Off for annotations (titles and axis titles)
 #' @param col Color for the fill of the histogram bar/boxplot box.
 #' @param border Color for the border.
-#' @param frame.plot On/Off for surrounding box (`spec_line` only). Default
+#' @param frame.plot On/Off for surrounding box (`spec_plot` only). Default
 #' is False.
-#' @param lwd Line width for `spec_line`; within `spec_line`, the `minmax`
+#' @param lwd Line width for `spec_plot`; within `spec_plot`, the `minmax`
 #' argument defaults to use this value for `cex` for points. Default is 2.
+#' @param pch,cex Shape and size for points (if type is other than "l").
+#' @param type Passed to `plot`, often one of "l", "p", or "b", see
+#' [graphics::plot.default()] for more details. Ignored when 'polymin' is
+#' not 'NA'.
+#' @param polymin Special argument that converts a "line" to a polygon,
+#' where the flat portion is this value, and the other side of the polygon
+#' is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
+#' this is ignored; otherwise if this is numeric then a polygon is
+#' created (and 'type' is ignored). Note that if 'polymin' is in the middle
+#' of the 'y' values, it will generate up/down polygons around this value.
 #' @param minmax,min,max Arguments passed to `points` to highlight minimum
-#' and maximum values in `spec_line`. If `min` or `max` are `NULL`, they
+#' and maximum values in `spec_plot`. If `min` or `max` are `NULL`, they
 #' default to the value of `minmax`. Set to an empty `list()` to disable.
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
@@ -253,67 +263,113 @@ rmd_files_dir <- function(create = TRUE) {
 #' @param ... extra parameters passing to `plot`
 #'
 #' @export
-spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
+spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       same_lim = TRUE, xlim = NULL, ylim = NULL,
                       xaxt = 'n', yaxt = 'n', ann = FALSE,
                       col = "lightgray", border = NULL,
                       frame.plot = FALSE, lwd = 2,
-                      minmax = list(pch = ".", cex = lwd, col = "red"),
+                      pch = ".", cex = 2, type = "l", polymin = NA,
+                      minmax = list(pch = ".", cex = cex, col = "red"),
                       min = minmax, max = minmax,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
-                      file = NULL,
-                      file_type = if (is_latex()) "png" else "svg", ...) {
+                      file = NULL, file_type = if (is_latex()) "png" else "svg", ...) {
   if (is.list(x)) {
+    lenx <- length(x)
+
     if (same_lim) {
       if (is.null(xlim)) {
-        xlim <- base::range(unlist(x))
+        xlim <- base::range(unlist(x), na.rm = TRUE)
       }
       if (is.null(ylim) && !is.null(y)) {
-        ylim <- base::range(unlist(y))
+        ylim <- base::range(c(unlist(y), polymin), na.rm = TRUE)
       }
     }
+
     if (is.null(y)) {
-      y <- replicate(length(x), NULL, simplify = FALSE)
-    } else if (!is.list(y) || length(x) != length(y)) {
+      y <- list(y)
+    } else if (length(y) != lenx) {
       stop("'x' and 'y' are not the same length")
     }
-    return(Map(function(x_, y_) {
-      spec_line(x = x_, y = y_,
-                width = width, height = height,
-                same_lim = same_lim, xlim = xlim, ylim = ylim,
-                xaxt = xaxt, yaxt = yaxt, ann = ann, col = col, border = border,
-                frame.plot = frame.plot, lwd = lwd,
-                minmax = minmax, min = min, max = max,
-                dir = dir, file = file, file_type = file_type, ...)
-    }, x, y))
+
+    # any of the arguments can be per-plot controlling, but an arg
+    # that is normally not length-1 may be recycled (incorrectly) by
+    # Map, so we have to listify them if not already lists;
+    # enforce a restriction of recycling only length 1 or lenx
+
+    # first, start with the literals (x,y)
+    # (same_lim is not a factor anymore)
+    dots <- list(x = x, y = y)
+
+    # second, we know these args are likely to be vectors (length > 1)
+    # or lists, so we have to handle them carefully and double-list if
+    # present
+    notlen1vec <- list(xlim = xlim, ylim = ylim)
+    dots <- c(dots, Map(
+      function(L, nm) {
+        if (is.null(L)) return(list(NULL))
+        if (!is.list(L)) return(list(L))
+        if (length(L) == lenx) return(L)
+        stop("length of '", nm, "' must be 1 or the same length as 'x'")
+      }, notlen1vec, names(notlen1vec)))
+
+    # these are special ... they are lists which may need to be
+    # nested, and we can't pass NULL since that may default to the
+    # actual values instead of the intended
+    notlen1lst <- list(minmax = minmax, min = min, max = max)
+    dots <- c(dots, Map(
+      function(L, nm) {
+        if (is.null(L)) return(list(NULL))
+        if (!length(L)) return(list(list()))
+        if (!is.list(L[[1]])) return (list(L))
+        if (length(L) == lenx) return(L)
+        stop("length of '", nm, "' must be 1 or the same length as 'x'")
+      }, notlen1lst, names(notlen1lst)))
+
+    # last, all remaining arguments that we don't already know about
+    # are length-1, so can be easily listified; using 'formals()'
+    # allows us to not hard-code all params
+    len1args <- mget(setdiff(names(formals()),
+                             c(names(dots), "same_lim", "x", "y", "...")))
+    dots <- c(dots, Map(
+      function(V, nm) {
+        if (is.null(V)) return(list(NULL))
+        if (!length(V) %in% c(1L, lenx)) {
+          stop("length of '", nm, "' must be 1 or the same length as 'x'")
+        }
+        V
+      }, len1args, names(len1args)))
+
+    return(do.call(Map, c(list(f = spec_plot), dots)))
+
   }
 
   if (is.null(x)) return(NULL)
 
   if (is.null(y) || !length(y)) {
     y <- x
-    x <- seq(0, 1, length.out = length(y))
-    tmp <- ylim
-    ylim <- xlim
-    xlim <- tmp
+    x <- seq_along(y)
+    if (!is.null(xlim) && is.null(ylim)) {
+      ylim <- range(c(xlim, polymin), na.rm = TRUE)
+      xlim <- range(x)
+    }
   }
 
   if (is.null(xlim)) {
-    xlim <- base::range(x)
+    xlim <- base::range(x, na.rm = TRUE)
   }
 
   if (is.null(ylim) && !is.null(y)) {
-    ylim <- base::range(y)
+    ylim <- base::range(c(y, polymin), na.rm = TRUE)
   }
 
   if (is.null(min)) min <- minmax
   if (is.null(max)) max <- minmax
 
   expand <- c(
-    if (!is.null(min) && length(min)) 0.96 else 1,
-    if (!is.null(max) && length(max)) 1.04 else 1)
-  xlim <- xlim * expand
-  ylim <- ylim * expand
+    if (!is.null(min) && length(min)) -0.04 else 0,
+    if (!is.null(max) && length(max)) +0.04 else 0)
+  xlim <- xlim + diff(xlim) * expand
+  ylim <- ylim + diff(ylim) * expand
 
   file_type <- match.arg(file_type, c("svg", "png"))
 
@@ -336,17 +392,36 @@ spec_line <- function(x, y = NULL, width = 200, height = 50, res = 300,
   curdev <- grDevices::dev.cur()
   on.exit(grDevices::dev.off(curdev), add = TRUE)
 
-  graphics::par(mar = c(0, 0, 0.2, 0), lwd = lwd)
-  graphics::plot(x, y, type = "l", xlim = xlim, ylim = ylim, border = border,
+  graphics::par(mar = c(0, 0, 0, 0), lwd = lwd)
+
+  dots <- list(...)
+  if (!is.na(polymin) && "angle" %in% names(dots)) {
+    angle <- dots$angle
+    dots$angle <- NULL
+  } else angle <- 45
+
+  do.call(graphics::plot,
+          c(list(x, y, type = if (is.na(polymin)) type else "n",
+                 xlim = xlim, ylim = ylim,
                  xaxt = xaxt, yaxt = yaxt, ann = ann, col = col,
-                 frame.plot = frame.plot, ...)
+                 frame.plot = frame.plot, cex = cex, pch = pch),
+            dots))
+
+  if (!is.na(polymin)) {
+    lty <- if ("lty" %in% names(dots)) dots$lty else graphics::par("lty")
+    polygon(c(x[1], x, x[length(x)]), c(polymin, y, polymin),
+            border = NA, col = col, angle = angle, lty = lty,
+            xpd = if ("xpd" %in% names(dots)) dots$xpd else NA)
+  }
 
   if (!is.null(min) && length(min)) {
+    if (!"xpd" %in% names(min)) min$xpd <- NA
     ind <- which.min(y)
     do.call(graphics::points, c(list(x[ind], y[ind]), min))
   }
 
   if (!is.null(max) && length(max)) {
+    if (!"xpd" %in% names(max)) max$xpd <- NA
     ind <- which.max(y)
     do.call(graphics::points, c(list(x[ind], y[ind]), max))
   }
