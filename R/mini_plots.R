@@ -21,7 +21,9 @@
 #' @param border Color for the border.
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
-#' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
+#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
+#'   or a graphics device function (`grDevices::pdf`). This defaults
+#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
 #' for HTML output
 #' @param ... extra parameters sending to `hist()`
 #'
@@ -33,17 +35,17 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
                       col = "lightgray", border = NULL,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
                       file = NULL,
-                      file_type = if (is_latex()) "png" else "svg", ...) {
+                      file_type = if (is_latex()) "pdf" else "svg", ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
       lim <- base::range(unlist(x))
     }
-    return(lapply(x, function(x_) {spec_hist(
-      x = x_, width = width, height = height,
-      breaks = breaks, same_lim = same_lim, lim = lim,
-      xaxt = xaxt, yaxt = yaxt, ann = ann, col = col, border = border,
-      dir = dir, file = file, file_type = file_type, ...
-    )}))
+
+    dots <- listify_args(x, width, height, res, breaks,
+                         lim, xaxt, yaxt, ann, col, border,
+                         dir, file, file_type,
+                         lengths = c(1, length(x)))
+    return(do.call(Map, c(list(f = spec_hist), dots)))
   }
 
   if (is.null(x)) return(NULL)
@@ -52,42 +54,33 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
     lim <- base::range(x)
   }
 
-  file_type <- match.arg(file_type, c("svg", "png"))
-
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
 
+  file_ext <- dev_chr(file_type)
   if (is.null(file)) {
-    file <- file.path(dir, paste0(
-      "hist_", round(as.numeric(Sys.time()) * 1000), ".", file_type))
+    file <- normalizePath(
+      tempfile(pattern = "hist_", tmpdir = dir, fileext = paste0(".", file_ext)),
+      winslash = "/", mustWork = FALSE)
   }
 
-  if (file_type == "svg") {
-    grDevices::svg(filename = file, width = width / res, height = height / res,
-                   bg = 'transparent')
-  } else {
-    grDevices::png(filename = file, width = width, height = height, res = res,
-                   bg = 'transparent')
-  }
+  graphics_dev(filename = file, dev = file_type,
+               width = width, height = height, res = res,
+               bg = "transparent")
+  curdev <- grDevices::dev.cur()
+  on.exit(grDevices::dev.off(curdev), add = TRUE)
 
   graphics::par(mar = c(0, 0, 0.2, 0), lwd=0.5)
   graphics::hist(x, breaks = breaks, xlim = lim, border = border,
                  xaxt = xaxt, yaxt = yaxt, ann = ann, col = col, ...)
-  grDevices::dev.off()
 
-  if (file_type == "svg") {
-    svg_xml <- xml2::read_xml(file)
-    svg_text <- as.character(svg_xml)
-    unlink(file)
-  } else {
-    svg_text <- NULL
-  }
-  out <- list(path = file, dev = file_type, type = "hist",
-              width = width, height = height, res = res,
-              svg_text = svg_text)
+  grDevices::dev.off(curdev)
 
-  class(out) <- "kableExtraInlinePlots"
+  out <- make_inline_plot(
+    file, file_ext, file_type,
+    width, height, res,
+    del = TRUE)
   return(out)
 }
 
@@ -121,8 +114,9 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' @param medlwd Boxplot - median line width
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
-#' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
-#' for HTML output
+#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
+#'   or a graphics device function (`grDevices::pdf`). This defaults
+#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
 #' @param ... extraparameters passing to boxplot
 #'
 #' @export
@@ -134,19 +128,18 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
                          boxlty = 0, medcol = "red", medlwd = 1,
                          dir = if (is_latex()) rmd_files_dir() else tempdir(),
                          file = NULL,
-                         file_type = if (is_latex()) "png" else "svg", ...) {
+                         file_type = if (is_latex()) "pdf" else "svg", ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
       lim <- base::range(unlist(x))
     }
-    return(lapply(x, function(x_) {spec_boxplot(
-      x = x_, width = width, height = height,
-      add_label = add_label, same_lim = same_lim, lim = lim,
-      xaxt = xaxt, yaxt = yaxt, ann = ann,
-      col = col, border = border,
-      boxlty = boxlty, medcol = medcol, medlwd = medlwd,
-      dir = dir, file = file, file_type = file_type, ...
-    )}))
+
+    dots <- listify_args(x, width, height, res,
+                         add_label, label_digits,
+                         lim, xaxt, yaxt, ann, col, border,
+                         dir, file, file_type,
+                         lengths = c(1, length(x)))
+    return(do.call(Map, c(list(f = spec_boxplot), dots)))
   }
 
   if (is.null(x)) return(NULL)
@@ -157,24 +150,22 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
     lim[2] <- (lim[2] - lim[1]) / 10 + lim[2]
   }
 
-  file_type <- match.arg(file_type, c("svg", "png"))
-
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
 
+  file_ext <- dev_chr(file_type)
   if (is.null(file)) {
-    file <- file.path(dir, paste0(
-      "hist_", round(as.numeric(Sys.time()) * 1000), ".", file_type))
+    file <- normalizePath(
+      tempfile(pattern = "boxplot_", tmpdir = dir, fileext = paste0(".", file_ext)),
+      winslash = "/", mustWork = FALSE)
   }
 
-  if (file_type == "svg") {
-    grDevices::svg(filename = file, width = width / res, height = height / res,
-                   bg = 'transparent')
-  } else {
-    grDevices::png(filename = file, width = width, height = height, res = res,
-                   bg = 'transparent')
-  }
+  graphics_dev(filename = file, dev = file_type,
+               width = width, height = height, res = res,
+               bg = "transparent")
+  curdev <- grDevices::dev.cur()
+  on.exit(grDevices::dev.off(curdev), add = TRUE)
 
   graphics::par(mar = c(0, 0, 0, 0))
 
@@ -191,19 +182,13 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
     graphics::text(x_min, y = 0.6, labels = x_min, cex = 0.5)
     graphics::text(x_max, y = 0.6, labels = x_max, cex = 0.5)
   }
-  grDevices::dev.off()
 
-  if (file_type == "svg") {
-    svg_xml <- xml2::read_xml(file)
-    svg_text <- as.character(svg_xml)
-    unlink(file)
-  } else {
-    svg_text <- NULL
-  }
-  out <- list(path = file, dev = file_type, type = "boxplot",
-              width = width, height = height, res = res,
-              svg_text = svg_text)
-  class(out) <- "kableExtraInlinePlots"
+  grDevices::dev.off(curdev)
+
+  out <- make_inline_plot(
+    file, file_ext, file_type,
+    width, height, res,
+    del = TRUE)
   return(out)
 }
 
@@ -258,8 +243,9 @@ rmd_files_dir <- function(create = TRUE) {
 #' default to the value of `minmax`. Set to an empty `list()` to disable.
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
-#' @param file_type Graphic device. Support `png` or `svg`. SVG is recommended
-#' for HTML output.
+#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
+#'   or a graphics device function (`grDevices::pdf`). This defaults
+#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
 #' @param ... extra parameters passing to `plot`
 #'
 #' @export
@@ -272,7 +258,7 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       minmax = list(pch = ".", cex = cex, col = "red"),
                       min = minmax, max = minmax,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
-                      file = NULL, file_type = if (is_latex()) "png" else "svg", ...) {
+                      file = NULL, file_type = if (is_latex()) "pdf" else "svg", ...) {
   if (is.list(x)) {
     lenx <- length(x)
 
@@ -291,53 +277,11 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
       stop("'x' and 'y' are not the same length")
     }
 
-    # any of the arguments can be per-plot controlling, but an arg
-    # that is normally not length-1 may be recycled (incorrectly) by
-    # Map, so we have to listify them if not already lists;
-    # enforce a restriction of recycling only length 1 or lenx
-
-    # first, start with the literals (x,y)
-    # (same_lim is not a factor anymore)
-    dots <- list(x = x, y = y)
-
-    # second, we know these args are likely to be vectors (length > 1)
-    # or lists, so we have to handle them carefully and double-list if
-    # present
-    notlen1vec <- list(xlim = xlim, ylim = ylim)
-    dots <- c(dots, Map(
-      function(L, nm) {
-        if (is.null(L)) return(list(NULL))
-        if (!is.list(L)) return(list(L))
-        if (length(L) == lenx) return(L)
-        stop("length of '", nm, "' must be 1 or the same length as 'x'")
-      }, notlen1vec, names(notlen1vec)))
-
-    # these are special ... they are lists which may need to be
-    # nested, and we can't pass NULL since that may default to the
-    # actual values instead of the intended
-    notlen1lst <- list(minmax = minmax, min = min, max = max)
-    dots <- c(dots, Map(
-      function(L, nm) {
-        if (is.null(L)) return(list(NULL))
-        if (!length(L)) return(list(list()))
-        if (!is.list(L[[1]])) return (list(L))
-        if (length(L) == lenx) return(L)
-        stop("length of '", nm, "' must be 1 or the same length as 'x'")
-      }, notlen1lst, names(notlen1lst)))
-
-    # last, all remaining arguments that we don't already know about
-    # are length-1, so can be easily listified; using 'formals()'
-    # allows us to not hard-code all params
-    len1args <- mget(setdiff(names(formals()),
-                             c(names(dots), "same_lim", "x", "y", "...")))
-    dots <- c(dots, Map(
-      function(V, nm) {
-        if (is.null(V)) return(list(NULL))
-        if (!length(V) %in% c(1L, lenx)) {
-          stop("length of '", nm, "' must be 1 or the same length as 'x'")
-        }
-        V
-      }, len1args, names(len1args)))
+    dots <- listify_args(x, y = y, width, height, res,
+                         xlim, ylim, xaxt, yaxt, ann, col, border, frame.plot,
+                         lwd, pch, cex, type, polymin, minmax, min, max,
+                         dir, file, file_type,
+                         lengths = c(1, lenx))
 
     return(do.call(Map, c(list(f = spec_plot), dots)))
 
@@ -371,24 +315,20 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
   xlim <- xlim + diff(xlim) * expand
   ylim <- ylim + diff(ylim) * expand
 
-  file_type <- match.arg(file_type, c("svg", "png"))
-
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
 
+  file_ext <- dev_chr(file_type)
   if (is.null(file)) {
-    file <- file.path(dir, paste0(
-      "hist_", round(as.numeric(Sys.time()) * 1000), ".", file_type))
+    file <- normalizePath(
+      tempfile(pattern = "plot_", tmpdir = dir, fileext = paste0(".", file_ext)),
+      winslash = "/", mustWork = FALSE)
   }
 
-  if (file_type == "svg") {
-    grDevices::svg(filename = file, width = width / res, height = height / res,
-                   bg = 'transparent')
-  } else {
-    grDevices::png(filename = file, width = width, height = height, res = res,
-                   bg = 'transparent')
-  }
+  graphics_dev(filename = file, dev = file_type,
+               width = width, height = height, res = res,
+               bg = "transparent")
   curdev <- grDevices::dev.cur()
   on.exit(grDevices::dev.off(curdev), add = TRUE)
 
@@ -428,17 +368,9 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
 
   grDevices::dev.off(curdev)
 
-  if (file_type == "svg") {
-    svg_xml <- xml2::read_xml(file)
-    svg_text <- as.character(svg_xml)
-    unlink(file)
-  } else {
-    svg_text <- NULL
-  }
-  out <- list(path = file, dev = file_type, type = "line",
-              width = width, height = height, res = res,
-              svg_text = svg_text)
-
-  class(out) <- "kableExtraInlinePlots"
+  out <- make_inline_plot(
+    file, file_ext, file_type,
+    width, height, res,
+    del = TRUE)
   return(out)
 }

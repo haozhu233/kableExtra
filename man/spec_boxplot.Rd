@@ -23,7 +23,7 @@ spec_boxplot(
   medlwd = 1,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
+  file_type = if (is_latex()) "pdf" else "svg",
   ...
 )
 }
@@ -68,8 +68,9 @@ and \code{ylim} are used in \code{spec_plot}.}
 
 \item{file}{File name. If not provided, a random name will be used}
 
-\item{file_type}{Graphic device. Support \code{png} or \code{svg}. SVG is recommended
-for HTML output}
+\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"})
+or a graphics device function (\code{grDevices::pdf}). This defaults
+to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.}
 
 \item{...}{extraparameters passing to boxplot}
 }
