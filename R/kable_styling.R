@@ -335,6 +335,7 @@ pdfTable_styling <- function(kable_input,
 
   if ("striped" %in% latex_options) {
     out <- styling_latex_striped(out, table_info, stripe_color, stripe_index)
+    table_info <- magic_mirror(out)
   }
 
   # hold_position is only meaningful in a table environment
