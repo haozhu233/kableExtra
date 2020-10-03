@@ -264,9 +264,9 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
                                              extra_css)
   }
 
-  if (!is.null(image)) {
+  if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
     image <- image[[1]]
-    if (class(image) == "kableExtraInlinePlots") {
+    if (inherits(image, "kableExtraInlinePlots")) {
       if (!is.null(image$svg_text)) {
         xml_add_child(target_cell, xml2::read_xml(image$svg_text))
       } else {
@@ -284,13 +284,13 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
 
   # favor popover over tooltip
   if (!is.null(popover)) {
-    if (class(popover) != "ke_popover") popover <- spec_popover(popover)
+    if (!inherits(popover, "ke_popover")) popover <- spec_popover(popover)
     popover_list <- attr(popover, 'list')
     for (p in names(popover_list)) {
       xml_attr(target_cell, p) <- popover_list[p]
     }
   } else if (!is.null(tooltip)) {
-    if (class(tooltip) != "ke_tooltip") tooltip <- spec_tooltip(tooltip)
+    if (!inherits(tooltip, "ke_tooltip")) tooltip <- spec_tooltip(tooltip)
     tooltip_list <- attr(tooltip, 'list')
     for (t in names(tooltip_list)) {
       xml_attr(target_cell, t) <- tooltip_list[t]
@@ -539,9 +539,9 @@ latex_cell_builder <- function(target_row, column, table_info,
                               new_row[column], "\\}")
   }
 
-  if (!is.null(image)) {
+  if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
     image <- image[[1]]
-    if (class(image) == "kableExtraInlinePlots") {
+    if (inherits(image, "kableExtraInlinePlots")) {
       new_row[column] <- paste0(
         new_row[column],
         '\\\\includegraphics\\[width=',

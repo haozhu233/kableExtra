@@ -23,7 +23,7 @@ spec_boxplot(
   medlwd = 1,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "png" else "svg",
+  file_type = if (is_latex()) "pdf" else "svg",
   ...
 )
 }
@@ -46,7 +46,7 @@ plotted in the same range? Default is True.}
 
 \item{lim, xlim, ylim}{Manually specify plotting range in the form of
 \code{c(0, 10)}. \code{lim} is used in \code{spec_hist} and \code{spec_boxplot}; \code{xlim}
-and \code{ylim} are used in \code{spec_line}.}
+and \code{ylim} are used in \code{spec_plot}.}
 
 \item{xaxt}{On/Off for xaxis text}
 
@@ -68,8 +68,9 @@ and \code{ylim} are used in \code{spec_line}.}
 
 \item{file}{File name. If not provided, a random name will be used}
 
-\item{file_type}{Graphic device. Support \code{png} or \code{svg}. SVG is recommended
-for HTML output}
+\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"})
+or a graphics device function (\code{grDevices::pdf}). This defaults
+to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.}
 
 \item{...}{extraparameters passing to boxplot}
 }
