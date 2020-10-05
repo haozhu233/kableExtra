@@ -203,13 +203,14 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      hline_after, extra_latex_after)
     temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
                                    !is.null(table_info$repeat_header_latex)),
-                       gsub, sub)
+                       stringr::str_replace_all, stringr::str_replace)
     if (length(new_row) == 1) {
-      out <- temp_sub(target_row, new_row, out, perl = T)
+      out <- temp_sub(out, paste0(target_row, "\\\\\\\\"),
+                      paste0(new_row, "\\\\\\\\"))
       table_info$contents[i] <- new_row
     } else {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                  paste(new_row, collapse = ""), out, perl = T)
+      out <- temp_sub(out, paste0(target_row, "\\\\\\\\"),
+                  paste(new_row, collapse = ""))
       table_info$contents[i] <- new_row[1]
     }
   }

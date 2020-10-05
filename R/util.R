@@ -127,7 +127,7 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
     # insert empty_times before last non whitespace characters
     new_row <- str_replace(
       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
-      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\}\\1"))
+      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
     kable_input <- sub(
       paste0(dup_row, "(?=\\s*\\\\\\\\\\*?(\\[.*\\])?)"),
       new_row,
