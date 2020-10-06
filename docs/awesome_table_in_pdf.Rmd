@@ -263,16 +263,24 @@ tbl_img %>%
     c("kableExtra_sm.png", "kableExtra_sm.png"), 50, 50))
 ```
 
-`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist` and `spec_boxplot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. 
+`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist`, `spec_boxplot`, and `spec_plot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows.
 
 ```{r}
 mpg_list <- split(mtcars$mpg, mtcars$cyl)
-inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "")
-inline_plot %>% 
-  kbl(booktabs = T) %>%
-  kable_paper(full_width = F) %>%
+disp_list <- split(mtcars$disp, mtcars$cyl)
+inline_plot <- data.frame(cyl = c(4, 6, 8), mpg_box = "", mpg_hist = "",
+                          mpg_line1 = "", mpg_line2 = "",
+                          mpg_points1 = "", mpg_points2 = "", mpg_poly = "")
+inline_plot %>%
+  kbl(booktabs = TRUE) %>%
+  kable_paper(full_width = FALSE) %>%
   column_spec(2, image = spec_boxplot(mpg_list)) %>%
-  column_spec(3, image = spec_hist(mpg_list))
+  column_spec(3, image = spec_hist(mpg_list)) %>%
+  column_spec(4, image = spec_plot(mpg_list, same_lim = TRUE)) %>%
+  column_spec(5, image = spec_plot(mpg_list, same_lim = FALSE)) %>%
+  column_spec(6, image = spec_plot(mpg_list, type = "p")) %>%
+  column_spec(7, image = spec_plot(mpg_list, disp_list, type = "p")) %>%
+  column_spec(8, image = spec_plot(mpg_list, polymin = 5))
 ```
 
 ## Row spec
@@ -318,7 +326,7 @@ cs_dt$cyl = cell_spec(
   background = factor(cs_dt$cyl, c(4, 6, 8), c("#666666", "#999999", "#BBBBBB")))
 cs_dt <- cs_dt[c("car", "mpg", "cyl")]
 
-kbl(cs_dt, escape = F) %>%
+kbl(cs_dt, booktabs = T, escape = F) %>%
   kable_paper("striped", full_width = F)
 
 # You can also do this with dplyr and use one pipe from top to bottom
@@ -347,7 +355,7 @@ vs_dt[1:4] <- lapply(vs_dt[1:4], function(x) {
 })
 vs_dt[5] <- cell_spec(vs_dt[[5]], color = "white", bold = T,
     background = spec_color(1:10, end = 0.9, option = "A", direction = -1))
-kbl(vs_dt, escape = F, align = "c") %>%
+kbl(vs_dt, booktabs = T, escape = F, align = "c") %>%
   kable_classic("striped", full_width = F)
 # Or dplyr ver
 # iris[1:10, ] %>%

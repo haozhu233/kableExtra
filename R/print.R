@@ -1,7 +1,7 @@
 #' @export
 print.kableExtra <- function(x, ...) {
   view_html <- getOption("kableExtra_view_html", TRUE)
-  if (view_html & interactive() & rstudioapi::isAvailable()) {
+  if (view_html & interactive()) {
     dep <- list(
       rmarkdown::html_dependency_jquery(),
       rmarkdown::html_dependency_bootstrap(theme = "cosmo"),

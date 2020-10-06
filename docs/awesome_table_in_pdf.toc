@@ -20,13 +20,13 @@
 \contentsline {subsection}{Header Rows}{13}{section*.21}%
 \contentsline {section}{Cell/Text Specification}{13}{section*.22}%
 \contentsline {subsection}{Conditional logic}{14}{section*.23}%
-\contentsline {subsection}{Visualize data with Viridis Color}{14}{section*.24}%
+\contentsline {subsection}{Visualize data with Viridis Color}{15}{section*.24}%
 \contentsline {subsection}{Text Specification}{15}{section*.25}%
 \contentsline {section}{Grouped Columns / Rows}{16}{section*.26}%
 \contentsline {subsection}{Add header rows to group columns}{16}{section*.27}%
 \contentsline {subsection}{Group rows via labeling}{17}{section*.28}%
 \contentsline {subsection}{Row indentation}{18}{section*.29}%
-\contentsline {subsection}{Group rows via multi-row cell}{18}{section*.30}%
+\contentsline {subsection}{Group rows via multi-row cell}{19}{section*.30}%
 \contentsline {section}{Table Footnote}{22}{section*.31}%
 \contentsline {section}{LaTeX Only Features}{25}{section*.32}%
 \contentsline {subsection}{Linebreak processor}{25}{section*.33}%
