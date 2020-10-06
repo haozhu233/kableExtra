@@ -201,7 +201,9 @@ footnote_html <- function(kable_input, footnote_table, footnote_as_chunk) {
 
   new_html_footnote <- html_tfoot_maker(footnote_table, footnote_as_chunk)
   xml_add_child(kable_xml, new_html_footnote)
-
+  xml2::xml_set_attr(kable_xml, "style",
+                     paste0(xml2::xml_attr(kable_xml, "style"),
+                            "border-bottom: 0;"))
   out <- as_kable_xml(kable_xml)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
@@ -233,12 +235,12 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
   }
   if (!ft_chunk) {
     footnote_text <- paste0(
-      '<tr><td style="padding: 0; border: 0;" colspan="100%">',
+      '<tr><td style="padding: 0; " colspan="100%">',
       footnote_text, '</td></tr>'
     )
   } else {
     footnote_text <- paste0(
-      '<tr><td style="padding: 0; border: 0;" colspan="100%">',
+      '<tr><td style="padding: 0; " colspan="100%">',
       paste0(footnote_text, collapse = " "),
       '</td></tr>'
     )

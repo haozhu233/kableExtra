@@ -41,6 +41,7 @@
 
 .lightable-classic {
   border-top: 0.16em solid #111111;
+  border-bottom: 0.16em solid #111111;
   width: 100%;
   margin-bottom: 10px;
   margin: 10px 5px;
@@ -67,9 +68,15 @@
   border-bottom: 0.10em solid #111111;
 }
 
-.lightable-classic tbody tr:last-child td {
-  border-bottom: 0.14em solid #111111;
+.lightable-classic tfoot tr td {
+  border: 0;
 }
+
+.lightable-classic tfoot tr:first-child td {
+  border-top: 0.14em solid #111111;
+}
+
+
 
 .lightable-classic.lightable-hover tbody tr:hover {
   background-color: #F9EEC1;
