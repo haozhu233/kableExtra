@@ -165,6 +165,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 custom_latex_hline, headers_to_remove, target,
                                 col_names, longtable_clean_cut) {
   table_info <- magic_mirror(kable_input)
+  if (table_info$nrow <= 2) return(kable_input)
   out <- solve_enc(kable_input)
   out <- gsub("\\\\addlinespace\n", "", out)
 
