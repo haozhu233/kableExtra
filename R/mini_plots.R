@@ -38,7 +38,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
                       file_type = if (is_latex()) "pdf" else "svg", ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
-      lim <- base::range(unlist(x))
+      lim <- base::range(unlist(x), na.rm=TRUE)
     }
 
     dots <- listify_args(x, width, height, res, breaks,
@@ -51,7 +51,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
   if (is.null(x)) return(NULL)
 
   if (is.null(lim)) {
-    lim <- base::range(x)
+    lim <- base::range(x, na.rm=TRUE)
   }
 
   if (!dir.exists(dir)) {
@@ -131,7 +131,7 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
                          file_type = if (is_latex()) "pdf" else "svg", ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
-      lim <- base::range(unlist(x))
+      lim <- base::range(unlist(x), na.rm=TRUE)
     }
 
     dots <- listify_args(x, width, height, res,
@@ -145,7 +145,7 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
   if (is.null(x)) return(NULL)
 
   if (is.null(lim)) {
-    lim <- base::range(x)
+    lim <- base::range(x, na.rm=TRUE)
     lim[1] <- lim[1] - (lim[2] - lim[1]) / 10
     lim[2] <- (lim[2] - lim[1]) / 10 + lim[2]
   }
