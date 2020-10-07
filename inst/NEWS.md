@@ -1,3 +1,15 @@
+kableExtra 1.3.0
+--------------------------------------------------------------------------------
+
+# Major Change
+
+* Added a `header_separate` function that simplifies the workflow of adding 
+header rows to grouped data. For example, if the original dataframe has columns 
+in the form of "var", "a_mean", "a_sd", "b_mean" and "b_sd", this 
+`header_separate` will change the column names of the 1st row to be "var", 
+"mean", "sd", "mean" and "sd" and add an additional row with group a and b 
+there.
+
 kableExtra 1.2.1
 --------------------------------------------------------------------------------
 

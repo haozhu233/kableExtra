@@ -1,0 +1,22 @@
+---
+title: "In-table Plots"
+output: 
+  html_document:
+    theme: cosmo
+---
+
+```{r, include=F}
+knitr::opts_chunk$set(warning = F, message = F)
+```
+
+Sometimes it's a delight to see plots in a table. Here we provide some examples and recipes on some common tasks. We will use the following packages.
+
+
+```{r}
+library(kableExtra)
+library(plotly)
+library(sparkline)
+library(tidyverse)
+```
+
+
