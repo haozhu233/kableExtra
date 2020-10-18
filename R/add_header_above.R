@@ -145,8 +145,8 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
   }
 
   if (sum(header$colspan) != kable_ncol) {
-    stop("The new header row you provided has a different total number of ",
-         "columns with the original kable output.")
+    stop("The new header row you provided has a total of ", sum(header$colspan),
+         " columns but the original kable_input has ", kable_ncol, ".")
   }
 
   new_header_row <- htmlTable_new_header_generator(
