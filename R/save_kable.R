@@ -34,12 +34,41 @@ save_kable <- function(x, file,
                        extra_dependencies = NULL, ...,
                        latex_header_includes = NULL, keep_tex = FALSE,
                        density = 300) {
-  if (!is.null(attr(x, "format")) && attr(x, "format") == "latex") {
-    return(save_kable_latex(x, file, latex_header_includes, keep_tex, density))
+
+  if (!is.null(attr(x, "format"))) {
+
+    # latex
+    if (attr(x, "format") == "latex") {
+      return(save_kable_latex(x, file, latex_header_includes, keep_tex, density))
+
+    # markdown
+    } else if (attr(x, "format") == "pipe") {
+
+      # good file extension: write to file
+      if (tools::file_ext(file) %in% c("txt", "md", "markdown", "Rmd")) {
+        return(save_kable_markdown(x, file))
+
+      # bad file extension: warning + keep going to html writer
+      } else {
+        warning('`save_kable` can only save markdown tables to files with the following extensions: .txt, .md, .markdown, .Rmd. Since the supplied file name has a different extension, `save_kable` will try to use the HTML writer. This is likely to produce suboptimal results. To save images or other file formats, try supplying a LaTeX or HTML table to `save_kable`.')
+      }
+
+    }
+
   }
+
+  # html
   return(save_kable_html(x, file, bs_theme, self_contained,
                          extra_dependencies, density, ...))
 }
+
+
+save_kable_markdown <- function(x, file, ...) {
+  out <- paste(x, collapse="\n")
+  writeLines(text=out, con=file)
+  return(invisible(file))
+}
+
 
 save_kable_html <- function(x, file, bs_theme, self_contained,
                             extra_dependencies, density, ...) {
