@@ -89,16 +89,20 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
 
   # Check if we are generating an image and use webshot to do that
   if (tools::file_ext(file) %in% c("png", "jpg", "jpeg", "pdf")) {
-    file_temp_html <- tempfile(pattern = tools::file_path_sans_ext(file), tmpdir = '.', fileext = ".html")
-
+    file_temp_html <- tempfile(
+      pattern = tools::file_path_sans_ext(basename(file)),
+      fileext = ".html")
     file.create(file_temp_html)
     file_temp_html <- normalizePath(file_temp_html)
+
     file.create(file)
     file <- normalizePath(file)
 
     # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
-    temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
-    htmltools::save_html(html_result, file = file_temp_html, libdir = temp_dir)
+    temp_dir <- sub(pattern = '^[\\\\/]{1,2}',
+                    replacement = '',
+                    tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+    save_HTML(html_result, file = file_temp_html, libdir = temp_dir)
 
     result <- webshot::webshot(file_temp_html, file, ...)
     if (is.null(result)) {
@@ -131,8 +135,10 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
 
     if (self_contained) {
       # Generate a random temp lib directory. The sub is to remove any back or forward slash at the beginning of the temp_dir
-      temp_dir <- sub(pattern = '^[\\\\/]{1,2}', replacement = '', tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
-      htmltools::save_html(html_result, file = file, libdir = temp_dir)
+      temp_dir <- sub(pattern = '^[\\\\/]{1,2}',
+                      replacement = '',
+                      tempfile(pattern = 'lib', tmpdir = '' , fileext = ''))
+      save_HTML(html_result, file = file, libdir = temp_dir)
       #remove_html_doc(file)
       rmarkdown::pandoc_self_contained_html(file, file)
       unlink(file.path(dirname(file), temp_dir), recursive = TRUE)
@@ -143,6 +149,30 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
   }
 
   return(invisible(file))
+}
+
+# Local version of htmltools::save_html with fix to relative path.
+# See https://github.com/rstudio/htmltools/pull/105
+save_HTML <- function(html, file, background = "white", libdir="lib") {
+  base_file <- basename(file)
+  dir <- dirname(file)
+  file <- file.path(dir, base_file)
+  oldwd <- setwd(dir)
+  on.exit(setwd(oldwd), add = TRUE)
+  rendered <- htmltools::renderTags(html)
+  deps <- lapply(rendered$dependencies, function(dep) {
+    dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
+    dep <- htmltools::makeDependencyRelative(dep, dir, FALSE)
+    dep
+  })
+  html <- c("<!DOCTYPE html>", "<html>", "<head>",
+            "<meta charset=\"utf-8\" title=\"table output\"/>",
+            sprintf("<style>body{background-color:%s;}</style>",
+                    htmltools::htmlEscape(background)),
+            htmltools::renderDependencies(deps, c("href", "file")),
+            rendered$head, "</head>", "<body>",
+            rendered$html, "</body>", "</html>")
+  writeLines(html, file, useBytes = TRUE)
 }
 
 remove_html_doc <- function(x){
