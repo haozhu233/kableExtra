@@ -99,7 +99,7 @@ dev_chr <- function(dev) {
 }
 
 #' Combine file (or svg text) and parameters into a 'kableExtraInlinePlots' object
-#' 
+#'
 #' @param filename Passed through to the graphics device.
 #' @param file_ext Character, something like "png".
 #' @param dev Character (e.g., "svg", "pdf") or function (e.g.,
@@ -113,7 +113,7 @@ dev_chr <- function(dev) {
 make_inline_plot <- function(filename, file_ext, dev,
                              width, height, res,
                              del = TRUE) {
-  if (is_latex() && (is_svg(file_ext) || is_svg(dev))) {
+  if ((is_svg(file_ext) || is_svg(dev))) {
     svg_xml <- xml2::read_xml(filename)
     svg_text <- as.character(svg_xml)
     if (del) {
