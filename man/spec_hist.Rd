@@ -32,6 +32,9 @@ spec_hist(
 
 \item{res}{The resolution of the plot. Default is 300.}
 
+\item{breaks}{The \code{break} option in \code{hist}. Default is "Sturges" but you can
+also provide a vector to manually specify break points.}
+
 \item{same_lim}{T/F. If x is a list of vectors, should all the plots be
 plotted in the same range? Default is True.}
 
@@ -62,7 +65,8 @@ for HTML output}
 \description{
 These functions helps you quickly generate sets of sparkline
 style plots using base R plotting system. Currently, we support histogram,
-boxplot, and line. You can use them together with \code{column_spec} to
-generate inline plot in tables. By default, this function will save images
-in a folder called "kableExtra" and return the address of the file.
+boxplot, line, scatter and pointrange plots. You can use them together with
+\code{column_spec} to generate inline plot in tables. By default, this function
+will save images in a folder called "kableExtra" and return the address of
+the file.
 }

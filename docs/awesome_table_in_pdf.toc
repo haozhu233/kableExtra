@@ -17,22 +17,22 @@
 \contentsline {subsection}{Column spec}{10}{section*.18}%
 \contentsline {subsection}{Insert Images into Columns}{11}{section*.19}%
 \contentsline {subsection}{Row spec}{13}{section*.20}%
-\contentsline {subsection}{Header Rows}{13}{section*.21}%
-\contentsline {section}{Cell/Text Specification}{13}{section*.22}%
+\contentsline {subsection}{Header Rows}{14}{section*.21}%
+\contentsline {section}{Cell/Text Specification}{14}{section*.22}%
 \contentsline {subsection}{Conditional logic}{14}{section*.23}%
 \contentsline {subsection}{Visualize data with Viridis Color}{15}{section*.24}%
-\contentsline {subsection}{Text Specification}{15}{section*.25}%
-\contentsline {section}{Grouped Columns / Rows}{16}{section*.26}%
-\contentsline {subsection}{Add header rows to group columns}{16}{section*.27}%
+\contentsline {subsection}{Text Specification}{16}{section*.25}%
+\contentsline {section}{Grouped Columns / Rows}{17}{section*.26}%
+\contentsline {subsection}{Add header rows to group columns}{17}{section*.27}%
 \contentsline {subsection}{Group rows via labeling}{17}{section*.28}%
-\contentsline {subsection}{Row indentation}{18}{section*.29}%
+\contentsline {subsection}{Row indentation}{19}{section*.29}%
 \contentsline {subsection}{Group rows via multi-row cell}{19}{section*.30}%
-\contentsline {section}{Table Footnote}{22}{section*.31}%
-\contentsline {section}{LaTeX Only Features}{25}{section*.32}%
-\contentsline {subsection}{Linebreak processor}{25}{section*.33}%
-\contentsline {subsection}{Table on a Landscape Page}{25}{section*.34}%
-\contentsline {subsection}{Decimal Alignment}{27}{section*.35}%
-\contentsline {subsection}{Use LaTeX table in HTML or Word}{27}{section*.36}%
-\contentsline {section}{From other packages}{27}{section*.37}%
-\contentsline {subsection}{\texttt {tables}}{27}{section*.38}%
-\contentsline {subsection}{\texttt {xtable}}{28}{section*.39}%
+\contentsline {section}{Table Footnote}{23}{section*.31}%
+\contentsline {section}{LaTeX Only Features}{26}{section*.32}%
+\contentsline {subsection}{Linebreak processor}{26}{section*.33}%
+\contentsline {subsection}{Table on a Landscape Page}{26}{section*.34}%
+\contentsline {subsection}{Decimal Alignment}{28}{section*.35}%
+\contentsline {subsection}{Use LaTeX table in HTML or Word}{28}{section*.36}%
+\contentsline {section}{From other packages}{28}{section*.37}%
+\contentsline {subsection}{\texttt {tables}}{28}{section*.38}%
+\contentsline {subsection}{\texttt {xtable}}{29}{section*.39}%

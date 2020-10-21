@@ -255,6 +255,30 @@ inline_plot %>%
   column_spec(8, image = spec_plot(mpg_list, polymin = 5))
 ```
 
+There is also a `spec_pointrange` function specifically designed for forest plots in regression tables. Of course, feel free to use it for other purposes. 
+
+```{r}
+coef_table <- data.frame(
+  Variables = c("var 1", "var 2", "var 3"),
+  Coefficients = c(1.6, 0.2, -2.0),
+  Conf.Lower = c(1.3, -0.4, -2.5),
+  Conf.Higher = c(1.9, 0.6, -1.4)
+) 
+
+data.frame(
+  Variable = coef_table$Variables,
+  Visualization = ""
+) %>%
+  kbl(booktabs = T) %>%
+  kable_classic(full_width = FALSE) %>%
+  column_spec(2, image = spec_pointrange(
+    x = coef_table$Coefficients, 
+    xmin = coef_table$Conf.Lower, 
+    xmax = coef_table$Conf.Higher, 
+    vline = 0)
+    )
+```
+
 ## Row spec
 Similar with `column_spec`, you can define specifications for rows. Currently, you can either bold or italicize an entire row. Note that, similar with other row-related functions in `kableExtra`, for the position of the target row, you don't need to count in header rows or the group labeling rows.
 

@@ -188,13 +188,20 @@ self_contained <- function(input, output) {
   output <- normalizePath(output)
   template <- tempfile(fileext = ".html")
   on.exit(unlink(template), add = TRUE)
-  rmarkdown:::write_utf8("$body$", template)
+  write_utf8("$body$", template)
   from <- if (rmarkdown::pandoc_available("1.17")) "markdown_strict" else "markdown"
   rmarkdown::pandoc_convert(
     input = input, from = from, output = output,
     options = c("--metadata", 'pagetitle="table output"', "--self-contained",
                 "--template", template))
   invisible(output)
+}
+
+# Local version of rmarkdown:::write_utf8
+write_utf8 <- function (text, con, ...) {
+  opts <- options(encoding = "native.enc")
+  on.exit(options(opts), add = TRUE)
+  writeLines(enc2utf8(text), con, ..., useBytes = TRUE)
 }
 
 

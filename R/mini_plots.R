@@ -2,14 +2,17 @@
 #'
 #' @description These functions helps you quickly generate sets of sparkline
 #' style plots using base R plotting system. Currently, we support histogram,
-#' boxplot, and line. You can use them together with `column_spec` to
-#' generate inline plot in tables. By default, this function will save images
-#' in a folder called "kableExtra" and return the address of the file.
+#' boxplot, line, scatter and pointrange plots. You can use them together with
+#' `column_spec` to generate inline plot in tables. By default, this function
+#' will save images in a folder called "kableExtra" and return the address of
+#' the file.
 #'
 #' @param x Vector of values or List of vectors of values.
 #' @param width The width of the plot in pixel
 #' @param height The height of the plot in pixel
 #' @param res The resolution of the plot. Default is 300.
+#' @param breaks The `break` option in `hist`. Default is "Sturges" but you can
+#' also provide a vector to manually specify break points.
 #' @param same_lim T/F. If x is a list of vectors, should all the plots be
 #' plotted in the same range? Default is True.
 #' @param lim Manually specify plotting range in the form of
@@ -88,9 +91,10 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #'
 #' @description These functions helps you quickly generate sets of sparkline
 #' style plots using base R plotting system. Currently, we support histogram,
-#' boxplot, and line. You can use them together with `column_spec` to
-#' generate inline plot in tables. By default, this function will save images
-#' in a folder called "kableExtra" and return the address of the file.
+#' boxplot, line, scatter and pointrange plots. You can use them together with
+#' `column_spec` to generate inline plot in tables. By default, this function
+#' will save images in a folder called "kableExtra" and return the address of
+#' the file.
 #'
 #' @param x Vector of values or List of vectors of values.
 #' @param width The width of the plot in pixel
@@ -101,9 +105,8 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' Default is 2.
 #' @param same_lim T/F. If x is a list of vectors, should all the plots be
 #' plotted in the same range? Default is True.
-#' @param lim,xlim,ylim Manually specify plotting range in the form of
-#' `c(0, 10)`. `lim` is used in `spec_hist` and `spec_boxplot`; `xlim`
-#' and `ylim` are used in `spec_plot`.
+#' @param lim Manually specify plotting range in the form of
+#' `c(0, 10)`.
 #' @param xaxt On/Off for xaxis text
 #' @param yaxt On/Off for yaxis text
 #' @param ann On/Off for annotations (titles and axis titles)
@@ -170,10 +173,10 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
   graphics::par(mar = c(0, 0, 0, 0))
 
   graphics::boxplot(x, horizontal = TRUE, ann = ann, frame = FALSE, bty = 'n', ylim = lim,
-          col = col, border = border,
-          boxlty = boxlty, medcol = medcol, medlwd = medlwd,
-          axes = FALSE, outcex = 0.2, whisklty = 1,
-          ...)
+                    col = col, border = border,
+                    boxlty = boxlty, medcol = medcol, medlwd = medlwd,
+                    axes = FALSE, outcex = 0.2, whisklty = 1,
+                    ...)
   if (add_label) {
     x_median <- round(median(x, na.rm = T), label_digits)
     x_min <- round(min(x, na.rm = T), label_digits)
@@ -207,9 +210,10 @@ rmd_files_dir <- function(create = TRUE) {
 #'
 #' @description These functions helps you quickly generate sets of sparkline
 #' style plots using base R plotting system. Currently, we support histogram,
-#' boxplot, and line. You can use them together with `column_spec` to
-#' generate inline plot in tables. By default, this function will save images
-#' in a folder called "kableExtra" and return the address of the file.
+#' boxplot, line, scatter and pointrange plots. You can use them together with
+#' `column_spec` to generate inline plot in tables. By default, this function
+#' will save images in a folder called "kableExtra" and return the address of
+#' the file.
 #'
 #' @param x,y Vector of values or List of vectors of values. y is optional.
 #' @param width The width of the plot in pixel
@@ -349,7 +353,7 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
 
   if (!is.na(polymin)) {
     lty <- if ("lty" %in% names(dots)) dots$lty else graphics::par("lty")
-    polygon(c(x[1], x, x[length(x)]), c(polymin, y, polymin),
+    graphics::polygon(c(x[1], x, x[length(x)]), c(polymin, y, polymin),
             border = NA, col = col, angle = angle, lty = lty,
             xpd = if ("xpd" %in% names(dots)) dots$xpd else NA)
   }
@@ -364,6 +368,112 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
     if (!"xpd" %in% names(max)) max$xpd <- NA
     ind <- which.max(y)
     do.call(graphics::points, c(list(x[ind], y[ind]), max))
+  }
+
+  grDevices::dev.off(curdev)
+
+  out <- make_inline_plot(
+    file, file_ext, file_type,
+    width, height, res,
+    del = TRUE)
+  return(out)
+}
+
+
+#' Helper functions to generate inline sparklines
+#'
+#' @description These functions helps you quickly generate sets of sparkline
+#' style plots using base R plotting system. Currently, we support histogram,
+#' boxplot, line, scatter and pointrange plots. You can use them together with
+#' `column_spec` to generate inline plot in tables. By default, this function
+#' will save images in a folder called "kableExtra" and return the address of
+#' the file.
+#'
+#' @param x,xmin,xmax A scalar value or List of scalar values for dot, left
+#' and right errorbar.
+#' @param vline A scalar value for where to draw a vertical line.
+#' @param width The width of the plot in pixel
+#' @param height The height of the plot in pixel
+#' @param res The resolution of the plot. Default is 300.
+#' @param same_lim T/F. If x is a list of vectors, should all the plots be
+#' plotted in the same range? Default is True.
+#' @param lim Manually specify plotting range in the form of
+#' `c(0, 10)`.
+#' @param xaxt On/Off for xaxis text
+#' @param yaxt On/Off for yaxis text
+#' @param ann On/Off for annotations (titles and axis titles)
+#' @param col Color for the fill of the histogram bar/boxplot box.
+#' @param cex size of the mean dot and error bar size.
+#' @param frame.plot T/F for whether to plot the plot frames.
+#' @param dir Directory of where the images will be saved.
+#' @param file File name. If not provided, a random name will be used
+#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
+#'   or a graphics device function (`grDevices::pdf`). This defaults
+#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
+#' for HTML output
+#' @param ... extra parameters sending to `hist()`
+#'
+#' @export
+spec_pointrange <- function(
+  x, xmin, xmax, vline = NULL,
+  width = 200, height = 50, res = 300,
+  same_lim = TRUE, lim = NULL,
+  xaxt = 'n', yaxt = 'n', ann = FALSE,
+  col = "red", cex = 0.3, frame.plot = FALSE,
+  dir = if (is_latex()) rmd_files_dir() else tempdir(),
+  file = NULL,
+  file_type = if (is_latex()) "pdf" else "svg", ...) {
+  if (length(x) > 1) {
+    if (same_lim & is.null(lim)) {
+      all_range <- c(unlist(xmin), unlist(xmax))
+      lim <- base::range(all_range, na.rm=TRUE)
+      lim <- lim + c(-0.04 * diff(lim), 0.04 * diff(lim))
+    }
+
+    dots <- listify_args(
+      x = as.list(x), xmin = as.list(xmin), xmax = as.list(xmax), vline,
+      width, height, res,
+      lim, xaxt, yaxt, ann, col, cex, frame.plot,
+      dir, file, file_type,
+      lengths = c(1, length(x)),
+      passthru = c("x", "xmin", "xmax"))
+    return(do.call(Map, c(list(f = spec_pointrange), dots)))
+  }
+
+  if (is.null(x)) return(NULL)
+
+  if (is.null(lim)) {
+    one_range <- unlist(c(xmin, xmax))
+    lim <- base::range(one_range, na.rm=TRUE)
+    lim <- lim + c(-0.04 * diff(lim), 0.04 * diff(lim))
+  }
+
+  if (!dir.exists(dir)) {
+    dir.create(dir)
+  }
+
+  file_ext <- dev_chr(file_type)
+  if (is.null(file)) {
+    file <- normalizePath(
+      tempfile(pattern = "pointrange_", tmpdir = dir, fileext = paste0(".", file_ext)),
+      winslash = "/", mustWork = FALSE)
+  }
+
+  graphics_dev(filename = file, dev = file_type,
+               width = width, height = height, res = res,
+               bg = "transparent")
+  curdev <- grDevices::dev.cur()
+  on.exit(grDevices::dev.off(curdev), add = TRUE)
+
+  graphics::par(mar = c(0, 0, 0.2, 0), lwd=1,
+                ann = ann, xaxt = xaxt, yaxt = yaxt)
+
+  graphics::plot(x, 0, type = "p", pch = ".",
+                 xlim = lim, frame.plot = frame.plot)
+  graphics::arrows(xmin, 0, xmax, 0, cex / 15, angle = 90, code = 3)
+  graphics::points(x, 0, col = col, type = "p", pch = 15, cex = cex)
+  if (!is.null(vline)) {
+    graphics::abline(v = vline, lty = 3)
   }
 
   grDevices::dev.off(curdev)

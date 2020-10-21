@@ -68,7 +68,7 @@
 #' @importFrom utils read.csv head capture.output
 #' @importFrom scales rescale
 #' @importFrom viridisLite viridis
-#' @importFrom stats ave density median
+#' @importFrom stats ave density median na.omit setNames
 #' @importFrom grDevices col2rgb svg png
 #' @importFrom rstudioapi isAvailable viewer
 #' @importFrom glue glue

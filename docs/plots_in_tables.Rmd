@@ -9,7 +9,7 @@ output:
 knitr::opts_chunk$set(warning = F, message = F)
 ```
 
-Sometimes it's a delight to see plots in a table. Here we provide some examples and recipes on some common tasks. We will use the following packages.
+Sometimes it's a delight to see plots in a table. Here we provide some examples and recipes on some common situation. We will use the following packages.
 
 
 ```{r}

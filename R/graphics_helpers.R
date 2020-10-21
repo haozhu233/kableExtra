@@ -183,7 +183,7 @@ listify_args <- function(..., lengths = NA,
       function(L, nm) {
         if (is.null(L)) return(list(NULL))
         if (!is.list(L)) return(list(L))
-        if (is.na(lengths) || length(L) %in% lengths) return(L)
+        if ((length(lengths) == 1 && is.na(lengths)) || length(L) %in% lengths) return(L)
         stop("length of '", nm, "' must be one of: ", paste(lengths, collapse = " or "))
       }, indots[ nms ], nms))
   }
@@ -197,7 +197,7 @@ listify_args <- function(..., lengths = NA,
         if (is.null(L)) return(list(NULL))
         if (!length(L)) return(list(list()))
         if (!is.list(L[[1]])) return (list(L))
-        if (is.na(lengths) || length(L) %in% lengths) return(L)
+        if ((length(lengths) == 1 && is.na(lengths)) || length(L) %in% lengths) return(L)
         stop("length of '", nm, "' must be one of: ", paste(lengths, collapse = " or "))
       }, indots[ nms ], nms))
   }
@@ -210,7 +210,7 @@ listify_args <- function(..., lengths = NA,
       function(V, nm) {
         if (is.null(V)) return(list(NULL))
         if (is.function(V)) return(list(V))
-        if (is.na(lengths) || length(V) %in% lengths) return(V)
+        if ((length(lengths) == 1 && is.na(lengths)) || length(V) %in% lengths) return(V)
         stop("length of '", nm, "' must be one of: ", paste(lengths, collapse = " or "))
       }, indots[ nms ], nms))
   }
