@@ -99,9 +99,12 @@ header-includes:
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
+  - \usepackage{xcolor}
 ```
 
-Note: `kableExtra` was using `xcolor` for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. If you experience any issues, please report on github. 
+Note: `kableExtra` was using `xcolor` with the `table` option for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. 
+
+In reality, most cases, you still need `xcolor` to define new colors. The tricky part is that, if you are using a older version of `rmarkdown`, `xcolor` is not included in the template while in recent version, after `rmarkdown` started to use the default pandoc template, `xcolor` is included by default. To minimize the effort, we chose to load `xcolor` in the end. 
 
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.

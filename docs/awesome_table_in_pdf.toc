@@ -15,7 +15,7 @@
 \contentsline {subsection}{Font Size}{10}{section*.16}%
 \contentsline {section}{Column / Row Specification}{10}{section*.17}%
 \contentsline {subsection}{Column spec}{10}{section*.18}%
-\contentsline {subsection}{Insert Images into Columns}{11}{section*.19}%
+\contentsline {subsection}{Insert Images into Columns}{12}{section*.19}%
 \contentsline {subsection}{Row spec}{13}{section*.20}%
 \contentsline {subsection}{Header Rows}{14}{section*.21}%
 \contentsline {section}{Cell/Text Specification}{14}{section*.22}%
@@ -24,7 +24,7 @@
 \contentsline {subsection}{Text Specification}{16}{section*.25}%
 \contentsline {section}{Grouped Columns / Rows}{17}{section*.26}%
 \contentsline {subsection}{Add header rows to group columns}{17}{section*.27}%
-\contentsline {subsection}{Group rows via labeling}{17}{section*.28}%
+\contentsline {subsection}{Group rows via labeling}{18}{section*.28}%
 \contentsline {subsection}{Row indentation}{19}{section*.29}%
 \contentsline {subsection}{Group rows via multi-row cell}{19}{section*.30}%
 \contentsline {section}{Table Footnote}{23}{section*.31}%
