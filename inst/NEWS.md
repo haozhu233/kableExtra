@@ -10,6 +10,15 @@ in the form of "var", "a_mean", "a_sd", "b_mean" and "b_sd", this
 "mean", "sd", "mean" and "sd" and add an additional row with group a and b 
 there.
 
+* @r2evans significanntly improved the previous spec_** functions to generate 
+mini plots. He also added a more general `spec_plot` function to use the base R general plot function (scatter, line / polygon).
+
+* Added a `spec_pointrange` function for forest-plot like figures. 
+
+# Bug fixes
+
+* Quite a lot. Somehow I forgot to document these changes this round...
+
 kableExtra 1.2.1
 --------------------------------------------------------------------------------
 
