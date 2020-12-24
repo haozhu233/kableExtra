@@ -547,7 +547,7 @@ styling_latex_position_center <- function(x, table_info, hold_position,
                 "\n\\end{", table.envir, "}")
     if (hold_position == "hold_position") {
       x <- styling_latex_hold_position(x)
-    } else {
+    } else if(hold_position == "HOLD_position") {
       x <- styling_latex_HOLD_position(x)
     }
   }
