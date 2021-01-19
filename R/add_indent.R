@@ -109,7 +109,7 @@ add_indent_html <- function(kable_input, positions,
     for (j in target_cols) {
       node_to_edit <- xml_child(row_to_edit, j)
       if (!xml_has_attr(node_to_edit, "indentlevel")) {
-        xml_attr(node_to_edit, "style") <- paste(
+        xml_attr(node_to_edit, "style") <- paste0(
           xml_attr(node_to_edit, "style"), "padding-left: ",paste0(level_of_indent*2,"em;")
         )
         xml_attr(node_to_edit, "indentlevel") <- 1
