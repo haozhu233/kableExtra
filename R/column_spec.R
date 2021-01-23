@@ -279,7 +279,7 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
   }
   if (!is.null(extra_css)) {
     xml_attr(target_cell, "style") <- paste0(xml_attr(target_cell, "style"),
-                                             extra_css)
+                                             enc2utf8(extra_css))
   }
 
   if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
@@ -303,13 +303,13 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
   # favor popover over tooltip
   if (!is.null(popover)) {
     if (!inherits(popover, "ke_popover")) popover <- spec_popover(popover)
-    popover_list <- attr(popover, 'list')
+    popover_list <- lapply(attr(popover, 'list'), enc2utf8)
     for (p in names(popover_list)) {
       xml_attr(target_cell, p) <- popover_list[p]
     }
   } else if (!is.null(tooltip)) {
     if (!inherits(tooltip, "ke_tooltip")) tooltip <- spec_tooltip(tooltip)
-    tooltip_list <- attr(tooltip, 'list')
+    tooltip_list <- lapply(attr(tooltip, 'list'), enc2utf8)
     for (t in names(tooltip_list)) {
       xml_attr(target_cell, t) <- tooltip_list[t]
     }

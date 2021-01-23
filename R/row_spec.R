@@ -175,7 +175,7 @@ xml_cell_style <- function(x, bold, italic, monospace,
                                    "deg);")
   }
   if (!is.null(extra_css)) {
-    xml_attr(x, "style") <- paste0(xml_attr(x, "style"), extra_css)
+    xml_attr(x, "style") <- paste0(xml_attr(x, "style"), enc2utf8(extra_css))
   }
   return(x)
 }
