@@ -8,15 +8,26 @@
 #' @export
 
 magic_mirror <- function(kable_input){
-  if ("kable_meta" %in% names(attributes(kable_input))) {
-    return(attr(kable_input, "kable_meta"))
-  }
   kable_format <- attr(kable_input, "format")
   if (kable_format == "latex") {
     table_info <- magic_mirror_latex(kable_input)
   }
   if (kable_format == "html") {
     table_info <- magic_mirror_html(kable_input)
+  }
+  if ("kable_meta" %in% names(attributes(kable_input))) {
+    out <- attr(kable_input, "kable_meta")
+    # if we return `kable_meta` immediately, `kable_styling` will use the
+    # original `table_env` value. So if we call `kable_styling` twice on the
+    # same object, it will nest a table within a table. Make sure this does not
+    # happen.
+    if (kable_format == "latex") {
+      table_info <- magic_mirror_latex(kable_input)
+      if (table_info$table_env && !out$table_env) {
+        out$table_env <- table_info$table_env
+      }
+    }
+    return(out)
   }
   return(table_info)
 }
@@ -98,7 +109,8 @@ magic_mirror_latex <- function(kable_input){
   table_info$centering <- grepl("\\\\centering", kable_input)
 
   table_info$table_env <- (!is.na(table_info$caption) &
-                             table_info$tabular != "longtable")
+                           table_info$tabular != "longtable") ||
+                          grepl("\\\\begin\\{table\\}", kable_input)
 
   return(table_info)
 }
