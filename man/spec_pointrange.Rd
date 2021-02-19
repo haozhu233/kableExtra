@@ -22,7 +22,7 @@ spec_pointrange(
   frame.plot = FALSE,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "pdf" else "svg",
+  file_type = if (is_latex()) "pdf" else svglite::svglite,
   ...
 )
 }

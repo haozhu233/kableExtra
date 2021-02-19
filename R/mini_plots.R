@@ -38,7 +38,8 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
                       col = "lightgray", border = NULL,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
                       file = NULL,
-                      file_type = if (is_latex()) "pdf" else "svg", ...) {
+                      file_type = if (is_latex()) "pdf" else svglite::svglite,
+                      ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
       lim <- base::range(unlist(x), na.rm=TRUE)
@@ -131,7 +132,8 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
                          boxlty = 0, medcol = "red", medlwd = 1,
                          dir = if (is_latex()) rmd_files_dir() else tempdir(),
                          file = NULL,
-                         file_type = if (is_latex()) "pdf" else "svg", ...) {
+                         file_type = if (is_latex()) "pdf" else svglite::svglite,
+                         ...) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
       lim <- base::range(unlist(x), na.rm=TRUE)
@@ -262,7 +264,8 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
                       minmax = list(pch = ".", cex = cex, col = "red"),
                       min = minmax, max = minmax,
                       dir = if (is_latex()) rmd_files_dir() else tempdir(),
-                      file = NULL, file_type = if (is_latex()) "pdf" else "svg", ...) {
+                      file = NULL, file_type = if (is_latex()) "pdf" else svglite::svglite,
+                      ...) {
   if (is.list(x)) {
     lenx <- length(x)
 
@@ -422,7 +425,7 @@ spec_pointrange <- function(
   col = "red", cex = 0.3, frame.plot = FALSE,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
-  file_type = if (is_latex()) "pdf" else "svg", ...) {
+  file_type = if (is_latex()) "pdf" else svglite::svglite, ...) {
   if (length(x) > 1) {
     if (same_lim & is.null(lim)) {
       all_range <- c(unlist(xmin), unlist(xmax))

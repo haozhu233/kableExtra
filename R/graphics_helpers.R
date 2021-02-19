@@ -42,7 +42,7 @@ graphics_dev <- function(filename, width, height, res, ..., dev) {
     dots <- c(dots, list(width = width / res, height = height / res))
   }
   filenames <- c("file", "filename")
-  found <- na.omit(match(frmls, filenames))
+  found <- na.omit(match(frmls, filenames))[1]
   if (length(found)) {
     dots <- c(dots, setNames(filename, filenames[ found ]))
   } else {
