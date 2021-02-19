@@ -76,6 +76,7 @@
 #' @importFrom webshot webshot
 #' @importFrom digest digest
 #' @importFrom graphics par text hist boxplot
+#' @importFrom svglite svglite
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra
