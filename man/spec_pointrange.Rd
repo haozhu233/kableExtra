@@ -18,6 +18,7 @@ spec_pointrange(
   yaxt = "n",
   ann = FALSE,
   col = "red",
+  line_col = "black",
   cex = 0.3,
   frame.plot = FALSE,
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
@@ -50,7 +51,9 @@ plotted in the same range? Default is True.}
 
 \item{ann}{On/Off for annotations (titles and axis titles)}
 
-\item{col}{Color for the fill of the histogram bar/boxplot box.}
+\item{col}{Color for mean dot.}
+
+\item{line_col}{Color for the line and the error bar.}
 
 \item{cex}{size of the mean dot and error bar size.}
 
