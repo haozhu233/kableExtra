@@ -4,7 +4,13 @@
 \alias{add_indent}
 \title{Add indentations to row headers}
 \usage{
-add_indent(kable_input, positions, level_of_indent = 1, all_cols = FALSE)
+add_indent(
+  kable_input,
+  positions,
+  level_of_indent = 1,
+  all_cols = FALSE,
+  target_cols = 1
+)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
@@ -15,6 +21,8 @@ be indented.}
 \item{level_of_indent}{a numeric value for the indent level. Default is 1.}
 
 \item{all_cols}{T/F whether to apply indentation to all columns}
+
+\item{target_cols}{A vector of numeric column positions. Default is 1.}
 }
 \description{
 Add indentations to row headers
