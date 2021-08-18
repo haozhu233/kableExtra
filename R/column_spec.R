@@ -189,7 +189,7 @@ column_spec_html <- function(kable_input, column, width,
   for (i in seq(length(all_contents_rows))) {
     for (j in column) {
       io <- i + off
-      target_cell <- xml_child(xml_child(kable_tbody, all_contents_rows[io]), j)
+      target_cell <- xml_child(xml_child(kable_tbody, all_contents_rows[i]), j)
       column_spec_html_cell(
         target_cell, width, width_min, width_max,
         bold[io], italic[io], monospace[io], underline[io], strikeout[io],
