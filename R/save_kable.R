@@ -84,7 +84,8 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
 
   html_header <- htmltools::tags$head(dependencies)
   html_table <- htmltools::HTML(as.character(x),
-        '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}})</script><script async src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>')
+        '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}})</script><script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">')
   html_result <- htmltools::tagList(html_header, html_table)
 
   # Check if we are generating an image and use webshot to do that
