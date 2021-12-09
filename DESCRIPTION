@@ -26,7 +26,6 @@ Description: Build complex HTML or 'LaTeX' tables using 'kable()' from 'knitr'
     users to construct complex tables and customize styles using a readable 
     syntax. 
 License: MIT + file LICENSE
-LazyData: TRUE
 URL: http://haozhu233.github.io/kableExtra/, https://github.com/haozhu233/kableExtra
 BugReports: https://github.com/haozhu233/kableExtra/issues
 Depends:
@@ -57,5 +56,5 @@ Suggests:
     sparkline
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)

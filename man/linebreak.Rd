@@ -9,7 +9,7 @@ linebreak(x, align = c("l", "c", "r"), double_escape = F, linebreaker = "\\n")
 \arguments{
 \item{x}{A character vector}
 
-\item{align}{Choose from "l", "c" or "r"}
+\item{align}{Choose from "l", "c" or "r".  Defaults to "l".}
 
 \item{double_escape}{Whether special character should be double escaped.
 Default is FALSE.}
@@ -17,6 +17,6 @@ Default is FALSE.}
 \item{linebreaker}{Symbol for linebreaks to replace. Default is \verb{\\\\n}.}
 }
 \description{
-This function generate LaTeX code of \code{makecell} so that users
+This function generates LaTeX code of \code{makecell} so that users
 can have linebreaks in their table
 }
