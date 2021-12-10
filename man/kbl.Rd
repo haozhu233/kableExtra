@@ -67,7 +67,8 @@ expanded to a vector of individual letters, e.g. \code{'clc'} becomes
 \item{caption}{The table caption.}
 
 \item{label}{The table reference label. By default, the label is obtained
-from \code{knitr::\link[knitr]{opts_current}$get('label')}.}
+from \code{knitr::\link[knitr]{opts_current}$get('label')}. To disable the label,
+use \code{label = NA}.}
 
 \item{format.args}{A list of arguments to be passed to \code{\link{format}()}
 to format table values, e.g. \code{list(big.mark = ',')}.}
@@ -126,7 +127,7 @@ using booktabs, but you want a cleaner display, you can change this to ''.}
 default setting is to put a table environment outside of tabular if a
 caption is provided.}
 
-\item{...}{Other arguments (see Examples).}
+\item{...}{Other arguments (see Examples and References).}
 }
 \description{
 knitr's kable function is the foundation of this package.
