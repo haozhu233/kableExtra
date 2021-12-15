@@ -11,7 +11,7 @@
 #' is a regular expression that matches any sequence of non-alphanumeric values.
 #'
 #' @export
-header_separate <- function(kable_input, sep = "[^[:alnum:]]+") {
+header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
   kable_format <- attr(kable_input, "format")
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -20,14 +20,22 @@ header_separate <- function(kable_input, sep = "[^[:alnum:]]+") {
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(header_separate_html(kable_input, sep))
+    return(do.call(header_separate_html, list(
+      kable_input = kable_input, 
+      sep = sep, 
+      ...
+    )))
   }
   if (kable_format == "latex") {
-    return(header_separate_latex(kable_input, sep))
+    return(do.call(header_separate_latex, list(
+      kable_input = kable_input, 
+      sep = sep, 
+      ...
+    )))
   }
 }
 
-header_separate_html <- function(kable_input, sep) {
+header_separate_html <- function(kable_input, sep, ...) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- kable_as_xml(kable_input)
 
@@ -66,9 +74,14 @@ header_separate_html <- function(kable_input, sep) {
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
 
   for (l in seq(2, length(header_layers))) {
-    out <- kableExtra::add_header_above(
-      out, kableExtra::auto_index(header_layers[[l]])
+    out <- do.call(
+      kableExtra::add_header_above, 
+      list(
+        kable_input = out, 
+        kableExtra::auto_index(header_layers[[l]]), 
+        ...
       )
+    )
   }
   return(out)
 }
@@ -92,7 +105,7 @@ process_header_sep <- function(header_sep) {
   return(header_layers)
 }
 
-header_separate_latex <- function(kable_input, sep) {
+header_separate_latex <- function(kable_input, sep, ...) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -124,8 +137,13 @@ header_separate_latex <- function(kable_input, sep) {
   attr(out, "kable_meta") <- table_info
 
   for (l in seq(2, length(header_layers))) {
-    out <- kableExtra::add_header_above(
-      out, kableExtra::auto_index(header_layers[[l]])
+    out <- do.call(
+      kableExtra::add_header_above, 
+      list(
+        kable_input = out, 
+        kableExtra::auto_index(header_layers[[l]]), 
+        ...
+      )
     )
   }
 
