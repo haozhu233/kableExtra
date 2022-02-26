@@ -92,6 +92,7 @@
 #'
 #'
 #' # example with mathematical notation
+#'
 #' # create simple data frame for example
 #' df <- data.frame(
 #'  Variable = c("$X_1$", "$X_2$", "$X_3$", "$X_4$", "$X_5$"),
