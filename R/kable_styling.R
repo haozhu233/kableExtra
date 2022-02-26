@@ -89,6 +89,20 @@
 #'
 #' x_latex <- knitr::kable(head(mtcars), "latex")
 #' kable_styling(x_latex, latex_options = "striped", position = "float_left")
+#'
+#'
+#' # example with mathematical notation
+#' # create simple data frame for example
+#' df <- data.frame(
+#'  Variable = c("$X_1$", "$X_2$", "$X_3$", "$X_4$", "$X_5$"),
+#'  OR = c(1.4, 2, 0.7, 1.2, .0)
+#' )
+#'
+#' # inserting a title with mathematical symbols
+#' df %>%
+#'  kbl(caption = "$\\hat{Y} = \\beta_1X_1 + \\beta_2X_2 + \\beta_3X_3 + \\beta_4X_4$",
+#'      align = "c", escape  = FALSE) %>%
+#'  kable_styling("striped")
 #' }
 #'
 #' @export
