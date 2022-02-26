@@ -45,6 +45,15 @@
 #' booktabs tables.
 #'
 #' @inheritParams knitr::kable
+#'
+#' @examples
+#' \dontrun{
+#' # pipe the input into the kbl() function
+#' head(mtcars) %>%
+#'  kbl(caption = "mtcars", align = "c") %>%
+#'  kable_material()
+#' }
+#'
 #' @export
 kbl <- function(x, format, digits = getOption("digits"),
                 row.names = NA, col.names = NA, align,
