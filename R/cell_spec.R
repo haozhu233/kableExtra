@@ -46,6 +46,23 @@
 #' background only works in a table cell. If it's `FALSE`, it works outside of a
 #' table environment.
 #'
+#' @examples
+#' \dontrun{
+#' # create simple data frame for example
+#' df <- data.frame(
+#'  Variable = c("A", "B", "C", "D", "E"),
+#'  OR = c(1.1, 0.9, 0.8, 1.5, 1.2)
+#')
+#'
+#' # color cells of OR column based on whether their OR value was greater than 1
+#' df$OR <- cell_spec(df$OR, background = ifelse(df$OR > 1, "lightgray", "lightblue"))
+#'
+#' # pipe the result into kbl() with the escape = FALSE argument to create the table
+#' df %>%
+#'  kbl(escape = FALSE)
+#'
+#' }
+#'
 #' @export
 cell_spec <- function(x, format,
                       bold = FALSE, italic = FALSE, monospace = FALSE,
