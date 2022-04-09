@@ -33,6 +33,7 @@
 #' addes a hline after ther row
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
 #' with `add.to.row` in xtable
+#' @param extra_latex_before Extra LaTeX text to be added before the row.
 #'
 #' @examples
 #' \dontrun{
@@ -46,7 +47,7 @@ row_spec <- function(kable_input, row,
                      underline = FALSE, strikeout = FALSE,
                      color = NULL, background = NULL, align = NULL,
                      font_size = NULL, angle = NULL, extra_css = NULL,
-                     hline_after = FALSE, extra_latex_after = NULL) {
+                     hline_after = FALSE, extra_latex_after = NULL, extra_latex_before = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -67,7 +68,7 @@ row_spec <- function(kable_input, row,
     return(row_spec_latex(kable_input, row, bold, italic, monospace,
                           underline, strikeout,
                           color, background, align, font_size, angle,
-                          hline_after, extra_latex_after))
+                          hline_after, extra_latex_after, extra_latex_before))
   }
 }
 
@@ -183,7 +184,7 @@ xml_cell_style <- function(x, bold, italic, monospace,
 row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            underline, strikeout,
                            color, background, align, font_size, angle,
-                           hline_after, extra_latex_after) {
+                           hline_after, extra_latex_after, extra_latex_before) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -200,7 +201,8 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
-                                     hline_after, extra_latex_after)
+                                     hline_after, extra_latex_after, extra_latex_before)
+
     temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
                                    !is.null(table_info$repeat_header_latex)),
                        gsub, sub)
@@ -211,7 +213,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     } else {
       out <- temp_sub(paste0(target_row, "\\\\\\\\"),
                   paste(new_row, collapse = ""), out, perl = T)
-      table_info$contents[i] <- new_row[1]
+      table_info$contents[i] <- new_row[2]
     }
   }
 
@@ -224,7 +226,7 @@ latex_new_row_builder <- function(target_row, table_info,
                                   bold, italic, monospace,
                                   underline, strikeout,
                                   color, background, align, font_size, angle,
-                                  hline_after, extra_latex_after) {
+                                  hline_after, extra_latex_after, extra_latex_before) {
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
@@ -309,24 +311,30 @@ latex_new_row_builder <- function(target_row, table_info,
   #   new_row <- paste0("\\\\rowcolor", latex_color(background), "  ", new_row)
   # }
 
-  if (!hline_after & is.null(extra_latex_after)) {
-    return(new_row)
-  } else {
-    latex_after <- "\\\\\\\\"
-    if (hline_after) {
-      if (table_info$booktabs) {
-        latex_after <- paste0(latex_after, "\n\\\\midrule")
-      } else {
-        latex_after <- paste0(latex_after, "\n\\\\hline")
-      }
+  latex_after <- "\\\\\\\\"
+  latex_before <- ""
+
+  if (hline_after) {
+    if (table_info$booktabs) {
+      latex_after <- paste0(latex_after, "\n\\\\midrule")
+    } else {
+      latex_after <- paste0(latex_after, "\n\\\\hline")
     }
-    if (!is.null(extra_latex_after)) {
-      latex_after <- paste0(latex_after, "\n",
-                            regex_escape(extra_latex_after,
-                                         double_backslash = TRUE))
-    }
-    return(c(new_row, latex_after))
   }
+
+  if (!is.null(extra_latex_after)) {
+    latex_after <- paste0(latex_after, "\n",
+                          regex_escape(extra_latex_after,
+                                       double_backslash = TRUE))
+  }
+
+  if (!is.null(extra_latex_before)) {
+    latex_before <- paste0(latex_before,
+                          regex_escape(extra_latex_before,
+                                       double_backslash = TRUE), '\n')
+  }
+
+  return(c(latex_before, new_row, latex_after))
 }
 
 
