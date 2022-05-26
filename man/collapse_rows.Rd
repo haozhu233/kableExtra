@@ -9,7 +9,7 @@ collapse_rows(
   columns = NULL,
   valign = c("middle", "top", "bottom"),
   latex_hline = c("full", "major", "none", "custom", "linespace"),
-  row_group_label_position = c("identity", "stack"),
+  row_group_label_position = c("identity", "stack", "first"),
   custom_latex_hline = NULL,
   row_group_label_fonts = NULL,
   headers_to_remove = NULL,
@@ -24,22 +24,25 @@ collapse_rows(
 \item{columns}{A numeric value or vector indicating in which column(s) rows
 need to be collapsed.}
 
-\item{valign}{Select from "top", "middle"(default), "bottom". The reason why
+\item{valign}{Select from "top", "middle" (default), "bottom". The reason why
 "top" is not default is that the multirow package on CRAN win-builder is
-not up to date.}
+not up to date.
+Only used when \code{row_group_label_position} is \code{identity}.}
 
 \item{latex_hline}{Option controlling the behavior of adding hlines to table.
 Choose from \code{full}, \code{major}, \code{none}, \code{custom} and \code{linespace}.}
 
 \item{row_group_label_position}{Option controlling positions of row group
-labels. Choose from \code{identity}, \code{stack}.}
+labels. Choose from \code{identity}, \code{stack}, or \code{first} -- the latter behaves
+like \code{identity} when \code{row_group_label_position} is \code{top} but without using
+the multirow package.}
 
 \item{custom_latex_hline}{Numeric column positions whose collapsed rows will
 be separated by hlines.}
 
 \item{row_group_label_fonts}{A list of arguments that can be supplied to
 group_rows function to format the row group label when
-\code{row_group_label_position} is \code{stack}}
+\code{row_group_label_position} is \code{stack}.}
 
 \item{headers_to_remove}{Numeric column positions where headers should be
 removed when they are stacked.}

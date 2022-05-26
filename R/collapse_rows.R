@@ -9,18 +9,21 @@
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param columns A numeric value or vector indicating in which column(s) rows
 #' need to be collapsed.
-#' @param valign Select from "top", "middle"(default), "bottom". The reason why
+#' @param valign Select from "top", "middle" (default), "bottom". The reason why
 #' "top" is not default is that the multirow package on CRAN win-builder is
 #' not up to date.
+#' Only used when `row_group_label_position` is `identity`.
 #' @param latex_hline Option controlling the behavior of adding hlines to table.
 #' Choose from `full`, `major`, `none`, `custom` and `linespace`.
 #' @param custom_latex_hline Numeric column positions whose collapsed rows will
 #' be separated by hlines.
 #' @param row_group_label_position Option controlling positions of row group
-#' labels. Choose from `identity`, `stack`.
+#' labels. Choose from `identity`, `stack`, or `first` -- the latter behaves
+#' like `identity` when `row_group_label_position` is `top` but without using
+#' the multirow package.
 #' @param row_group_label_fonts A list of arguments that can be supplied to
 #' group_rows function to format the row group label when
-#' `row_group_label_position` is `stack`
+#' `row_group_label_position` is `stack`.
 #' @param headers_to_remove Numeric column positions where headers should be
 #' removed when they are stacked.
 #' @param target If multiple columns are selected to do collapsing and a target
@@ -46,7 +49,7 @@ collapse_rows <- function(kable_input, columns = NULL,
                           valign = c("middle", "top", "bottom"),
                           latex_hline = c("full", "major", "none", "custom",
                                           "linespace"),
-                          row_group_label_position = c('identity', 'stack'),
+                          row_group_label_position = c("identity", "stack", "first"),
                           custom_latex_hline = NULL,
                           row_group_label_fonts = NULL,
                           headers_to_remove = NULL,
@@ -72,7 +75,7 @@ collapse_rows <- function(kable_input, columns = NULL,
   if (kable_format == "latex") {
     latex_hline <- match.arg(latex_hline)
     row_group_label_position <- match.arg(row_group_label_position,
-                                          c('identity', 'stack'))
+                                          c("identity", "stack", "first"))
     return(collapse_rows_latex(kable_input, columns, latex_hline, valign,
       row_group_label_position, row_group_label_fonts, custom_latex_hline,
       headers_to_remove, target, col_names, longtable_clean_cut))
@@ -198,6 +201,10 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
     for (i in seq(1:nrow(collapse_matrix))) {
       if(row_group_label_position == 'stack'){
         if(columns[j] < ncol(collapse_matrix) || collapse_matrix_rev[i, j] == 0){
+          new_kable_dt[i, columns[j]] <- ''
+        }
+      } else if(row_group_label_position == 'first'){
+        if(columns[j] <= ncol(collapse_matrix) && collapse_matrix_rev[i, j] == 0){
           new_kable_dt[i, columns[j]] <- ''
         }
       } else {
