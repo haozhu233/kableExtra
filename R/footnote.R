@@ -1,7 +1,7 @@
 #' Add footnote (new)
 #'
 #' @description `footnote` provides a more flexible way to add footnote. You
-#' can add mutiple sets of footnote using differeny notation system. It is
+#' can add mutiple sets of footnote using different notation systems. It is
 #' also possible to specify footnote section header one by one and print
 #' footnotes as a chunk of texts.
 #'
