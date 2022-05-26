@@ -4,7 +4,7 @@
 \alias{header_separate}
 \title{Separate table headers and add additional header rows based on grouping}
 \usage{
-header_separate(kable_input, sep = "[^[:alnum:]]+")
+header_separate(kable_input, sep = "[^[:alnum:]]+", ...)
 }
 \arguments{
 \item{kable_input}{Output of \code{knitr::kable()} with \code{format} specified}
