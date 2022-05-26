@@ -532,7 +532,7 @@ kbl(dt) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical allignment of the cell is controlled by `valign` with default as "top". 
+Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical alignment of the cell is controlled by `valign` with default as "top".
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
