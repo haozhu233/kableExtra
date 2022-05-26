@@ -493,7 +493,9 @@ kbl(dt, booktabs = T, align = "l") %>%
 ## Group rows via multi-row cell
 Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider using `collapse_rows` instead, which will put repeating cells in columns into multi-row cells.  
 
-In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`. Vertical alignment of cells is controlled by the `valign` option. You can choose from "top", "middle"(default) and "bottom". Be cautious that the vertical alignment option was only introduced in multirow in 2016. If you are using a legacy LaTeX distribution, you will run into trouble if you set `valign` to be either "top" or "bottom".
+In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`.
+
+Vertical alignment of cells (with the default `row_group_label_position = "identity")`) is controlled by the `valign` option. You can choose from "top", "middle" (default) and "bottom". Be cautious that the vertical alignment option was only introduced in multirow in 2016. If you are using a legacy LaTeX distribution, you will run into trouble if you set `valign` to be either "top" or "bottom". Alternatively, use `row_group_label_position = "first"`, which will put the row group labels into the first row without using the `\multirow` LaTeX command at all.
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -502,7 +504,7 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C4 = sample(c(0,1), 15, replace = TRUE))
 kbl(collapse_rows_dt, booktabs = T, align = "c") %>%
   column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2, latex_hline = "major", valign = "middle")
+  collapse_rows(columns = 1:2, latex_hline = "major", row_group_label_position = "first")
 ```
 
 Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only document it here if you want to give it a try. 
