@@ -214,7 +214,8 @@ htmlTable_styling <- function(kable_input,
   }
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
-
+  pre <- attr(kable_xml, "pre")
+  post <- attr(kable_xml, "post")
   # Modify class
   bootstrap_options <- match.arg(
     bootstrap_options,
@@ -296,7 +297,7 @@ htmlTable_styling <- function(kable_input,
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(kable_xml, pre, post)
   if (protect_latex) {
     out <- replace_latex_in_kable(out, kable_attrs$extracted_latex)
     kable_attrs$extracted_latex <- NULL

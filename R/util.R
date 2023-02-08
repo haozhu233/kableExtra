@@ -67,14 +67,45 @@ regex_escape <- function(x, double_backslash = FALSE) {
   return(x)
 }
 
-as_kable_xml <- function(x) {
-  out <- structure(as.character(x), format = "html", class = "knitr_kable")
+as_kable_xml <- function(x, pre = NULL, post = NULL) {
+  out <- structure(paste(c(pre, as.character(x), post), collapse = "\n"),
+                   format = "html", class = "knitr_kable")
   return(out)
+}
+
+is_html_table <- function(x) {
+  xml_length(x) == 1 &&
+    xml_name(xml_child(x, 1)) == "table"
+}
+
+child_to_character <- function(x) {
+  result <- character()
+  n <- xml_length(x)
+  for (i in seq_len(n)) {
+    if (xml_name(xml_child(x, i)) != "meta")
+      result <- c(result, as.character(xml_child(x, i)))
+  }
+  result
 }
 
 read_kable_as_xml <- function(x) {
   kable_html <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
-  xml_child(xml_child(kable_html, 1), 1)
+  children <- lapply(seq_len(xml_length(kable_html)),
+                     function(num) xml_child(kable_html, num))
+  pre <- character(0)
+  post <- character(0)
+  result <- list()
+  for (i in seq_along(children)) {
+    if (!is_html_table(children[[i]]))
+      pre <- c(pre, child_to_character(children[[i]]))
+    else {
+      result <- xml_child(children[[i]], 1)
+      for (j in seq_along(children)[-seq_len(i)])
+        post <- c(post, child_to_character(children[[i]]))
+      break;
+    }
+  }
+  structure(result, pre = pre, post = post)
 }
 
 #' LaTeX Packages
