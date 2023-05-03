@@ -20,8 +20,14 @@
   }
   auto_format <- getOption("kableExtra.auto_format", default = TRUE)
   if (auto_format) auto_set_format()
-  if (!is.null(rmarkdown::metadata$output) &&
-      names(rmarkdown::metadata$output)[1] %in% c(
+
+  output_type <-
+    if (is.list(rmarkdown::metadata$output))
+      names(rmarkdown::metadata$output)[1]
+    else
+      rmarkdown::metadata$output
+
+  if (!is.null(output_type) && output_type %in% c(
         "ioslides_presentation", "slidy_presentation",
         "gitbook", "bookdown::gitbook", "radix_article", "radix::radix_article",
         "distill_article", "distill::distill_article"
