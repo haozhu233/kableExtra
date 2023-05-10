@@ -13,7 +13,7 @@
 #' `bordered`, `hover`, `condensed`, `responsive` and `none`.
 #' @param latex_options A character vector for LaTeX table options. Please see
 #' package vignette for more information. Possible options include
-#' `basic`, `striped`, `hold_position`, `HOLD_position`, `scale_down` & `repeat_header`.
+#' `basic`, `striped`, `hold_position`, `HOLD_position`, `scale_down`, `scale_up` & `repeat_header`.
 #' `striped` will add alternative row colors to the table. It will imports
 #' `LaTeX` package `xcolor` if enabled. `hold_position` will "hold" the floating
 #' table to the exact position. It is useful when the `LaTeX` table is contained
@@ -324,7 +324,7 @@ pdfTable_styling <- function(kable_input,
 
   latex_options <- match.arg(
     latex_options,
-    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "repeat_header"),
+    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
     several.ok = T
   )
 
@@ -349,7 +349,11 @@ pdfTable_styling <- function(kable_input,
   }
 
   if ("scale_down" %in% latex_options) {
-    out <- styling_latex_scale_down(out, table_info)
+    out <- styling_latex_scale(out, table_info, "down")
+  }
+
+  if ("scale_up" %in% latex_options) {
+    out <- styling_latex_scale(out, table_info, "up")
   }
 
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
@@ -425,16 +429,22 @@ styling_latex_HOLD_position <- function(x) {
   }
 }
 
-styling_latex_scale_down <- function(x, table_info) {
+styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
   # You cannot put longtable in a resizebox
   # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
   if (table_info$tabular == "longtable") {
     warning("Longtable cannot be resized.")
     return(x)
   }
+  if (dir=="down") {
+    d <- ">"
+  } else {
+    d <- "<"
+  }
+
   x <- sub(table_info$begin_tabular,
-           paste0("\\\\resizebox\\{\\\\linewidth\\}\\{\\!\\}\\{\n",
-                  table_info$begin_tabular),
+           paste0("\\\\resizebox{\\\\ifdim\\\\width\\", d,"\\\\linewidth\\\\linewidth\\\\else\\\\width\\\\fi\\}\\{\\!\\}\\{\n",
+		  table_info$begin_tabular),
            x)
   sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
 }
