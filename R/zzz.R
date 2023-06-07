@@ -20,12 +20,10 @@
   }
   auto_format <- getOption("kableExtra.auto_format", default = TRUE)
   if (auto_format) auto_set_format()
-  if (!is.null(rmarkdown::metadata$output) &&
-      rmarkdown::metadata$output %in% c(
-        "ioslides_presentation", "slidy_presentation",
-        "gitbook", "bookdown::gitbook", "radix_article", "radix::radix_article",
-        "distill_article", "distill::distill_article"
-      )) {
+  if (
+    !is.null(knitr::opts_knit$get("rmarkdown.pandoc.to")) &&
+      knitr::opts_knit$get("rmarkdown.pandoc.to") == "html"
+  ) {
     options(kableExtra.html.bsTable = TRUE)
   }
   if (!is.null(knitr::opts_knit$get("rmarkdown.pandoc.to")) &&
