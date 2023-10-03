@@ -595,6 +595,18 @@ styling_latex_position_float <- function(x, table_info, option, table.envir,
 styling_latex_font_size <- function(x, table_info, font_size) {
   row_height <- font_size + 2
   if (table_info$tabular != "longtable" & table_info$table_env) {
+    # Following two lines use negative lookbehinds to find curly braces
+    # which have not been escaped and escape them. This situation arises
+    # when the user has declared latex column types like this (C = center):
+    #
+    # \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+    # \newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+    table_info$begin_tabular <- gsub("(?<!\\\\){", "\\\\{",
+                                     table_info$begin_tabular,
+                                     perl = TRUE)
+    table_info$begin_tabular <- gsub("(?<!\\\\)}", "\\\\}",
+                                     table_info$begin_tabular,
+                                     perl = TRUE)
     return(sub(table_info$begin_tabular,
                paste0("\\\\fontsize\\{", font_size, "\\}\\{", row_height,
                       "\\}\\\\selectfont\n", table_info$begin_tabular),
