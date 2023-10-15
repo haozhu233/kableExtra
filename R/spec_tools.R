@@ -1,22 +1,27 @@
-#' Generate viridis Color code for continuous values
+#' Generate viridis or other color code for continuous values
 #'
 #' @inheritParams viridisLite::viridis
 #' @param x continuous vectors of values
 #' @param na_color color code for NA values
 #' @param scale_from input range (vector of length two). If not given,
 #' is calculated from the range of x
+#' @param palette The palette to use as a character vector of colors.  If
+#' this is specified, parameters other than `x`, `na_color` and `scale_from`
+#' are ignored.
 #' @export
 spec_color <- function(x, alpha = 1, begin = 0, end = 1,
                        direction = 1, option = "D",
-                       na_color = "#BBBBBB", scale_from = NULL) {
+                       na_color = "#BBBBBB", scale_from = NULL,
+                       palette = viridisLite::viridis(256, alpha, begin, end, direction, option)) {
+  n <- length(palette)
   if (is.null(scale_from)) {
-    x <- round(rescale(x, c(1, 256)))
+    x <- round(rescale(x, c(1, n)))
   } else {
-    x <- round(rescale(x, to = c(1, 256),
+    x <- round(rescale(x, to = c(1, n),
                        from = scale_from))
   }
 
-  color_code <- viridisLite::viridis(256, alpha, begin, end, direction, option)[x]
+  color_code <- palette[x]
   color_code[is.na(color_code)] <- na_color
   return(color_code)
 }
