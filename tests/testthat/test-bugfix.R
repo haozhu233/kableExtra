@@ -1,0 +1,25 @@
+# Issue #534
+BelQ <- structure(list(Source = "Kalender 2019", `Sourse of Questions` = "The survey instruments were part of a larger survey that included other motivational constructs. The development and validation of these surveys is reported in prior work [18–22,59]. ", Results = "PCA analysis reveals that for both genders, sense of belonging and identity were not separate from the Expectancy Value Theory constructs. Instead, sense of belonging was closely tied to self-efficacy, which was therefore labeled as “self-efficacy or belonging” component or factor. ", Questions = "Sense of Belonging or Self-efficacy (not separated in a paper):<br>1. Sometimes I worry that I do not belong in this physics class<br>2. I feel like I can be myself in this class<br>3. I am able to help my classmates with physics in the laboratory or in recitation<br>4. I understand concepts I have studied in physics<br>5. If I wanted to, I could be good at physics research<br>6. ", Reference = "Kalender, Z. Y., Marshman, E., Schunn, C. D., Nokes-Malach, T. J., & Singh, C. (2019). Gendered patterns in the construction of physics identity from motivational factors. Physical Review Physics Education Research, 15(2), [020119](https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.15.020119)"), row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame"))
+
+# mtcars[1:4, 1:4] |> kbl() |> column_spec(1, italic = TRUE)
+tab <- BelQ |>
+    kbl(escape = FALSE) |>
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 12, full_width = TRUE) |>
+    column_spec(1, width = "40em", include_thead = TRUE) |>
+    scroll_box(width = "100%", height = "500px")
+expect_s3_class(tab, "kableExtra")
+
+tab <- BelQ |>
+    kbl(escape = FALSE) |>
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 12, full_width = TRUE) |>
+    column_spec(1, width = "40em", include_thead = FALSE) |>
+    scroll_box(width = "100%", height = "500px")
+expect_s3_class(tab, "kableExtra")
+
+## This breaks because scroll_box breaks `kable_as_html()`
+# tab <- BelQ |>
+#     kbl(escape = FALSE) |>
+#     kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 12, full_width = TRUE) |>
+#     scroll_box(width = "100%", height = "500px") |>
+#     column_spec(1, width = "40em", include_thead = FALSE)
+# expect_s3_class(tab, "kableExtra")
