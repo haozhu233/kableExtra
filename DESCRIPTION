@@ -45,7 +45,6 @@ Imports:
     rstudioapi,
     glue,
     tools,
-    webshot,
     digest,
     graphics,
     svglite
@@ -53,7 +52,8 @@ Suggests:
     testthat,
     magick,
     formattable,
-    sparkline
+    sparkline,
+    webshot
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.2.0

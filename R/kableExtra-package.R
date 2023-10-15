@@ -73,7 +73,6 @@
 #' @importFrom rstudioapi isAvailable viewer
 #' @importFrom glue glue
 #' @importFrom tools file_ext file_path_sans_ext
-#' @importFrom webshot webshot
 #' @importFrom digest digest
 #' @importFrom graphics par text hist boxplot
 #' @importFrom svglite svglite

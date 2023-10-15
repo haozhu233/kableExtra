@@ -105,7 +105,12 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
     save_HTML(html_result, file = file_temp_html, libdir = temp_dir,
               self_contained = FALSE)
 
-    result <- webshot::webshot(file_temp_html, file, ...)
+    if (requireNamespace("webshot", quietly = TRUE)) {
+      result <- webshot::webshot(file_temp_html, file, ...)
+    } else {
+      stop("Please install the `webshot` package.", call. = FALSE)
+    }
+
     if (is.null(result)) {
       # A webshot could not be created. Delete newly created files and issue msg
       file.remove(file)
