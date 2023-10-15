@@ -53,7 +53,7 @@ Suggests:
     magick,
     formattable,
     sparkline,
-    webshot
+    webshot2
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.2.0

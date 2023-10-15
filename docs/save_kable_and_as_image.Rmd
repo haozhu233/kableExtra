@@ -25,8 +25,7 @@ kable(mtcars, "latex") %>%
 To get it work, you need to make sure you have the following things installed.
 ```{r, eval = F}
 install.packages("magick")
-install.packages("webshot")
-webshot::install_phantomjs()
+install.packages("webshot2")
 ```
 
 In the end, please make sure you can use `magick::read_image()` function properly for a PDF. On some system (not only windows), it's possible that GhostScript was not setup properly so even if you have `magick` installed, `magick::read_image()` still cannot read PDF properly. That said, although `save_kable` and `as_image` provide really attractive feature, they may not work on every computer. 

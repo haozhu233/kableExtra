@@ -9,7 +9,7 @@
 #' @param self_contained Will the files be self-contained?
 #' @param extra_dependencies Additional HTML dependencies. For example,
 #' `list(`
-#' @param ... Additional variables being passed to `webshot::webshot`. This
+#' @param ... Additional variables being passed to `webshot2::webshot`. This
 #' is for HTML only.
 #' @param latex_header_includes A character vector of extra LaTeX header stuff.
 #' Each element is a row. You can have things like
@@ -105,8 +105,8 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
     save_HTML(html_result, file = file_temp_html, libdir = temp_dir,
               self_contained = FALSE)
 
-    if (requireNamespace("webshot", quietly = TRUE)) {
-      result <- webshot::webshot(file_temp_html, file, ...)
+    if (requireNamespace("webshot2", quietly = TRUE)) {
+      result <- webshot2::webshot(file_temp_html, file, ...)
     } else {
       stop("Please install the `webshot` package.", call. = FALSE)
     }
