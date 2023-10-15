@@ -412,7 +412,11 @@ pdfTable_styling <- function(kable_input,
 
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
-    stripe_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
+    stripe_index <- seq(
+      1,
+      # Issue #613
+      max(1, table_info$nrow - table_info$position_offset),
+      2)
   }
   row_spec(x, stripe_index, background = color)
 }
