@@ -18,7 +18,7 @@
       usepackage_latex("xcolor")
     }
   }
-  auto_format <- getOption("kableExtra.auto_format", default = TRUE)
+  auto_format <- getOption("kableExtra.auto_format", default = FALSE)
   if (auto_format) auto_set_format()
 
   output_type <-
