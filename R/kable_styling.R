@@ -260,6 +260,13 @@ htmlTable_styling <- function(kable_input,
       xml_attr(kable_caption_node, "style") <- "font-size: initial !important;"
     }
   }
+
+  # issue 689: invisible font in Rstudio dark theme
+  flag <- tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE)
+  if (isTRUE(flag)) {
+    kable_xml_style <- c(kable_xml_style, "color: black;")
+  }
+
   if (!is.null(html_font)) {
     kable_xml_style <- c(kable_xml_style, paste0(
       'font-family: ', html_font, ';'
