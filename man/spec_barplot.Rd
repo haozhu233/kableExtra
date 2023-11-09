@@ -21,23 +21,33 @@ spec_barplot(
   dir = if (is_latex()) rmd_files_dir() else tempdir(),
   file = NULL,
   file_type = if (is_latex()) "pdf" else svglite::svglite,
+  fixed_params = NULL,
   ...
 )
 }
 \arguments{
 \item{x}{Vector of values or List of vectors of values.}
 
+\item{devwidth, devheight}{image width and height}
+
 \item{res}{The resolution of the plot. Default is 300.}
+
+\item{beside}{a logical value.  If \code{FALSE}, the columns of
+    \code{height} are portrayed as stacked bars, and if \code{TRUE}
+    the columns are portrayed as juxtaposed bars.}
+
+\item{horiz}{a logical value.  If \code{FALSE}, the bars are drawn
+    vertically with the first bar to the left.  If \code{TRUE}, the
+    bars are drawn horizontally with the first at the bottom.}
 
 \item{same_lim}{T/F. If x is a list of vectors, should all the plots be
 plotted in the same range? Default is True.}
 
-\item{lim}{Manually specify plotting range in the form of
-\code{c(0, 10)}.}
+\item{lim}{Manually specify plotting range in the form of \code{c(0, 10)}.}
 
-\item{xaxt}{On/Off for xaxis text}
+\item{xaxt}{On/Off for xaxis text ('n'=off, 's'=on).}
 
-\item{yaxt}{On/Off for yaxis text}
+\item{yaxt}{On/Off for yaxis text ('n'=off, 's'=on).}
 
 \item{ann}{On/Off for annotations (titles and axis titles)}
 
@@ -49,32 +59,62 @@ plotted in the same range? Default is True.}
 
 \item{file}{File name. If not provided, a random name will be used}
 
-\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"})
-or a graphics device function (\code{grDevices::pdf}). This defaults
-to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.}
+\item{file_type}{Graphic device. Can be character (e.g., \code{"pdf"}) or a
+graphics device function (\code{grDevices::pdf}). This defaults to \code{"pdf"} if
+the rendering is in LaTeX and \code{"svg"} otherwise.}
 
-\item{...}{extraparameters passing to boxplot}
+\item{fixed_params}{Character vector of parameter names that should be kept
+constant across calls to \code{barplot}. See details.}
 
-\item{width}{The width of the plot in pixel}
-
-\item{height}{The height of the plot in pixel}
-
-\item{add_label}{For boxplot. T/F to add labels for min, mean and max.}
-
-\item{label_digits}{If T for add_label, rounding digits for the label.
-Default is 2.}
-
-\item{boxlty}{Boxplot - box boarder type}
-
-\item{medcol}{Boxplot - median line color}
-
-\item{medlwd}{Boxplot - median line width}
+\item{...}{
+  Arguments passed on to \code{\link[graphics:barplot]{graphics::barplot}}
+  \describe{
+    \item{\code{}}{}
+  }}
 }
 \description{
 These functions helps you quickly generate sets of sparkline
 style plots using base R plotting system. Currently, we support histogram,
-boxplot, line, scatter, pointrange, barplot plots. You can use them together with
-\code{column_spec} to generate inline plot in tables. By default, this function
-will save images in a folder called "kableExtra" and return the address of
-the file.
+boxplot, line, scatter, pointrange, barplot plots. You can use them
+together with \code{column_spec} to generate inline plot in tables. By default,
+this function will save images in a folder called "kableExtra" and return
+the address of the file.
+}
+\details{
+Normally, the parameters that control the attributes of the
+\code{barplot} are processed to ensure they have the same number of elements as
+rows in \code{x} (scalars are recycled to create vectors), and the call to
+\code{barplot} uses the corresponding values from the parameter vectors.  This
+allows providing a vector of values with one value for each row (e.g. to
+specify a different color for each row).
+
+When it is desirable to specify that the same vector is passed to all calls
+to \code{barplot},  this can be prevented by providing the name of the
+parameter(s) in \code{fixed_params} (e.g. to specify color for the individual bars
+within a barplot).
+}
+\examples{
+
+df <- data.frame(a=letters[1:3], b=1:3, bars="")
+df
+
+counts <- list(
+   'a' = c(red=3, blue=5, green=0),
+   'b' = c(red=1, blue=5, green=3),
+   'c' = c(red=0, blue=4, green=4)
+ )
+
+# Set color in each row
+kbl(df) |>
+  column_spec(3, image=spec_barplot(counts,
+              col=c('red','green','blue'), beside=TRUE, space=0.2)
+              )
+
+# Set color of each bar
+kbl(df) |>
+  column_spec(3,
+              image=spec_barplot(counts, col=c('red','green','blue'),
+                                 beside=TRUE, space=0.2, fixed_params='col')
+              )
+
 }
