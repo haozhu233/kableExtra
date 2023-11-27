@@ -342,7 +342,7 @@ kbl(cs_dt, escape = F) %>%
 ```
 
 ## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any color palettes, by default [viridis palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
 
 ```{r}
 vs_dt <- iris[1:10, ]
@@ -634,13 +634,13 @@ Well, this is not a feature but rather a documentation of how to use the `sparkl
 ```{r}
 # Not evaluated
 library(sparkline)
-sparkline(0)
+sparkline::sparkline(0)
 ```
 
 ```{r}
 spk_dt <- data.frame(
   var = c("mpg", "wt"),
-  sparkline = c(spk_chr(mtcars$mpg), spk_chr(mtcars$wt))
+  sparkline = c(sparkline::spk_chr(mtcars$mpg), sparkline::spk_chr(mtcars$wt))
 )
 
 kbl(spk_dt, escape = F) %>%

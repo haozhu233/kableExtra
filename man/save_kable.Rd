@@ -31,7 +31,7 @@ conversion.}
 \item{extra_dependencies}{Additional HTML dependencies. For example,
 \verb{list(}}
 
-\item{...}{Additional variables being passed to \code{webshot::webshot}. This
+\item{...}{Additional variables being passed to \code{webshot2::webshot}. This
 is for HTML only.}
 
 \item{latex_header_includes}{A character vector of extra LaTeX header stuff.

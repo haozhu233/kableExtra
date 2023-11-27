@@ -102,7 +102,7 @@ kable_styling <- function(kable_input,
                           repeat_header_text = "\\textit{(continued)}",
                           repeat_header_method = c("append", "replace"),
                           repeat_header_continued = FALSE,
-                          stripe_color = "gray!6",
+                          stripe_color = "gray!10",
                           stripe_index = NULL,
                           latex_table_env = NULL,
                           protect_latex = TRUE,
@@ -214,7 +214,8 @@ htmlTable_styling <- function(kable_input,
   }
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
-
+  pre <- attr(kable_xml, "pre")
+  post <- attr(kable_xml, "post")
   # Modify class
   bootstrap_options <- match.arg(
     bootstrap_options,
@@ -259,6 +260,13 @@ htmlTable_styling <- function(kable_input,
       xml_attr(kable_caption_node, "style") <- "font-size: initial !important;"
     }
   }
+
+  # issue 689: invisible font in Rstudio dark theme
+  flag <- tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE)
+  if (isTRUE(flag)) {
+    kable_xml_style <- c(kable_xml_style, "color: black;")
+  }
+
   if (!is.null(html_font)) {
     kable_xml_style <- c(kable_xml_style, paste0(
       'font-family: ', html_font, ';'
@@ -296,7 +304,7 @@ htmlTable_styling <- function(kable_input,
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(kable_xml, pre, post)
   if (protect_latex) {
     out <- replace_latex_in_kable(out, kable_attrs$extracted_latex)
     kable_attrs$extracted_latex <- NULL
@@ -404,7 +412,11 @@ pdfTable_styling <- function(kable_input,
 
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
-    stripe_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
+    stripe_index <- seq(
+      1,
+      # Issue #613
+      max(1, table_info$nrow - table_info$position_offset),
+      2)
   }
   row_spec(x, stripe_index, background = color)
 }
