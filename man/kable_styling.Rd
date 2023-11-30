@@ -15,7 +15,7 @@ kable_styling(
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE,
-  stripe_color = "gray!6",
+  stripe_color = "gray!10",
   stripe_index = NULL,
   latex_table_env = NULL,
   protect_latex = TRUE,

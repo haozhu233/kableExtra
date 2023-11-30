@@ -68,6 +68,10 @@ add_header_above <- function(kable_input, header = NULL,
   if (is.null(header)) return(kable_input)
 
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -257,7 +261,8 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
   }
 
   line_sep <- ez_rep(line_sep, nrow(header_df))
-  line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
+  line_sep <- paste0('padding-left:', line_sep, 'px;',
+                     'padding-right:', line_sep, 'px;')
 
   row_style <- sprintf(row_style, align)
 
@@ -405,8 +410,7 @@ cline_gen <- function(header_df, booktabs, line_sep) {
   cline_type <- switch(
     booktabs + 1,
     "\\\\cline{",
-    glue::glue("\\\\cmidrule(l{[line_sep]pt}r{[line_sep]pt}){",
-               .open = "[", .close = "]"))
+    paste0("\\\\cmidrule(l{", line_sep, "pt}r{", line_sep, "pt}){"))
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")

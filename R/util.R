@@ -108,6 +108,46 @@ read_kable_as_xml <- function(x) {
   structure(result, pre = pre, post = post)
 }
 
+get_xml_text <- function(xml_node) {
+  return(trimws(xml2::xml_text(xml_node)))
+}
+
+read_table_data_from_xml <- function(kable_xml) {
+  thead <- xml_tpart(kable_xml, "thead")
+  tbody <- xml_tpart(kable_xml, "tbody")
+
+  # Header part
+  n_header_rows <- xml2::xml_length(thead)
+  col_headers_xml <- xml2::xml_children(xml2::xml_child(thead, n_header_rows))
+  col_headers <- unlist(lapply(col_headers_xml, get_xml_text))
+  n_cols <- length(col_headers)
+  first_column_as_row_names <- (col_headers[1] == '')
+
+  # Content part
+  filtered_rows <- lapply(xml2::xml_children(tbody), function(row) {
+    all_tds <- xml2::xml_children(row)
+    if (length(all_tds) == n_cols) {
+      all_td_texts <- unlist(lapply(all_tds, get_xml_text))
+      return(all_td_texts)
+    } else {
+      return(NULL)
+    }
+  })
+  filtered_rows[sapply(filtered_rows, is.null)] <- NULL
+
+  table_data <- do.call(rbind, filtered_rows)
+
+  if (first_column_as_row_names) {
+    row_names <- table_data[, 1]
+    table_data <- table_data[, 2:ncol(table_data)]
+    row.names(table_data) <- row_names
+    colnames(table_data) <- col_headers[2:n_cols]
+  } else {
+    colnames(table_data) <- col_headers
+  }
+  return(as.data.frame(table_data))
+}
+
 #' LaTeX Packages
 #' @description This function shows all LaTeX packages that is supposed to be
 #' loaded for this package in a rmarkdown yaml format.
@@ -203,5 +243,55 @@ clear_color_latex <- function(x, background = F) {
 
 sim_double_escape <- function(x) {
   return(sub("\\\\", "\\\\\\\\", x))
+}
+
+# Here (v 1.4.0) we introduced a simple markdown table parser to compensate the
+# breaking change on changing the default of auto_format.
+line_separator <- function(line, idx_matrix) {
+  return(trimws(apply(idx_matrix, 1, function(idx) {
+    substr(line, idx[1], idx[2])
+  })))
+}
+
+md_table_parser <- function(md_table) {
+  # It seems that if there is a caption, the second row is definitely an empty
+  # string
+  # https://github.com/yihui/knitr/blob/a51a7a07c4df6d05d02778027e84ce00a10b9b14/R/table.R#L489
+  table_has_caption <- (length(md_table) > 2 && md_table[2] == '')
+
+  if (table_has_caption) {
+    table_caption_line <- md_table[1]
+    # Well, here is a guess. It will not work if people use custom caption.label
+    table_caption <- trimws(sub('Table:', '', table_caption_line))
+    md_table <- md_table[3:length(md_table)]
+  } else {
+    table_caption <- NA
+  }
+
+  thead_line <- md_table[1]
+  separator_line <- md_table[2]
+  tbody_lines <- md_table[3:length(md_table)]
+
+  # Analyze separator line
+  separator_indices <- which(strsplit(separator_line, '')[[1]] == '|')
+  cell_start_indices <- separator_indices[-length(separator_indices)] + 1
+  cell_end_indices <- separator_indices[-1] - 1
+  cell_indices <- matrix(c(cell_start_indices, cell_end_indices), ncol=2)
+
+  alignment_raw <- line_separator(separator_line, cell_indices)
+  alignment <- sapply(alignment_raw, function(x) {
+    if (grepl("^:-+$", x)) 'l' else if (grepl("^:-+:$", x)) 'c' else 'r'
+  })
+
+  n_cols <- length(alignment)
+  n_rows <- length(tbody_lines)
+
+  # thead and tbody
+  header_row <- line_separator(thead_line, cell_indices)
+  body_rows <- sapply(tbody_lines, line_separator, cell_indices)
+  table_matrix <- matrix(body_rows, ncol = n_cols, byrow = TRUE)
+
+  return(kbl(table_matrix, col.names=header_row, align=alignment,
+             caption=table_caption))
 }
 

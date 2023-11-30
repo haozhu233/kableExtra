@@ -18,8 +18,8 @@
       usepackage_latex("xcolor")
     }
   }
-  auto_format <- getOption("kableExtra.auto_format", default = FALSE)
-  if (auto_format) auto_set_format()
+  # auto_format <- getOption("kableExtra.auto_format", default = FALSE)
+  # if (auto_format) auto_set_format()
 
   output_type <-
     if (is.list(rmarkdown::metadata$output))

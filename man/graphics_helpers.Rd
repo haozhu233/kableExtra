@@ -71,10 +71,10 @@ are checked for clues (i.e., default value of a \verb{file=} argument)
 }
 \section{Functions}{
 \itemize{
-\item \code{graphics_dev}: Generalize 'res' and 'filename across dev functions
+\item \code{graphics_dev()}: Generalize 'res' and 'filename across dev functions
 
-\item \code{is_svg}: Determine if plot device is svg-like
+\item \code{is_svg()}: Determine if plot device is svg-like
 
-\item \code{dev_chr}: Determine filename extension
+\item \code{dev_chr()}: Determine filename extension
+
 }}
-

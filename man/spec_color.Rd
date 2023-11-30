@@ -33,14 +33,14 @@ reversed.}
 \item{option}{A character string indicating the color map option to use.
 Eight options are available:
 \itemize{
- \item "magma" (or "A")
- \item "inferno" (or "B")
- \item "plasma" (or "C")
- \item "viridis" (or "D")
- \item "cividis" (or "E")
- \item "rocket" (or "F")
- \item "mako" (or "G")
- \item "turbo" (or "H")
+ \item{}{"magma" (or "A")}
+ \item{}{"inferno" (or "B")}
+ \item{}{"plasma" (or "C")}
+ \item{}{"viridis" (or "D")}
+ \item{}{"cividis" (or "E")}
+ \item{}{"rocket" (or "F")}
+ \item{}{"mako" (or "G")}
+ \item{}{"turbo" (or "H")}
 }}
 
 \item{na_color}{color code for NA values}

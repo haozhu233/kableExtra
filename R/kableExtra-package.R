@@ -60,7 +60,6 @@
 #' @importFrom xml2 read_xml xml_attr xml_has_attr xml_attr<- read_html
 #' xml_child xml_children xml_name xml_add_sibling xml_add_child xml_text xml_length
 #' xml_remove write_xml xml_text<- xml_length
-#' @importFrom rvest html_table
 #' @importFrom knitr knit_meta_add include_graphics knit_print asis_output kable
 #' @importFrom rmarkdown latex_dependency html_dependency_bootstrap
 #' html_dependency_jquery pandoc_self_contained_html
@@ -71,7 +70,6 @@
 #' @importFrom stats ave density median na.omit setNames
 #' @importFrom grDevices col2rgb svg png
 #' @importFrom rstudioapi isAvailable viewer
-#' @importFrom glue glue
 #' @importFrom tools file_ext file_path_sans_ext
 #' @importFrom digest digest
 #' @importFrom graphics par text hist boxplot
