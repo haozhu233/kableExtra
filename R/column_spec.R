@@ -35,7 +35,7 @@
 #' of table columns.
 #' @param extra_css A vector of extra css text to be passed into the cells of
 #' the column.
-#' @param include_thead T/F. A HTML only feature to contoll whether the
+#' @param include_thead T/F. A HTML only feature to control whether the
 #' header row will be manipulated. Default is `FALSE`.
 #' @param latex_column_spec Only for LaTeX tables.  Code to replace the column
 #' specification.  If not `NULL`, will override all other arguments.
