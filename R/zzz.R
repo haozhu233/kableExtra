@@ -21,11 +21,9 @@
   # auto_format <- getOption("kableExtra.auto_format", default = FALSE)
   # if (auto_format) auto_set_format()
 
-  output_type <-
-    if (is.list(rmarkdown::metadata$output))
-      names(rmarkdown::metadata$output)[1]
-    else
-      rmarkdown::metadata$output
+  output_type <- rmarkdown::metadata$output[1]
+  if (is.list(output_type))
+    output_type <- names(output_type)
 
   if (!is.null(output_type) && output_type %in% c(
         "ioslides_presentation", "slidy_presentation",
