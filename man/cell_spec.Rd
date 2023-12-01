@@ -52,7 +52,7 @@ text_spec(
 )
 }
 \arguments{
-\item{x}{Things to be formated. It could be a vector of numbers or strings.}
+\item{x}{Things to be formatted. It could be a vector of numbers or strings.}
 
 \item{format}{Either "html" or "latex". It can also be set through
 \code{option(knitr.table.format)}, same as \code{knitr::kable()}.}
@@ -67,7 +67,7 @@ text_spec(
 need to be underlined}
 
 \item{strikeout}{A T/F value to control whether the text of the selected row
-need to be stricked out.}
+need to be struck out.}
 
 \item{color}{A character string for text color. Here please pay
 attention to the differences in color codes between HTML and LaTeX.}

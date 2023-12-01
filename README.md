@@ -21,7 +21,7 @@ I hope with `kableExtra`, you can
 
 ***
 
-This package can load required LaTeX package automatically in vanilla rmarkdown. For customized rmarkdown templates, it is recommended to load related LaTeX packages manually.
+This package can load required LaTeX package automatically in vanilla R Markdown. For customized R Markdown templates, it is recommended to load related LaTeX packages manually.
 
 ***
 

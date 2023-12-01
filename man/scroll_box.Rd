@@ -16,9 +16,9 @@ scroll_box(
 \arguments{
 \item{kable_input}{A HTML kable object}
 
-\item{height}{A character string indicating the height of the box, e.g. "50px"}
+\item{height}{A character string indicating the height of the box, e.g. \code{"50px"}}
 
-\item{width}{A character string indicating the width of the box, e.g. "100px"}
+\item{width}{A character string indicating the width of the box, e.g. \code{"100px"}}
 
 \item{box_css}{CSS text for the box}
 

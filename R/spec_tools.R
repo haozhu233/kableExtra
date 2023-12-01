@@ -70,7 +70,7 @@ latex_color <- function(colors, escape = TRUE) {
 #' Generate common font size for continuous values
 #'
 #' @param x continuous vectors of values
-#' @param begin Smalles font size to be used. Default is 10.
+#' @param begin Smallest font size to be used. Default is 10.
 #' @param end Largest font size. Default is 20.
 #' @param na_font_size font size for NA values
 #' @param scale_from input range (vector of length two). If not given,

@@ -34,7 +34,7 @@ print.kableExtraInlinePlots <- function(x, ...) {
   }
 }
 
-#' HTML dependency for js script to enable bootstrap tooltip and popup message
+#' HTML dependency for Javascript to enable bootstrap tooltip and popup message
 #'
 #' @export
 html_dependency_kePrint <- function() {

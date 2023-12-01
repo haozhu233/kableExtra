@@ -18,7 +18,7 @@ listify_args(
 of arguments.}
 
 \item{lengths}{Allowable lengths of the arguments, typically 1 and
-the length of the main variable (e.g., "x"). If 'NA' (default),
+the length of the main variable (e.g., "x"). If  \code{NA} (default),
 it is not enforced.}
 
 \item{passthru}{Character vector of variables to pass through with

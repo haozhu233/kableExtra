@@ -13,7 +13,7 @@
 #' @name graphics_helpers
 NULL
 
-#' @describeIn graphics_helpers Generalize 'res' and 'filename across dev functions
+#' @describeIn graphics_helpers Generalize `res` and `filename` across device functions
 #' @details
 #' - `graphics_dev` generalizes the use of 'res' and plot dimensions
 #'   across graphic devices. Raster-based devices (e.g., 'png',
@@ -31,7 +31,7 @@ NULL
 #'
 #'   Another purpose of this function is to generalize the different
 #'   graphic functions' use of 'file=' versus 'filename='.
-#' @return 'graphics_dev': nothing, a plot device is opened
+#' @return `graphics_dev`: nothing, a plot device is opened
 graphics_dev <- function(filename, width, height, res, ..., dev) {
   dev <- match.fun(dev)
   frmls <- names(formals(dev))
@@ -98,7 +98,7 @@ dev_chr <- function(dev) {
   return(ext)
 }
 
-#' Combine file (or svg text) and parameters into a 'kableExtraInlinePlots' object
+#' Combine file (or svg text) and parameters into a `kableExtraInlinePlots` object
 #'
 #' @param filename Passed through to the graphics device.
 #' @param file_ext Character, something like "png".
@@ -109,7 +109,7 @@ dev_chr <- function(dev) {
 #'   read the file into an embedded SVG object; once done, the file is
 #'   no longer used. The default action is to delete this file early,
 #'   set this to 'FALSE' to keep the file.
-#' @return list object, with class 'kableExtraInlinePlots'
+#' @return list object, with class `kableExtraInlinePlots`
 make_inline_plot <- function(filename, file_ext, dev,
                              width, height, res,
                              del = TRUE) {
@@ -138,7 +138,7 @@ make_inline_plot <- function(filename, file_ext, dev,
 #' @param ... Arbitrary arguments to be possibly converted into lists
 #'   of arguments.
 #' @param lengths Allowable lengths of the arguments, typically 1 and
-#'   the length of the main variable (e.g., "x"). If 'NA' (default),
+#'   the length of the main variable (e.g., "x"). If  `NA` (default),
 #'   it is not enforced.
 #' @param passthru Character vector of variables to pass through with
 #'   no conversion to lists of values. Extra names (not provided in

@@ -15,8 +15,8 @@
 #' @param longtable T/F for whether to use the longtable format. If you have a
 #' table that will span over two or more pages, you will have to turn this on.
 #' @param valign You probably won't need to adjust this latex option very often.
-#' If you are familar with latex tables, this is the optional position for the
-#' tabular environment controling the vertical position of the table relative
+#' If you are familiar with latex tables, this is the optional position for the
+#' tabular environment controlling the vertical position of the table relative
 #' to the baseline of the surrounding text. Possible choices are `b`, `c` and
 #' `t` (default).
 #' @param position This is the "real" or say floating position for the latex

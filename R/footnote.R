@@ -1,7 +1,7 @@
 #' Add footnote (new)
 #'
 #' @description `footnote` provides a more flexible way to add footnote. You
-#' can add mutiple sets of footnote using different notation systems. It is
+#' can add multiple sets of footnote using different notation systems. It is
 #' also possible to specify footnote section header one by one and print
 #' footnotes as a chunk of texts.
 #'
@@ -11,7 +11,7 @@
 #' @param number A vector of footnote texts. Footnotes here will be numbered.
 #' There is no upper cap for the number of footnotes here
 #' @param alphabet A vector of footnote texts, Footnotes here will be labeled
-#' with abc. The vector here should not have more than 26 elements.
+#' with "a,b,c". The vector here should not have more than 26 elements.
 #' @param symbol A vector of footnote texts, Footnotes here will be labeled
 #' with special symbols. The vector here should not have more than 20 elements.
 #' @param footnote_order The order of how to arrange `general`, `number`,

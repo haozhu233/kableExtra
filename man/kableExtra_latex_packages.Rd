@@ -8,5 +8,5 @@ kableExtra_latex_packages()
 }
 \description{
 This function shows all LaTeX packages that is supposed to be
-loaded for this package in a rmarkdown yaml format.
+loaded for this package in a R Markdown YAML format.
 }

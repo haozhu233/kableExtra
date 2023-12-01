@@ -15,7 +15,7 @@
 #' @param underline A T/F value to control whether the text of the selected row
 #' need to be underlined
 #' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be stricked out.
+#' need to be struck out.
 #' @param color A character string for row text color. For example, "red" or
 #' "#BBBBBB".
 #' @param background A character string for row background color. Here please
@@ -30,7 +30,7 @@
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole row.
 #' @param hline_after T/F. A replicate of `hline.after` in xtable. It
-#' addes a hline after ther row
+#' adds a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
 #' with `add.to.row` in xtable
 #'
