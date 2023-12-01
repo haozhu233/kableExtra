@@ -26,7 +26,7 @@ dev_chr(dev)
 \code{grDevices::svg}, \code{grDevices::pdf}).}
 }
 \value{
-'graphics_dev': nothing, a plot device is opened
+\code{graphics_dev}: nothing, a plot device is opened
 
 'is_svg': logical
 
@@ -71,7 +71,7 @@ are checked for clues (i.e., default value of a \verb{file=} argument)
 }
 \section{Functions}{
 \itemize{
-\item \code{graphics_dev()}: Generalize 'res' and 'filename across dev functions
+\item \code{graphics_dev()}: Generalize \code{res} and \code{filename} across device functions
 
 \item \code{is_svg()}: Determine if plot device is svg-like
 

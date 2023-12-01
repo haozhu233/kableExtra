@@ -1,7 +1,7 @@
 #' Print the table on an isolated landscape page in PDF
 #'
 #' @description This function will put the table on an single landscape page.
-#' It's useful for wide tables that cann't be printed on a portrait page.
+#' It's useful for wide tables that can't be printed on a portrait page.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param margin Customizable page margin for special needs. Values can be

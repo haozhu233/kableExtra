@@ -41,7 +41,7 @@ need to be monospaced (verbatim)}
 need to be underlined}
 
 \item{strikeout}{A T/F value to control whether the text of the selected row
-need to be stricked out.}
+need to be struck out.}
 
 \item{color}{A character string for row text color. For example, "red" or
 "#BBBBBB".}
@@ -63,7 +63,7 @@ options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, 
 that it's not for the whole row.}
 
 \item{hline_after}{T/F. A replicate of \code{hline.after} in xtable. It
-addes a hline after ther row}
+adds a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row. Similar
 with \code{add.to.row} in xtable}

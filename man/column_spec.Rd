@@ -51,7 +51,7 @@ selected column need to be monospaced (verbatim)}
 selected row need to be underlined}
 
 \item{strikeout}{T/F value or vector to control whether the text of the
-selected row need to be striked out.}
+selected row need to be struck out.}
 
 \item{color}{A character string or vector for column text color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}

@@ -4,8 +4,8 @@
 #' fixed-width or both box and make it scrollable.
 #'
 #' @param kable_input A HTML kable object
-#' @param height A character string indicating the height of the box, e.g. "50px"
-#' @param width A character string indicating the width of the box, e.g. "100px"
+#' @param height A character string indicating the height of the box, e.g. `"50px"`
+#' @param width A character string indicating the width of the box, e.g. `"100px"`
 #' @param box_css CSS text for the box
 #' @param extra_css Extra CSS styles
 #' @param fixed_thead HTML table option so table header row is fixed at top.

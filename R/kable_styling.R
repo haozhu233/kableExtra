@@ -2,7 +2,7 @@
 #'
 #' @description This function provides a cleaner approach to modify the style
 #' of HTML tables other than using the `table.attr` option in `knitr::kable()`. Note
-#' that those bootstrap options requires Twitter bootstrap theme, which is not avaiable
+#' that those bootstrap options requires Twitter bootstrap theme, which is not available
 #' in some customized template being loaded.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
@@ -36,8 +36,8 @@
 #' imported.
 #' @param font_size A numeric input for table font size
 #' @param row_label_position A character string determining the justification
-#' of the row labels in a table.  Possible values inclued `l` for left, `c` for
-#' center, and `r` for right.  The default value is `l` for left justifcation.
+#' of the row labels in a table.  Possible values include `l` for left, `c` for
+#' center, and `r` for right.  The default value is `l` for left justification.
 #' @param repeat_header_text LaTeX option. A text string you want to append on
 #' or replace the caption.
 #' @param repeat_header_method LaTeX option, can either be `append`(default) or
@@ -74,7 +74,7 @@
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 #' characters on a Windows machine, make sure to use
-#' Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+#' `Sys.setlocale("LC_ALL","Hungarian")` to avoid unexpected conversions.
 #' - `protect_latex = TRUE` has no effect.
 #'
 #' For HTML,

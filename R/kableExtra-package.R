@@ -48,11 +48,11 @@
 #'
 #' @note If you found a feature on the documentation site that is not available
 #' in the version of `kableExtra` you are using, try to install the pre-release
-#' version from github. You can do so by running
+#' version from Github. You can do so by running
 #' `devtools::install_github("haozhu233/kableExtra")`.
 #'
 #' Also, note that This package can load required LaTeX package automatically in
-#' vanilla rmarkdown. For customized rmarkdown templates, it is recommended to
+#' vanilla R Markdown. For customized R Markdown templates, it is recommended to
 #' load related LaTeX packages manually.
 #'
 #' @importFrom stringr fixed str_count str_split str_match str_detect str_match_all

@@ -89,8 +89,8 @@ some special cases.}
 table that will span over two or more pages, you will have to turn this on.}
 
 \item{valign}{You probably won't need to adjust this latex option very often.
-If you are familar with latex tables, this is the optional position for the
-tabular environment controling the vertical position of the table relative
+If you are familiar with latex tables, this is the optional position for the
+tabular environment controlling the vertical position of the table relative
 to the baseline of the surrounding text. Possible choices are \code{b}, \code{c} and
 \code{t} (default).}
 

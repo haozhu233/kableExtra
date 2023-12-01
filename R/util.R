@@ -1,6 +1,6 @@
-#' Rmarkdown Format
+#' R Markdown Format
 #'
-#' @description If the export format of the Rmarkdown document exist,
+#' @description Check if the export format of the R Markdown document exists.
 #'
 #' @importFrom rmarkdown metadata
 #'
@@ -150,7 +150,7 @@ read_table_data_from_xml <- function(kable_xml) {
 
 #' LaTeX Packages
 #' @description This function shows all LaTeX packages that is supposed to be
-#' loaded for this package in a rmarkdown yaml format.
+#' loaded for this package in a R Markdown YAML format.
 #'
 #' @export
 kableExtra_latex_packages <- function() {

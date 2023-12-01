@@ -16,7 +16,7 @@
 #' @param underline T/F value or vector to control whether the text of the
 #' selected row need to be underlined
 #' @param strikeout T/F value or vector to control whether the text of the
-#' selected row need to be striked out.
+#' selected row need to be struck out.
 #' @param color A character string or vector for column text color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string or vector for column background color. Here please

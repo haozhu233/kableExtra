@@ -70,7 +70,7 @@ add_footnote <- function(input, label = NULL,
       "[0-9]{1,2}")))
 
   # Pandoc ---------------------------
-  # Footnote solution for markdown and pandoc. It is not perfect as
+  # Footnote solution for markdown and Pandoc. It is not perfect as
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
   # time to define their `kable` format.
