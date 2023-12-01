@@ -292,6 +292,7 @@ md_table_parser <- function(md_table) {
   table_matrix <- matrix(body_rows, ncol = n_cols, byrow = TRUE)
 
   return(kbl(table_matrix, col.names=header_row, align=alignment,
-             caption=table_caption))
+             caption=table_caption, booktabs = TRUE,
+             longtable = TRUE))
 }
 
