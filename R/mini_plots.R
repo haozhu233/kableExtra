@@ -311,7 +311,8 @@ spec_barplot <- function(
     dir.create(dir)
   }
   height<-matrix(x)
-  height<-cbind(height,0)
+  #height<-cbind(height,0)
+
   file_ext <- dev_chr(file_type)
   if (is.null(file)) {
     file <- normalizePath(
