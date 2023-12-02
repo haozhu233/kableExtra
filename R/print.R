@@ -22,7 +22,19 @@ print.kableExtra <- function(x, ...) {
   }
 }
 
-#' HTML dependency for js script to enable bootstrap tooltip and popup message
+#' @export
+print.kableExtraInlinePlots <- function(x, ...) {
+  view_html <- getOption("kableExtra_view_html", TRUE)
+  if (view_html & interactive() & !is.null(x$svg_text)) {
+    html_inline <- htmltools::browsable(htmltools::HTML(x$svg_text))
+    class(html_inline) <- "shiny.tag.list"
+    print(html_inline)
+  } else {
+    print.simple.list(x)
+  }
+}
+
+#' HTML dependency for Javascript to enable bootstrap tooltip and popup message
 #'
 #' @export
 html_dependency_kePrint <- function() {

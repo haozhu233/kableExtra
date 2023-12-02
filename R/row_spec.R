@@ -30,7 +30,7 @@
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole row.
 #' @param hline_after T/F. A replicate of `hline.after` in xtable. It
-#' addes a hline after the row
+#' adds a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
 #' with `add.to.row` in `xtable::xtable`
 #'
@@ -65,6 +65,10 @@ row_spec <- function(kable_input, row,
     stop("row must be numeric. ")
   }
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",

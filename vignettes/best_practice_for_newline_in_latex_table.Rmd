@@ -26,10 +26,10 @@ vignette: >
 
 Since many people have asked me this question ([#157](https://github.com/haozhu233/kableExtra/issues/157), this [SO question](https://stackoverflow.com/questions/49546778/inserting-new-lines-into-kable-headers/49616173#49616173), etc.), I feel like I should document it out. :)
 
-Wrapping texts and make newlines may seem to be the same but they are actaully quite different. Thinking about when you "wrap texts" in your text editor, you have a fixed width window and the texts will be automatically wrapped. It's like a passive skill (in games :P). However, when you are trying to make newlines, you are inserting the linebreak by yourself and it's mostly like an active skill you need to cast. For these two tasks, LaTeX provides two totally different approaches.
+Wrapping texts and make newlines may seem to be the same but they are actually quite different. Thinking about when you "wrap texts" in your text editor, you have a fixed width window and the texts will be automatically wrapped. It's like a passive skill (in games :P). However, when you are trying to make newlines, you are inserting the linebreak by yourself and it's mostly like an active skill you need to cast. For these two tasks, LaTeX provides two totally different approaches.
 
 ## Text wrapping
-If you are only trying stop your texts from "overflowing", you can get it done by setting a fixed width with `kableExtra::column_spec`. This is the most recommanded practice as it's fairly straightforward. The column width controls the width for both table header and table body. 
+If you are only trying stop your texts from "overflowing", you can get it done by setting a fixed width with `kableExtra::column_spec`. This is the most recommended practice as it's fairly straightforward. The column width controls the width for both table header and table body. 
 
 ```{r, warning=F, message=F}
 library(kableExtra)
@@ -47,7 +47,7 @@ kable(dt, "latex", booktabs = T,
 ```
 
 ## Insert linebreak in table
-In LaTeX, to make linebreaks in table cells, people usually use the `makecell` package. `kableExtra` 0.8.0 comes with a function called `linebreak` to facilitate that. Basically, this function will scan the existance of `\n`. If `\n` exists, it will put the texts in a `makecell` statement. It works in a very similar way with `cell_spec` so you will need to put `escape = F` in `kable`.
+In LaTeX, to make linebreaks in table cells, people usually use the `makecell` package. `kableExtra` 0.8.0 comes with a function called `linebreak` to facilitate that. Basically, this function will scan the existence of `\n`. If `\n` exists, it will put the texts in a `makecell` statement. It works in a very similar way with `cell_spec` so you will need to put `escape = F` in `kable`.
 
 ```{r}
 linebreak("a\nb")

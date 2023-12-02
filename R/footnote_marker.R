@@ -25,11 +25,11 @@
 #' @export
 footnote_marker_number <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_number format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
@@ -44,11 +44,11 @@ footnote_marker_number <- function(x, format, double_escape = FALSE) {
 #' @export
 footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_alphabet format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   if (is.numeric(x)) x <- letters[x]
   if (format == "html") {
@@ -64,11 +64,11 @@ footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
 #' @export
 footnote_marker_symbol <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_symbol format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   number_index <- read.csv(system.file("symbol_index.csv",
                                        package = "kableExtra"))

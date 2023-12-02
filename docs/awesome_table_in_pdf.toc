@@ -2,31 +2,31 @@
 \contentsline {section}{Installation}{3}{section*.3}%
 \contentsline {section}{Getting Started}{3}{section*.4}%
 \contentsline {subsection}{LaTeX packages used in this package}{4}{section*.5}%
-\contentsline {subsection}{Plain LaTeX}{4}{section*.6}%
+\contentsline {subsection}{Plain LaTeX}{5}{section*.6}%
 \contentsline {subsection}{LaTeX table with booktabs}{5}{section*.7}%
 \contentsline {section}{Table Styles}{5}{section*.8}%
 \contentsline {subsection}{LaTeX options}{5}{section*.9}%
-\contentsline {subsubsection}{Striped}{5}{section*.10}%
+\contentsline {subsubsection}{Striped}{6}{section*.10}%
 \contentsline {subsubsection}{Hold position}{6}{section*.11}%
-\contentsline {subsubsection}{Scale down}{6}{section*.12}%
+\contentsline {subsubsection}{Scale down}{7}{section*.12}%
 \contentsline {subsubsection}{Repeat header in longtable}{7}{section*.13}%
 \contentsline {subsection}{Full width?}{9}{section*.14}%
-\contentsline {subsection}{Position}{9}{section*.15}%
+\contentsline {subsection}{Position}{10}{section*.15}%
 \contentsline {subsection}{Font Size}{10}{section*.16}%
-\contentsline {section}{Column / Row Specification}{10}{section*.17}%
-\contentsline {subsection}{Column spec}{10}{section*.18}%
+\contentsline {section}{Column / Row Specification}{11}{section*.17}%
+\contentsline {subsection}{Column spec}{11}{section*.18}%
 \contentsline {subsection}{Insert Images into Columns}{12}{section*.19}%
-\contentsline {subsection}{Row spec}{13}{section*.20}%
+\contentsline {subsection}{Row spec}{14}{section*.20}%
 \contentsline {subsection}{Header Rows}{14}{section*.21}%
 \contentsline {section}{Cell/Text Specification}{14}{section*.22}%
-\contentsline {subsection}{Conditional logic}{14}{section*.23}%
-\contentsline {subsection}{Visualize data with Viridis Color}{15}{section*.24}%
-\contentsline {subsection}{Text Specification}{16}{section*.25}%
+\contentsline {subsection}{Conditional logic}{15}{section*.23}%
+\contentsline {subsection}{Visualize data with Viridis Color}{16}{section*.24}%
+\contentsline {subsection}{Text Specification}{17}{section*.25}%
 \contentsline {section}{Grouped Columns / Rows}{17}{section*.26}%
 \contentsline {subsection}{Add header rows to group columns}{17}{section*.27}%
 \contentsline {subsection}{Group rows via labeling}{18}{section*.28}%
 \contentsline {subsection}{Row indentation}{19}{section*.29}%
-\contentsline {subsection}{Group rows via multi-row cell}{19}{section*.30}%
+\contentsline {subsection}{Group rows via multi-row cell}{20}{section*.30}%
 \contentsline {section}{Table Footnote}{23}{section*.31}%
 \contentsline {section}{LaTeX Only Features}{26}{section*.32}%
 \contentsline {subsection}{Linebreak processor}{26}{section*.33}%
@@ -34,5 +34,5 @@
 \contentsline {subsection}{Decimal Alignment}{28}{section*.35}%
 \contentsline {subsection}{Use LaTeX table in HTML or Word}{28}{section*.36}%
 \contentsline {section}{From other packages}{28}{section*.37}%
-\contentsline {subsection}{\texttt {tables}}{28}{section*.38}%
+\contentsline {subsection}{\texttt {tables}}{29}{section*.38}%
 \contentsline {subsection}{\texttt {xtable}}{29}{section*.39}%

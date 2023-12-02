@@ -9,7 +9,7 @@ spec_font_size(x, begin = 8, end = 16, na_font_size = 12, scale_from = NULL)
 \arguments{
 \item{x}{continuous vectors of values}
 
-\item{begin}{Smalles font size to be used. Default is 10.}
+\item{begin}{Smallest font size to be used. Default is 10.}
 
 \item{end}{Largest font size. Default is 20.}
 

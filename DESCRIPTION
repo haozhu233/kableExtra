@@ -1,7 +1,7 @@
 Package: kableExtra
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
-Version: 1.3.4.9000
+Version: 1.3.9.9000
 Authors@R: c(
     person('Hao', 'Zhu', email = 'haozhu233@gmail.com', role = c('aut', 'cre'),
     comment = c(ORCID = '0000-0002-3386-6076')),
@@ -35,7 +35,6 @@ Imports:
     magrittr,
     stringr (>= 1.0),
     xml2 (>= 1.1.1),
-    rvest,
     rmarkdown (>= 1.6.0),
     scales, 
     viridisLite,
@@ -43,9 +42,7 @@ Imports:
     grDevices,
     htmltools,
     rstudioapi,
-    glue,
     tools,
-    webshot,
     digest,
     graphics,
     svglite
@@ -53,8 +50,10 @@ Suggests:
     testthat,
     magick,
     formattable,
-    sparkline
+    sparkline,
+    webshot2
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
+Language: en-US

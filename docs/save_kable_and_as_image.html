@@ -392,8 +392,7 @@ kable(mtcars, &quot;latex&quot;) %&gt;%
 <h1>Feature Dependencies</h1>
 <p>To get it work, you need to make sure you have the following things installed.</p>
 <pre class="r"><code>install.packages(&quot;magick&quot;)
-install.packages(&quot;webshot&quot;)
-webshot::install_phantomjs()</code></pre>
+install.packages(&quot;webshot2&quot;)
 <p>In the end, please make sure you can use <code>magick::read_image()</code> function properly for a PDF. On some system (not only windows), it’s possible that GhostScript was not setup properly so even if you have <code>magick</code> installed, <code>magick::read_image()</code> still cannot read PDF properly. That said, although <code>save_kable</code> and <code>as_image</code> provide really attractive feature, they may not work on every computer.</p>
 </div>
 <div id="turn-your-tables-into-images-for-cross-formating-support" class="section level1">
