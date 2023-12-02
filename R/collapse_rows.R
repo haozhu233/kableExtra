@@ -57,6 +57,10 @@ collapse_rows <- function(kable_input, columns = NULL,
                           col_names = TRUE,
                           longtable_clean_cut = TRUE) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -87,8 +91,7 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
   kable_xml <- kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
-  kable_dt <- rvest::html_table(xml2::read_html(as.character(kable_input)))[[1]]
-  kable_dt <- as.data.frame(kable_dt)
+  kable_dt <- read_table_data_from_xml(kable_xml)
   if (is.null(columns)) {
     columns <- seq(1, ncol(kable_dt))
   }
@@ -96,11 +99,6 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
     if (!target %in% columns) {
       stop("target has to be within the range of columns")
     }
-  }
-  if (!is.null(kable_attrs$header_above)) {
-    kable_dt_col_names <- unlist(kable_dt[kable_attrs$header_above, ])
-    kable_dt <- kable_dt[-(1:kable_attrs$header_above),]
-    names(kable_dt) <- kable_dt_col_names
   }
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, target = target)
 

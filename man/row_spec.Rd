@@ -63,7 +63,7 @@ options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, 
 that it's not for the whole row.}
 
 \item{hline_after}{T/F. A replicate of \code{hline.after} in xtable. It
-addes a hline after the row}
+adds a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row. Similar
 with \code{add.to.row} in \code{xtable::xtable}}

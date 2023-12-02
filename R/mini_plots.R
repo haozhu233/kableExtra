@@ -121,7 +121,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
 #'   or a graphics device function (`grDevices::pdf`). This defaults
 #'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
-#' @param ... extraparameters passing to boxplot
+#' @param ... extra parameters passing to boxplot
 #'
 #' @export
 spec_boxplot <- function(x, width = 200, height = 50, res = 300,
@@ -311,7 +311,8 @@ spec_barplot <- function(
     dir.create(dir)
   }
   height<-matrix(x)
-  height<-cbind(height,0)
+  #height<-cbind(height,0)
+
   file_ext <- dev_chr(file_type)
   if (is.null(file)) {
     file <- normalizePath(
@@ -378,13 +379,13 @@ rmd_files_dir <- function(create = TRUE) {
 #' argument defaults to use this value for `cex` for points. Default is 2.
 #' @param pch,cex Shape and size for points (if type is other than "l").
 #' @param type Passed to `plot`, often one of "l", "p", or "b", see
-#' [graphics::plot.default()] for more details. Ignored when 'polymin' is
-#' not 'NA'.
+#' [graphics::plot.default()] for more details. Ignored when `polymin` is
+#' not `NA`.
 #' @param polymin Special argument that converts a "line" to a polygon,
 #' where the flat portion is this value, and the other side of the polygon
-#' is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
+#' is the 'y' value ('x' if no 'y' provided). If `NA` (the default), then
 #' this is ignored; otherwise if this is numeric then a polygon is
-#' created (and 'type' is ignored). Note that if 'polymin' is in the middle
+#' created (and 'type' is ignored). Note that if `polymin` is in the middle
 #' of the 'y' values, it will generate up/down polygons around this value.
 #' @param minmax,min,max Arguments passed to `points` to highlight minimum
 #' and maximum values in `spec_plot`. If `min` or `max` are `NULL`, they
@@ -535,7 +536,7 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
 #' the file.
 #'
 #' @param x,xmin,xmax A scalar value or List of scalar values for dot, left
-#' and right errorbar.
+#' and right error bar.
 #' @param vline A scalar value for where to draw a vertical line.
 #' @param width The width of the plot in pixel
 #' @param height The height of the plot in pixel

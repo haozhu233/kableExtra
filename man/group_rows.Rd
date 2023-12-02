@@ -97,11 +97,11 @@ The default setting will have the text span the entire length.}
 
 \item{italic}{A T/F value to control whether the text should to be emphasized.}
 
-\item{hline_before}{A T/F value that addes a horizontal line before the group_row label.  Default
+\item{hline_before}{A T/F value that adds a horizontal line before the group_row label.  Default
 value is False.}
 
 \item{hline_after}{A replicate of \code{hline.after} in xtable. It
-addes a hline after the row}
+adds a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row.}
 
@@ -114,7 +114,7 @@ selected column need to be monospaced (verbatim)}
 selected row need to be underlined}
 
 \item{strikeout}{T/F value to control whether the text of the
-selected row need to be striked out.}
+selected row need to be struck out.}
 
 \item{color}{A character string for column text color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}

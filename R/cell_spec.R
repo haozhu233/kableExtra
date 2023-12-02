@@ -2,7 +2,7 @@
 #'
 #' @description Specify Cell format before it gets into kable
 #'
-#' @param x Things to be formated. It could be a vector of numbers or strings.
+#' @param x Things to be formatted. It could be a vector of numbers or strings.
 #' @param format Either "html" or "latex". It can also be set through
 #' `option(knitr.table.format)`, same as `knitr::kable()`.
 #' @param bold T/F for font bold.
@@ -11,7 +11,7 @@
 #' @param underline A T/F value to control whether the text of the selected row
 #' need to be underlined
 #' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be stricked out.
+#' need to be struck out.
 #' @param color A character string for text color. Here please pay
 #' attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string for background color. Here please

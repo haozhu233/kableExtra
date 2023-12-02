@@ -4,8 +4,8 @@
 #' fixed-width or both box and make it scrollable.
 #'
 #' @param kable_input A HTML kable object
-#' @param height A character string indicating the height of the box, e.g. "50px"
-#' @param width A character string indicating the width of the box, e.g. "100px"
+#' @param height A character string indicating the height of the box, e.g. `"50px"`
+#' @param width A character string indicating the width of the box, e.g. `"100px"`
 #' @param box_css CSS text for the box
 #' @param extra_css Extra CSS styles
 #' @param fixed_thead HTML table option so table header row is fixed at top.
@@ -31,6 +31,10 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
                        fixed_thead = TRUE
                        ) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (kable_format != "html") {
     return(kable_input)
   }

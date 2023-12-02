@@ -11,6 +11,8 @@ header_separate(kable_input, sep = "[^[:alnum:]]+", ...)
 
 \item{sep}{A regular expression separator between groups. The default value
 is a regular expression that matches any sequence of non-alphanumeric values.}
+
+\item{...}{Additional parameters passed to do.call.}
 }
 \description{
 When you create a summary table for either model or basic

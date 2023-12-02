@@ -14,11 +14,11 @@ Think about using `reprex` to generate an example in R.
 # code to reproduce the bug.
 ```
 
-If you need to attach the entire rmarkdown doc, try to use ```` to quote your entire doc.
+If you need to attach the entire R Markdown doc, try to use ```` to quote your entire doc.
 
 ````
 ---
-title: "A reproducible example in rmarkdown"
+title: "A reproducible example in R Markdown"
 output: html_document
 ---
 

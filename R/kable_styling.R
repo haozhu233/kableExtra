@@ -2,7 +2,7 @@
 #'
 #' @description This function provides a cleaner approach to modify the style
 #' of HTML tables other than using the `table.attr` option in `knitr::kable()`. Note
-#' that those bootstrap options requires Twitter bootstrap theme, which is not avaiable
+#' that those bootstrap options requires Twitter bootstrap theme, which is not available
 #' in some customized template being loaded.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
@@ -36,8 +36,8 @@
 #' imported.
 #' @param font_size A numeric input for table font size
 #' @param row_label_position A character string determining the justification
-#' of the row labels in a table.  Possible values inclued `l` for left, `c` for
-#' center, and `r` for right.  The default value is `l` for left justifcation.
+#' of the row labels in a table.  Possible values include `l` for left, `c` for
+#' center, and `r` for right.  The default value is `l` for left justification.
 #' @param repeat_header_text LaTeX option. A text string you want to append on
 #' or replace the caption.
 #' @param repeat_header_method LaTeX option, can either be `append`(default) or
@@ -74,7 +74,7 @@
 #' @details  For LaTeX, if you use other than English environment
 #' - all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 #' characters on a Windows machine, make sure to use
-#' Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+#' `Sys.setlocale("LC_ALL","Hungarian")` to avoid unexpected conversions.
 #' - `protect_latex = TRUE` has no effect.
 #'
 #' For HTML,
@@ -102,7 +102,7 @@ kable_styling <- function(kable_input,
                           repeat_header_text = "\\textit{(continued)}",
                           repeat_header_method = c("append", "replace"),
                           repeat_header_continued = FALSE,
-                          stripe_color = "gray!6",
+                          stripe_color = "gray!10",
                           stripe_index = NULL,
                           latex_table_env = NULL,
                           protect_latex = TRUE,
@@ -128,6 +128,10 @@ kable_styling <- function(kable_input,
   }
 
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
 
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -214,7 +218,8 @@ htmlTable_styling <- function(kable_input,
   }
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
-
+  pre <- attr(kable_xml, "pre")
+  post <- attr(kable_xml, "post")
   # Modify class
   bootstrap_options <- match.arg(
     bootstrap_options,
@@ -259,6 +264,13 @@ htmlTable_styling <- function(kable_input,
       xml_attr(kable_caption_node, "style") <- "font-size: initial !important;"
     }
   }
+
+  # issue 689: invisible font in Rstudio dark theme
+  flag <- tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE)
+  if (isTRUE(flag)) {
+    kable_xml_style <- c(kable_xml_style, "color: black;")
+  }
+
   if (!is.null(html_font)) {
     kable_xml_style <- c(kable_xml_style, paste0(
       'font-family: ', html_font, ';'
@@ -296,7 +308,7 @@ htmlTable_styling <- function(kable_input,
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(kable_xml, pre, post)
   if (protect_latex) {
     out <- replace_latex_in_kable(out, kable_attrs$extracted_latex)
     kable_attrs$extracted_latex <- NULL
@@ -404,7 +416,11 @@ pdfTable_styling <- function(kable_input,
 
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
-    stripe_index <- seq(1, table_info$nrow - table_info$position_offset, 2)
+    stripe_index <- seq(
+      1,
+      # Issue #613
+      max(1, table_info$nrow - table_info$position_offset),
+      2)
   }
   row_spec(x, stripe_index, background = color)
 }
@@ -485,7 +501,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
       }
       bottom_part <- paste0(
         "\\midrule\n",
-        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\n",
+        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\\\n",
         "\\endfoot\n",
         "\\bottomrule\n",
         "\\endlastfoot"

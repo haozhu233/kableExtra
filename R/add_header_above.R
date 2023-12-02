@@ -13,7 +13,7 @@
 #' Alternatively, a data frame with two columns can be provided: The first
 #' column should contain the header names (character vector) and the second
 #' column should contain the colspan (numeric vector). This input can be used
-#' if there are problems with unicode characters in the headers.
+#' if there are problems with Unicode characters in the headers.
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
 #' @param monospace A T/F value to control whether the text of the selected column
@@ -21,7 +21,7 @@
 #' @param underline A T/F value to control whether the text of the selected row
 #' need to be underlined
 #' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be stricked out.
+#' need to be struck out.
 #' @param align A character string for cell alignment. For HTML, possible values could
 #' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
@@ -68,6 +68,10 @@ add_header_above <- function(kable_input, header = NULL,
   if (is.null(header)) return(kable_input)
 
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -257,7 +261,8 @@ htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
   }
 
   line_sep <- ez_rep(line_sep, nrow(header_df))
-  line_sep <- glue::glue('padding-left:{line_sep}px;padding-right:{line_sep}px;')
+  line_sep <- paste0('padding-left:', line_sep, 'px;',
+                     'padding-right:', line_sep, 'px;')
 
   row_style <- sprintf(row_style, align)
 
@@ -405,8 +410,7 @@ cline_gen <- function(header_df, booktabs, line_sep) {
   cline_type <- switch(
     booktabs + 1,
     "\\\\cline{",
-    glue::glue("\\\\cmidrule(l{[line_sep]pt}r{[line_sep]pt}){",
-               .open = "[", .close = "]"))
+    paste0("\\\\cmidrule(l{", line_sep, "pt}r{", line_sep, "pt}){"))
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")

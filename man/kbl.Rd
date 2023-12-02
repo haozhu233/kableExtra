@@ -41,11 +41,11 @@ returned value from \code{kable()}.}
 
 \item{format}{A character string. Possible values are \code{latex},
 \code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
+simple tables), \code{rst}, \code{jira}, and \code{org} (Emacs Org-mode).
+The value of this argument will be automatically determined if the function
+is called within a \pkg{knitr} document. The \code{format} value can also
+be set in the global option \code{knitr.table.format}. If \code{format} is
+a function, it must return a character string.}
 
 \item{digits}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
@@ -89,8 +89,8 @@ some special cases.}
 table that will span over two or more pages, you will have to turn this on.}
 
 \item{valign}{You probably won't need to adjust this latex option very often.
-If you are familar with latex tables, this is the optional position for the
-tabular environment controling the vertical position of the table relative
+If you are familiar with latex tables, this is the optional position for the
+tabular environment controlling the vertical position of the table relative
 to the baseline of the surrounding text. Possible choices are \code{b}, \code{c} and
 \code{t} (default).}
 

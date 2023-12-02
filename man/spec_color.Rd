@@ -2,7 +2,7 @@
 % Please edit documentation in R/spec_tools.R
 \name{spec_color}
 \alias{spec_color}
-\title{Generate viridis Color code for continuous values}
+\title{Generate viridis or other color code for continuous values}
 \usage{
 spec_color(
   x,
@@ -12,7 +12,8 @@ spec_color(
   direction = 1,
   option = "D",
   na_color = "#BBBBBB",
-  scale_from = NULL
+  scale_from = NULL,
+  palette = viridisLite::viridis(256, alpha, begin, end, direction, option)
 )
 }
 \arguments{
@@ -32,21 +33,25 @@ reversed.}
 \item{option}{A character string indicating the color map option to use.
 Eight options are available:
 \itemize{
- \item "magma" (or "A")
- \item "inferno" (or "B")
- \item "plasma" (or "C")
- \item "viridis" (or "D")
- \item "cividis" (or "E")
- \item "rocket" (or "F")
- \item "mako" (or "G")
- \item "turbo" (or "H")
+ \item{}{"magma" (or "A")}
+ \item{}{"inferno" (or "B")}
+ \item{}{"plasma" (or "C")}
+ \item{}{"viridis" (or "D")}
+ \item{}{"cividis" (or "E")}
+ \item{}{"rocket" (or "F")}
+ \item{}{"mako" (or "G")}
+ \item{}{"turbo" (or "H")}
 }}
 
 \item{na_color}{color code for NA values}
 
 \item{scale_from}{input range (vector of length two). If not given,
 is calculated from the range of x}
+
+\item{palette}{The palette to use as a character vector of colors.  If
+this is specified, parameters other than \code{x}, \code{na_color} and \code{scale_from}
+are ignored.}
 }
 \description{
-Generate viridis Color code for continuous values
+Generate viridis or other color code for continuous values
 }

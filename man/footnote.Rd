@@ -33,7 +33,7 @@ won't be labeled with any notations}
 There is no upper cap for the number of footnotes here}
 
 \item{alphabet}{A vector of footnote texts, Footnotes here will be labeled
-with abc. The vector here should not have more than 26 elements.}
+with "a,b,c". The vector here should not have more than 26 elements.}
 
 \item{symbol}{A vector of footnote texts, Footnotes here will be labeled
 with special symbols. The vector here should not have more than 20 elements.}
@@ -73,7 +73,7 @@ latex symbols. For example, \code{symbol_manual = c('*', '\\\\\\\\dag', '\\\\\\\
 }
 \description{
 \code{footnote} provides a more flexible way to add footnote. You
-can add mutiple sets of footnote using differeny notation system. It is
+can add multiple sets of footnote using different notation systems. It is
 also possible to specify footnote section header one by one and print
 footnotes as a chunk of texts.
 }
