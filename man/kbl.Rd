@@ -15,10 +15,11 @@ kbl(
   label = NULL,
   format.args = list(),
   escape = TRUE,
-  table.attr = "",
+  table.attr = getOption("knitr.table.html.attr", ""),
   booktabs = FALSE,
   longtable = FALSE,
-  valign = "t",
+  tabular = if (longtable) "longtable" else "tabular",
+  valign = if (tabular \%in\% c("tabularx", "xltabular")) "{\\\\linewidth}" else "[t]",
   position = "",
   centering = TRUE,
   vline = getOption("knitr.table.vline", if (booktabs) "" else "|"),
@@ -88,6 +89,9 @@ some special cases.}
 \item{longtable}{T/F for whether to use the longtable format. If you have a
 table that will span over two or more pages, you will have to turn this on.}
 
+\item{tabular}{The "inner environment" to use for the
+table, e.g. "tabularx".}
+
 \item{valign}{You probably won't need to adjust this latex option very often.
 If you are familiar with latex tables, this is the optional position for the
 tabular environment controlling the vertical position of the table relative
@@ -135,4 +139,9 @@ However, it has many latex/html specific arguments hidden under the ground
 unless you check its source code. This wrapper function is created to
 provide better documentation (and auto-complete yay) and at the same time,
 solve the auto format setting in a better way.
+}
+\note{
+The current set of arguments were written for
+\code{knitr} version 1.45.  If you are using an older
+or newer version, some of the default values may be different.
 }
