@@ -206,9 +206,20 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
           new_kable_dt[i, columns[j]] <- ''
         }
       } else {
+        # We need to account for the cmidrules that
+        # are to the right of this column
+        num_rows <- collapse_matrix[i, j]
+        num_cols <- ncol(collapse_matrix) - j
+        if (num_rows && num_cols && valign != "\\[b\\]") {
+          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0)
+          if (valign == "")
+            vmove <- 0.5*vmove
+        } else
+          vmove <- 0
         new_kable_dt[i, columns[j]] <- collapse_new_dt_item(
           kable_dt[i, columns[j]], collapse_matrix[i, j], column_width,
-          align = column_align, valign = valign
+          align = column_align, valign = valign,
+          vmove = vmove
         )
       }
     }
@@ -310,13 +321,15 @@ kable_dt_latex <- function(x, col_names) {
   data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
 }
 
-collapse_new_dt_item <- function(x, span, width = NULL, align, valign) {
+collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0) {
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
     "\\\\multirow", valign, "\\{", -span, "\\}\\{",
     ifelse(is.null(width), "\\*", width),
-    "\\}\\{",
+    "\\}",
+    if(vmove) paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+    "\\{",
     switch(align,
            "l" = "\\\\raggedright\\\\arraybackslash ",
            "c" = "\\\\centering\\\\arraybackslash ",

@@ -7,6 +7,7 @@ parameters in knitr 1.45. knitr versions back to 1.33
 should be supported.
 * cell_spec() colors like "darkgoldenrod2" weren't 
 shown (issue #726).
+* placement of collapsed row labels was incorrect (issue #719).
 
 
 
