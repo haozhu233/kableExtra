@@ -39,3 +39,6 @@ add_footnote(x, c("footnote 1", "footnote 2"), notation = "symbol")
 }
 
 }
+\seealso{
+\code{\link[=footnote]{footnote()}}, \code{\link[=footnote_marker_number]{footnote_marker_number()}}
+}
