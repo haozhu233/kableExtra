@@ -37,10 +37,19 @@
 #' @param symbol_manual User can manually supply a vector of either html or
 #' latex symbols. For example, `symbol_manual = c('*', '\\\\dag', '\\\\ddag')`.`
 #'
+#' @seealso [add_footnote()], [footnote_marker_number()]
+#'
 #' @examples
 #' \dontrun{
 #' dt <- mtcars[1:5, 1:5]
-#' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+#' colnames(dt)[1] <- paste0("mpg",
+#'                           footnote_marker_alphabet(2))
+#' rownames(dt)[2] <- paste0(rownames(dt)[2],
+#'                           footnote_marker_alphabet(1))
+#' dt[1,2] <- paste0(dt[1,2], footnote_marker_alphabet(3))
+#'
+#' kbl(dt, escape = FALSE) |>
+#'   footnote(alphabet = c("Note a", "Note b", "Note c"))
 #' }
 #'
 #' @export

@@ -14,6 +14,7 @@
 #' @param escape Logical value controlling if the label needs to be escaped.
 #' Default is TRUE.
 #'
+#' @seealso [footnote()], [footnote_marker_number()]
 #' @examples
 #' \dontrun{
 #' x <- knitr::kable(head(mtcars), "html")
