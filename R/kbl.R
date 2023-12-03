@@ -1,6 +1,6 @@
 #' Wrapper function of knitr::kable
 #'
-#' @description knitr's kable function is the foundation of this package.
+#' @description The `knitr::kable()` function is the foundation of this package.
 #' However, it has many latex/html specific arguments hidden under the ground
 #' unless you check its source code. This wrapper function is created to
 #' provide better documentation (and auto-complete yay) and at the same time,
@@ -64,71 +64,39 @@ kbl <- function(x, format, digits = getOption("digits"),
     align <- strsplit(align, '')[[1]]
   }
   if (missing(format) || is.null(format)) {
-    if (knitr::is_latex_output()) {
+    if (knitr::is_latex_output())
       format <- "latex"
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        booktabs = booktabs, longtable = longtable,
-        valign = valign, position = position, centering = centering,
-        vline = vline, toprule = toprule, bottomrule = bottomrule,
-        midrule = midrule, linesep = linesep, caption.short = caption.short,
-        table.envir = table.envir, ...
-      )
-      table_info <- magic_mirror(out)
-      if (is.null(col.names)) {
-        table_info$position_offset <- 0
-      }
-      return(out)
-    } else {
+    else
       format <- "html"
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        table.attr = table.attr, ...
-      )
-      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
-      return(out)
-    }
-  } else {
-    if (format == "latex") {
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        booktabs = booktabs, longtable = longtable,
-        valign = valign, position = position, centering = centering,
-        vline = vline, toprule = toprule, bottomrule = bottomrule,
-        midrule = midrule, linesep = linesep, caption.short = caption.short,
-        table.envir = table.envir, ...
-      )
-      table_info <- magic_mirror(out)
-      if (is.null(col.names)) {
-        table_info$position_offset <- 0
-      }
-      return(out)
-    }
-    if (format == "html") {
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        table.attr = table.attr, ...
-      )
-      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
-      return(out)
-    }
-    return(knitr::kable(
+  }
+  if (format == "latex") {
+    use_latex_packages()
+    out <- knitr::kable(
+      x = x, format = format, digits = digits,
+      row.names = row.names, col.names = col.names, align = align,
+      caption = caption, label = label, format.args = format.args,
+      escape = escape,
+      booktabs = booktabs, longtable = longtable,
+      valign = valign, position = position, centering = centering,
+      vline = vline, toprule = toprule, bottomrule = bottomrule,
+      midrule = midrule, linesep = linesep, caption.short = caption.short,
+      table.envir = table.envir, ...
+    )
+  } else if (format == "html") {
+    out <- knitr::kable(
+      x = x, format = format, digits = digits,
+      row.names = row.names, col.names = col.names, align = align,
+      caption = caption, label = label, format.args = format.args,
+      escape = escape,
+      table.attr = table.attr, ...
+    )
+    if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
+  } else
+    out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
       caption = caption, label = label, format.args = format.args,
       escape = escape, ...
-    ))
-  }
+    )
+  out
 }
