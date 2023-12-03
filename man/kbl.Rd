@@ -130,7 +130,7 @@ caption is provided.}
 \item{...}{Other arguments (see Examples and References).}
 }
 \description{
-knitr's kable function is the foundation of this package.
+The \code{knitr::kable()} function is the foundation of this package.
 However, it has many latex/html specific arguments hidden under the ground
 unless you check its source code. This wrapper function is created to
 provide better documentation (and auto-complete yay) and at the same time,

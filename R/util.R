@@ -25,6 +25,47 @@ usepackage_latex <- function(name, options = NULL) {
   invisible(knit_meta_add(list(latex_dependency(name, options))))
 }
 
+#' Declare LaTeX packages needed by kableExtra
+#'
+#' @description
+#' Declares all of the LaTeX packages that
+#' may be used by `kableExtra` functions so that they
+#' will be loaded when the document is produced.
+#' @details
+#' When `kableExtra` loads, it calls this function if it
+#' detects that `knitr` is running and producing
+#' LaTeX output.  However, sometimes `kableExtra`
+#' is loaded before `knitr` runs, and then these packages
+#' can end up being missed, leading to LaTeX errors such as
+#' "Undefined control sequence."  (See
+#' Github issue #721 for an example.)
+#'
+#' Our `kbl()` wrapper for `knitr::kable()` calls
+#' this function for LaTeX output, so an explicit call
+#' is not necessary.
+#'
+#' @examples use_latex_packages()
+#' @export
+use_latex_packages <- function() {
+  load_packages <- getOption("kableExtra.latex.load_packages", default = TRUE)
+  if (load_packages) {
+    usepackage_latex("booktabs")
+    usepackage_latex("longtable")
+    usepackage_latex("array")
+    usepackage_latex("multirow")
+    usepackage_latex("wrapfig")
+    usepackage_latex("float")
+    usepackage_latex("colortbl")
+    usepackage_latex("pdflscape")
+    usepackage_latex("tabu")
+    usepackage_latex("threeparttable")
+    usepackage_latex("threeparttablex")
+    usepackage_latex("ulem", "normalem")
+    usepackage_latex("makecell")
+    usepackage_latex("xcolor")
+  }
+}
+
 # Find the right xml section. Since xml_child + search name will result in a
 # crash (at least on my machine), here is a helper function.
 xml_tpart <- function(x, part) {
