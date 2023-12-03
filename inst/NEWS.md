@@ -5,6 +5,8 @@ kableExtra 1.4.0
 * updated kbl() parameters to match knitr::kable()
 parameters in knitr 1.45. knitr versions back to 1.33
 should be supported.
+* cell_spec() colors like "darkgoldenrod2" weren't 
+shown (issue #726).
 
 
 

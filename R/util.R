@@ -336,4 +336,3 @@ md_table_parser <- function(md_table) {
              caption=table_caption, booktabs = TRUE,
              longtable = TRUE))
 }
-
