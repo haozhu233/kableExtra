@@ -23,14 +23,11 @@
 #'
 #' @export
 add_footnote <- function(input, label = NULL,
-                         notation = "alphabet",
+                         notation = getOption("kable_footnote_notation", "alphabet"),
                          threeparttable = FALSE,
                          escape = TRUE) {
   if (is.null(label)) return(input)
 
-  if (notation == "alphabet") {
-    notation <- getOption("kable_footnote_notation", "alphabet")
-  }
   if (!threeparttable) {
     threeparttable <- getOption("kable_footnote_threeparttable", FALSE)
   }
@@ -76,10 +73,14 @@ add_footnote <- function(input, label = NULL,
   # should be able to satisfy people who don't want to spend extra
   # time to define their `kable` format.
   if (!attr(input, "format") %in% c("html", "latex")) {
+    if (notation == "none")
+      ids.innote <- ids.intable  # issue #672
+    else
+      ids.innote <- paste0("^", ids.intable, "^")
     # In table notation
     if (count.intablenote != 0) {
       for (i in 1:count.intablenote) {
-        replace_note <- paste0("^", ids.intable[i], "^",
+        replace_note <- paste0(ids.innote[i],
                                paste0(rep(" ", 4 - ceiling(i/5)), collapse = ""))
 
         export[which(str_detect(export, "\\[note\\]"))[1]] <-
@@ -90,7 +91,7 @@ add_footnote <- function(input, label = NULL,
     # Fix extra in table notation
     for (i in extra.notation) {
       export <- gsub(paste0("\\[note", i, "\\]"),
-                     paste0("^", ids.intable[i], "^",
+                     paste0(ids.innote[i],
                             paste0(rep(" ", 4 - ceiling(i/5)), collapse = "")),
                      export)
     }
@@ -98,7 +99,7 @@ add_footnote <- function(input, label = NULL,
     export[length(export) + 1] <- ""
     export[length(export) + 1] <- "__Note:__"
     export[length(export) + 1] <- paste0(
-      paste0("^", ids[1:length(label)], "^ ", label), collapse = " "
+      paste0(ids.innote[1:length(label)], label), collapse = " "
     )
   }
 

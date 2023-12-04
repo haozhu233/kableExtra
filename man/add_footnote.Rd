@@ -7,7 +7,7 @@
 add_footnote(
   input,
   label = NULL,
-  notation = "alphabet",
+  notation = getOption("kable_footnote_notation", "alphabet"),
   threeparttable = FALSE,
   escape = TRUE
 )
