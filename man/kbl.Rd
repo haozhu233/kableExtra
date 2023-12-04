@@ -144,4 +144,11 @@ solve the auto format setting in a better way.
 The current set of arguments were written for
 \code{knitr} version 1.45.  If you are using an older
 or newer version, some of the default values may be different.
+
+In \code{knitr::kable()}, the \code{escape} parameter does not affect the text
+in the \code{caption} argument, and \code{kbl()} inherits this
+behavior.  This means that special characters
+in the caption (such as "\%" for LaTeX output)
+need to be escaped by the user, e.g.
+written as \code{"\\\\\%"}.
 }
