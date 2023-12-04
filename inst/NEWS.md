@@ -8,6 +8,7 @@ should be supported.
 * cell_spec() colors like "darkgoldenrod2" weren't 
 shown (issue #726).
 * placement of collapsed row labels was incorrect (issue #719).
+* centering of three part table wasn't working (issue #692)
 
 
 
