@@ -10,6 +10,13 @@
 #' `knitr` version 1.45.  If you are using an older
 #' or newer version, some of the default values may be different.
 #'
+#' @note In `knitr::kable()`, the `escape` parameter does not affect the text
+#' in the `caption` argument, and `kbl()` inherits this
+#' behavior.  This means that special characters
+#' in the caption (such as "%" for LaTeX output)
+#' need to be escaped by the user, e.g.
+#' written as `"\\%"`.
+#'
 #' @param table.attr A character string for addition HTML table attributes.
 #' This is convenient if you simply want to add a few HTML classes or styles.
 #' For example, you can put 'class="table" style="color: red"'.
