@@ -400,7 +400,7 @@ column_spec_latex <- function(kable_input, column, width,
   }
 
   # issue #658: offset generates bad indices with single row tables
-  rows <- intersect(rows, seq_along(nrows))
+  rows <- intersect(rows, seq(nrows))
 
   for (i in rows) {
     target_row <- table_info$contents[i]
