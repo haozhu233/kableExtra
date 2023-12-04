@@ -145,7 +145,8 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   kable_attrs <- attributes(kable_input)
   kable_xml <- read_kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
-
+  if (is.null(kable_tbody))
+    return(kable_input)
   if (escape) {
     group_label <- escape_html(group_label)
   }

@@ -122,6 +122,8 @@ column_spec_html <- function(kable_input, column, width,
   kable_attrs <- attributes(kable_input)
   kable_xml <- kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
+  if (is.null(kable_tbody))
+    return(kable_input)
 
   group_header_rows <- attr(kable_input, "group_header_rows")
   all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
@@ -143,39 +145,41 @@ column_spec_html <- function(kable_input, column, width,
     border_right <- T
   }
 
+  off <- 0
   if (include_thead) {
-    nrows <- length(all_contents_rows) + 1
-    off <- 1
-
-    bold <- ensure_len_html(bold, nrows, "bold")
-    italic <- ensure_len_html(italic, nrows, "italic")
-    monospace <- ensure_len_html(monospace, nrows, "monospace")
-    underline <- ensure_len_html(underline, nrows, "underline")
-    strikeout <- ensure_len_html(strikeout, nrows, "strikeout")
-    color <- ensure_len_html(color, nrows, "color")
-    background <- ensure_len_html(background, nrows,"background")
-    link <- ensure_len_html(link, nrows, "link")
-    new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
-    tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
-    popover <- ensure_len_html(popover, nrows, "popover")
-    image <- ensure_len_html(image, nrows, "image")
-
     kable_thead <- xml_tpart(kable_xml, "thead")
-    nrow_thead <- length(xml_children(kable_thead))
-    for (j in column) {
-      target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
-      column_spec_html_cell(
-        target_cell, width, width_min, width_max,
-        bold[1], italic[1], monospace[1], underline[1], strikeout[1],
-        color[1], background[1], border_left, border_right,
-        border_l_css, border_r_css,
-        extra_css,
-        link[1], new_tab[1], tooltip[1], popover[1], image[1]
-      )
+    if (!is.null(kable_thead)) {
+      nrows <- length(all_contents_rows) + 1
+      off <- 1
+
+      bold <- ensure_len_html(bold, nrows, "bold")
+      italic <- ensure_len_html(italic, nrows, "italic")
+      monospace <- ensure_len_html(monospace, nrows, "monospace")
+      underline <- ensure_len_html(underline, nrows, "underline")
+      strikeout <- ensure_len_html(strikeout, nrows, "strikeout")
+      color <- ensure_len_html(color, nrows, "color")
+      background <- ensure_len_html(background, nrows,"background")
+      link <- ensure_len_html(link, nrows, "link")
+      new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
+      tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
+      popover <- ensure_len_html(popover, nrows, "popover")
+      image <- ensure_len_html(image, nrows, "image")
+
+      nrow_thead <- length(xml_children(kable_thead))
+      for (j in column) {
+        target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
+        column_spec_html_cell(
+          target_cell, width, width_min, width_max,
+          bold[1], italic[1], monospace[1], underline[1], strikeout[1],
+          color[1], background[1], border_left, border_right,
+          border_l_css, border_r_css,
+          extra_css,
+          link[1], new_tab[1], tooltip[1], popover[1], image[1]
+        )
+      }
     }
   } else {
     nrows <- length(all_contents_rows)
-    off <- 0
 
     bold <- ensure_len_html(bold, nrows, "bold")
     italic <- ensure_len_html(italic, nrows, "italic")

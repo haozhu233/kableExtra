@@ -156,6 +156,8 @@ get_xml_text <- function(xml_node) {
 read_table_data_from_xml <- function(kable_xml) {
   thead <- xml_tpart(kable_xml, "thead")
   tbody <- xml_tpart(kable_xml, "tbody")
+  if (is.null(thead) || is.null(tbody))
+    return(NULL)
 
   # Header part
   n_header_rows <- xml2::xml_length(thead)

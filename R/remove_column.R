@@ -36,6 +36,8 @@ remove_column_html <- function (kable_input, columns) {
     kable_attrs <- attributes(kable_input)
     kable_xml <- kable_as_xml(kable_input)
     kable_tbody <- xml_tpart(kable_xml, "tbody")
+    if (is.null(kable_tbody))
+      return(kable_input)
     kable_thead <- xml_tpart(kable_xml, "thead")
 
     group_header_rows <- attr(kable_input, "group_header_rows")
@@ -55,11 +57,11 @@ remove_column_html <- function (kable_input, columns) {
                                                 names(collapse_matrix))))
         collapse_columns_origin <- collapse_columns
     }
-
     while (length(columns) > 0) {
-        xml2::xml_remove(xml2::xml_child(
+        if (!is.null(kable_thead))
+          xml2::xml_remove(xml2::xml_child(
             xml2::xml_child(kable_thead, xml2::xml_length(kable_thead)),
-            columns[1]))
+              columns[1]))
         if (length(collapse_columns) != 0 && collapse_columns[1] <= columns[1]){
             if (columns[1] %in% collapse_columns) {
                 column_span <- collapse_matrix[[paste0('x', columns[1])]]

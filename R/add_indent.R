@@ -106,7 +106,8 @@ add_indent_html <- function(kable_input, positions,
 
   kable_xml <- kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
-
+  if (is.null(kable_tbody))
+    return(kable_input)
   group_header_rows <- attr(kable_input, "group_header_rows")
   if (!is.null(group_header_rows)) {
     positions <- positions_corrector(positions, group_header_rows,

@@ -90,7 +90,8 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
   kable_attrs <- attributes(kable_input)
   kable_xml <- kable_as_xml(kable_input)
   kable_tbody <- xml_tpart(kable_xml, "tbody")
-
+  if (is.null(kable_tbody))
+    return(kable_input)
   kable_dt <- read_table_data_from_xml(kable_xml)
   if (is.null(columns)) {
     columns <- seq(1, ncol(kable_dt))

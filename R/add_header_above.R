@@ -140,8 +140,12 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
 
     # To check the number of columns in the new header, compare it to body
     kable_xml_tbody <- xml_tpart(kable_xml, 'tbody')
-    body_rows <- xml_children(kable_xml_tbody)
-    kable_ncol <- max(xml_length(body_rows))
+    if (is.null(kable_xml_tbody))
+      body_rows <- kable_ncol <- 0
+    else {
+      body_rows <- xml_children(kable_xml_tbody)
+      kable_ncol <- max(xml_length(body_rows))
+    }
   } else {
     header_rows <- xml_children(kable_xml_thead)
     bottom_header_row <- header_rows[[length(header_rows)]]
