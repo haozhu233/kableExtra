@@ -19,7 +19,8 @@ row_spec(
   angle = NULL,
   extra_css = NULL,
   hline_after = FALSE,
-  extra_latex_after = NULL
+  extra_latex_after = NULL,
+  extra_latex_before = NULL
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ adds a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row. Similar
 with \code{add.to.row} in xtable}
+
+\item{extra_latex_before}{Extra LaTeX text to be added before the row.}
 }
 \description{
 This function allows users to select a row and then specify
