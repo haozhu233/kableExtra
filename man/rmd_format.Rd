@@ -2,10 +2,10 @@
 % Please edit documentation in R/util.R
 \name{rmd_format}
 \alias{rmd_format}
-\title{Rmarkdown Format}
+\title{R Markdown Format}
 \usage{
 rmd_format()
 }
 \description{
-If the export format of the Rmarkdown document exist,
+Check if the export format of the R Markdown document exists.
 }

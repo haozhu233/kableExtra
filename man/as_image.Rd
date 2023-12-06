@@ -2,7 +2,7 @@
 % Please edit documentation in R/as_image.R
 \name{as_image}
 \alias{as_image}
-\title{Render the table as an format-independent image and use it in rmarkdown}
+\title{Render the table as an format-independent image and use it in R Markdown}
 \usage{
 as_image(x, width = NULL, height = NULL, file = NULL, ...)
 }
@@ -14,15 +14,15 @@ as_image(x, width = NULL, height = NULL, file = NULL, ...)
 \item{height}{Image height in inches. (1 inch = 2.54 cm)}
 
 \item{file}{By default, as_image saves to an temp file, which works for
-normal rmarkdown. However if you are using things like xaringan, which can't
-be a standalone html, you can specify this file be the path you need, eg.
-"img/something.png"}
+normal R Markdown. However if you are using things like xaringan, which can't
+be a standalone html, you can specify this file be the path you need, e.g.
+\code{"img/something.png"}}
 
 \item{...}{Additional arguments passed to save_kable.}
 }
 \description{
 This function generates a temporary png file using \code{save_kable}
-and then try to put it in an rmarkdown document using
+and then try to put it in an R Markdown document using
 \code{knitr::include_graphics}.
 }
 \examples{

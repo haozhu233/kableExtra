@@ -51,7 +51,7 @@ selected column need to be monospaced (verbatim)}
 selected row need to be underlined}
 
 \item{strikeout}{T/F value or vector to control whether the text of the
-selected row need to be striked out.}
+selected row need to be struck out.}
 
 \item{color}{A character string or vector for column text color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}
@@ -78,7 +78,7 @@ of table columns.}
 \item{extra_css}{A vector of extra css text to be passed into the cells of
 the column.}
 
-\item{include_thead}{T/F. A HTML only feature to contoll whether the
+\item{include_thead}{T/F. A HTML only feature to control whether the
 header row will be manipulated. Default is \code{FALSE}.}
 
 \item{latex_column_spec}{Only for LaTeX tables.  Code to replace the column

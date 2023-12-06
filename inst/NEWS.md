@@ -1,3 +1,32 @@
+kableExtra 1.4.0
+--------------------------------------------------------------------------------
+* removed dependency on rvest and glue
+* added live preview to inline plots
+* updated kbl() parameters to match knitr::kable()
+parameters in knitr 1.45. knitr versions back to 1.33
+should be supported.
+* cell_spec() colors like "darkgoldenrod2" weren't 
+shown (issue #726).
+* placement of collapsed row labels was incorrect (issue #719).
+* centering of three part table wasn't working (issue #692)
+* add_footnote(notation = "none") didn't work properly
+in Markdown output (issue #672)
+* In previous versions, kableExtra manipulated knitr's global settings to auto
+format tables. In 1.4.0, we introduced a markdown table parser, which will
+parse the inputting markdown table back to a dataframe and resend it to the
+kbl function. In this way, all the auto formatting happens within this
+package. In terms of latex table specifically, we also turned on booktabs and
+longtable by default to mimic the default behavior of how pandoc handle
+markdown tables. As a result, most users won't even feel the change. The only
+part that gets impacted is the table labels or references set within the kable
+function through the label option. For this part, first, people can set labels
+using knitr chunk options. Also, people can easily overcome it by either using
+kbl or setting format in kable.
+
+
+
+
+
 kableExtra 1.3.5
 --------------------------------------------------------------------------------
 
@@ -177,7 +206,7 @@ kableExtra 0.9.0
 --------------------------------------------------------------------------------
 * Major Change: Now when you load `kableExtra` package, it will automatically 
 set format for `kable()` based on the working environment: only if you are using
-rmarkdown/r sweave to render PDFs, the default format will be set to "latex". 
+R Markdown or R Sweave to render PDFs, the default format will be set to "latex". 
 Otherwise it will be set to "html".
 
 * Major Change: Now `kableExtra` will try to load the table section of the 
@@ -358,7 +387,7 @@ behavior
 
 * Added kable_as_image() for LaTeX tables. This function will render the LaTeX
 code snippet to a piece of standalone PDF file and then convert that to an 
-image, which will then be included in the rmarkdown document, if the 
+image, which will then be included in the R Markdown document, if the 
 environment exists. It's useful for people who have a strong need of 
 generating Word documents and producing well-formatted LaTeX table at the same
 time.

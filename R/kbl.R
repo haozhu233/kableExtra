@@ -1,10 +1,21 @@
 #' Wrapper function of knitr::kable
 #'
-#' @description knitr's kable function is the foundation of this package.
+#' @description The `knitr::kable()` function is the foundation of this package.
 #' However, it has many latex/html specific arguments hidden under the ground
 #' unless you check its source code. This wrapper function is created to
 #' provide better documentation (and auto-complete yay) and at the same time,
 #' solve the auto format setting in a better way.
+#'
+#' @note The current set of arguments were written for
+#' `knitr` version 1.45.  If you are using an older
+#' or newer version, some of the default values may be different.
+#'
+#' @note In `knitr::kable()`, the `escape` parameter does not affect the text
+#' in the `caption` argument, and `kbl()` inherits this
+#' behavior.  This means that special characters
+#' in the caption (such as "%" for LaTeX output)
+#' need to be escaped by the user, e.g.
+#' written as `"\\%"`.
 #'
 #' @param table.attr A character string for addition HTML table attributes.
 #' This is convenient if you simply want to add a few HTML classes or styles.
@@ -14,9 +25,11 @@
 #' some special cases.
 #' @param longtable T/F for whether to use the longtable format. If you have a
 #' table that will span over two or more pages, you will have to turn this on.
+#' @param tabular The "inner environment" to use for the
+#' table, e.g. "tabularx".
 #' @param valign You probably won't need to adjust this latex option very often.
-#' If you are familar with latex tables, this is the optional position for the
-#' tabular environment controling the vertical position of the table relative
+#' If you are familiar with latex tables, this is the optional position for the
+#' tabular environment controlling the vertical position of the table relative
 #' to the baseline of the surrounding text. Possible choices are `b`, `c` and
 #' `t` (default).
 #' @param position This is the "real" or say floating position for the latex
@@ -50,9 +63,11 @@ kbl <- function(x, format, digits = getOption("digits"),
                 row.names = NA, col.names = NA, align,
                 caption = NULL, label = NULL, format.args = list(),
                 escape = TRUE,
-                table.attr = '',
+                table.attr = getOption("knitr.table.html.attr", ""),
                 booktabs = FALSE, longtable = FALSE,
-                valign = 't', position = '', centering = TRUE,
+                tabular = if (longtable) "longtable" else "tabular",
+                valign = if (tabular %in% c("tabularx", "xltabular")) "{\\linewidth}" else "[t]",
+                position = '', centering = TRUE,
                 vline = getOption('knitr.table.vline', if (booktabs) '' else '|'),
                 toprule = getOption('knitr.table.toprule', if (booktabs) '\\toprule' else '\\hline'),
                 bottomrule = getOption('knitr.table.bottomrule', if (booktabs) '\\bottomrule' else '\\hline'),
@@ -64,71 +79,46 @@ kbl <- function(x, format, digits = getOption("digits"),
     align <- strsplit(align, '')[[1]]
   }
   if (missing(format) || is.null(format)) {
-    if (knitr::is_latex_output()) {
+    if (knitr::is_latex_output())
       format <- "latex"
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        booktabs = booktabs, longtable = longtable,
-        valign = valign, position = position, centering = centering,
-        vline = vline, toprule = toprule, bottomrule = bottomrule,
-        midrule = midrule, linesep = linesep, caption.short = caption.short,
-        table.envir = table.envir, ...
-      )
-      table_info <- magic_mirror(out)
-      if (is.null(col.names)) {
-        table_info$position_offset <- 0
-      }
-      return(out)
-    } else {
+    else
       format <- "html"
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        table.attr = table.attr, ...
-      )
-      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
-      return(out)
+  }
+  if (format == "latex") {
+    use_latex_packages()
+    if (utils::packageVersion("knitr") < "1.40" &&
+        !missing(tabular)) {
+      warning("'tabular' is not not supported in knitr versions < 1.40")
+      if (missing(valign))
+        valign <- "t"
     }
-  } else {
-    if (format == "latex") {
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        booktabs = booktabs, longtable = longtable,
-        valign = valign, position = position, centering = centering,
-        vline = vline, toprule = toprule, bottomrule = bottomrule,
-        midrule = midrule, linesep = linesep, caption.short = caption.short,
-        table.envir = table.envir, ...
-      )
-      table_info <- magic_mirror(out)
-      if (is.null(col.names)) {
-        table_info$position_offset <- 0
-      }
-      return(out)
-    }
-    if (format == "html") {
-      out <- knitr::kable(
-        x = x, format = format, digits = digits,
-        row.names = row.names, col.names = col.names, align = align,
-        caption = caption, label = label, format.args = format.args,
-        escape = escape,
-        table.attr = table.attr, ...
-      )
-      if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
-      return(out)
-    }
-    return(knitr::kable(
+    out <- knitr::kable(
+      x = x, format = format, digits = digits,
+      row.names = row.names, col.names = col.names, align = align,
+      caption = caption, label = label, format.args = format.args,
+      escape = escape,
+      booktabs = booktabs, longtable = longtable,
+      tabular = tabular,
+      valign = valign, position = position, centering = centering,
+      vline = vline, toprule = toprule, bottomrule = bottomrule,
+      midrule = midrule, linesep = linesep, caption.short = caption.short,
+      table.envir = table.envir, ...
+    )
+  } else if (format == "html") {
+    out <- knitr::kable(
+      x = x, format = format, digits = digits,
+      row.names = row.names, col.names = col.names, align = align,
+      caption = caption, label = label, format.args = format.args,
+      escape = escape,
+      table.attr = table.attr, ...
+    )
+    if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
+  } else
+    out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
       caption = caption, label = label, format.args = format.args,
       escape = escape, ...
-    ))
-  }
+    )
+  out
 }

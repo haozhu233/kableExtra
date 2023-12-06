@@ -1,30 +1,40 @@
-#' Generate viridis Color code for continuous values
+#' Generate viridis or other color code for continuous values
 #'
 #' @inheritParams viridisLite::viridis
 #' @param x continuous vectors of values
 #' @param na_color color code for NA values
 #' @param scale_from input range (vector of length two). If not given,
 #' is calculated from the range of x
+#' @param palette The palette to use as a character vector of colors.  If
+#' this is specified, parameters other than `x`, `na_color` and `scale_from`
+#' are ignored.
 #' @export
 spec_color <- function(x, alpha = 1, begin = 0, end = 1,
                        direction = 1, option = "D",
-                       na_color = "#BBBBBB", scale_from = NULL) {
+                       na_color = "#BBBBBB", scale_from = NULL,
+                       palette = viridisLite::viridis(256, alpha, begin, end, direction, option)) {
+  n <- length(palette)
   if (is.null(scale_from)) {
-    x <- round(rescale(x, c(1, 256)))
+    x <- round(rescale(x, c(1, n)))
   } else {
-    x <- round(rescale(x, to = c(1, 256),
+    x <- round(rescale(x, to = c(1, n),
                        from = scale_from))
   }
 
-  color_code <- viridisLite::viridis(256, alpha, begin, end, direction, option)[x]
+  color_code <- palette[x]
   color_code[is.na(color_code)] <- na_color
   return(color_code)
 }
 
 html_color_ <- function(color) {
-  if (substr(color, 1, 1) != "#" | nchar(color) != 9) return(color)
+  # HTML colors are a subset of R colors, not including
+  # numbered versions like darkgoldenrod2 (issue #726)
+  if (substr(color, 1, 1) != "#" &&
+      !grepl("[[:digit:]]", color) )
+    return(color)
+
   rgba_code <- col2rgb(color, alpha = TRUE)
-  rgba_code[4] <- round(rgba_code[4] / 255, 2)
+  rgba_code[4] <- round(rgba_code[4])
   return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
 }
 
@@ -65,7 +75,7 @@ latex_color <- function(colors, escape = TRUE) {
 #' Generate common font size for continuous values
 #'
 #' @param x continuous vectors of values
-#' @param begin Smalles font size to be used. Default is 10.
+#' @param begin Smallest font size to be used. Default is 10.
 #' @param end Largest font size. Default is 20.
 #' @param na_font_size font size for NA values
 #' @param scale_from input range (vector of length two). If not given,

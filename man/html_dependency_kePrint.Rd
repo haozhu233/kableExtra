@@ -2,10 +2,10 @@
 % Please edit documentation in R/print.R
 \name{html_dependency_kePrint}
 \alias{html_dependency_kePrint}
-\title{HTML dependency for js script to enable bootstrap tooltip and popup message}
+\title{HTML dependency for Javascript to enable bootstrap tooltip and popup message}
 \usage{
 html_dependency_kePrint()
 }
 \description{
-HTML dependency for js script to enable bootstrap tooltip and popup message
+HTML dependency for Javascript to enable bootstrap tooltip and popup message
 }

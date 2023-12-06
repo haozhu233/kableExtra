@@ -29,7 +29,7 @@ spec_pointrange(
 }
 \arguments{
 \item{x, xmin, xmax}{A scalar value or List of scalar values for dot, left
-and right errorbar.}
+and right error bar.}
 
 \item{vline}{A scalar value for where to draw a vertical line.}
 

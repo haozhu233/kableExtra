@@ -37,7 +37,7 @@ As a result, \code{c(" ", "title" = 2)} is the same as \code{c(" " = 1, "title" 
 Alternatively, a data frame with two columns can be provided: The first
 column should contain the header names (character vector) and the second
 column should contain the colspan (numeric vector). This input can be used
-if there are problems with unicode characters in the headers.}
+if there are problems with Unicode characters in the headers.}
 
 \item{bold}{A T/F value to control whether the text should be bolded.}
 
@@ -50,7 +50,7 @@ need to be monospaced (verbatim)}
 need to be underlined}
 
 \item{strikeout}{A T/F value to control whether the text of the selected row
-need to be stricked out.}
+need to be struck out.}
 
 \item{align}{A character string for cell alignment. For HTML, possible values could
 be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
