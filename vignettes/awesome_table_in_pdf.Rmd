@@ -152,7 +152,7 @@ kbl(dt, caption = "Demo table", booktabs = T) %>%
 If you find `hold_position` is not powerful enough to literally PIN your table in the exact position, you may want to use `HOLD_position`, which is a more powerful version of this feature. For those who are familiar with LaTeX, `hold_position` uses `[!h]` and `HOLD_position` uses `[H]` and the `float` package.
 
 ### Scale down
-When you have a wide table that will normally go out of the page, and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, if your table is too small, it will also scale up your table. It was named in this way only because scaling up isn't very useful in most cases. You should also note that `scale_down` does not work with `longtable`. If you `longtable` is too wide, you should manually adjust your fontsize or switch to landscape layout. 
+When you have a wide table that will normally go out of the page, and you want to scale down the table to fit the page, you can use the `scale_down` option here. Similarly if you want scale up a table to use the full page width you can use the `scale_up` option. Having both options available ensures that your table is only scaled in the direction you intended to scale it. You should also note that `scale_down` does not work with `longtable`. If you `longtable` is too wide, you should manually adjust your fontsize or switch to landscape layout. 
 ```{r}
 kbl(cbind(dt, dt, dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
@@ -160,6 +160,10 @@ kbl(cbind(dt, dt, dt), booktabs = T) %>%
 ```{r}
 kbl(cbind(dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
+```
+```{r}
+kbl(cbind(dt), booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "scale_up"))
 ```
 
 ### Repeat header in longtable
