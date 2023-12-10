@@ -17,3 +17,10 @@ kbl(df, format = "latex") |>
         border_right = TRUE
         )
 ```
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+kbl(dt, format = "latex", booktabs = TRUE) %>%
+  kable_styling(full_width = TRUE) %>%
+  column_spec(1, width = "8cm")
+```

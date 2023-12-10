@@ -22,4 +22,11 @@ test_that("Rmarkdown example from inst/", {
                 border_right = TRUE
             )
     )
+
+    dt <- mtcars[1:5, 1:6]
+    expect_snapshot(
+        kbl(dt, format = "latex", booktabs = TRUE) %>%
+            kable_styling(full_width = TRUE) %>%
+            column_spec(1, width = "8cm")
+    )
 })

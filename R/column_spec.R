@@ -346,7 +346,7 @@ column_spec_latex <- function(kable_input, column, width,
             " especially in LaTeX, to get a desired result. ")
   }
   align_collapse <- ifelse(table_info$booktabs | !is.null(table_info$xtable),
-                           "", "|")
+                           "", "\\|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- unlist(lapply(
@@ -357,12 +357,13 @@ column_spec_latex <- function(kable_input, column, width,
     }
   ))
 
+
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
   out <- sub(paste0("{", kable_align_old, "}"),
              paste0("{", kable_align_new, "}"),
              solve_enc(kable_input),
-             fixed = TRUE)
+             perl = TRUE)
 
   if (!is.null(width)) {
     fix_newline <- replace_makecell_with_newline(out, table_info, column)
@@ -453,9 +454,9 @@ latex_column_align_builder <- function(x, width,
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
-                          "l" = "\\raggedright\\arraybackslash",
-                          "c" = "\\centering\\arraybackslash",
-                          "r" = "\\raggedleft\\arraybackslash")
+                          "l" = "\\\\raggedright\\\\arraybackslash",
+                          "c" = "\\\\centering\\\\arraybackslash",
+                          "r" = "\\\\raggedleft\\\\arraybackslash")
     x <- paste0(latex_valign, "{", width, "}")
   }
   # if (!is.null(color)) {
@@ -471,7 +472,7 @@ latex_column_align_builder <- function(x, width,
   #                            c(bold, italic, monospace, underline, strikeout)]
   # latex_array_options <- c(latex_array_options, extra_align,
   #                          color, background)
-  latex_array_options <- paste0(">{", extra_align, "}")
+  latex_array_options <- paste0(">\\{", extra_align, "\\}")
   x <- paste0(latex_array_options, x)
   if (border_left) {
     x <- paste0("|", x)

@@ -526,15 +526,15 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 styling_latex_full_width <- function(x, table_info) {
   col_align <- as.character(factor(
     table_info$align_vector, c("c", "l", "r"),
-    c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")
+    c(">\\{\\\\centering\\}X", ">\\{\\\\raggedright\\}X", ">\\{\\\\raggedleft\\}X")
   ))
   col_align[is.na(col_align)] <- table_info$align_vector[is.na(col_align)]
   col_align_vector <- col_align
-  col_align <- paste0(" to \\\\linewidth {", paste(col_align, collapse = ""), "}")
-  x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
-           table_info$begin_tabular, x)
+  col_align <- paste0(" to \\\\linewidth \\{", paste(col_align, collapse = ""), "\\}")
+  x <- sub(paste0(table_info$begin_tabular, "{[^\\n]*}"),
+           table_info$begin_tabular, x, perl = TRUE)
   x <- sub(table_info$begin_tabular,
-      paste0(table_info$begin_tabular, col_align), x)
+      paste0(table_info$begin_tabular, col_align), x, perl = TRUE)
   return(list(x, col_align_vector))
 }
 
@@ -567,7 +567,7 @@ styling_latex_position_center <- function(x, table_info, hold_position,
       x <- styling_latex_HOLD_position(x)
     }
   } else if (table_info$table_env)
-    x <- sub("^\\\\begin\\{table}", "\\\\begin{table}\n\\\\centering", x)
+    x <- sub("^\\begin{table}", "\\begin{table}\n\\centering", x, fixed = TRUE)
   return(x)
 }
 
