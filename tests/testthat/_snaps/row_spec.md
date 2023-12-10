@@ -82,6 +82,27 @@
 ---
 
     Code
+      row_spec(kable_classic(kbl(df, format = "latex", booktabs = TRUE)), 3,
+      hline_after = TRUE)
+    Output
+      \begin{table}
+      \centering
+      \begin{tabular}[t]{rr}
+      \toprule
+      X1.4 & X4.7\\
+      \midrule
+      1 & 4\\
+      2 & 5\\
+      3 & 6\\
+      \midrule
+      4 & 7\\
+      \bottomrule
+      \end{tabular}
+      \end{table}
+
+---
+
+    Code
       row_spec(row_spec(kbl(df, format = "latex"), 1, align = "r"), 2, align = "c")
     Output
       
@@ -93,6 +114,45 @@
       \hline
       \multicolumn{1}{c}{abc} & \multicolumn{1}{c}{abcde}\\
       \hline
+      \end{tabular}
+
+# extra_latex_after: Example from documentation
+
+    Code
+      kbl(collapse_rows_dt[-1], format = "latex", align = "c", booktabs = TRUE) %>%
+        column_spec(1, bold = T, width = "5em") %>% row_spec(c(1:7, 11:12) - 1,
+      extra_latex_after = "\\rowcolor{gray!6}") %>% collapse_rows(1, latex_hline = "none")
+    Output
+      
+      \begin{tabular}[t]{>{\centering\arraybackslash}p{5em}cc}
+      \toprule
+      C2 & C3 & C4\\
+      \rowcolor{gray!6}
+      \midrule
+      \textbf{c} & 1 & 1\\
+      \rowcolor{gray!6}
+      \textbf{c} & 2 & 0\\
+      \rowcolor{gray!6}
+      \textbf{c} & 3 & 0\\
+      \rowcolor{gray!6}
+      \textbf{c} & 4 & 0\\
+      \rowcolor{gray!6}
+      \textbf{c} & 5 & 1\\
+      \rowcolor{gray!6}
+      \textbf{c} & 6 & 1\\
+      \rowcolor{gray!6}
+      \textbf{c} & 7 & 1\\
+      \textbf{d} & 8 & 1\\
+      \textbf{d} & 9 & 1\\
+      \textbf{d} & 10 & 0\\
+      \rowcolor{gray!6}
+      \textbf{c} & 11 & 0\\
+      \rowcolor{gray!6}
+      \textbf{c} & 12 & 0\\
+      \textbf{d} & 13 & 1\\
+      \textbf{d} & 14 & 0\\
+      \textbf{d} & 15 & 1\\
+      \bottomrule
       \end{tabular}
 
 # issue #582: RMD kable styling repeates rows when rendering striped table to LaTeX in some data combination

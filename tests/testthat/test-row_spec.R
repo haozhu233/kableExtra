@@ -1,3 +1,12 @@
+# TODO: use system.file() instead of here::here()
+test_that("Rmarkdown  compilation", {
+    tmp <- tempfile(fileext = ".Rmd")
+    file.copy(here::here("inst/rmarkdown/test_row_spec.Rmd"), tmp)
+    compile <- try(rmarkdown::render(tmp, quiet = TRUE), silent = TRUE)
+    expect_false(inherits(compile, "try-error"))
+})
+
+
 test_that("LaTeX: basic argument tests", {
     df <- data.frame(1:4, 4:7)
 
@@ -41,19 +50,19 @@ test_that("LaTeX: basic argument tests", {
 })
 
 
-
+# TODO: This is broken. The last column values seem to change sometimes
 test_that("extra_latex_after: Example from documentation", {
     collapse_rows_dt <- data.frame(
         C1 = c(rep("a", 10), rep("b", 5)),
         C2 = c(rep("c", 7), rep("d", 3), rep("c", 2), rep("d", 3)),
         C3 = 1:15,
         C4 = sample(c(0, 1), 15, replace = TRUE))
-    Q
-    pkgload::load_all()
-    k = kbl(collapse_rows_dt[-1], format = "latex", align = "c", booktabs = TRUE) %>%
-        column_spec(1, bold = T, width = "5em") %>%
-        row_spec(c(1:7, 11:12) - 1, extra_latex_after = "\\rowcolor{gray!6}") %>%
-        collapse_rows(1, latex_hline = "none")
+    expect_snapshot(
+        kbl(collapse_rows_dt[-1], format = "latex", align = "c", booktabs = TRUE) %>%
+            column_spec(1, bold = T, width = "5em") %>%
+            row_spec(c(1:7, 11:12) - 1, extra_latex_after = "\\rowcolor{gray!6}") %>%
+            collapse_rows(1, latex_hline = "none")
+    )
 })
 
 

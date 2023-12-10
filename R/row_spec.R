@@ -212,7 +212,6 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
       out <- temp_sub(paste0(target_row, "\\\\"),
                       paste0(new_row, "\\\\"), out, fixed = TRUE)
       table_info$contents[i] <- new_row
-    # extra_latex_after
     } else {
       out <- temp_sub(paste0(target_row, "\\\\"),
                   paste(new_row, collapse = ""), out, fixed = TRUE)

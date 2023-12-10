@@ -359,10 +359,10 @@ column_spec_latex <- function(kable_input, column, width,
 
   kable_align_new <- paste(table_info$align_vector, collapse = align_collapse)
 
-  out <- sub(paste0("\\{", kable_align_old, "\\}"),
-             paste0("\\{", kable_align_new, "\\}"),
+  out <- sub(paste0("{", kable_align_old, "}"),
+             paste0("{", kable_align_new, "}"),
              solve_enc(kable_input),
-             perl = T)
+             fixed = TRUE)
 
   if (!is.null(width)) {
     fix_newline <- replace_makecell_with_newline(out, table_info, column)
@@ -413,7 +413,7 @@ column_spec_latex <- function(kable_input, column, width,
     temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
                                    !is.null(table_info$repeat_header_latex)),
                        gsub, sub)
-    out <- temp_sub(target_row, new_row, out, perl = T)
+    out <- temp_sub(target_row, new_row, out, fixed = TRUE)
     table_info$contents[i] <- new_row
   }
 
@@ -453,10 +453,10 @@ latex_column_align_builder <- function(x, width,
   extra_align <- ""
   if (!is.null(width)) {
     extra_align <- switch(x,
-                          "l" = "\\\\raggedright\\\\arraybackslash",
-                          "c" = "\\\\centering\\\\arraybackslash",
-                          "r" = "\\\\raggedleft\\\\arraybackslash")
-    x <- paste0(latex_valign, "\\{", width, "\\}")
+                          "l" = "\\raggedright\\arraybackslash",
+                          "c" = "\\centering\\arraybackslash",
+                          "r" = "\\raggedleft\\arraybackslash")
+    x <- paste0(latex_valign, "{", width, "}")
   }
   # if (!is.null(color)) {
   #   color <- paste0("\\\\leavevmode\\\\color", latex_color(color))
@@ -471,13 +471,13 @@ latex_column_align_builder <- function(x, width,
   #                            c(bold, italic, monospace, underline, strikeout)]
   # latex_array_options <- c(latex_array_options, extra_align,
   #                          color, background)
-  latex_array_options <- paste0("\\>\\{", extra_align, "\\}")
+  latex_array_options <- paste0(">{", extra_align, "}")
   x <- paste0(latex_array_options, x)
   if (border_left) {
-    x <- paste0("\\|", x)
+    x <- paste0("|", x)
   }
   if (border_right) {
-    x <- paste0(x, "\\|")
+    x <- paste0(x, "|")
   }
   if (!is.null(latex_column_spec))
     x <- latex_column_spec
@@ -511,7 +511,7 @@ replace_makecell_with_newline <- function(kable_input, table_info, column) {
   new_contents <- unlist(lapply(contents_table, paste, collapse = " & "))
   for (i in rows_to_replace) {
     kable_input <- sub(table_info$contents[i], new_contents[i], kable_input,
-                       perl = T)
+                       fixed = TRUE)
     table_info$contents[i] <- new_contents[i]
   }
 
@@ -526,24 +526,23 @@ latex_cell_builder <- function(target_row, column, table_info,
                                ) {
   new_row <- latex_row_cells(target_row)[[1]]
   if (bold) {
-    new_row[column] <- paste0("\\\\textbf\\{", new_row[column], "\\}")
+    new_row[column] <- paste0("\\textbf{", new_row[column], "}")
   }
   if (italic) {
-    new_row[column] <- paste0("\\\\em\\{", new_row[column], "\\}")
+    new_row[column] <- paste0("\\em{", new_row[column], "}")
   }
   if (monospace) {
-    new_row[column] <- paste0("\\\\ttfamily\\{", new_row[column], "\\}")
+    new_row[column] <- paste0("\\ttfamily{", new_row[column], "}")
   }
   if (underline) {
-    new_row[column] <- paste0("\\\\underline\\{", new_row[column], "\\}")
+    new_row[column] <- paste0("\\underline\\{", new_row[column], "}")
   }
   if (strikeout) {
-    new_row[column] <- paste0("\\\\sout\\{", new_row[column], "\\}")
+    new_row[column] <- paste0("\\sout{", new_row[column], "}")
   }
   if (!is.null(color)) {
     clean_columns <- unlist(lapply(new_row[column], clear_color_latex))
-    new_row[column] <- paste0("\\\\textcolor", latex_color(color), "\\{",
-                              clean_columns, "\\}")
+    new_row[column] <- paste0("\\textcolor", latex_color(color), "{", clean_columns, "}")
   }
   # if (!is.null(font_size)) {
   #   new_row[column] <- paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
@@ -556,13 +555,13 @@ latex_cell_builder <- function(target_row, column, table_info,
   # }
   if (!is.null(background)) {
     clean_columns <- unlist(lapply(new_row[column], clear_color_latex, TRUE))
-    new_row[column] <- paste0("\\\\cellcolor", latex_color(background), "\\{",
-                              clean_columns, "\\}")
+    new_row[column] <- paste0("\\cellcolor", latex_color(background), "{",
+                              clean_columns, "}")
   }
 
   if (!is.null(link)) {
-    new_row[column] <- paste0("\\\\href\\{", escape_latex(link), "\\}\\{",
-                              new_row[column], "\\}")
+    new_row[column] <- paste0("\\href{", escape_latex(link), "}{",
+                              new_row[column], "}")
   }
 
   if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
@@ -570,10 +569,10 @@ latex_cell_builder <- function(target_row, column, table_info,
     if (inherits(image, "kableExtraInlinePlots")) {
       new_row[column] <- paste0(
         new_row[column],
-        '\\\\includegraphics\\[width=',
+        '\\includegraphics[width=',
         # '\\\\raisebox\\{-\\\\totalheight\\}\\{\\\\includegraphics\\[width=',
         round(image$width / image$res, 2), 'in, height=',
-        round(image$height / image$res, 2), 'in\\]\\{',
+        round(image$height / image$res, 2), 'in]{',
         image$path,
         '\\}'
         # '\\}\\}'
@@ -582,8 +581,8 @@ latex_cell_builder <- function(target_row, column, table_info,
       if (!is.null(image) && !is.na(image) && image != "") {
         new_row[column] <- paste0(
           new_row[column],
-          '\\\\includegraphics\\{',
-          image, '\\}'
+          '\\includegraphics{',
+          image, '}'
         )
       }
     }
@@ -593,3 +592,4 @@ latex_cell_builder <- function(target_row, column, table_info,
 
   return(new_row)
 }
+

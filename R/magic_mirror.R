@@ -81,7 +81,10 @@ magic_mirror_latex <- function(kable_input){
   }
   # Contents
   table_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
-  table_info$contents <- regex_escape(table_info$contents, T)
+
+  # this line is commented out because it created problems when using perl=TRUE and the table data includes regexes
+  # table_info$contents <- regex_escape(table_info$contents, T)
+
   if (table_info$tabular == "longtable" & !is.na(table_info$caption) &
       !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption")) {
     table_info$contents <- table_info$contents[-1]
