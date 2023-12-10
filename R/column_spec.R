@@ -346,7 +346,7 @@ column_spec_latex <- function(kable_input, column, width,
             " especially in LaTeX, to get a desired result. ")
   }
   align_collapse <- ifelse(table_info$booktabs | !is.null(table_info$xtable),
-                           "", "\\|")
+                           "", "|")
   kable_align_old <- paste(table_info$align_vector, collapse = align_collapse)
 
   table_info$align_vector[column] <- unlist(lapply(
@@ -535,7 +535,7 @@ latex_cell_builder <- function(target_row, column, table_info,
     new_row[column] <- paste0("\\ttfamily{", new_row[column], "}")
   }
   if (underline) {
-    new_row[column] <- paste0("\\underline\\{", new_row[column], "}")
+    new_row[column] <- paste0("\\underline{", new_row[column], "}")
   }
   if (strikeout) {
     new_row[column] <- paste0("\\sout{", new_row[column], "}")

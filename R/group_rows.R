@@ -245,54 +245,54 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   if (bold) {
-    group_label <- paste0("\\\\textbf{", group_label, "}")
+    group_label <- paste0("\\textbf{", group_label, "}")
   }
 
-  if (italic) group_label <- paste0("\\\\textit{", group_label, "}")
+  if (italic) group_label <- paste0("\\textit{", group_label, "}")
 
   if (monospace) {
-    group_label <- paste0("\\\\ttfamily\\{", group_label, "\\}")
+    group_label <- paste0("\\ttfamily{", group_label, "}")
   }
   if (underline) {
-    group_label <- paste0("\\\\underline\\{", group_label, "\\}")
+    group_label <- paste0("\\underline{", group_label, "}")
   }
   if (strikeout) {
-    group_label <- paste0("\\\\sout\\{", group_label, "\\}")
+    group_label <- paste0("\\sout{", group_label, "}")
   }
   if (!is.null(color)) {
-    group_label <- paste0("\\\\textcolor", latex_color__(color), "\\{",
-                              group_label, "\\}")
+    group_label <- paste0("\\textcolor", latex_color__(color), "{",
+                              group_label, "}")
   }
   if (!is.null(background)) {
-    group_label <- paste0("\\\\cellcolor", latex_color__(background), "\\{",
-                              group_label, "\\}")
+    group_label <- paste0("\\cellcolor", latex_color__(background), "{",
+                              group_label, "}")
   }
   # Add group label
   if (latex_wrap_text) {
     latex_align <- switch(
       latex_align,
-      "l" = "p{\\\\linewidth}",
-      "c" = ">{\\\\centering\\\\arraybackslash}p{\\\\linewidth}",
-      "r" = ">{\\\\centering\\\\arraybackslash}p{\\\\linewidth}"
+      "l" = "p{\\linewidth}",
+      "c" = ">{\\centering\\arraybackslash}p{\\linewidth}",
+      "r" = ">{\\centering\\arraybackslash}p{\\linewidth}"
     )
   }
 
 
   rowtext <- table_info$contents[start_row + table_info$position_offset]
   if (table_info$booktabs) {
-    pre_rowtext <- paste0("\\\\addlinespace[", gap_space, "]\n")
+    pre_rowtext <- paste0("\\addlinespace[", gap_space, "]\n")
   } else {
     pre_rowtext <- ''
     hline_after <- TRUE
   }
   pre_rowtext <- paste0(
     pre_rowtext,
-    ifelse(hline_before,"\\\\hline\n", ""),
-    "\\\\multicolumn{", ifelse(is.null(colnum),
+    ifelse(hline_before,"\\hline\n", ""),
+    "\\multicolumn{", ifelse(is.null(colnum),
                                table_info$ncol,
                                colnum),
     "}{", latex_align,"}{", group_label,
-    "}\\\\\\\\\n", ifelse(hline_after, "\\\\hline\n", '')
+    "}\\\\\n", ifelse(hline_after, "\\hline\n", '')
   )
   if(!is.null(extra_latex_after)){
     pre_rowtext <- paste0(pre_rowtext,
@@ -301,16 +301,16 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   new_rowtext <- paste0(pre_rowtext, rowtext)
   if (start_row + 1 == table_info$nrow &
       !is.null(table_info$repeat_header_latex) & table_info$booktabs) {
-    out <- sub(paste0(rowtext, "\\\\\\\\\\*\n"),
-               paste0(new_rowtext, "\\\\\\\\\\*\n"),
+    out <- sub(paste0(rowtext, "\\\\\\*\n"),
+               paste0(new_rowtext, "\\\\\\*\n"),
                out)
   } else {
-    out <- sub(paste0(rowtext, "\\\\\\\\\n"),
-               paste0(new_rowtext, "\\\\\\\\\n"),
+    out <- sub(paste0(rowtext, "\\\\\n"),
+               paste0(new_rowtext, "\\\\\n"),
                out)
   }
 
-  out <- gsub("\\\\addlinespace\n", "", out)
+  out <- gsub("\\addlinespace\n", "", out)
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
   attr(out, "kable_meta") <- table_info
