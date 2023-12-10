@@ -1,0 +1,26 @@
+---
+output: pdf_document
+---
+
+```{r}
+library(kableExtra)
+df <- data.frame(a = 1:4, b = 4:7)
+kbl(df, format = "latex") |>
+    column_spec(2,
+        bold = TRUE,
+        monospace = TRUE,
+        underline = TRUE,
+        italic = TRUE,
+        color = "red",
+        background = "#FFFF00",
+        width = "3in",
+        border_right = TRUE
+        )
+```
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+kbl(dt, format = "latex", booktabs = TRUE) %>%
+  kable_styling(full_width = TRUE) %>%
+  column_spec(1, width = "8cm")
+```
