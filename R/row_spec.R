@@ -209,12 +209,13 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                    !is.null(table_info$repeat_header_latex)),
                        gsub, sub)
     if (length(new_row) == 1) {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                      paste0(new_row, "\\\\\\\\"), out, perl = T)
+      out <- temp_sub(paste0(target_row, "\\\\"),
+                      paste0(new_row, "\\\\"), out, fixed = TRUE)
       table_info$contents[i] <- new_row
+    # extra_latex_after
     } else {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                  paste(new_row, collapse = ""), out, perl = T)
+      out <- temp_sub(paste0(target_row, "\\\\"),
+                  paste(new_row, collapse = ""), out, fixed = TRUE)
       table_info$contents[i] <- new_row[1]
     }
   }
@@ -232,27 +233,27 @@ latex_new_row_builder <- function(target_row, table_info,
   new_row <- latex_row_cells(target_row)
   if (bold) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\textbf\\{", x, "\\}")
+      paste0("\\textbf{", x, "}")
     })
   }
   if (italic) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\em\\{", x, "\\}")
+      paste0("\\em{", x, "}")
     })
   }
   if (monospace) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\ttfamily\\{", x, "\\}")
+      paste0("\\ttfamily{", x, "}")
     })
   }
   if (underline) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\underline\\{", x, "\\}")
+      paste0("\\underline{", x, "}")
     })
   }
   if (strikeout) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\sout\\{", x, "\\}")
+      paste0("\\sout{", x, "}")
     })
   }
   if (!is.null(color)) {
@@ -263,7 +264,7 @@ latex_new_row_builder <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x)
-      paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
+      paste0("\\textcolor", latex_color__(color), "{", x, "}")
     })
   }
   if (!is.null(background)) {
@@ -274,36 +275,36 @@ latex_new_row_builder <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x, background = TRUE)
-      paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}")
+      paste0("\\cellcolor", latex_color__(background), "{", x, "}")
     })
   }
   if (!is.null(font_size)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
+      paste0("\\begingroup\\fontsize{", font_size, "}{",
              as.numeric(font_size) + 2,
-             "\\}\\\\selectfont ", x, "\\\\endgroup")})
+             "}\\selectfont ", x, "\\endgroup")})
   }
   if (!is.null(align)) {
     if (!is.null(table_info$column_width)) {
       p_align <- switch(align,
-                        "l" = "\\\\raggedright\\\\arraybackslash",
-                        "c" = "\\\\centering\\\\arraybackslash",
-                        "r" = "\\\\raggedleft\\\\arraybackslash")
+                        "l" = "\\raggedright\\arraybackslash",
+                        "c" = "\\centering\\arraybackslash",
+                        "r" = "\\raggedleft\\arraybackslash")
       align <- rep(align, table_info$ncol)
       p_cols <- as.numeric(sub("column_", "", names(table_info$column_width)))
       for (i in 1:length(p_cols)) {
-        align[p_cols[i]] <- paste0("\\>\\{", p_align, "\\}p\\{",
-                                   table_info$column_width[[i]], "\\}")
+        align[p_cols[i]] <- paste0(">{", p_align, "}p{",
+                                   table_info$column_width[[i]], "}")
       }
     }
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\multicolumn\\{1\\}\\{", align, "\\}\\{", x, "\\}")
+      paste0("\\multicolumn{1}{", align, "}{", x, "}")
     })
   }
 
   if (!is.null(angle)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\rotatebox\\{", angle, "\\}\\{", x, "\\}")
+      paste0("\\rotatebox{", angle, "}{", x, "}")
     })
   }
 
@@ -316,18 +317,16 @@ latex_new_row_builder <- function(target_row, table_info,
   if (!hline_after & is.null(extra_latex_after)) {
     return(new_row)
   } else {
-    latex_after <- "\\\\\\\\"
+    latex_after <- "\\\\"
     if (hline_after) {
       if (table_info$booktabs) {
-        latex_after <- paste0(latex_after, "\n\\\\midrule")
+        latex_after <- paste0(latex_after, "\n\\midrule")
       } else {
-        latex_after <- paste0(latex_after, "\n\\\\hline")
+        latex_after <- paste0(latex_after, "\n\\hline")
       }
     }
     if (!is.null(extra_latex_after)) {
-      latex_after <- paste0(latex_after, "\n",
-                            regex_escape(extra_latex_after,
-                                         double_backslash = TRUE))
+      latex_after <- paste0(latex_after, "\n", extra_latex_after)
     }
     return(c(new_row, latex_after))
   }

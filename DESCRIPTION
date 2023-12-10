@@ -52,6 +52,7 @@ Suggests:
     formattable,
     sparkline,
     webshot2
+Config/testthat/edition: 3
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.2.3
