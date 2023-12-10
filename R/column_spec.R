@@ -459,11 +459,11 @@ latex_column_align_builder <- function(x, width,
     x <- paste0(latex_valign, "{", width, "}")
   }
   # if (!is.null(color)) {
-  #   color <- paste0("\\\\leavevmode\\\\color", latex_color(color))
+  #   color <- paste0("\\\\leavevmode\\\\color", latex_color__(color))
   # }
   #
   # if (!is.null(background)) {
-  #   background <- paste0("\\\\columncolor", latex_color(background))
+  #   background <- paste0("\\\\columncolor", latex_color__(background))
   # }
   #
   # latex_array_options <- c("\\\\bfseries", "\\\\em", "\\\\ttfamily",
@@ -542,7 +542,7 @@ latex_cell_builder <- function(target_row, column, table_info,
   }
   if (!is.null(color)) {
     clean_columns <- unlist(lapply(new_row[column], clear_color_latex))
-    new_row[column] <- paste0("\\textcolor", latex_color(color), "{", clean_columns, "}")
+    new_row[column] <- paste0("\\textcolor", latex_color__(color), "{", clean_columns, "}")
   }
   # if (!is.null(font_size)) {
   #   new_row[column] <- paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
@@ -555,7 +555,7 @@ latex_cell_builder <- function(target_row, column, table_info,
   # }
   if (!is.null(background)) {
     clean_columns <- unlist(lapply(new_row[column], clear_color_latex, TRUE))
-    new_row[column] <- paste0("\\cellcolor", latex_color(background), "{",
+    new_row[column] <- paste0("\\cellcolor", latex_color__(background), "{",
                               clean_columns, "}")
   }
 
@@ -574,7 +574,7 @@ latex_cell_builder <- function(target_row, column, table_info,
         round(image$width / image$res, 2), 'in, height=',
         round(image$height / image$res, 2), 'in]{',
         image$path,
-        '\\}'
+        '}'
         # '\\}\\}'
         )
     } else {

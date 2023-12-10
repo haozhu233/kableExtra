@@ -260,11 +260,11 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
     group_label <- paste0("\\\\sout\\{", group_label, "\\}")
   }
   if (!is.null(color)) {
-    group_label <- paste0("\\\\textcolor", latex_color(color), "\\{",
+    group_label <- paste0("\\\\textcolor", latex_color__(color), "\\{",
                               group_label, "\\}")
   }
   if (!is.null(background)) {
-    group_label <- paste0("\\\\cellcolor", latex_color(background), "\\{",
+    group_label <- paste0("\\\\cellcolor", latex_color__(background), "\\{",
                               group_label, "\\}")
   }
   # Add group label

@@ -173,11 +173,11 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
   x <- sprintf(ifelse(underline, "\\underline{%s}", "%s"), x)
   x <- sprintf(ifelse(strikeout, "\\sout{%s}", "%s"), x)
   if (!is.null(color)) {
-    color <- latex_color(color, escape = FALSE)
+    color <- latex_color(color)
     x <- paste0("\\textcolor", color, "{", x, "}")
   }
   if (!is.null(background)) {
-    background <- latex_color(background, escape = FALSE)
+    background <- latex_color(background)
     background_env <- ifelse(latex_background_in_cell, "cellcolor", "colorbox")
     x <- paste0("\\", background_env, background, "{", x, "}")
   }

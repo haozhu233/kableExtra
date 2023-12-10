@@ -62,7 +62,7 @@ latex_color__ <- function(color) {
     return(paste0("[HTML]{", color, "}"))
   }
 }
-latex_color <- function(colors, escape = TRUE) {
+latex_color <- function(colors, escape = FALSE) {
   colors <- as.character(colors)
   if (escape) {
     return(sapply(colors, latex_color_))

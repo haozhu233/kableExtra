@@ -312,7 +312,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
 
   align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
 
-  hline_type <- switch(table_info$booktabs + 1, "\\\\hline", "\\\\toprule")
+  hline_type <- switch(table_info$booktabs + 1, "\\hline", "\\toprule")
   new_header_split <- pdfTable_new_header_generator(
     header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
     align, color, background, font_size, angle, line_sep,
@@ -373,32 +373,32 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   header <- header_df$header
   colspan <- header_df$colspan
 
-  header <- ifelse(bold, paste0('\\\\textbf\\{', header, '\\}'), header)
-  header <- ifelse(italic, paste0('\\\\em\\{', header, '\\}'), header)
-  header <- ifelse(monospace, paste0('\\\\ttfamily\\{', header, '\\}'), header)
-  header <- ifelse(underline, paste0('\\\\underline\\{', header, '\\}'), header)
-  header <- ifelse(strikeout, paste0('\\\\sout\\{', header, '\\}'), header)
+  header <- ifelse(bold, paste0('\\textbf{', header, '}'), header)
+  header <- ifelse(italic, paste0('\\em\\{', header, '}'), header)
+  header <- ifelse(monospace, paste0('\\ttfamily{', header, '}'), header)
+  header <- ifelse(underline, paste0('\\underline{', header, '}'), header)
+  header <- ifelse(strikeout, paste0('\\sout{', header, '}'), header)
   if (!is.null(color)) {
-    color <- latex_color(color)
-    header <- paste0("\\\\textcolor", color, "\\{", header, "\\}")
+    color <- latex_color__(color)
+    header <- paste0("\\textcolor", color, "{", header, "}")
   }
   if (!is.null(background)) {
-    background <- latex_color(background)
-    header <- paste0("\\\\cellcolor", background, "\\{", header, "\\}")
+    background <- latex_color__(background)
+    header <- paste0("\\cellcolor", background, "{", header, "}")
   }
   if (!is.null(font_size)) {
-    header <- paste0("\\\\bgroup\\\\fontsize\\{", font_size, "\\}\\{",
+    header <- paste0("\\bgroup\\fontsize{", font_size, "}{",
                      as.numeric(font_size) + 2,
-                     "\\}\\\\selectfont ", header, "\\\\egroup\\{\\}")
+                     "}\\selectfont ", header, "\\egroup{}")
   }
   if (!is.null(angle)) {
-    header <- paste0("\\\\rotatebox\\{", angle, "\\}\\{", header, "\\}")
+    header <- paste0("\\rotatebox{", angle, "}{", header, "}")
   }
   header_items <- paste0(
-    '\\\\multicolumn\\{', colspan, '\\}\\{', align, '\\}\\{', header, '\\}'
+    '\\multicolumn{', colspan, '}{', align, '}{', header, '}'
   )
 
-  header_text <- paste(paste(header_items, collapse = " & "), "\\\\\\\\")
+  header_text <- paste(paste(header_items, collapse = " & "), "\\\\")
   cline <- cline_gen(header_df, booktabs, line_sep)
   return(c(header_text, cline))
 }
@@ -409,8 +409,8 @@ cline_gen <- function(header_df, booktabs, line_sep) {
   cline_start <- cline_start[-length(cline_start)]
   cline_type <- switch(
     booktabs + 1,
-    "\\\\cline{",
-    paste0("\\\\cmidrule(l{", line_sep, "pt}r{", line_sep, "pt}){"))
+    "\\cline{",
+    paste0("\\cmidrule(l{", line_sep, "pt}r{", line_sep, "pt}){"))
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
   cline <- cline[trimws(header_df$header) != ""]
   cline <- paste(cline, collapse = " ")
