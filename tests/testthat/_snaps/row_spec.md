@@ -189,3 +189,37 @@
       \bottomrule
       \end{tabular}
 
+# Issue #576: string font_size in html
+
+    Code
+      cat(data.frame(a = c("foo", "bar", "foo", "bar", "foo", "bar")) %>% kbl() %>%
+        row_spec(3, font_size = "xx-large"))
+    Output
+      <table>
+       <thead>
+        <tr>
+         <th style="text-align:left;"> a </th>
+        </tr>
+       </thead>
+      <tbody>
+        <tr>
+         <td style="text-align:left;"> foo </td>
+        </tr>
+        <tr>
+         <td style="text-align:left;"> bar </td>
+        </tr>
+        <tr>
+         <td style="text-align:left;font-size: xx-large;"> foo </td>
+        </tr>
+        <tr>
+         <td style="text-align:left;"> bar </td>
+        </tr>
+        <tr>
+         <td style="text-align:left;"> foo </td>
+        </tr>
+        <tr>
+         <td style="text-align:left;"> bar </td>
+        </tr>
+      </tbody>
+      </table>
+
