@@ -1,3 +1,11 @@
+test_that("Issue #796", {
+    expect_snapshot(
+        kbl(mtcars[1:3, 1:4], caption = "Demo table", booktabs = TRUE, format = "latex") |>
+            kable_styling(latex_options = c("striped", "hold_position"))
+    )
+})
+
+
 # Issue #658: column_spec() fails at single-row headerless tables in latex format. 
 dat <- data.frame(x = 1, y = 1)
 dat <- setNames(dat, NULL)
@@ -43,3 +51,4 @@ expect_s3_class(tab, "kableExtra")
 #     scroll_box(width = "100%", height = "500px") |>
 #     column_spec(1, width = "40em", include_thead = FALSE)
 # expect_s3_class(tab, "kableExtra")
+
