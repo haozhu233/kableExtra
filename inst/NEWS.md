@@ -4,6 +4,7 @@ kableExtra 1.4.0
 New Features:
 
 * Added live preview of inline plots (#777).
+* Add feature to scale_up and scale_down latex tables (#753)
 * Added row grouping feature with `row_group_label_position = first` option (#711).
 * Expanded the functionality of `spec_color` to allow arbitrary palettes.
 * Removed dependency on `rvest` and `glue`
