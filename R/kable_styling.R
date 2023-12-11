@@ -566,8 +566,9 @@ styling_latex_position_center <- function(x, table_info, hold_position,
     } else if(hold_position == "HOLD_position") {
       x <- styling_latex_HOLD_position(x)
     }
-  } else if (table_info$table_env)
-    x <- sub("^\\\\begin\\{table}", "\\\\begin{table}\n\\\\centering", x)
+  } else if (table_info$table_env) {
+    x <- sub("^(\\\\begin\\{table}[^\n]*)\\n", "\\1\n\\\\centering", x)
+  }
   return(x)
 }
 
