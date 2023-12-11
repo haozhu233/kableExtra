@@ -78,3 +78,14 @@ test_that("awesome table example", {
             collapse_rows(1, latex_hline = "none")
     )
 })
+
+
+
+test_that("Issue #576: string font_size in html", {
+    expect_snapshot(
+        data.frame(a = c("foo", "bar", "foo", "bar", "foo", "bar")) %>%
+            kbl() %>%
+            row_spec(3, font_size = "xx-large") |>
+            cat()
+    )
+})

@@ -166,8 +166,9 @@ xml_cell_style <- function(x, bold, italic, monospace,
                                    "text-align: ", align, ";")
   }
   if (!is.null(font_size)) {
+    if (is.numeric(font_size)) font_size <- paste0(font_size, "px")
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                   "font-size: ", font_size, "px;")
+                                   "font-size: ", font_size, ";")
   }
   if (!is.null(angle)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
