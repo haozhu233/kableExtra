@@ -21,8 +21,8 @@ rmd_format <- function(){
 #'
 #' @examples usepackage_latex("xcolor")
 #' @export
-usepackage_latex <- function(name, options = NULL) {
-  invisible(knit_meta_add(list(latex_dependency(name, options))))
+usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
+  invisible(knit_meta_add(list(latex_dependency(name, options, extra_lines))))
 }
 
 #' Declare LaTeX packages needed by kableExtra
@@ -58,7 +58,10 @@ use_latex_packages <- function() {
     usepackage_latex("colortbl")
     usepackage_latex("pdflscape")
     usepackage_latex("tabu")
-    usepackage_latex("tabularray")
+    usepackage_latex("tabularray", options = NULL, extra_lines = c(
+      "\\newcommand{\\kableExtraTabularrayUnderline}[1]{\\underline}",
+      "\\newcommand{\\kableExtraTabularrayStrikeout}[1]{\\sout}")
+    )
     usepackage_latex("threeparttable")
     usepackage_latex("threeparttablex")
     usepackage_latex("ulem", "normalem")

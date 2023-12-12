@@ -2,9 +2,6 @@
 output:
   pdf_document:
     keep_tex: true
-header-includes: 
-  - \newcommand{\kableExtraTabularrayUnderline}[1]{\underline}
-  - \newcommand{\kableExtraTabularrayStrikeout}[1]{\sout}
 ---
 
 # TODO
