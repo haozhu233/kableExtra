@@ -189,8 +189,31 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            underline, strikeout,
                            color, background, align, font_size, angle,
                            hline_after, extra_latex_after) {
+
   table_info <- magic_mirror(kable_input)
+
   out <- solve_enc(kable_input)
+
+  if (table_info$tabular == "tblr") {
+    out <- row_spec_tabularray(
+      kable_input = out,
+      row = row,
+      bold = bold,
+      italic = italic,
+      monospace = monospace,
+      underline = underline,
+      strikeout = strikeout,
+      color = color,
+      background = background,
+      align = align,
+      font_size = font_size,
+      angle = angle,
+      hline_after = hline_after,
+      extra_latex_after = extra_latex_after
+    )
+    return(out)
+  }
+
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
@@ -206,37 +229,23 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
-                                   !is.null(table_info$repeat_header_latex)),
-                       gsub, sub)
-    if (length(new_row) == 1) {
-      # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", target_row, "\\E")
-      if (grepl(regex, out)) {
-        out <- temp_sub(regex, new_row, out, perl = TRUE)
-      } else {
-        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                        paste0(new_row, "\\\\\\\\"), out, perl = TRUE)
-      }
-      table_info$contents[i] <- new_row
-    } else {
-      # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", target_row, "\\E")
-      if (any(grepl(regex, out))) {
-        out <- temp_sub(regex,
-          paste(new_row, collapse = ""), out, perl = TRUE)
-      } else {
-        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                    paste(new_row, collapse = ""), out, perl = TRUE)
-      }
-      table_info$contents[i] <- new_row[1]
-    }
+
+    tmp <- latex_new_row_replacer(
+      i = i,
+      row = row,
+      out = out,
+      table_info = table_info,
+      new_row = new_row,
+      target_row = target_row)
+    out <- tmp$out
+    table_info <- tmp$table_info
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
   return(out)
 }
+
 
 latex_new_row_builder <- function(target_row, table_info,
                                   bold, italic, monospace,
@@ -348,3 +357,31 @@ latex_new_row_builder <- function(target_row, table_info,
 }
 
 
+# Do not repeat yourself: tabularray.R
+latex_new_row_replacer <- function(i, row, out, table_info, new_row, target_row) {
+  temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" | !is.null(table_info$repeat_header_latex)),
+                    gsub, sub)
+  if (length(new_row) == 1) {
+    # fixed=TRUE is safer but does not always work
+    regex <- paste0("\\Q", target_row, "\\E")
+    if (grepl(regex, out)) {
+      out <- temp_sub(regex, new_row, out, perl = TRUE)
+    } else {
+      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                      paste0(new_row, "\\\\\\\\"), out, perl = TRUE)
+    }
+    table_info$contents[i] <- new_row
+  } else {
+    # fixed=TRUE is safer but does not always work
+    regex <- paste0("\\Q", target_row, "\\E")
+    if (any(grepl(regex, out))) {
+      out <- temp_sub(regex,
+        paste(new_row, collapse = ""), out, perl = TRUE)
+    } else {
+      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                  paste(new_row, collapse = ""), out, perl = TRUE)
+    }
+    table_info$contents[i] <- new_row[1]
+  }
+  return(list(out = out, table_info = table_info))
+}

@@ -340,7 +340,30 @@ column_spec_latex <- function(kable_input, column, width,
                               border_left, border_right,
                               latex_column_spec, latex_valign, include_thead,
                               link, image) {
-  table_info <- magic_mirror(kable_input)
+
+  out <- solve_enc(kable_input)
+  table_info <- magic_mirror(out)
+
+  if (table_info$tabular == "tblr") {
+    out <- column_spec_tabularray(
+      kable_input = out,
+      column = column,
+      bold = bold,
+      italic = italic,
+      monospace = monospace,
+      underline = underline,
+      strikeout = strikeout,
+      color = color,
+      background = background,
+      font_size = NULL,
+      angle = NULL,
+      width = width,
+      latex_valign = latex_valign,
+      latex_column_spec = latex_column_spec
+    )
+    return(out)
+  }
+
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
             " especially in LaTeX, to get a desired result. ")
@@ -361,7 +384,7 @@ column_spec_latex <- function(kable_input, column, width,
 
   out <- sub(paste0("\\{", kable_align_old, "\\}"),
              paste0("\\{", kable_align_new, "\\}"),
-             solve_enc(kable_input),
+             out,
              perl = T)
 
   if (!is.null(width)) {

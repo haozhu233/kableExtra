@@ -1,0 +1,39 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+header-includes: 
+  - \newcommand{\kableExtraTabularrayUnderline}[1]{\underline}
+  - \newcommand{\kableExtraTabularrayStrikeout}[1]{\sout}
+---
+
+# TODO
+
+* [ ] vectorized arguments in columns
+* [ ] `border_right` and `border_left` are profoundly broken
+* [ ] `vline=""` breaks replacement of Q[] because sub is looking for "l|r|r"
+
+```{r, results = "asis"}
+pkgload::load_all()
+
+d <- mtcars[1:3, 1:3]
+kbl(d, format = "latex", tabular = "tblr", align = "lcr") |>
+  row_spec(
+    row = c(1, 3),
+    background = "pink",
+    color = "blue",
+    bold = TRUE,
+    italic = TRUE,
+    strikeout = FALSE,
+    align = "c"
+  ) |>
+  column_spec(
+    1:2,
+    background = "yellow",
+    color = "red",
+    monospace = TRUE,
+    strikeout = TRUE,
+    width = "4cm",
+    border_left = TRUE
+  ) |> cat()
+```
