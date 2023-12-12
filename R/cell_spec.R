@@ -70,11 +70,15 @@ cell_spec <- function(x, format,
                           color, background, align, font_size, angle,
                           tooltip, popover, link, new_tab, extra_css,
                           escape, background_as_tile))
-  }
-  if (tolower(format) == "latex") {
+  } else if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle, escape,
                            latex_background_in_cell))
+  } else if (tolower(format) == "tblr") {
+    return(cell_spec_tabularray(
+      x, bold, italic, monospace, underline, strikeout,
+      color, background, align, font_size, angle, escape,
+      latex_background_in_cell))
   }
 }
 

@@ -1,3 +1,9 @@
+# TODO:
+# - [ ] longtable -> longtblr
+# - [ ] `border_right` and `border_left` are profoundly broken
+# - [ ] `vline=""` breaks replacement of Q[] because sub is looking for "l|r|r"
+
+
 row_spec_tabularray <- function(kable_input,
                                 row = NULL,
                                 bold = NULL,
@@ -12,10 +18,11 @@ row_spec_tabularray <- function(kable_input,
                                 angle = NULL,
                                 hline_after = NULL,
                                 extra_latex_after = NULL) {
-    # TODO: hline_after is not supported
-    # TODO: font_size, angle
-    # TODO: vectorize bold et al.
-    # TODO: DRY with row replacer
+
+    # TODO: 
+    # - [ ] font_size,
+    # - [ ] angle,
+    # - [ ] hline_after,
 
     out <- kable_input
 
@@ -46,8 +53,6 @@ row_spec_tabularray <- function(kable_input,
     color <- vectorize_style(color, row)
     background <- vectorize_style(background, row)
     align <- vectorize_style(align, row)
-    # font_size <- vectorize_style(font_size, row)
-    # angle <- vectorize_style(angle, row)
 
     row <- row + table_info$position_offset
 
@@ -115,8 +120,6 @@ column_spec_tabularray <- function(kable_input,
                                    strikeout,
                                    color,
                                    background,
-                                   font_size,
-                                   angle,
                                    width,
                                    latex_valign,
                                    latex_column_spec) {
@@ -125,8 +128,6 @@ column_spec_tabularray <- function(kable_input,
     table_info <- magic_mirror(kable_input)
     out <- kable_input
 
-    if (!is.null(font_size)) stop("`font_size` is not supported by `column_spec()` for `tabularray` tables.", .call = FALSE)
-    if (!is.null(angle)) stop("`angle` is not supported by `column_spec()` for `tabularray` tables.", .call = FALSE)
     if (!identical(latex_valign, "p")) stop("`latex_valign` is not supported by `column_spec()` for `tabularray` tables.", .call = FALSE)
     if (!is.null(latex_column_spec)) stop("`latex_column_spec` is not supported by `column_spec()` for `tabularray` tables.", .call = FALSE)
 
@@ -199,4 +200,53 @@ column_spec_tabularray <- function(kable_input,
     out <- structure(out, format = "latex", class = "knitr_kable")
     attr(out, "kable_meta") <- table_info
     return(out)
+}
+
+
+cell_spec_tabularray <- function(
+    x,
+    bold,
+    italic,
+    monospace,
+    underline,
+    strikeout,
+    color,
+    background,
+    align,
+    font_size,
+    angle,
+    escape,
+    latex_background_in_cell) {
+
+    if (escape) x <- escape_latex(x)
+
+    background <- ifelse(is.null(background), "", paste0("bg=", background))
+    color <- ifelse(is.null(color), "", paste0("bg=", color))
+
+    font <- ""
+    font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
+    font <- ifelse(monospace, paste0(font, "\\\\ttfamily"), font)
+    font <- ifelse(italic, paste0(font, "\\\\itshape"), font)
+    if (font != "") font <- paste0("font=", font)
+
+    cmd <- ""
+    cmd <- ifelse(underline, paste0(cmd, "\\\\kableExtraTabularrayUnderline{\\#1}"), cmd)
+    cmd <- ifelse(strikeout, paste0(cmd, "\\\\kableExtraTabularrayStrikeout{\\#1}"), cmd)
+    if (cmd != "") cmd <- paste0("cmd=", cmd)
+
+    if (!is.null(font_size)) {
+        x <- paste0(
+            "\\bgroup\\fontsize{", font_size, "}{", as.numeric(font_size) + 2,
+            "}\\selectfont ", x, "\\egroup{}")
+    }
+    if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
+    if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
+
+    placeholder <- c(background, color, font, cmd)
+    placeholder <- Filter(function(x) x != "", placeholder)
+    placeholder <- paste(placeholder, collapse = ", ")
+    x <- paste0("\\SetCell{", placeholder, "} ", x)
+    x <- gsub("\\\\\\\\", "\\\\", x)
+
+    return(x)
 }

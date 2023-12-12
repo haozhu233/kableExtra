@@ -355,8 +355,6 @@ column_spec_latex <- function(kable_input, column, width,
       strikeout = strikeout,
       color = color,
       background = background,
-      font_size = NULL,
-      angle = NULL,
       width = width,
       latex_valign = latex_valign,
       latex_column_spec = latex_column_spec

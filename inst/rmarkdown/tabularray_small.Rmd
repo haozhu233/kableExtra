@@ -9,15 +9,23 @@ header-includes:
 
 # TODO
 
-* [ ] vectorized arguments in columns
-* [ ] `border_right` and `border_left` are profoundly broken
-* [ ] `vline=""` breaks replacement of Q[] because sub is looking for "l|r|r"
 
-```{r, results = "asis"}
+```{r}
 pkgload::load_all()
-
 d <- mtcars[1:3, 1:3]
-kbl(d, format = "latex", tabular = "tblr", align = "lcr") |>
+d[2, 3] <- cell_spec(d[2, 3],
+  format = "tblr",
+  underline = TRUE,
+  background = "pink",
+  escape = FALSE,
+  font_size = 20)
+
+kbl(d,
+  format = "latex",
+  tabular = "tblr",
+  escape = FALSE,
+  caption = "Blah blah") |>
+
   row_spec(
     row = c(1, 3),
     background = "pink",
@@ -25,15 +33,14 @@ kbl(d, format = "latex", tabular = "tblr", align = "lcr") |>
     bold = TRUE,
     italic = TRUE,
     strikeout = FALSE,
-    align = "c"
-  ) |>
+    align = "c") |>
+
   column_spec(
     1:2,
     background = "yellow",
     color = "red",
     monospace = TRUE,
     strikeout = TRUE,
-    width = "4cm",
-    border_left = TRUE
-  ) |> cat()
+    width = c("4cm", "6cm"),
+    border_left = TRUE)
 ```
