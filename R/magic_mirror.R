@@ -67,8 +67,14 @@ magic_mirror_latex <- function(kable_input){
   table_info$begin_tabular <- paste0("\\\\begin\\{", table_info$tabular, "\\}",
                                      table_info$valign2)
   table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
+
   # N of columns
-  table_info$ncol <- nchar(table_info$align)
+  if (!is.null(attr(kable_input, "tabularray_colspec"))) {
+    table_info$ncol <- length(attr(kable_input, "tabularray_colspec"))
+  } else {
+    table_info$ncol <- nchar(table_info$align)
+  }
+
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
     caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]

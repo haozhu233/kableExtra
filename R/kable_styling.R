@@ -376,8 +376,9 @@ pdfTable_styling <- function(kable_input,
   }
 
   if (full_width) {
-    latex_table_env <- ifelse(table_info$tabular == "longtable",
-                              "longtabu", "tabu")
+    if (!table_info$tabular %in% c("longtable", "tblr")) {
+      latex_table_env <- "tabu"
+    }
     full_width_return <- styling_latex_full_width(out, table_info)
     out <- full_width_return[[1]]
     table_info$align_vector <- full_width_return[[2]]
@@ -535,6 +536,19 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 }
 
 styling_latex_full_width <- function(x, table_info) {
+
+  if (table_info$tabular == "tblr") {
+    colspec <- attr(x, "tabularray_colspec")
+    for (i in seq_along(colspec)) {
+      colspec[[i]][["type"]] <- "X"
+    }
+    colspec_string <- lapply(colspec, make_spec_tabularray)
+    colspec_string <- paste(colspec_string, collapse = attr(x, "tabularray_linesep"))
+    attr(x, "tabularray_colspec") <- colspec
+    x <- sub("colspec=.*", paste0("colspec={", colspec_string, "},"), x, perl = TRUE)
+    return(list(x, NULL))
+  }
+
   col_align <- as.character(factor(
     table_info$align_vector, c("c", "l", "r"),
     c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")

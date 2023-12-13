@@ -72,12 +72,18 @@ kbl <- function(x, format, digits = getOption("digits"),
                 toprule = getOption('knitr.table.toprule', if (booktabs) '\\toprule' else '\\hline'),
                 bottomrule = getOption('knitr.table.bottomrule', if (booktabs) '\\bottomrule' else '\\hline'),
                 midrule = getOption('knitr.table.midrule', if (booktabs) '\\midrule' else '\\hline'),
-                linesep = if (booktabs) c('', '', '', '', '\\addlinespace') else '\\hline',
+                linesep = if (booktabs || tabular == "tblr") c('', '', '', '', '\\addlinespace') else '\\hline',
                 caption.short = '',
                 table.envir = if (!is.null(caption)) 'table', ...) {
   if (!missing(align) && length(align) == 1L && !grepl('[^lcr]', align)) {
     align <- strsplit(align, '')[[1]]
   }
+
+  # tblr only makes sense in LaTeX, so we override user choice
+  if (isTRUE(tabular == "tblr")) {
+    format <- "latex"
+  }
+
   if (missing(format) || is.null(format)) {
     if (knitr::is_latex_output())
       format <- "latex"
@@ -85,7 +91,14 @@ kbl <- function(x, format, digits = getOption("digits"),
       format <- "html"
   }
   if (format == "latex") {
+
+
+    # tblr needs special vline treatment
+    vline_internal <- ifelse(isTRUE(tabular == "tblr"), "|", vline)
+
     use_latex_packages()
+
+
     if (utils::packageVersion("knitr") < "1.40" &&
         !missing(tabular)) {
       warning("'tabular' is not not supported in knitr versions < 1.40")
@@ -100,7 +113,7 @@ kbl <- function(x, format, digits = getOption("digits"),
       booktabs = booktabs, longtable = longtable,
       tabular = tabular,
       valign = valign, position = position, centering = centering,
-      vline = vline, toprule = toprule, bottomrule = bottomrule,
+      vline = vline_internal, toprule = toprule, bottomrule = bottomrule,
       midrule = midrule, linesep = linesep, caption.short = caption.short,
       table.envir = table.envir, ...
     )
@@ -124,7 +137,7 @@ kbl <- function(x, format, digits = getOption("digits"),
   # call is important for tabularray
   attr(out, "call") <- match.call()
   if (format == "latex" && tabular == "tblr") {
-    out <- preprocess_tabularray(out)
+    out <- init_tabularray(out)
   }
 
   out
