@@ -10,6 +10,8 @@ usepackage_latex(name, options = NULL, extra_lines = NULL)
 \item{name}{The LaTeX package name}
 
 \item{options}{The LaTeX options for the package}
+
+\item{extra_lines}{Character vector. Each entry will be inserted as-is in the preamble, just after the \RequirePackage{} line.}
 }
 \description{
 Load a LaTeX package using R code. Just like \verb{\\\\usepackage\{\}}

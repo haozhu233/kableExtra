@@ -107,8 +107,8 @@ df |>
 
 In some contexts, user-specified settings like cell colors or text styles enter in conflict. In such cases, these two rules are applied:
 
-1. `cell_spec()` settings have the highest precendence.
-2. The last function call (`column_spec()` or `row_spec()`) determines if row or column settings have precedence.
+1. `cell_spec()` settings have the highest precedence.
+2. The last function call  determines if row or column settings have precedence: `column_spec()` vs `row_spec()`
 
 In the following example, we define conflicting background colors at the cell, column, and row level. In that case, the cell wins. When there is only a conflict between rows and columns, rows win because `row_spec()` is called after `column_spec()`.
 
@@ -133,7 +133,7 @@ kbl(df,
 )
 ```
 
-To achieve this result, we began by removing the default horizontal rules (`toprule`, `midrule`, `bottomrule`), otherwise, there would be double horizontal lines in the table. then, we use the `linesep` argument to tell `tabularray` how to format horizontal lines in the table, and the `vline` argument to control vertical lines. 
+To achieve this result, we began by removing the default horizontal rules (`toprule`, `midrule`, `bottomrule`), otherwise, there would be double horizontal lines in the table. Then, we use the `linesep` argument to tell `tabularray` how to format horizontal lines in the table, and the `vline` argument to control vertical lines. 
 
 When `vlines` and `hlines` are in plural form, they control all lines in the table. `tabularray` also supports another syntax for specifying individual lines. For example, we can control the color, width, and type of lines as follows::
 
@@ -147,7 +147,7 @@ kbl(df,
 ```
 
 
-# Width: Columns and table
+# Width
 
 To fix the width of certain columns or expand the table to full page width, `kableExtra` can use `X` or `Q` columns in `tabularray`. `X` columns are designed for scenarios where you want the table columns to automatically adjust their widths to fill the entire available space. This feature is particularly useful for creating tables that span the full width of a page or container. When you use `X` columns, the width of each column is proportionally divided based on the available space, allowing for a responsive and evenly distributed layout.  On the other hand, `Q` columns function like the standard `p` columns in \LaTeX, where you manually specify the width of each column. The content in these columns is wrapped to fit within the set width. This type of column is ideal when precise control over column width is needed, such as in tables with varying content lengths or specific design requirements.
 
@@ -158,12 +158,12 @@ This example illustrates how to customize the width of a single columns, while e
 ```{r}
 kbl(df,
     tabular = "tblr",
-    align = "ccc") |>
+    align = "lccc") |>
     kable_styling(full_width = TRUE) |>
     column_spec(1, width = "8cm")
 ```
 
-# Cell-specific settings: `cell_spec()`
+# Cell-specific settings
 
 To apply cell-specific settings, we can use the `cell_spec()` function. In `kbl()`, it is necessary to use `escape=TRUE` and `tabular="tblr"`. In `cell_spec()`, it is necessary to use `tabular="tblr"`:
 
@@ -185,11 +185,11 @@ kbl(df2, tabular = "tblr", escape = FALSE)
 
 The [`tabularray` document describes many other arguments](https://ctan.org/pkg/tabularray?lang=en) which are available to control cells, rows, and columns of a table. For example, the `ht` argument can control the height of a row.
 
-`kableExtra` does not have a `height` argument, but it is possible (and fun) to push through extra (unspecified) `tabularray` arguments through `background` argument. To understand how this works, note that when we call `background="red"`, `kableExtra` simply adds a string to the `rowspec` header: `fg=red`. If we extend the `background` entry, then we can specify height and vertical alignment too (here: using `f` for "foot"):
+`kableExtra` does not have a `height` argument, but it is possible (and fun) to push through extra (unspecified) `tabularray` arguments through `background` argument. To understand how this works, note that when we call `background="red"`, `kableExtra` simply adds a string to the `rowspec` header: `fg=red`. If we extend the `background` entry, then we can specify height and vertical alignment too. Here, we use `f` for "foot" (also: `h`, `m`) and specify the height in `em` units (also: `cm`, `pt`, `in`):
 
 ```{r}
 kbl(df, tabular = "tblr") |>
-  row_spec(2, background = "pink, ht=1cm, valign=f")
+  row_spec(2, background = "pink, ht=3.5em, valign=f")
 ```
 
 # Solved bugs

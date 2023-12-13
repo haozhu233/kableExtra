@@ -18,6 +18,7 @@ rmd_format <- function(){
 #'
 #' @param name The LaTeX package name
 #' @param options The LaTeX options for the package
+#' @param extra_lines Character vector. Each entry will be inserted as-is in the preamble, just after the \RequirePackage{} line.
 #'
 #' @examples usepackage_latex("xcolor")
 #' @export
