@@ -1,4 +1,5 @@
 # TODO:
+# - [ ] Hex colors
 # - [ ] HOLD_position does not work unless there's a caption. Where is \begin{table}?
 # - [ ] kbl(linesep) can be handled in init_tabularray
 # - [ ] longtable -> longtblr
