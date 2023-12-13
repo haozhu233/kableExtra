@@ -4,7 +4,7 @@
 \alias{usepackage_latex}
 \title{Load a LaTeX package}
 \usage{
-usepackage_latex(name, options = NULL)
+usepackage_latex(name, options = NULL, extra_lines = NULL)
 }
 \arguments{
 \item{name}{The LaTeX package name}

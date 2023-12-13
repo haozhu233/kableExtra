@@ -29,7 +29,8 @@ kbl(
     "\\\\hline"),
   midrule = getOption("knitr.table.midrule", if (booktabs) "\\\\midrule" else
     "\\\\hline"),
-  linesep = if (booktabs) c("", "", "", "", "\\\\addlinespace") else "\\\\hline",
+  linesep = if (booktabs || tabular == "tblr") c("", "", "", "", "\\\\addlinespace") else
+    "\\\\hline",
   caption.short = "",
   table.envir = if (!is.null(caption)) "table",
   ...
@@ -90,7 +91,7 @@ some special cases.}
 table that will span over two or more pages, you will have to turn this on.}
 
 \item{tabular}{The "inner environment" to use for the
-table, e.g. "tabularx".}
+table, e.g. "tblr", "tabularx".}
 
 \item{valign}{You probably won't need to adjust this latex option very often.
 If you are familiar with latex tables, this is the optional position for the

@@ -26,7 +26,7 @@
 #' @param longtable T/F for whether to use the longtable format. If you have a
 #' table that will span over two or more pages, you will have to turn this on.
 #' @param tabular The "inner environment" to use for the
-#' table, e.g. "tabularx".
+#' table, e.g. "tblr", "tabularx".
 #' @param valign You probably won't need to adjust this latex option very often.
 #' If you are familiar with latex tables, this is the optional position for the
 #' tabular environment controlling the vertical position of the table relative
