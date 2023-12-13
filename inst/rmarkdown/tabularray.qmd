@@ -1,8 +1,8 @@
 ---
-title: "`tabularray` and `kableExtra`: Flexible \\LaTeX{} tables"
-output:
-  pdf_document:
-    keep_tex: true
+title: "`tabularray` and `kableExtra`"
+subtitle: "Flexible \\LaTeX{} tables"
+format: 
+  pdf:
     toc: true
 ---
 
