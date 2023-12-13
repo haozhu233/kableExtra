@@ -184,7 +184,7 @@ cell_spec_tabularray <- function(
     if (escape) x <- escape_latex(x)
 
     background <- ifelse(is.null(background), "", paste0("bg=", background))
-    color <- ifelse(is.null(color), "", paste0("bg=", color))
+    color <- ifelse(is.null(color), "", paste0("fg=", color))
 
     font <- ""
     font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
