@@ -1,11 +1,3 @@
-# TODO:
-# - [ ] Hex colors
-# - [ ] HOLD_position does not work unless there's a caption. Where is \begin{table}?
-# - [ ] kbl(linesep) can be handled in init_tabularray
-# - [ ] longtable -> longtblr
-# - [ ] `border_right` and `border_left`
-
-
 row_spec_tabularray <- function(kable_input,
                                 row = NULL,
                                 bold = NULL,
