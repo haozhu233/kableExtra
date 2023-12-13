@@ -120,5 +120,12 @@ kbl <- function(x, format, digits = getOption("digits"),
       caption = caption, label = label, format.args = format.args,
       escape = escape, ...
     )
+
+  # call is important for tabularray
+  attr(out, "call") <- match.call()
+  if (format == "latex" && tabular == "tblr") {
+    out <- preprocess_tabularray(out)
+  }
+
   out
 }

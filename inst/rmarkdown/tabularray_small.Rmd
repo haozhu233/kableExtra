@@ -9,6 +9,18 @@ output:
 
 ```{r}
 pkgload::load_all()
+df <- mtcars[1:4, 1:3]
+kbl(df,
+    format = "latex",
+    tabular = "tblr",
+    align = "clr",
+    linesep = "",
+    vline = "|[dashed]") |>
+    column_spec(1, bold = TRUE, underline = TRUE) |>
+    column_spec(c(2, 4), strikeout = TRUE, color = "blue", background = "pink")
+```
+
+```{r}
 d <- mtcars[1:3, 1:3]
 d[2, 3] <- cell_spec(d[2, 3],
   format = "tblr",
