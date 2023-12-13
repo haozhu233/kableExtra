@@ -144,9 +144,9 @@ add_footnote <- function(input, label = NULL,
             label[i], "}")
         }
 
-        if (str_detect(export, "\\\\toprule")) {
-          export <- sub("\\\\toprule",
-                        paste0("\\\\toprule\n", caption.footnote), export)
+        if (str_detect(export, toprule_regexp)) {
+          export <- sub(toprule_regexp,
+                        paste0("\\1\n", caption.footnote), export)
         } else {
           export <- sub("\\\\hline",
                         paste0("\\\\hline\n", caption.footnote), export)
