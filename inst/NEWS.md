@@ -19,6 +19,7 @@ part that gets impacted is the table labels or references set within the kable
 function through the label option. For this part, first, people can set labels
 using knitr chunk options. Also, people can easily overcome it by either using
 kbl or setting format in kable.
+* Added line_col to spec_pointrange()
 
 Improvements:
 
@@ -42,6 +43,8 @@ dark-themed Rstudio (#689).
 including extra stuff, like a style block.
 * Fixed minor spelling errors and typos in various places (#779, #709, #710, #676).
 * Resolved issue with `auto_format` default setting (#749).
+* Some table additions didn't work with custom rule
+widths (#806).
 
 Documentation and Maintenance:
 
@@ -61,11 +64,6 @@ functionality.
 * Merged various pull requests improving codebase and resolving issues (#800,
 #799, #797, #798, #794, #793, #768, #632, #628, etc.).
 
-
-kableExtra 1.3.5
---------------------------------------------------------------------------------
-
-* Added line_col to spec_pointrange()
 
 kableExtra 1.3.1, 1.3.3, 1.3.4
 --------------------------------------------------------------------------------

@@ -471,12 +471,18 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
                                         repeat_header_method,
                                         repeat_header_continued) {
   x <- str_split(x, "\n")[[1]]
+  # These two defs won't be used, but make it clear
+  # the rules are defined
+  midrule <- "\\midrule"
+  bottomrule <- "\\bottomrule"
+  #
   if (table_info$booktabs) {
-    header_rows_start <- which(x == "\\toprule")[1]
+    header_rows_start <- grep(paste0("^", toprule_regexp, "$"),  x)[1]
     if (is.null(table_info$colnames)) {
       header_rows_end <- header_rows_start
     } else {
-      header_rows_end <- which(x == "\\midrule")[1]
+      header_rows_end <- grep(paste0("^", midrule_regexp, "$"), x)[1]
+      midrule <- sub(midrule_regexp, "\\1", x[header_rows_end])
     }
   } else {
     header_rows_start <- which(x == "\\hline")[1]
@@ -499,12 +505,14 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
   if (!table_info$booktabs) {
     bottom_part <- NULL
   } else {
-    index_bottomrule <- which(x == "\\bottomrule")
+    index_bottomrule <- grep(paste0("^", bottomrule_regexp, "$"), x)
+    bottomrule <- x[index_bottomrule]
     x <- x[-index_bottomrule]
     x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*")
 
     if (repeat_header_continued == FALSE) {
-      bottom_part <- "\n\\endfoot\n\\bottomrule\n\\endlastfoot"
+      bottom_part <- paste0( "\n\\endfoot\n", bottomrule,
+                             "\n\\endlastfoot")
     } else {
       if (repeat_header_continued == TRUE) {
         bottom_text <- "\\textit{(continued \\ldots)}"
@@ -512,10 +520,10 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
         bottom_text <- repeat_header_continued
       }
       bottom_part <- paste0(
-        "\\midrule\n",
+        midrule, "\n",
         "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\\\n",
         "\\endfoot\n",
-        "\\bottomrule\n",
+        bottomrule, "\n",
         "\\endlastfoot"
       )
     }

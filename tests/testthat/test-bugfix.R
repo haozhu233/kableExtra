@@ -1,3 +1,19 @@
+test_that("Issue #806: custom rule widths", {
+  expect_snapshot(
+    kbl(mtcars[1:3, 1:4],
+        caption="kable vary line thickness",
+        booktabs = TRUE,
+        toprule = "\\toprule[4pt]",
+        midrule = "\\midrule[3pt]",
+        bottomrule = "\\bottomrule[5pt]",
+        linesep = "\\midrule[2pt]") |>
+      kable_styling(repeat_header_text = TRUE) |>
+      add_header_above(c("", "Group 1" = 2, "Group 2" = 2)) |>
+      add_footnote("The footnote") |>
+      footnote("Another footnote")
+  )
+})
+
 test_that("Issue #796", {
     expect_snapshot(
         kbl(mtcars[1:3, 1:4], caption = "Demo table", booktabs = TRUE, format = "latex") |>
@@ -6,10 +22,10 @@ test_that("Issue #796", {
 })
 
 
-# Issue #658: column_spec() fails at single-row headerless tables in latex format. 
+# Issue #658: column_spec() fails at single-row headerless tables in latex format.
 dat <- data.frame(x = 1, y = 1)
 dat <- setNames(dat, NULL)
-tab <- kbl(dat, format = "latex") %>% 
+tab <- kbl(dat, format = "latex") %>%
   column_spec(2, latex_column_spec = "l")
 expect_s3_class(tab, "knitr_kable")
 
@@ -51,4 +67,5 @@ expect_s3_class(tab, "kableExtra")
 #     scroll_box(width = "100%", height = "500px") |>
 #     column_spec(1, width = "40em", include_thead = FALSE)
 # expect_s3_class(tab, "kableExtra")
+
 

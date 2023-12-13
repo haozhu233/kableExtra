@@ -50,7 +50,7 @@ magic_mirror_latex <- function(kable_input){
   }
 
   # Booktabs
-  table_info$booktabs <- grepl("\\\\toprule", kable_input)
+  table_info$booktabs <- grepl(toprule_regexp, kable_input)
   # Align
   table_info$align <- gsub("\\|", "", str_match(
     kable_input, paste0("\\\\begin\\{",
@@ -107,7 +107,7 @@ magic_mirror_latex <- function(kable_input){
   table_info$nrow <- length(table_info$contents)
   table_info$duplicated_rows <- (sum(duplicated(table_info$contents)) != 0)
   # Column names
-  if (table_info$booktabs & !grepl("\\\\midrule", kable_input)) {
+  if (table_info$booktabs & !grepl(midrule_regexp, kable_input)) {
     table_info$colnames <- NULL
     table_info$position_offset <- 0
   } else {

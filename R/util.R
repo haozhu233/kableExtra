@@ -342,3 +342,11 @@ md_table_parser <- function(md_table) {
              caption=table_caption, booktabs = TRUE,
              longtable = TRUE))
 }
+
+# \toprule, \midrule and \bottomrule have an optional width argument #806
+# Match it all.  Sometimes these are used with
+# the extended regex language, sometimes with PCRE
+# or ICU, so be careful!
+toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
+midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
+bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"
