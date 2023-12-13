@@ -43,6 +43,8 @@ dark-themed Rstudio (#689).
 including extra stuff, like a style block.
 * Fixed minor spelling errors and typos in various places (#779, #709, #710, #676).
 * Resolved issue with `auto_format` default setting (#749).
+* Some table additions didn't work with custom rule
+widths (#806).
 
 Documentation and Maintenance:
 
