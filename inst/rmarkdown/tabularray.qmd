@@ -22,6 +22,7 @@ To create tables with `tabularray` in `kableExtra`, users only need to set the `
 
 ```{r}
 library(kableExtra)
+pkgload::load_all()
 
 df <- data.frame(Car = row.names(mtcars), mtcars[, 1:3])[1:4,]
 row.names(df) <- NULL
@@ -190,6 +191,24 @@ The [`tabularray` document describes many other arguments](https://ctan.org/pkg/
 ```{r}
 kbl(df, tabular = "tblr") |>
   row_spec(2, background = "pink, ht=3.5em, valign=f")
+```
+
+# Tall tables
+
+```{r}
+kbl(df, tabular = "talltblr", caption = "Blah blah")
+```
+
+# Long tables
+
+```{r}
+df2 <- data.frame(
+  numbers = 1:40,
+  letters = sample(letters, 40, replace = TRUE)
+)
+
+kbl(df2, tabular = "longtblr", align = "ll", caption = "Blah blah") |>
+  kable_styling(full_width = TRUE)
 ```
 
 # Solved bugs

@@ -238,6 +238,7 @@ init_tabularray <- function(x) {
     table_info <- magic_mirror(x)
     out <- x
 
+
     linesep <- ifelse(is.null(cl$linesep), "", cl$linesep)
     vline <- ifelse(is.null(cl$vline), "", cl$vline)
 
@@ -248,12 +249,19 @@ init_tabularray <- function(x) {
 
     # extract align from \begin{tblr}[t]{lrcc}
     tab_split <- strsplit(out, "\\n")[[1]]
-    idx <- grep("begin\\{tblr\\}", tab_split)
+    idx <- grep("begin\\{tblr\\}|begin\\{talltblr\\}|begin\\{longtblr\\}", tab_split)
     align <- tab_split[idx]
     align <- gsub(".*\\{(.*)}", "\\1", align)
     align <- strsplit(align, split = "|", fixed = TRUE)[[1]]
     align <- lapply(align, function(x) list(type = "Q", halign = x))
     align <- sapply(align, make_spec_tabularray)
+
+    # caption
+    if (is.character(cl[["caption"]])) {
+        caption <- paste0("caption={", cl[["caption"]], "}")
+    } else {
+        caption <- ""
+    }
 
     # basic rows
     rowspec <- rep("Q[]", table_info$nrow + table_info$position_offset)
@@ -262,12 +270,17 @@ init_tabularray <- function(x) {
     rowspec_string <- paste(rowspec, collapse = "")
 
     tmp <- sprintf(
-        "\\begin{tblr}{
+        "\\begin{%s}[
+%s,
+]
+{
 colspec={%s},
 rowspec={%s},
 %s,
 %s,
 }",
+        table_info$tabular,
+        caption,
         paste(align, collapse = ""),
         rowspec_string,
         linesep,

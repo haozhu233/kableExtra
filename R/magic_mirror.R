@@ -45,6 +45,10 @@ magic_mirror_latex <- function(kable_input){
     table_info$tabular <- "tabular"
   } else if (grepl("\\\\begin\\{tblr\\}", kable_input)) {
     table_info$tabular <- "tblr"
+  } else if (grepl("\\\\begin\\{longtblr\\}", kable_input)) {
+    table_info$tabular <- "longtblr"
+  } else if (grepl("\\\\begin\\{talltblr\\}", kable_input)) {
+    table_info$tabular <- "talltblr"
   } else {
     table_info$tabular <- "longtable"
   }

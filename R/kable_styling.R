@@ -376,7 +376,7 @@ pdfTable_styling <- function(kable_input,
   }
 
   if (full_width) {
-    if (!table_info$tabular %in% c("longtable", "tblr")) {
+    if (!table_info$tabular %in% c("longtable", "tblr", "talltblr", "longtblr")) {
       latex_table_env <- "tabu"
     }
     full_width_return <- styling_latex_full_width(out, table_info)
@@ -545,7 +545,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 
 styling_latex_full_width <- function(x, table_info) {
 
-  if (table_info$tabular == "tblr") {
+  if (table_info$tabular %in% c("tblr", "talltblr", "longtblr")) {
     colspec <- attr(x, "tabularray_colspec")
     for (i in seq_along(colspec)) {
       colspec[[i]][["type"]] <- "X"
