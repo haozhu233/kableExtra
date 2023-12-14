@@ -4,6 +4,7 @@ subtitle: "Flexible \\LaTeX{} tables"
 format: 
   pdf:
     toc: true
+    keep-tex: true
 ---
 
 \clearpage
@@ -30,7 +31,7 @@ row.names(df) <- NULL
 kbl(df, tabular = "tblr")
 ```
 
-# Why use `tabularray`?
+# Why `tabularray`?
 
 `kableExtra` supports the `tabularray` package for \LaTeX{} to create tables with advanced formatting options. `tabularray` offers several benefits:
 
@@ -186,6 +187,11 @@ kbl(df2, tabular = "tblr", escape = FALSE)
 
 The [`tabularray` document describes many other arguments](https://ctan.org/pkg/tabularray?lang=en) which are available to control cells, rows, and columns of a table. For example, the `ht` argument can control the height of a row.
 
+```{r}
+kbl(df, tabular = "talltblr") |>
+  kable_styling(latex_options = list(tabularray = c("note{a}={Blah blah}", "note{b}={Second note: $\\beta_2$.}")))
+```
+
 `kableExtra` does not have a `height` argument, but it is possible (and fun) to push through extra (unspecified) `tabularray` arguments through `background` argument. To understand how this works, note that when we call `background="red"`, `kableExtra` simply adds a string to the `rowspec` header: `fg=red`. If we extend the `background` entry, then we can specify height and vertical alignment too. Here, we use `f` for "foot" (also: `h`, `m`) and specify the height in `em` units (also: `cm`, `pt`, `in`):
 
 ```{r}
@@ -196,52 +202,62 @@ kbl(df, tabular = "tblr") |>
 # Tall tables
 
 ```{r}
-kbl(df, tabular = "talltblr", caption = "Blah blah")
+kbl(df, tabular = "talltblr",caption = "Blah blah") |>
+  kable_styling(latex_options = "HOLD_position")
 ```
 
 # Long tables
 
 ```{r}
+cities <- c(
+"Toronto", "Montreal", "Vancouver", "Calgary", "Edmonton", "Ottawa",
+"Winnipeg", "Quebec City", "Hamilton", "Kitchener", "London", "Victoria",
+"Halifax", "Oshawa", "Windsor", "Saskatoon", "Regina", "St. John's",
+"Sudbury", "Sherbrooke", "Barrie", "Kelowna", "Abbotsford", "Kingston",
+"Guelph", "Moncton", "Brantford", "Saint John", "Thunder Bay", "Peterborough",
+"Lethbridge", "Kamloops", "Nanaimo", "Sarnia", "Saint-Jean-sur-Richelieu",
+"Red Deer", "Chilliwack", "Sault Ste. Marie", "Drummondville", "Fredericton"
+)
 df2 <- data.frame(
-  numbers = 1:40,
-  letters = sample(letters, 40, replace = TRUE)
+  city = cities,
+  numbers = sprintf("%.5f", rnorm(40))
 )
 
-kbl(df2, tabular = "longtblr", align = "ll", caption = "Blah blah") |>
-  kable_styling(full_width = TRUE)
+kbl(df2, tabular = "longtblr", caption = "Blah blah") |>
+  kable_styling()
 ```
 
-# Notes
+# Footnotes and remarks
 
-The `notes` and `threepartable` arguments work as expected:
+The `footnote()` function from `kableExtra` works as expected, including the `threepartable` argument:
 
 ```{r}
 kbl(df,
     tabular = "tblr",
     note = "A first note",
     caption = "Blah blah") |>
-kable_styling(full_width = TRUE) |>
-column_spec(1, width = "4cm") |>
-footnote(
+  kable_styling(full_width = TRUE, latex_options = "HOLD_position") |>
+  footnote(
     threeparttable = TRUE,
     general = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Aliquam molestie, leo in placerat tristique, nisi diam laoreet lorem, molestie venenatis ex elit non leo. Vivamus posuere ligula quis felis vehicula, porta consectetur tortor fringilla. Fusce gravida venenatis consectetur. Sed a odio metus. Sed egestas dui sed justo accumsan volutpat. Phasellus a mollis dolor. Morbi luctus nibh at erat interdum, sed rutrum eros ultrices. Suspendisse at bibendum nibh. Duis sit amet nisi nec nisl pretium volutpat sed ut elit. Donec ultricies dapibus dolor, non congue purus vestibulum sit amet. Etiam molestie libero in hendrerit porttitor.") 
 ```
 
-In addition, we can use the `tabularray`-specific syntax inside tables:
+In addition, `tabularray` includes its own mechanism to append notes and remarks to the bottom of tables in the `longtblr` and `talltblr` formats. To insert a footnote with a marker inside a specific cell of the table, we insert a `\TblrNote{}` command inside the cell, and use `note` and/or `remark` in the `latex_options`:
 
 ```{r}
-df2 <- data.frame(
-  a = c("Blah", "Blah blah\")
+df <- data.frame(
+    blah = c("blah blah\\TblrNote{$\\dag$}", "blah blah blah"), 
+    location = c("Montreal", "Quebec")
 )
-```
-
-Using `tabularray`-specific syntax inside tables:
-
-```{r}
-df2 <- data.frame(
-  a = c("Blah", "Blah blah\\TblrNote{1}")
-)
-kbl(df2, tabular = "talltblr", escape = FALSE)
+kbl(df, tabular = "talltblr", escape = FALSE) |>
+    kable_styling(
+        latex_options = list(tabularray = c(
+            "caption={A caption.}",
+            "remark{Source}={A remark.}",
+            "remark{Note}={Another remark.}",
+            "note{$\\dag$}={A note.}")
+            )
+    )
 ```
 
 # Solved bugs
@@ -333,11 +349,38 @@ The bugs in this section should be easy to fix now.
 ```{r}
 groups <- c(3, 3, 5, 4, 3, 3, 3, 2, 3, 2, 3)
 groups <- setNames(groups, c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"))
-x <- data.frame(Term = c('Other', 'White', 'Black', '18 to 24', '25 to 39', '40 to 59', 'Married', 'No longer married', 'Never married', 'Living with partner', 'Missing', '0-1', '2-5', '6-10', '11+', '0-1', '2-5', '6+', '0-1', '2-5', '6+', '0-1', '2-5', '6+', 'Yes', 'No', 'Never', 'Ever', 'Missing', 'Never', 'Ever', 'Heterosexual', 'Homosexual/Bisexual', 'Other'),
-           uni = c('Ref', '0.87(0.36, 2.1)', '1.3(0.62, 2.7)^', 'Ref', '0.65(0.32, 1.3)', '0.69(0.38, 1.2)', 'Ref', '4.5(1.5, 13.5)**^', '3.8(1.6, 9.1)**^', '2.7(0.86, 8.3)^', '7.1(2.4, 20.7)***', 'Ref', '1.9(0.47, 7.3)^', '2.5(0.89, 6.9)^', '4.1(1.5, 11.6)**^', 'Ref', '4.2(2.2, 7.8)***', '14.1(2.6, 75.9)***^', 'Ref', '1.6(0.81, 3.1)^', '3.7(1.5, 9.2)**^', 'Ref', '2.8(1.2, 6.3)*^', '16.8(3.1, 92.5)***^', 'Ref', '0.59(0.28, 1.2)', 'Ref', '3.2(1.3, 7.9)*^', '6.6(3.3, 13.2)***', 'Ref', '2.7(1.5, 4.9)***', 'Ref', '1.4(0.48, 4.0)^', '0.69(0.16, 3.0)'),
-           adj = c('Ref', '0.63(0.21, 1.9)', '0.86(0.40, 1.8)', 'Ref', '1.5(0.43, 5.1)^', '2.1(0.75, 5.9)^', 'Ref', '2.5(0.73, 8.5)^', '2.8(0.79, 9.6)^', '2.0(0.62, 6.4)^', '5.9(1.0, 34.4)^', 'Ref', '0.99(0.14, 7.1)', '0.70(0.16, 3.1)', '0.57(0.11, 3.0)', 'Ref', '3.3(0.87, 12.8)^', '4.2(0.85, 20.3)^', 'Ref', '1.3(0.44, 3.8)^', '2.1(0.47, 9.6)^', 'Ref', '0.65(0.13, 3.2)', '2.6(0.54, 12.5)^', 'NA', 'NA', 'Ref', '2.3(0.81, 6.5)^', '1.8(0.31, 11.1)^', 'Ref', '1.7(0.89, 3.1)^', 'NA', 'NA', 'NA'),
-           uni1 = c('Ref', '1.1(0.37, 3.2)^', '0.67(0.19, 2.3)', 'Ref', '0.38(0.16, 0.89)*', '0.61(0.24, 1.5)', 'Ref', '3.5(1.0, 12.5)^', '2.4(0.84, 7.0)^', '1.7(0.34, 8.3)^', '8.0(2.5, 25.4)***', 'Ref', '1.2(0.23, 6.5)^', '2.5(0.81, 7.8)^', '4.1(1.3, 13.3)*^', 'Ref', '4.4(2.1, 9.3)***', '18.2(2.8, 120.2)***^', 'Ref', '2.9(0.96, 8.7)^', '6.0(1.9, 18.6)***^', 'Ref', '3.8(1.4, 10.4)*^', '22.5(3.2, 155.8)***^', 'Ref', '0.99(0.33, 3.0)', 'Ref', '4.8(1.8, 12.6)***^', '12.0(5.3, 27.1)***', 'Ref', '3.3(1.4, 7.9)*^', 'Ref', '0.98(0.24, 4.0)', '1.0(0.24, 4.6)^'),
-           adj1 = c('Ref', '0.73(0.22, 2.5)', '0.47(0.14, 1.6)', 'Ref', '0.88(0.15, 5.2)', '1.9(0.48, 7.6)^', 'Ref', '1.7(0.48, 6.0)^', '1.8(0.39, 8.0)^', '1.2(0.28, 5.5)^', '6.5(0.95, 44.8)^', 'Ref', '0.36(0.06, 2.2)', '0.41(0.09, 1.8)', '0.36(0.08, 1.7)', 'Ref', '3.2(0.45, 23.2)^', '4.6(0.55, 38.9)^', 'Ref', '3.0(0.75, 12.0)^', '3.1(0.54, 18.1)^', 'Ref', '0.95(0.11, 8.0)', '3.3(0.41, 26.8)^', 'NA', 'NA', 'Ref', '3.3(1.3, 8.1)*^', '1.9(0.27, 13.1)^', 'Ref', '1.4(0.70, 2.9)^', 'NA', 'NA', 'NA'))
+x <- data.frame(Term = c('Other', 'White', 'Black', '18 to 24', '25 to 39', '40
+to 59', 'Married', 'No longer married', 'Never married', 'Living with partner',
+'Missing', '0-1', '2-5', '6-10', '11+', '0-1', '2-5', '6+', '0-1', '2-5', '6+',
+'0-1', '2-5', '6+', 'Yes', 'No', 'Never', 'Ever', 'Missing', 'Never', 'Ever',
+'Heterosexual', 'Homosexual/Bisexual', 'Other'), uni = c('Ref', '0.87(0.36,
+2.1)', '1.3(0.62, 2.7)^', 'Ref', '0.65(0.32, 1.3)', '0.69(0.38, 1.2)', 'Ref',
+'4.5(1.5, 13.5)**^', '3.8(1.6, 9.1)**^', '2.7(0.86, 8.3)^', '7.1(2.4, 20.7)***',
+'Ref', '1.9(0.47, 7.3)^', '2.5(0.89, 6.9)^', '4.1(1.5, 11.6)**^', 'Ref',
+'4.2(2.2, 7.8)***', '14.1(2.6, 75.9)***^', 'Ref', '1.6(0.81, 3.1)^', '3.7(1.5,
+9.2)**^', 'Ref', '2.8(1.2, 6.3)*^', '16.8(3.1, 92.5)***^', 'Ref', '0.59(0.28,
+1.2)', 'Ref', '3.2(1.3, 7.9)*^', '6.6(3.3, 13.2)***', 'Ref', '2.7(1.5, 4.9)***',
+'Ref', '1.4(0.48, 4.0)^', '0.69(0.16, 3.0)'), adj = c('Ref', '0.63(0.21, 1.9)',
+'0.86(0.40, 1.8)', 'Ref', '1.5(0.43, 5.1)^', '2.1(0.75, 5.9)^', 'Ref',
+'2.5(0.73, 8.5)^', '2.8(0.79, 9.6)^', '2.0(0.62, 6.4)^', '5.9(1.0, 34.4)^',
+'Ref', '0.99(0.14, 7.1)', '0.70(0.16, 3.1)', '0.57(0.11, 3.0)', 'Ref',
+'3.3(0.87, 12.8)^', '4.2(0.85, 20.3)^', 'Ref', '1.3(0.44, 3.8)^', '2.1(0.47,
+9.6)^', 'Ref', '0.65(0.13, 3.2)', '2.6(0.54, 12.5)^', 'NA', 'NA', 'Ref',
+'2.3(0.81, 6.5)^', '1.8(0.31, 11.1)^', 'Ref', '1.7(0.89, 3.1)^', 'NA', 'NA',
+'NA'), uni1 = c('Ref', '1.1(0.37, 3.2)^', '0.67(0.19, 2.3)', 'Ref', '0.38(0.16,
+0.89)*', '0.61(0.24, 1.5)', 'Ref', '3.5(1.0, 12.5)^', '2.4(0.84, 7.0)^',
+'1.7(0.34, 8.3)^', '8.0(2.5, 25.4)***', 'Ref', '1.2(0.23, 6.5)^', '2.5(0.81,
+7.8)^', '4.1(1.3, 13.3)*^', 'Ref', '4.4(2.1, 9.3)***', '18.2(2.8, 120.2)***^',
+'Ref', '2.9(0.96, 8.7)^', '6.0(1.9, 18.6)***^', 'Ref', '3.8(1.4, 10.4)*^',
+'22.5(3.2, 155.8)***^', 'Ref', '0.99(0.33, 3.0)', 'Ref', '4.8(1.8, 12.6)***^',
+'12.0(5.3, 27.1)***', 'Ref', '3.3(1.4, 7.9)*^', 'Ref', '0.98(0.24, 4.0)',
+'1.0(0.24, 4.6)^'), adj1 = c('Ref', '0.73(0.22, 2.5)', '0.47(0.14, 1.6)', 'Ref',
+'0.88(0.15, 5.2)', '1.9(0.48, 7.6)^', 'Ref', '1.7(0.48, 6.0)^', '1.8(0.39,
+8.0)^', '1.2(0.28, 5.5)^', '6.5(0.95, 44.8)^', 'Ref', '0.36(0.06, 2.2)',
+'0.41(0.09, 1.8)', '0.36(0.08, 1.7)', 'Ref', '3.2(0.45, 23.2)^', '4.6(0.55,
+38.9)^', 'Ref', '3.0(0.75, 12.0)^', '3.1(0.54, 18.1)^', 'Ref', '0.95(0.11,
+8.0)', '3.3(0.41, 26.8)^', 'NA', 'NA', 'Ref', '3.3(1.3, 8.1)*^', '1.9(0.27,
+13.1)^', 'Ref', '1.4(0.70, 2.9)^', 'NA', 'NA', 'NA'))
 
 kbl(x, tabular = "tblr", row.names = FALSE) |>
   kable_styling(latex_options = c("striped", "scale_down")) |> 

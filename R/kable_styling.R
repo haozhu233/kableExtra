@@ -115,7 +115,7 @@ kable_styling <- function(kable_input,
   if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
     bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
   }
-  if (length(latex_options) == 1 && latex_options == "basic") {
+  if (is.character(latex_options) && length(latex_options) == 1 && latex_options == "basic") {
     latex_options <- getOption("kable_styling_latex_options", "basic")
   }
   if (position == "center") {
@@ -335,6 +335,23 @@ pdfTable_styling <- function(kable_input,
                              table.envir,
                              wraptable_width) {
 
+
+  # `latex_options`` can only be a list when using tabularray
+  table_info <- magic_mirror(kable_input)
+  tabularray_options <- NULL
+  if (!is.character(latex_options)) {
+    if (!table_info$tabular %in% c("tblr", "talltblr", "longtblr")) {
+      stop('`latex_options` can only be a character vector, unless `tabular` is one of "tblr", "talltbr", or "longtblr".', call. = FALSE)
+    }
+    if (is.list(latex_options)) {
+      tabularray_options <- latex_options[["tabularray"]]
+    }
+  }
+  if ("tabularray" %in% names(latex_options)) {
+    latex_options[["tabularray"]] <- NULL
+  }
+  latex_options <- unlist(latex_options)
+
   latex_options <- match.arg(
     latex_options,
     c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
@@ -345,6 +362,8 @@ pdfTable_styling <- function(kable_input,
   out <- solve_enc(kable_input)
 
   table_info <- magic_mirror(kable_input)
+
+  out <- styling_tabularray(out, tabularray_options = tabularray_options)
 
   if ("striped" %in% latex_options) {
     out <- styling_latex_striped(out, table_info, stripe_color, stripe_index)
@@ -546,15 +565,8 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 styling_latex_full_width <- function(x, table_info) {
 
   if (table_info$tabular %in% c("tblr", "talltblr", "longtblr")) {
-    colspec <- attr(x, "tabularray_colspec")
-    for (i in seq_along(colspec)) {
-      colspec[[i]][["type"]] <- "X"
-    }
-    colspec_string <- lapply(colspec, make_spec_tabularray)
-    colspec_string <- paste(colspec_string, collapse = attr(x, "tabularray_linesep"))
-    attr(x, "tabularray_colspec") <- colspec
-    x <- sub("colspec=.*", paste0("colspec={", colspec_string, "},"), x, perl = TRUE)
-    return(list(x, NULL))
+    out <- styling_latex_full_width_tabularray(x, table_info)
+    return(out)
   }
 
   col_align <- as.character(factor(

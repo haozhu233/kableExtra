@@ -12,11 +12,11 @@ row_spec_tabularray <- function(kable_input,
                                 angle = NULL,
                                 hline_after = NULL,
                                 extra_latex_after = NULL) {
-    out <- kable_input
-    rowspec <- attr(out, "tabularray_rowspec")
-    linesep <- attr(out, "tabularray_linesep")
-    table_info <- magic_mirror(out)
 
+    table_info <- magic_mirror(kable_input)
+    rowspec <- table_info$tabularray$rowspec
+    linesep <- table_info$tabularray$linesep
+    out <- kable_input
 
     # sanity checks
     if (!is.null(font_size)) {
@@ -63,10 +63,9 @@ row_spec_tabularray <- function(kable_input,
     # assumes that rowspec is on its own line
     out <- sub("rowspec=.*", rowspec_string, out, perl = TRUE)
 
-    attr(out, "tabularray_rowspec") <- rowspec
-
     # priority rowspec over colspec
     at <- attributes(out)
+    at$tabularray$rowspec <- rowspec
     out <- tmp <- strsplit(out, "\\n")[[1]]
     idx_col <- grep("^colspec=", tmp)[1]
     idx_row <- grep("^rowspec=", tmp)[1]
@@ -96,8 +95,9 @@ column_spec_tabularray <- function(kable_input,
                                    latex_column_spec) {
 
     out <- kable_input
-    vline <- attr(out, "tabularray_vline")
-    colspec <- attr(out, "tabularray_colspec")
+    table_info <- magic_mirror(out)
+    vline <- table_info$tabularray$vline
+    colspec <- table_info$tabularray$colspec
 
     # sanity checks
     if (!is.null(latex_column_spec)) {
@@ -140,10 +140,9 @@ column_spec_tabularray <- function(kable_input,
     # assumes that colspec is on its own line
     out <- sub("colspec=.*", colspec_string, out, perl = TRUE)
 
-    attr(out, "tabularray_colspec") <- colspec
-
     # priority colspec over rowspec
     at <- attributes(out)
+    at$tabularray$rowspec <- rowspec
     out <- tmp <- strsplit(out, "\\n")[[1]]
     idx_col <- grep("^colspec=", tmp)[1]
     idx_row <- grep("^rowspec=", tmp)[1]
@@ -296,15 +295,49 @@ rowspec={%s},
     for (n in names(at)) {
         attr(out, n) <- attr(x, n)
     }
-    attr(out, "tabularray_colspec") <- lapply(align, parse_spec_tabularray)
-    attr(out, "tabularray_rowspec") <- lapply(rowspec, parse_spec_tabularray)
-    attr(out, "tabularray_vline") <- vline
-    attr(out, "tabularray_linesep") <- linesep
+
+    attr(out, "tabularray") <- list(
+        colspec = lapply(align, parse_spec_tabularray),
+        rowspec = lapply(rowspec, parse_spec_tabularray),
+        vline = vline,
+        linesep = linesep
+    )
+
     class(out) <- class(x)
 
     return(out)
 }
 
+
+styling_tabularray <- function(x, tabularray_options = NULL) {
+    if (is.null(tabularray_options)) {
+        return(x)
+    }
+    tab <- strsplit(x, "\\n")[[1]]
+    idx <- which(tab %in% c("\\begin{tblr}[", "\\begin{talltblr}[", "\\begin{longtblr}["))[1]
+    out <- c(
+        tab[1:idx],
+        paste0(paste(tabularray_options, collapse = ", "), ","),
+        tab[(idx + 1):length(tab)])
+    out <- paste(out, collapse = "\n")
+    return(out)
+}
+
+styling_latex_full_width_tabularray <- function(x, table_info){
+    colspec <- table_info$tabularray$colspec
+    for (i in seq_along(colspec)) {
+      colspec[[i]][["type"]] <- "X"
+    }
+    colspec_string <- lapply(colspec, make_spec_tabularray)
+    colspec_string <- paste(colspec_string, collapse = table_info$tabularray$linesep)
+    at <- attributes(x)
+    at$tabularray$colspec <- colspec
+    x <- sub("colspec=.*", paste0("colspec={", colspec_string, "},"), x, perl = TRUE)
+    for (n in names(at)) {
+        attr(x, n) <- at[[n]]
+    }
+    return(list(x, NULL))
+}
 
 
 

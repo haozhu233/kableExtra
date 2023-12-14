@@ -53,6 +53,8 @@ magic_mirror_latex <- function(kable_input){
     table_info$tabular <- "longtable"
   }
 
+  table_info$tabularray <- attr(kable_input, "tabularray")
+
   # Booktabs
   table_info$booktabs <- grepl(toprule_regexp, kable_input)
   # Align
@@ -72,9 +74,10 @@ magic_mirror_latex <- function(kable_input){
                                      table_info$valign2)
   table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
 
+
   # N of columns
-  if (!is.null(attr(kable_input, "tabularray_colspec"))) {
-    table_info$ncol <- length(attr(kable_input, "tabularray_colspec"))
+  if (!is.null(table_info[["tabularray"]])) {
+    table_info$ncol <- length(table_info$tabularray$colspec)
   } else {
     table_info$ncol <- nchar(table_info$align)
   }
