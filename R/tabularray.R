@@ -156,18 +156,20 @@ column_spec_tabularray <- function(kable_input,
 
 cell_spec_tabularray <- function(
     x,
-    bold,
-    italic,
-    monospace,
-    underline,
-    strikeout,
-    color,
-    background,
-    align,
-    font_size,
-    angle,
-    escape,
-    latex_background_in_cell) {
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = "black",
+    background = "white",
+    align = "c",
+    font_size = NULL,
+    angle = NULL,
+    escape = TRUE,
+    multicolumn = 1,
+    multirow = 1,
+    ...) {
 
     if (escape) x <- escape_latex(x)
 
@@ -191,12 +193,22 @@ cell_spec_tabularray <- function(
             "}\\selectfont ", x, "\\egroup{}")
     }
     if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
-    if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
+    if (!is.null(align)) {
+        halign <- "halign=c"
+    } else {
+        halign <- paste0("halign=", align)
+    }
 
-    placeholder <- c(background, color, font, cmd)
+    placeholder <- c(background, color, font, cmd, halign)
     placeholder <- Filter(function(x) x != "", placeholder)
     placeholder <- paste(placeholder, collapse = ", ")
-    x <- paste0("\\SetCell{", placeholder, "} ", x)
+    x <- sprintf(
+        "\\SetCell[r=%s, c=%s]{%s}%s",
+        multirow,
+        multicolumn,
+        placeholder,
+        x)
+    x <- sub("SetCell[r=1, c=1]", "SetCell", x, fixed = TRUE)
     x <- gsub("\\\\\\\\", "\\\\", x)
 
     return(x)
@@ -265,15 +277,15 @@ init_tabularray <- function(x) {
     rowspec_string <- paste(rowspec, collapse = "")
 
     tmp <- sprintf(
-        "\\begin{%s}[
+        "\\begin{%s}[         %% tabularray square open
 %s,
-]
-{
+]                     %% tabularray square close
+{                     %% tabularray curly open
 colspec={%s},
 rowspec={%s},
 %s,
 %s,
-}",
+}                     %% tabularray curly close",
         table_info$tabular,
         caption,
         paste(align, collapse = ""),
@@ -337,19 +349,84 @@ styling_latex_full_width_tabularray <- function(x, table_info){
 }
 
 
+add_header_above_tabularray <- function(
+    kable_input,
+    header = NULL,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    align = "c",
+    color = NULL,
+    background = NULL,
+    font_size = NULL,
+    angle = NULL,
+    escape = TRUE,
+    line = TRUE,
+    line_sep = 3,
+    include_empty = FALSE,
+    border_left = FALSE,
+    border_right = FALSE,
+    ...) {
 
-# vectorize_style <- function(s, column) {
-#     if (is.null(s)) {
-#         return(rep("", length(column)))
-#     }
-#     if (length(s) == 1) {
-#         out <- rep(s, length(column))
-#     } else {
-#         out <- s
-#     }
-#     if (length(out) != length(column)) {
-#         msg <- sprintf("`column_spec()` error: length of style vector must be the same as the length of the `column` index vector.", length(column))
-#         stop(msg, .call = FALSE)
-#     }
-#     return(out)
-# }
+    if (is.null(header)) {
+        return(kable_input)
+    }
+
+    out <- kable_input
+    table_info <- magic_mirror(kable_input)
+
+    # sanity checks
+    if (length(table_info$tabularray$colspec) != sum(header)) {
+        stop("The length of `header` must be equal to the number of columns in the table.", call. = FALSE)
+    }
+
+    new_row <- ""
+    for (i in seq_along(header)) {
+       cell <- cell_spec_tabularray(names(header)[i], multicolumn = header[i], escape = TRUE)
+       pad <- strrep("&", header[i] - 1)
+       new_row <- paste(new_row, cell, pad, "\\\\", collapse = " ")
+    }
+
+    # Insert at the top of the table
+    browser()
+    out <- strsplit(out, "\\n")[[1]]
+    idx <- grep("tabularray curly close", out)
+    out <- c(
+        out[1:idx],
+        new_row,
+        out[(idx + 1):length(out)])
+    out <- paste(out, collapse = "\\n")
+
+    # TODO: 
+    # cmidrule
+    # table_info$tabularray$rowspec
+    # table_info$nrows
+
+    out <- structure(out, format = "latex", class = "knitr_kable")
+    attr(out, "kable_meta") <- table_info
+
+    return(out)
+}
+
+
+
+# \begin{tblr}[         % tabularray curly open
+# ]                     % tabularray curly close
+# {                     % tabularray square open
+# colspec={Q[halign=c]Q[halign=c]Q[halign=c]Q[halign=c]},
+# rowspec={Q[l]Q[]Q[]Q[]Q[]Q[]},
+# }                     % tabularray square close
+# \toprule
+# \SetCell[c=2]{c} Blah blah & 1-2 & \SetCell[c=2]{c} Oh yeah & 1-4 \\
+# \cmidrule[r]{1-2}
+# \cmidrule[l]{3-4}
+# car & mpg & qsec & carb\\
+# \midrule
+# Mazda RX4 & 21.0 & 16.46 & 4\\
+# Mazda RX4 Wag & 21.0 & 17.02 & 4\\
+# Datsun 710 & 22.8 & 18.61 & 1\\
+# Hornet 4 Drive & 21.4 & 19.44 & 1\\
+# \bottomrule
+# \end{tblr}
