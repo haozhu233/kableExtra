@@ -29,8 +29,8 @@ kbl(
     "\\\\hline"),
   midrule = getOption("knitr.table.midrule", if (booktabs) "\\\\midrule" else
     "\\\\hline"),
-  linesep = if (booktabs || tabular == "tblr") c("", "", "", "", "\\\\addlinespace") else
-    "\\\\hline",
+  linesep = if (booktabs || tabular \%in\% c("tblr", "talltblr", "longtblr")) c("", "",
+    "", "", "\\\\addlinespace") else "\\\\hline",
   caption.short = "",
   table.envir = if (!is.null(caption)) "table",
   ...
