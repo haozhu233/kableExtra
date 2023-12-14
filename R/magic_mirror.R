@@ -38,7 +38,8 @@ magic_mirror_latex <- function(kable_input){
                      valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
                      rownames = NULL, caption = NULL, caption.short = NULL,
                      contents = NULL,
-                     centering = FALSE, table_env = FALSE)
+                     centering = FALSE, table_env = FALSE,
+                     tabularray = attr(kable_input, "kable_meta")[["tabularray"]])
 
   # Tabular
   if (grepl("\\\\begin\\{tabular\\}", kable_input)) {
@@ -52,8 +53,6 @@ magic_mirror_latex <- function(kable_input){
   } else {
     table_info$tabular <- "longtable"
   }
-
-  table_info$tabularray <- attr(kable_input, "tabularray")
 
   # Booktabs
   table_info$booktabs <- grepl(toprule_regexp, kable_input)

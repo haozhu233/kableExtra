@@ -29,7 +29,7 @@ row_spec_tabularray <- function(kable_input,
         stop("`align` is not supported in `row_spec()` with tabularray. Use the `cell_spec()` function instead.", call. = FALSE)
     }
     if (!all(row %in% 0:length(rowspec))) {
-        msg <- sprintf("`row_spec()` error: column index must be between 1 and %s.", length(rowspec))
+        msg <- sprintf("`row_spec()` error: row index must be between 1 and %s.", length(rowspec))
         stop(msg, call. = FALSE)
     }
 
@@ -64,18 +64,16 @@ row_spec_tabularray <- function(kable_input,
     out <- sub("rowspec=.*", rowspec_string, out, perl = TRUE)
 
     # priority rowspec over colspec
-    at <- attributes(out)
-    at$tabularray$rowspec <- rowspec
     out <- tmp <- strsplit(out, "\\n")[[1]]
     idx_col <- grep("^colspec=", tmp)[1]
     idx_row <- grep("^rowspec=", tmp)[1]
     out[min(c(idx_col, idx_row))] <- tmp[idx_col]
     out[max(c(idx_col, idx_row))] <- tmp[idx_row]
     out <- paste(out, collapse = "\n")
-    for (n in names(at)) {
-        attr(out, n) <- at[[n]]
-    }
-    class(out) <- class(kable_input)
+
+    table_info$tabularray$rowspec <- rowspec
+    out <- structure(out, format = "latex", class = "knitr_kable")
+    attr(out, "kable_meta") <- table_info
 
     return(out)
 }
@@ -141,18 +139,16 @@ column_spec_tabularray <- function(kable_input,
     out <- sub("colspec=.*", colspec_string, out, perl = TRUE)
 
     # priority colspec over rowspec
-    at <- attributes(out)
-    at$tabularray$rowspec <- rowspec
     out <- tmp <- strsplit(out, "\\n")[[1]]
     idx_col <- grep("^colspec=", tmp)[1]
     idx_row <- grep("^rowspec=", tmp)[1]
     out[min(c(idx_col, idx_row))] <- tmp[idx_row]
     out[max(c(idx_col, idx_row))] <- tmp[idx_col]
     out <- paste(out, collapse = "\n")
-    for (n in names(at)) {
-        attr(out, n) <- at[[n]]
-    }
-    class(out) <- class(kable_input)
+
+    table_info$tabularray$colspec <- colspec
+    out <- structure(out, format = "latex", class = "knitr_kable")
+    attr(out, "kable_meta") <- table_info
 
     return(out)
 }
@@ -296,14 +292,15 @@ rowspec={%s},
         attr(out, n) <- attr(x, n)
     }
 
-    attr(out, "tabularray") <- list(
+    table_info$tabularray <- list(
         colspec = lapply(align, parse_spec_tabularray),
         rowspec = lapply(rowspec, parse_spec_tabularray),
         vline = vline,
         linesep = linesep
     )
 
-    class(out) <- class(x)
+    out <- structure(out, format = "latex", class = "knitr_kable")
+    attr(out, "kable_meta") <- table_info
 
     return(out)
 }
