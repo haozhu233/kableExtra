@@ -211,17 +211,51 @@ kbl(df2, tabular = "longtblr", align = "ll", caption = "Blah blah") |>
   kable_styling(full_width = TRUE)
 ```
 
+# Notes
+
+The `notes` and `threepartable` arguments work as expected:
+
+```{r}
+kbl(df,
+    tabular = "tblr",
+    note = "A first note",
+    caption = "Blah blah") |>
+kable_styling(full_width = TRUE) |>
+column_spec(1, width = "4cm") |>
+footnote(
+    threeparttable = TRUE,
+    general = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Aliquam molestie, leo in placerat tristique, nisi diam laoreet lorem, molestie venenatis ex elit non leo. Vivamus posuere ligula quis felis vehicula, porta consectetur tortor fringilla. Fusce gravida venenatis consectetur. Sed a odio metus. Sed egestas dui sed justo accumsan volutpat. Phasellus a mollis dolor. Morbi luctus nibh at erat interdum, sed rutrum eros ultrices. Suspendisse at bibendum nibh. Duis sit amet nisi nec nisl pretium volutpat sed ut elit. Donec ultricies dapibus dolor, non congue purus vestibulum sit amet. Etiam molestie libero in hendrerit porttitor.") 
+```
+
+In addition, we can use the `tabularray`-specific syntax inside tables:
+
+```{r}
+df2 <- data.frame(
+  a = c("Blah", "Blah blah\")
+)
+```
+
+Using `tabularray`-specific syntax inside tables:
+
+```{r}
+df2 <- data.frame(
+  a = c("Blah", "Blah blah\\TblrNote{1}")
+)
+kbl(df2, tabular = "talltblr", escape = FALSE)
+```
+
 # Solved bugs
 
 This section prints several tables which previous included bugs, as reported by `kableExtra` users on the issue tracker. This illustrates that `tabularray` solves many longstanding problems.
 
 ## Issue #616
 
+
 ```{r}
 mtcars %>%
   head(n = 10) %>%
   kbl(tabular = "tblr") %>%
-  kable_styling() |>
+  kable_styling(latex_options = "HOLD_position") |>
   row_spec(seq(1, 10, by = 2), background = "gray8, ht=1cm") |>
   row_spec(seq(2, 10, by = 2), background = "white, ht=1cm")
 ```
