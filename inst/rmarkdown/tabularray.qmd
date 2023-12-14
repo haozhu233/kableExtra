@@ -4,7 +4,6 @@ subtitle: ""
 format: 
   pdf:
     toc: true
-    keep-tex: true
 ---
 
 \clearpage
@@ -17,7 +16,6 @@ To create tables with `tabularray` in `kableExtra`, users only need to set the `
 
 ```{r}
 library(kableExtra)
-pkgload::load_all()
 
 df <- data.frame(
   car = row.names(mtcars),
@@ -159,7 +157,7 @@ Under the hood, to fix the width of certain columns or expand the table to full 
 When using the `kable_styling()` function in R for \LaTeX{} output and setting `full_width = TRUE`, the table automatically employs `X` columns. This configuration makes the table expand to fill the width of its container, with each column adjusting its width to fit proportionally. This is a key feature for creating full-width tables that need to be responsive and aesthetically balanced in their layout.
 
 
-# Cell-specific settings
+# Cell specification
 
 To apply cell-specific settings, we can use the `cell_spec()` function. In `kbl()`, it is necessary to use `escape=TRUE` and `tabular="tblr"`. In `cell_spec()`, it is necessary to use `tabular="tblr"`:
 
@@ -227,12 +225,13 @@ Mazda RX4 Wag & 21.0 \\
 \end{longtblr}
 ```
 
-To set outer options in `kableExtra`, we use the `kable_styling()` function and its `latex_options` argument:
+To set outer options in Table \ref{tab:mytable}, we used the `kable_styling()` function and its `latex_options` argument:
 
 ```{r}
 kbl(df, tabular = "longtblr") |>
   kable_styling(latex_options = list(tabularray = c(
-    caption = "A caption.",
+    "caption = {A caption.}",
+    "label = {tab:mytable}",
     "headsep = 12pt"
   )))
 ```
@@ -243,15 +242,15 @@ For example, the `row_spec()` function from `kableExtra` does not have an argume
 
 ```{r}
 kbl(df, tabular = "tblr") |>
-  row_spec(2, background = "pink, ht=3.5em, valign=f") |>
-  cat()
+  row_spec(2, background = "pink, ht=3.5em, valign=f") 
 ```
 
-In the code above, you'll note that the `rowspec` line has been modified: The second row will now be taller, and the text will be foot-aligned. The compiled table looks like this: 
+The code for this table is printed below. You will note that the `rowspec` line has been modified: The second row will now be taller, and the text will be foot-aligned.
 
 ```{r, echo = FALSE}
 kbl(df, tabular = "tblr") |>
-  row_spec(2, background = "pink, ht=3.5em, valign=f")
+  row_spec(2, background = "pink, ht=3.5em, valign=f") |>
+  cat()
 ```
 
 # Footnotes and remarks

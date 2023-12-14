@@ -3,6 +3,7 @@ kableExtra 1.4.0
 
 New Features:
 
+* `tabularray` support for flexible LaTeX tables. See the new vignette.
 * Added live preview of inline plots (#777).
 * Add feature to scale_up and scale_down latex tables (#753)
 * Added row grouping feature with `row_group_label_position = first` option (#711).
