@@ -17,7 +17,12 @@ row_spec_tabularray <- function(kable_input,
     rowspec <- table_info$tabularray$rowspec
     out <- kable_input
 
-    # sanity checks
+    # assertions
+    # the reason why we force arguments to be scalar is that that vector
+    # arguments are fundamentally at odds with the design philosophy of
+    # tabularray, which separates style and data, and applies styles to complete
+    # rows and columns. it makes more sense to return an informative pointing
+    # users to cell_spec(), which can easily deal with the same use case.
     if (!all(sapply(list(font_size, angle, align), is.null))) {
         msg <- "`row_spec()` does not support these arguments for `tabularray` tables: `font_size`, `angle`, `align`. Please use the `cell_spec()` function."
         stop(msg, call. = FALSE)
@@ -34,17 +39,17 @@ row_spec_tabularray <- function(kable_input,
     row <- table_info$position_offset + row
 
     for (r in row) {
-        rowspec[[r]][["fg"]] <- ifelse(is.character(color), color, "")
-        rowspec[[r]][["bg"]] <- ifelse(is.character(background), background, "")
+        if (is.character(color)) rowspec[[r]][["fg"]] <- color
+        if (is.character(background)) rowspec[[r]][["bg"]] <- background
 
         font <- ""
-        font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
-        font <- ifelse(monospace, paste0(font, "\\\\ttfamily"), font)
-        font <- ifelse(italic, paste0(font, "\\\\itshape"), font)
+        if (bold) font <- paste0(font, "\\\\bfseries")
+        if (monospace) font <- paste0(font, "\\\\ttfamily")
+        if (italic) font <- paste0(font, "\\\\itshape")
 
         cmd <- ""
-        cmd <- ifelse(underline, paste0(cmd, "\\\\kableExtraTabularrayUnderline{#1}"), cmd)
-        cmd <- ifelse(strikeout, paste0(cmd, "\\\\kableExtraTabularrayStrikeout{#1}"), cmd)
+        if (underline) cmd <- paste0(cmd, "\\\\kableExtraTabularrayUnderline{#1}")
+        if (strikeout) cmd <- paste0(cmd, "\\\\kableExtraTabularrayStrikeout{#1}")
 
         rowspec[[r]][["font"]] <- font
         rowspec[[r]][["cmd"]] <- cmd
@@ -97,6 +102,11 @@ column_spec_tabularray <- function(kable_input,
     colspec <- table_info$tabularray$colspec
 
     # assertions
+    # the reason why we force arguments to be scalar is that that vector
+    # arguments are fundamentally at odds with the design philosophy of
+    # tabularray, which separates style and data, and applies styles to complete
+    # rows and columns. it makes more sense to return an informative pointing
+    # users to cell_spec(), which can easily deal with the same use case.
     if (!is.null(latex_column_spec)) {
         msg <- "latex_column_spec not supported with tabularray"
         stop(msg, call. = FALSE)
@@ -118,19 +128,19 @@ column_spec_tabularray <- function(kable_input,
     valign <- if (latex_valign == "p") latex_valign <- "m"
 
     for (col in column) {
-        colspec[[col]][["wd"]] <- ifelse(is.character(width), width, "")
-        colspec[[col]][["fg"]] <- ifelse(is.character(color), color, "")
-        colspec[[col]][["bg"]] <- ifelse(is.character(background), background, "")
-        colspec[[col]][["valign"]] <- ifelse(is.character(valign), valign, "")
+        if (is.character(width)) colspec[[col]][["wd"]] <- width
+        if (is.character(color)) colspec[[col]][["fg"]] <- color
+        if (is.character(background)) colspec[[col]][["bg"]] <- background
+        if (is.character(valign)) colspec[[col]][["valign"]] <- valign
 
         font <- ""
-        font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
-        font <- ifelse(monospace, paste0(font, "\\\\ttfamily"), font)
-        font <- ifelse(italic, paste0(font, "\\\\itshape"), font)
+        if (bold) font <- paste0(font, "\\\\bfseries")
+        if (monospace) font <- paste0(font, "\\\\ttfamily")
+        if (italic) font <- paste0(font, "\\\\itshape")
 
         cmd <- ""
-        cmd <- ifelse(underline, paste0(cmd, "\\\\kableExtraTabularrayUnderline{#1}"), cmd)
-        cmd <- ifelse(strikeout, paste0(cmd, "\\\\kableExtraTabularrayStrikeout{#1}"), cmd)
+        if (underline) cmd <- paste0(cmd, "\\\\kableExtraTabularrayUnderline{#1}")
+        if (strikeout) cmd <- paste0(cmd, "\\\\kableExtraTabularrayStrikeout{#1}")
 
         colspec[[col]][["font"]] <- font
         colspec[[col]][["cmd"]] <- cmd
@@ -184,16 +194,16 @@ cell_spec_tabularray <- function(
     background <- ifelse(is.null(background), "", paste0("bg=", background))
     color <- ifelse(is.null(color), "", paste0("fg=", color))
 
-    font <- ""
+    font <- rep("", length(x))
     font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
     font <- ifelse(monospace, paste0(font, "\\\\ttfamily"), font)
     font <- ifelse(italic, paste0(font, "\\\\itshape"), font)
-    if (font != "") font <- paste0("font=", font)
+    font <- ifelse(font != "", paste0("font=", font), font)
 
-    cmd <- ""
+    cmd <- rep("", length(x))
     cmd <- ifelse(underline, paste0(cmd, "\\\\kableExtraTabularrayUnderline{\\#1}"), cmd)
     cmd <- ifelse(strikeout, paste0(cmd, "\\\\kableExtraTabularrayStrikeout{\\#1}"), cmd)
-    if (cmd != "") cmd <- paste0("cmd=", cmd)
+    cmd <- ifelse(cmd != "", paste0("cmd=", cmd), cmd)
 
     if (!is.null(font_size)) {
         x <- paste0(
@@ -256,7 +266,7 @@ init_tabularray <- function(
     table_info <- magic_mirror(kable_input)
     out <- kable_input
 
-    vline <- ifelse(is.null(vline), "", vline)
+    if (is.null(vline)) vline <- ""
 
     # extract align from \begin{tblr}[t]{lrcc}
     tab_split <- strsplit(out, "\\n")[[1]]
