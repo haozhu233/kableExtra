@@ -16,7 +16,6 @@ To create tables with `tabularray` in `kableExtra`, users only need to set the `
 
 ```{r}
 library(kableExtra)
-pkgload::load_all()
 
 df <- data.frame(
   car = row.names(mtcars),
@@ -132,7 +131,7 @@ kbl(df,
 
 To achieve this result, we began by removing the default horizontal rules (`toprule`, `midrule`, `bottomrule`), otherwise, there would be double horizontal lines in the table. Then, we use the `linesep` argument to tell `tabularray` how to format horizontal lines in the table, and the `vline` argument to control vertical lines. 
 
-When `vlines` and `hlines` are in plural form, they control all lines in the table. `tabularray` also supports another syntax for specifying individual lines. For example, we can control the color, width, and type of lines as follows::
+When `vlines` and `hlines` are in plural form, they control all lines in the table. `tabularray` also supports another syntax for specifying individual lines. For example, we can control the color, width, and type of lines as follows:
 
 ```{r}
 kbl(df,
@@ -142,6 +141,20 @@ kbl(df,
     vline = "vline{2,3}={dash=dotted, fg=green4}"
 )
 ```
+
+Of course, we can still use the usual `kableExtra` interface:
+
+```{r}
+kbl(mtcars[1:5, 1:4],
+    caption = "kable colour lines and vary thickness",
+    booktabs = TRUE,
+    vline = "",
+    toprule = "\\arrayrulecolor{lightgray}\\toprule[4pt]",
+    midrule = "\\arrayrulecolor{lightgray}\\midrule[3pt]",
+    bottomrule = "\\arrayrulecolor{orange}\\bottomrule[5pt]",
+    linesep = "\\arrayrulecolor{lightgray}\\midrule[2pt]")
+```
+
 
 # Width
 
@@ -200,7 +213,7 @@ kbl(df2, tabular = "longtblr", caption = "Blah blah") |>
 # Tall tables
 
 ```{r}
-kbl(df, tabular = "talltblr",caption = "Blah blah") |>
+kbl(df, tabular = "talltblr", caption = "Blah blah") |>
   kable_styling(latex_options = "HOLD_position")
 ```
 
@@ -270,10 +283,7 @@ lorem <- paste(c(
 "dapibus dolor, non congue purus vestibulum sit amet. Etiam molestie libero in."),
 collapse = " ")
 
-kbl(df,
-    tabular = "tblr",
-    note = "A first note",
-    caption = "Blah blah") |>
+kbl(df, tabular = "tblr", caption = "Blah blah") |>
   kable_styling(full_width = TRUE, latex_options = "HOLD_position") |>
   footnote(
     threeparttable = TRUE,
@@ -344,10 +354,14 @@ set.seed(1024)
 paint <- function(x) {
   col <- ifelse(x < 0.5, "yellow", "red")
   sapply(seq_along(x), function(i) cell_spec(
-    formatC(x[i], format = "f", digits = 2), background = col[i], format = "tblr")
+    formatC(x[i], format = "f", digits = 2),
+    background = col[i], format = "tblr")
   )
 }
-DF <- data.frame(V1 = sample(letters,10,T), V2 = abs(rnorm(10)), V3 = abs(rnorm(10)))
+DF <- data.frame(
+  V1 = sample(letters,10,T),
+  V2 = abs(rnorm(10)),
+  V3 = abs(rnorm(10)))
 DF[,-1] = lapply(DF[,-1], paint)
 
 kbl(DF, tabular = "tblr", digits = 2, escape = FALSE) |>
@@ -365,8 +379,11 @@ mtcars[1:3, 1:3] |>
 ## Issue #660
 
 ```{r}
-kbl(mtcars[1:7, ], align = "c", tabular = "tblr", booktabs = TRUE, linesep = "") %>%
-  kable_styling(latex_options = c("striped", "HOLD_position"), full_width = TRUE) %>%
+kbl(mtcars[1:7, ], align = "c", tabular = "tblr",
+    booktabs = TRUE, linesep = "") %>%
+  kable_styling(
+    latex_options = c("striped", "HOLD_position"),
+    full_width = TRUE) %>%
   column_spec(1, width = "4cm")
 ```
 
@@ -389,7 +406,8 @@ kbl(dt, format = "latex", tabular = "tblr") |>
 ```{r}
 t <- head(cars)
 t$dist <- cell_spec(t$dist, background = "red", format = "tblr")
-kbl(t, tabular = "tblr", escape = FALSE) |> kable_styling(latex_options = c("striped"))
+kbl(t, tabular = "tblr", escape = FALSE) |>
+  kable_styling(latex_options = c("striped"))
 ```
 
 # Remaining bugs 

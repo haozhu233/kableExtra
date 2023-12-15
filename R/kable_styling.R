@@ -395,10 +395,15 @@ pdfTable_styling <- function(kable_input,
   }
 
   if (full_width) {
-    if (!table_info$tabular %in% c("longtable", "tblr", "talltblr", "longtblr")) {
+    if (table_info$tabular %in% c("tblr", "talltblr", "longtblr")) {
+      # styling_latex_full_width_tabularray() changes
+      # table_info$tabularray$colspec: Q[] -> X[]
+      full_width_return <- styling_latex_full_width(out, table_info)
+      table_info <- magic_mirror(full_width_return[[1]])
+    } else if (!table_info$tabular %in% "longtable") {
       latex_table_env <- "tabu"
+      full_width_return <- styling_latex_full_width(out, table_info)
     }
-    full_width_return <- styling_latex_full_width(out, table_info)
     out <- full_width_return[[1]]
     table_info$align_vector <- full_width_return[[2]]
   }

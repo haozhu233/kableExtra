@@ -111,9 +111,9 @@ column_spec_tabularray <- function(kable_input,
 
     for (col in column) {
         colspec[[col]][["wd"]] <- ifelse(is.character(width) && length(width) == 1, width, "")
-        colspec[[col]][["fg"]] <- ifelse(is.character(color) && length(width) == 1, color, "")
-        colspec[[col]][["bg"]] <- ifelse(is.character(background) && length(width) == 1, background, "")
-        colspec[[col]][["valign"]] <- ifelse(is.character(valign) && length(width) == 1, valign, "")
+        colspec[[col]][["fg"]] <- ifelse(is.character(color) && length(color) == 1, color, "")
+        colspec[[col]][["bg"]] <- ifelse(is.character(background) && length(background) == 1, background, "")
+        colspec[[col]][["valign"]] <- ifelse(is.character(valign) && length(valign) == 1, valign, "")
 
         font <- ""
         font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
@@ -253,7 +253,7 @@ init_tabularray <- function(
     # override knitr::kable linesep
     # linesep can be a LaTeX command or a tabularray argument.
     # LaTeX command start with \\
-    linesep_tabularray <- !grepl("^\\\\", trimws(linesep))
+    linesep_tabularray <- !any(grepl("^\\\\", trimws(linesep)))
     out <- strsplit(out, "\n")[[1]]
     if (linesep_tabularray) {
         out <- out[out != linesep]
@@ -339,18 +339,18 @@ styling_tabularray <- function(x, tabularray_options = NULL) {
 
 styling_latex_full_width_tabularray <- function(x, table_info){
     colspec <- table_info$tabularray$colspec
-    for (i in seq_along(colspec)) {
-      colspec[[i]][["type"]] <- "X"
+    out <- strsplit(x, "\\n")[[1]]
+    idx <- grep("^colspec=", out)
+    if (!is.na(idx)) {
+        out[idx[1]] <- gsub("Q[", "X[", out[idx[1]], fixed = TRUE)
     }
-    colspec_string <- lapply(colspec, make_spec_tabularray)
-    colspec_string <- paste(colspec_string, collapse = table_info$tabularray$linesep)
-    at <- attributes(x)
-    at$tabularray$colspec <- colspec
-    x <- sub("colspec=.*", paste0("colspec={", colspec_string, "},"), x, perl = TRUE)
-    for (n in names(at)) {
-        attr(x, n) <- at[[n]]
+    for (i in seq_along(table_info$tabularray$colspec)) {
+      table_info$tabularray$colspec[[i]][["type"]] <- "X"
     }
-    return(list(x, NULL))
+    out <- paste(out, collapse = "\n")
+    out <- structure(out, format = "latex", class = "knitr_kable")
+    attr(out, "kable_meta") <- table_info
+    return(list(out, NULL))
 }
 
 

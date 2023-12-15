@@ -85,9 +85,13 @@ kbl <- function(x, format, digits = getOption("digits"),
     format <- "latex"
   } 
   if (isTRUE(tabular %in% c("talltblr", "longtblr"))) {
-    caption <- NULL
-    longtable <- FALSE
-    table.envir <- NULL
+    caption_internal <- NULL
+    longtable_internal <- FALSE
+    table.envir_internal <- NULL
+  } else {
+    caption_internal <- caption
+    longtable_internal <- longtable
+    table.envir_internal <- table.envir
   }
 
   if (missing(format) || is.null(format)) {
@@ -113,20 +117,20 @@ kbl <- function(x, format, digits = getOption("digits"),
     out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
-      caption = caption, label = label, format.args = format.args,
+      caption = caption_internal, label = label, format.args = format.args,
       escape = escape,
-      booktabs = booktabs, longtable = longtable,
+      booktabs = booktabs, longtable = longtable_internal,
       tabular = tabular,
       valign = valign, position = position, centering = centering,
       vline = vline_internal, toprule = toprule, bottomrule = bottomrule,
       midrule = midrule, linesep = linesep, caption.short = caption.short,
-      table.envir = table.envir, ...
+      table.envir = table.envir_internal, ...
     )
   } else if (format == "html") {
     out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
-      caption = caption, label = label, format.args = format.args,
+      caption = caption_internal, label = label, format.args = format.args,
       escape = escape,
       table.attr = table.attr, ...
     )
@@ -135,7 +139,7 @@ kbl <- function(x, format, digits = getOption("digits"),
     out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,
-      caption = caption, label = label, format.args = format.args,
+      caption = caption_internal, label = label, format.args = format.args,
       escape = escape, ...
     )
 
