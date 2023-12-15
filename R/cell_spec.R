@@ -57,7 +57,6 @@ cell_spec <- function(x, format,
                       escape = TRUE,
                       background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
-
   if (missing(format) || is.null(format)) {
     if (knitr::is_latex_output()) {
       format <- "latex"
@@ -66,19 +65,32 @@ cell_spec <- function(x, format,
     }
   }
   if (tolower(format) == "html") {
-    return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
-                          color, background, align, font_size, angle,
-                          tooltip, popover, link, new_tab, extra_css,
-                          escape, background_as_tile))
+    return(cell_spec_html(
+      x, bold, italic, monospace, underline, strikeout,
+      color, background, align, font_size, angle,
+      tooltip, popover, link, new_tab, extra_css,
+      escape, background_as_tile))
   } else if (tolower(format) == "latex") {
-    return(cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
-                           color, background, align, font_size, angle, escape,
-                           latex_background_in_cell))
-  } else if (tolower(format) == "tblr") {
-    return(cell_spec_tabularray(
+    return(cell_spec_latex(
       x, bold, italic, monospace, underline, strikeout,
       color, background, align, font_size, angle, escape,
       latex_background_in_cell))
+  } else if (tolower(format) %in% c("tblr", "talltblr", "longtblr")) {
+    return(cell_spec_tabularray(
+      x,
+      bold = bold,
+      italic = italic,
+      monospace = monospace,
+      underline = underline,
+      strikeout = strikeout,
+      color = color,
+      background = background,
+      align = align,
+      font_size = font_size,
+      angle = angle,
+      escape = escape,
+      latex_background_in_cell = latex_background_in_cell
+    ))
   }
 }
 

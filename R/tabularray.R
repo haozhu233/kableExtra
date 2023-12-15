@@ -323,9 +323,9 @@ styling_tabularray <- function(x, tabularray_options = NULL) {
         return(x)
     }
     tab <- strsplit(x, "\\n")[[1]]
-    idx <- which(tab %in% c("\\begin{tblr}[", "\\begin{talltblr}[", "\\begin{longtblr}["))[1]
+    idx <- grep("tabularray square open", tab)[1]
     out <- c(
-        tab[1:idx],
+        tab[seq_len(idx)],
         paste0(paste(tabularray_options, collapse = ", "), ","),
         tab[(idx + 1):length(tab)])
     out <- paste(out, collapse = "\n")
@@ -421,7 +421,7 @@ add_header_above_tabularray <- function(
         idx <- idx + 1
     }
     out <- c(
-        out[1:idx],
+        out[seq_len(idx)],
         new_row,
         out[(idx + 1):length(out)])
     out <- paste(out, collapse = "\n")
