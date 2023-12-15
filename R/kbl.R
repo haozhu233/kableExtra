@@ -144,7 +144,7 @@ kbl <- function(x, format, digits = getOption("digits"),
     )
 
   # call is important for tabularray
-  if (format == "latex" && tabular %in% c("tblr", "talltblr", "longtblr")) {
+  if (format == "latex" && isTRUE(tabular %in% c("tblr", "talltblr", "longtblr"))) {
     out <- init_tabularray(
       kable_input = out,
       format = format,

@@ -106,7 +106,7 @@ add_header_above <- function(kable_input, header = NULL,
 
   table_info <- magic_mirror(kable_input)
 
-  if (table_info$tabular %in% c("tblr", "longtblr", "talltblr")) {
+  if (isTRUE(table_info$tabular %in% c("tblr", "longtblr", "talltblr"))) {
     out <- add_header_above_tabularray(
       kable_input = kable_input,
       header = header,
@@ -335,7 +335,8 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   table_info <- magic_mirror(kable_input)
 
   if (is.data.frame(header)){
-    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+    # internally header can have 4 columns: header, colspan, start, end
+    if(ncol(header) %in% c(2, 4) & is.character(header[[1]]) & is.numeric(header[[2]])){
       header <- data.frame(header = header[[1]], colspan = header[[2]],
                            stringsAsFactors = FALSE)
     }
