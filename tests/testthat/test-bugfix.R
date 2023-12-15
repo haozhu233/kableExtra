@@ -2,6 +2,7 @@ test_that("Issue #806: custom rule widths", {
   expect_snapshot(
     kbl(mtcars[1:3, 1:4],
         caption="kable vary line thickness",
+        format = "latex",
         booktabs = TRUE,
         toprule = "\\toprule[4pt]",
         midrule = "\\midrule[3pt]",

@@ -2,62 +2,32 @@
 
     Code
       footnote(add_footnote(add_header_above(kable_styling(kbl(mtcars[1:3, 1:4],
-      caption = "kable vary line thickness", booktabs = TRUE, toprule = "\\toprule[4pt]",
-      midrule = "\\midrule[3pt]", bottomrule = "\\bottomrule[5pt]", linesep = "\\midrule[2pt]"),
-      repeat_header_text = TRUE), c("", `Group 1` = 2, `Group 2` = 2)),
-      "The footnote"), "Another footnote")
+      caption = "kable vary line thickness", format = "latex", booktabs = TRUE,
+      toprule = "\\toprule[4pt]", midrule = "\\midrule[3pt]", bottomrule = "\\bottomrule[5pt]",
+      linesep = "\\midrule[2pt]"), repeat_header_text = TRUE), c("", `Group 1` = 2,
+        `Group 2` = 2)), "The footnote"), "Another footnote")
     Output
-      <table class="table" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
-      <caption>kable vary line thickness</caption>
-       <thead>
-      <tr>
-      <th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
-      <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Group 1</div></th>
-      <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Group 2</div></th>
-      </tr>
-        <tr>
-         <th style="text-align:left;">   </th>
-         <th style="text-align:right;"> mpg </th>
-         <th style="text-align:right;"> cyl </th>
-         <th style="text-align:right;"> disp </th>
-         <th style="text-align:right;"> hp </th>
-        </tr>
-       </thead>
-      <tbody>
-        <tr>
-         <td style="text-align:left;"> Mazda RX4 </td>
-         <td style="text-align:right;"> 21.0 </td>
-         <td style="text-align:right;"> 6 </td>
-         <td style="text-align:right;"> 160 </td>
-         <td style="text-align:right;"> 110 </td>
-        </tr>
-        <tr>
-         <td style="text-align:left;"> Mazda RX4 Wag </td>
-         <td style="text-align:right;"> 21.0 </td>
-         <td style="text-align:right;"> 6 </td>
-         <td style="text-align:right;"> 160 </td>
-         <td style="text-align:right;"> 110 </td>
-        </tr>
-        <tr>
-         <td style="text-align:left;"> Datsun 710 </td>
-         <td style="text-align:right;"> 22.8 </td>
-         <td style="text-align:right;"> 4 </td>
-         <td style="text-align:right;"> 108 </td>
-         <td style="text-align:right;"> 93 </td>
-        </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-      <td style="padding: 0; border:0;" colspan="100%">
-      <sup>a</sup> The footnote</td>
-      </tr>
-      </tfoot>
-      <tfoot>
-      <tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
-      <tr><td style="padding: 0; " colspan="100%">
-      <sup></sup> Another footnote</td></tr>
-      </tfoot>
-      </table>
+      \begin{table}
+      \centering
+      \caption{kable vary line thickness}
+      \centering
+      \begin{tabular}[t]{lrrrr}
+      \toprule[4pt]
+      \multicolumn{1}{c}{} & \multicolumn{2}{c}{Group 1} & \multicolumn{2}{c}{Group 2} \\
+      \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+        & mpg & cyl & disp & hp\\
+      \midrule[3pt]
+      Mazda RX4 & 21.0 & 6 & 160 & 110\\
+      \midrule[2pt]
+      Mazda RX4 Wag & 21.0 & 6 & 160 & 110\\
+      \midrule[2pt]
+      Datsun 710 & 22.8 & 4 & 108 & 93\\
+      \bottomrule[5pt]
+      \multicolumn{5}{l}{\rule{0pt}{1em}\textit{Note: }}\\
+      \multicolumn{5}{l}{\rule{0pt}{1em}Another footnote}\\
+      \multicolumn{5}{l}{\textsuperscript{a} The footnote}\\
+      \end{tabular}
+      \end{table}
 
 # Issue #796
 
