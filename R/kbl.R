@@ -76,9 +76,6 @@ kbl <- function(x, format, digits = getOption("digits"),
                 caption.short = '',
                 table.envir = if (!is.null(caption)) 'table', ...) {
 
-  # save at the top to use later in tabularray
-  cl <- match.call()
-
   if (!missing(align) && length(align) == 1L && !grepl('[^lcr]', align)) {
     align <- strsplit(align, '')[[1]]
   }
@@ -106,7 +103,6 @@ kbl <- function(x, format, digits = getOption("digits"),
     vline_internal <- ifelse(isTRUE(tabular %in% c("tblr", "talltblr", "longtblr")), "|", vline)
 
     use_latex_packages()
-
 
     if (utils::packageVersion("knitr") < "1.40" &&
         !missing(tabular)) {
@@ -144,9 +140,32 @@ kbl <- function(x, format, digits = getOption("digits"),
     )
 
   # call is important for tabularray
-  attr(out, "call") <- cl
   if (format == "latex" && tabular %in% c("tblr", "talltblr", "longtblr")) {
-    out <- init_tabularray(out)
+    out <- init_tabularray(
+      kable_input = out,
+      format = format,
+      digits = digits,
+      row.names = row.names,
+      col.names = col.names,
+      align = align,
+      caption = caption,
+      label = label,
+      format.args = format.args,
+      escape = escape,
+      table.attr = table.attr,
+      booktabs = booktabs,
+      longtable = longtable,
+      tabular = tabular,
+      valign = valign,
+      position = position,
+      centering = centering,
+      vline = vline,
+      toprule = toprule,
+      bottomrule = bottomrule,
+      midrule = midrule,
+      linesep = linesep,
+      caption.short = caption.short,
+      table.envir = table.envir)
   }
 
   out

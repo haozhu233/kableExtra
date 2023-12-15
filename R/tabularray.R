@@ -36,8 +36,8 @@ row_spec_tabularray <- function(kable_input,
     row <- table_info$position_offset + row
 
     for (r in row) {
-        rowspec[[r]][["fg"]] <- ifelse(is.character(color), color, "")
-        rowspec[[r]][["bg"]] <- ifelse(is.character(background), background, "")
+        rowspec[[r]][["fg"]] <- ifelse(is.character(color) && length(color) == 1, color, "")
+        rowspec[[r]][["bg"]] <- ifelse(is.character(background) && length(background) == 1, background, "")
 
         font <- ""
         font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
@@ -110,10 +110,10 @@ column_spec_tabularray <- function(kable_input,
     valign <- ifelse(isTRUE(latex_valign == "p"), "m", latex_valign)
 
     for (col in column) {
-        colspec[[col]][["wd"]] <- ifelse(is.character(width), width, "")
-        colspec[[col]][["fg"]] <- ifelse(is.character(color), color, "")
-        colspec[[col]][["bg"]] <- ifelse(is.character(background), background, "")
-        colspec[[col]][["valign"]] <- ifelse(is.character(valign), valign, "")
+        colspec[[col]][["wd"]] <- ifelse(is.character(width) && length(width) == 1, width, "")
+        colspec[[col]][["fg"]] <- ifelse(is.character(color) && length(width) == 1, color, "")
+        colspec[[col]][["bg"]] <- ifelse(is.character(background) && length(width) == 1, background, "")
+        colspec[[col]][["valign"]] <- ifelse(is.character(valign) && length(width) == 1, valign, "")
 
         font <- ""
         font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
@@ -239,19 +239,27 @@ make_spec_tabularray <- function(args_list) {
 }
 
 
-init_tabularray <- function(x) {
-    cl <- attr(x, "call")
-    at <- attributes(x)
-    table_info <- magic_mirror(x)
-    out <- x
+init_tabularray <- function(
+    kable_input, format, digits, row.names, col.names, align, caption, label, format.args,
+    escape, table.attr, booktabs, longtable, tabular, valign, position,
+    centering, vline, toprule, bottomrule, midrule, linesep, caption.short,
+    table.envir) {
 
+    table_info <- magic_mirror(kable_input)
+    out <- kable_input
 
-    linesep <- ifelse(is.null(cl$linesep), "", cl$linesep)
-    vline <- ifelse(is.null(cl$vline), "", cl$vline)
+    vline <- ifelse(is.null(vline), "", vline)
 
     # override knitr::kable linesep
+    # linesep can be a LaTeX command or a tabularray argument.
+    # LaTeX command start with \\
+    linesep_tabularray <- !grepl("^\\\\", trimws(linesep))
     out <- strsplit(out, "\n")[[1]]
-    out <- out[out != linesep]
+    if (linesep_tabularray) {
+        out <- out[out != linesep]
+    } else {
+        linesep <- ""
+    }
     out <- paste(out, collapse = "\n")
 
     # extract align from \begin{tblr}[t]{lrcc}
@@ -264,8 +272,8 @@ init_tabularray <- function(x) {
     align <- sapply(align, make_spec_tabularray)
 
     # caption
-    if (is.character(cl[["caption"]])) {
-        caption <- paste0("caption={", cl[["caption"]], "}")
+    if (is.character(caption)) {
+        caption <- paste0("caption={", caption, "}")
     } else {
         caption <- ""
     }
@@ -300,9 +308,6 @@ rowspec={%s},
 
     # prepare new table
     out <- paste(tab_split, collapse = "\n")
-    for (n in names(at)) {
-        attr(out, n) <- attr(x, n)
-    }
 
     table_info$tabularray <- list(
         colspec = lapply(align, parse_spec_tabularray),
