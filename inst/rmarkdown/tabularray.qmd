@@ -16,7 +16,6 @@ To create tables with `tabularray` in `kableExtra`, users only need to set the `
 
 ```{r}
 library(kableExtra)
-pkgload::load_all()
 
 df <- data.frame(
   car = row.names(mtcars),
@@ -201,7 +200,7 @@ Mazda RX4 Wag & 21.0 \\
 \end{longtblr}
 ```
 
-To set outer options in Table \ref{tab:mytable}, we used the `kable_styling()` function and its `latex_options` argument:
+Both types of options can be set using `kable_styling()` function and its `latex_options` argument:
 
 ```{r}
 kbl(df, tabular = "talltblr", booktabs = TRUE) |>
@@ -212,7 +211,7 @@ kbl(df, tabular = "talltblr", booktabs = TRUE) |>
   )))
 ```
 
-Unfortunately, the `kableExtra` does not have a direct way to set inner options. However, it is easy to hack our way around this limitation to set inner options at any level we want: columns, rows, or cells.
+The mechanism above sets options at the table-level. Unfortunately, `kableExtra` does not have a direct way to set inner options at the row, column or cell-level. However, it is easy to hack our way around this limitation to set inner options at any level we want: columns, rows, or cells.
 
 For example, the `row_spec()` function from `kableExtra` does not have an argument to control the height of columns, but `tabularray` does have an inner option: `ht`. To insert this in the row settings, we can push `ht` through the existing `background` argument of `row_spec()`. To understand how this works, note that when we call `background="red"`, `kableExtra` simply adds a string to the `rowspec` header: `fg=red`. If we extend the `background` entry, then we can specify height and vertical alignment too. Here, we use `f` for "foot" (also: `h`, `m`) and specify the height in `em` units (also: `cm`, `pt`, `in`):
 
