@@ -16,7 +16,6 @@ To create tables with `tabularray` in `kableExtra`, users only need to set the `
 
 ```{r}
 library(kableExtra)
-pkgload::load_all()
 
 df <- data.frame(
   car = row.names(mtcars),
