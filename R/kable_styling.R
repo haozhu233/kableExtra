@@ -338,18 +338,18 @@ pdfTable_styling <- function(kable_input,
 
   # `latex_options`` can only be a list when using tabularray
   table_info <- magic_mirror(kable_input)
-  tabularray_options <- NULL
+  tabularray_inner <- tabularray_outer <- NULL
   if (!is.character(latex_options)) {
     if (!table_info$tabular %in% c("tblr", "talltblr", "longtblr")) {
       stop('`latex_options` can only be a character vector, unless `tabular` is one of "tblr", "talltbr", or "longtblr".', call. = FALSE)
     }
     if (is.list(latex_options)) {
-      tabularray_options <- latex_options[["tabularray"]]
+      tabularray_inner <- latex_options[["tabularray_inner"]]
+      tabularray_outer <- latex_options[["tabularray_outer"]]
     }
   }
-  if ("tabularray" %in% names(latex_options)) {
-    latex_options[["tabularray"]] <- NULL
-  }
+  if ("tabularray_inner" %in% names(latex_options)) latex_options[["tabularray_inner"]] <- NULL
+  if ("tabularray_outer" %in% names(latex_options)) latex_options[["tabularray_outer"]] <- NULL
   latex_options <- unlist(latex_options)
 
   latex_options <- match.arg(
@@ -363,7 +363,9 @@ pdfTable_styling <- function(kable_input,
 
   table_info <- magic_mirror(kable_input)
 
-  out <- styling_tabularray(out, tabularray_options = tabularray_options)
+  out <- styling_tabularray(
+    out, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer
+  )
 
   if ("striped" %in% latex_options) {
     out <- styling_latex_striped(out, table_info, stripe_color, stripe_index)

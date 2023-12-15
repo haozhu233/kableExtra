@@ -15,7 +15,6 @@ row_spec_tabularray <- function(kable_input,
 
     table_info <- magic_mirror(kable_input)
     rowspec <- table_info$tabularray$rowspec
-    linesep <- table_info$tabularray$linesep
     out <- kable_input
 
     # sanity checks
@@ -250,18 +249,6 @@ init_tabularray <- function(
 
     vline <- ifelse(is.null(vline), "", vline)
 
-    # override knitr::kable linesep
-    # linesep can be a LaTeX command or a tabularray argument.
-    # LaTeX command start with \\
-    linesep_tabularray <- !any(grepl("^\\\\", trimws(linesep)))
-    out <- strsplit(out, "\n")[[1]]
-    if (linesep_tabularray) {
-        out <- out[out != linesep]
-    } else {
-        linesep <- ""
-    }
-    out <- paste(out, collapse = "\n")
-
     # extract align from \begin{tblr}[t]{lrcc}
     tab_split <- strsplit(out, "\\n")[[1]]
     idx <- grep("begin\\{tblr\\}|begin\\{talltblr\\}|begin\\{longtblr\\}", tab_split)
@@ -280,26 +267,20 @@ init_tabularray <- function(
 
     # basic rows
     rowspec <- rep("Q[]", table_info$nrow + table_info$position_offset)
-
-    # let user specify their own linesep
     rowspec_string <- paste(rowspec, collapse = "")
 
     tmp <- sprintf(
-        "\\begin{%s}[         %% tabularray square open
+        "\\begin{%s}[         %% tabularray outer open
 %s,
-]                     %% tabularray square close
-{                     %% tabularray curly open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
 colspec={%s},
 rowspec={%s},
-%s,
-%s,
-}                     %% tabularray curly close",
+}                     %% tabularray inner close",
         table_info$tabular,
         caption,
-        paste(align, collapse = ""),
-        rowspec_string,
-        linesep,
-        vline
+        paste(align, collapse = vline),
+        rowspec_string
     )
 
     # cleanup table
@@ -323,16 +304,31 @@ rowspec={%s},
 }
 
 
-styling_tabularray <- function(x, tabularray_options = NULL) {
-    if (is.null(tabularray_options)) {
-        return(x)
-    }
+styling_tabularray <- function(x, tabularray_inner, tabularray_outer) {
+    if (is.null(tabularray_inner) && is.null(tabularray_outer)) return(x)
+
     tab <- strsplit(x, "\\n")[[1]]
-    idx <- grep("tabularray square open", tab)[1]
-    out <- c(
-        tab[seq_len(idx)],
-        paste0(paste(tabularray_options, collapse = ", "), ","),
-        tab[(idx + 1):length(tab)])
+
+    # outer
+    if (!is.null(tabularray_outer)) {
+        idx <- grep("% tabularray outer open", tab, fixed = TRUE)[1]
+        out <- c(
+            tab[seq_len(idx)],
+            paste0(paste(tabularray_outer, collapse = ", "), ","),
+            tab[(idx + 1):length(tab)])
+        tab <- out
+    }
+
+    # inner
+    if (!is.null(tabularray_inner)) {
+        idx <- grep("tabularray inner open", tab, fixed = TRUE)[1]
+        out <- c(
+            tab[seq_len(idx)],
+            paste0(paste(tabularray_inner, collapse = ", "), ","),
+            tab[(idx + 1):length(tab)])
+        tab <- out
+    }
+
     out <- paste(out, collapse = "\n")
     return(out)
 }
@@ -420,7 +416,7 @@ add_header_above_tabularray <- function(
 
     # Insert at the top of the table, below \toprule
     out <- strsplit(out, "\\n")[[1]]
-    idx <- grep("tabularray curly close", out)
+    idx <- grep("tabularray inner close", out)
     flag <- grepl("\\\\toprule|\\\\hline|\\\\midrule", out[idx + 1])
     if (flag) {
         idx <- idx + 1
