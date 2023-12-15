@@ -19,7 +19,8 @@ library(kableExtra)
 
 df <- data.frame(
   car = row.names(mtcars),
-  mtcars[, 1:3], row.names = NULL
+  mtcars[, 1:3],
+  row.names = NULL
 )[1:4,]
 
 kbl(df, tabular = "tblr", booktabs = TRUE)

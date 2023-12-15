@@ -80,11 +80,15 @@ kbl <- function(x, format, digits = getOption("digits"),
     align <- strsplit(align, '')[[1]]
   }
 
-  # tblr: some arguments are used in init_tabularray()
-  if (isTRUE(tabular %in% c("tblr", "talltblr", "longtblr"))) {
-    format <- "latex"
-  } 
-  if (isTRUE(tabular %in% c("talltblr", "longtblr"))) {
+  if (missing(format) || is.null(format)) {
+    if (knitr::is_latex_output())
+      format <- "latex"
+    else
+      format <- "html"
+  }
+
+  # these arguments are used in init_tabularray() and need to be hardcoded in knir::kable
+  if (format == "latex" && isTRUE(tabular %in% c("talltblr", "longtblr"))) {
     caption_internal <- NULL
     longtable_internal <- FALSE
     table.envir_internal <- NULL
@@ -92,19 +96,14 @@ kbl <- function(x, format, digits = getOption("digits"),
     caption_internal <- caption
     longtable_internal <- longtable
     table.envir_internal <- table.envir
+    vline_internal <- vline
+  }
+  # vline_internal="|" is safer because we know where to split column alignments
+  if (format == "latex" && isTRUE(tabular %in% c("tblr", "talltblr", "longtblr"))) {
+    vline_internal <- "|"
   }
 
-  if (missing(format) || is.null(format)) {
-    if (knitr::is_latex_output())
-      format <- "latex"
-    else
-      format <- "html"
-  }
   if (format == "latex") {
-
-
-    # tblr needs special vline treatment
-    vline_internal <- ifelse(isTRUE(tabular %in% c("tblr", "talltblr", "longtblr")), "|", vline)
 
     use_latex_packages()
 
@@ -143,7 +142,7 @@ kbl <- function(x, format, digits = getOption("digits"),
       escape = escape, ...
     )
 
-  # call is important for tabularray
+  # tabularray
   if (format == "latex" && isTRUE(tabular %in% c("tblr", "talltblr", "longtblr"))) {
     out <- init_tabularray(
       kable_input = out,

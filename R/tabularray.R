@@ -1,10 +1,10 @@
 row_spec_tabularray <- function(kable_input,
                                 row = NULL,
-                                bold = NULL,
-                                italic = NULL,
-                                monospace = NULL,
-                                underline = NULL,
-                                strikeout = NULL,
+                                bold = FALSE,
+                                italic = FALSE,
+                                monospace = FALSE,
+                                underline = FALSE,
+                                strikeout = FALSE,
                                 color = NULL,
                                 background = NULL,
                                 align = NULL,
@@ -18,25 +18,24 @@ row_spec_tabularray <- function(kable_input,
     out <- kable_input
 
     # sanity checks
-    if (!is.null(font_size)) {
-        stop("`font_size` is not supported in `row_spec()` with tabularray. Use the `cell_spec()` function instead.", call. = FALSE)
+    if (!all(sapply(list(font_size, angle, align), is.null))) {
+        msg <- "`row_spec()` does not support these arguments for `tabularray` tables: `font_size`, `angle`, `align`. Please use the `cell_spec()` function."
+        stop(msg, call. = FALSE)
     }
-    if (!is.null(angle)) {
-        stop("`angle` is not supported in `row_spec()` with tabularray. Use the `cell_spec()` function instead.", call. = FALSE)
+    if (any(sapply(list(bold, italic, monospace, underline, strikeout), length) != 1)) {
+        msg <- "`row_spec()` requires these arguments to be of length 1 for `tabularray` tables: `bold`, `italic`, `underline`, `strikeout`. Please use the `cell_spec()` function."
+        stop(msg, call. = FALSE)
     }
-    if (!is.null(align)) {
-        stop("`align` is not supported in `row_spec()` with tabularray. Use the `cell_spec()` function instead.", call. = FALSE)
-    }
-    if (!all(row %in% 0:length(rowspec))) {
-        msg <- sprintf("`row_spec()` error: row index must be between 1 and %s.", length(rowspec))
+    if (any(sapply(list(background, color), function(x) !is.null(x) && length(x) != 1))) {
+        msg <- "`row_spec()` requires these arguments to be `NULL` or of length 1 for `tabularray` tables: `background`, `color`. Please use the `cell_spec()` function."
         stop(msg, call. = FALSE)
     }
 
     row <- table_info$position_offset + row
 
     for (r in row) {
-        rowspec[[r]][["fg"]] <- ifelse(is.character(color) && length(color) == 1, color, "")
-        rowspec[[r]][["bg"]] <- ifelse(is.character(background) && length(background) == 1, background, "")
+        rowspec[[r]][["fg"]] <- ifelse(is.character(color), color, "")
+        rowspec[[r]][["bg"]] <- ifelse(is.character(background), background, "")
 
         font <- ""
         font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
@@ -91,28 +90,38 @@ column_spec_tabularray <- function(kable_input,
                                    latex_valign,
                                    latex_column_spec) {
 
+
     out <- kable_input
     table_info <- magic_mirror(out)
     vline <- table_info$tabularray$vline
     colspec <- table_info$tabularray$colspec
 
-    # sanity checks
+    # assertions
     if (!is.null(latex_column_spec)) {
-        stop("latex_column_spec not supported with tabularray", call. = FALSE)
+        msg <- "latex_column_spec not supported with tabularray"
+        stop(msg, call. = FALSE)
     }
-
     if (any(!column %in% seq_along(colspec))) {
         msg <- sprintf("`column_spec()` error: `column` must be a vector of unique integers between 1 and %s.", length(colspec))
         stop(msg, call. = FALSE)
     }
+    if (any(sapply(list(bold, italic, monospace, underline, strikeout, latex_valign), length) != 1)) {
+        msg <- "`column_spec()` requires these arguments to be of length 1 for `tabularray` tables: `bold`, `italic`, `underline`, `strikeout`, `latex_valign`. Please use the `cell_spec()` function."
+        stop(msg, call. = FALSE)
+    }
+    if (any(sapply(list(background, color), function(x) !is.null(x) && length(x) != 1))) {
+        msg <- "`column_spec()` requires these arguments to be `NULL` or of length 1 for `tabularray` tables: `background`, `color`. Please use the `cell_spec()` function."
+        stop(msg, call. = FALSE)
+    }
 
-    valign <- ifelse(isTRUE(latex_valign == "p"), "m", latex_valign)
+    # tabularray calls it m instead of p
+    valign <- if (latex_valign == "p") latex_valign <- "m"
 
     for (col in column) {
-        colspec[[col]][["wd"]] <- ifelse(is.character(width) && length(width) == 1, width, "")
-        colspec[[col]][["fg"]] <- ifelse(is.character(color) && length(color) == 1, color, "")
-        colspec[[col]][["bg"]] <- ifelse(is.character(background) && length(background) == 1, background, "")
-        colspec[[col]][["valign"]] <- ifelse(is.character(valign) && length(valign) == 1, valign, "")
+        colspec[[col]][["wd"]] <- ifelse(is.character(width), width, "")
+        colspec[[col]][["fg"]] <- ifelse(is.character(color), color, "")
+        colspec[[col]][["bg"]] <- ifelse(is.character(background), background, "")
+        colspec[[col]][["valign"]] <- ifelse(is.character(valign), valign, "")
 
         font <- ""
         font <- ifelse(bold, paste0(font, "\\\\bfseries"), font)
