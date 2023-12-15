@@ -193,7 +193,7 @@ cell_spec_tabularray <- function(
             "}\\selectfont ", x, "\\egroup{}")
     }
     if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
-    if (!is.null(align)) {
+    if (is.null(align)) {
         halign <- "halign=c"
     } else {
         halign <- paste0("halign=", align)
@@ -378,55 +378,60 @@ add_header_above_tabularray <- function(
     table_info <- magic_mirror(kable_input)
 
     # sanity checks
-    if (length(table_info$tabularray$colspec) != sum(header)) {
+    if (length(table_info$tabularray$colspec) != sum(header$colspan)) {
         stop("The length of `header` must be equal to the number of columns in the table.", call. = FALSE)
     }
 
-    new_row <- ""
-    for (i in seq_along(header)) {
-       cell <- cell_spec_tabularray(names(header)[i], multicolumn = header[i], escape = TRUE)
-       pad <- strrep("&", header[i] - 1)
-       new_row <- paste(new_row, cell, pad, "\\\\", collapse = " ")
+    cells <- sapply(seq_len(nrow(header)), function(i) {
+        cell_spec_tabularray(
+            header$header[i],
+            multicolumn = header$colspan[i],
+            multirow = 1,
+            bold = bold,
+            italic = italic,
+            monospace = monospace,
+            underline = underline,
+            strikeout = strikeout,
+            align = align,
+            color = color,
+            background = background,
+            font_size = font_size,
+            angle = angle,
+            escape = escape)
+    })
+
+    idx <- seq_len(length(cells) - 1)
+    new_row <- cells
+    new_row[idx] <- paste(new_row, strrep("&", header$colspan))[idx]
+    new_row <- paste(new_row, collapse = " ")
+    new_row <- paste(new_row, "\\\\")
+
+    if (line) {
+        midrule <- sprintf("\\cmidrule[lr]{%s-%s}", header$start, header$end)
+        midrule <- midrule[trimws(header$header) != ""]
+        midrule <- paste(midrule, collapse = " ")
+        new_row <- c(new_row, midrule)
     }
 
-    # Insert at the top of the table
-    browser()
+    # Insert at the top of the table, below \toprule
     out <- strsplit(out, "\\n")[[1]]
     idx <- grep("tabularray curly close", out)
+    flag <- grepl("\\\\toprule|\\\\hline|\\\\midrule", out[idx + 1])
+    if (flag) {
+        idx <- idx + 1
+    }
     out <- c(
         out[1:idx],
         new_row,
         out[(idx + 1):length(out)])
-    out <- paste(out, collapse = "\\n")
+    out <- paste(out, collapse = "\n")
 
-    # TODO: 
-    # cmidrule
-    # table_info$tabularray$rowspec
-    # table_info$nrows
+    # New row in colspec
+    new_row <- "rowspec={Q[]"
+    out <- sub("rowspec={", new_row, out, fixed = TRUE)
 
     out <- structure(out, format = "latex", class = "knitr_kable")
     attr(out, "kable_meta") <- table_info
 
     return(out)
 }
-
-
-
-# \begin{tblr}[         % tabularray curly open
-# ]                     % tabularray curly close
-# {                     % tabularray square open
-# colspec={Q[halign=c]Q[halign=c]Q[halign=c]Q[halign=c]},
-# rowspec={Q[l]Q[]Q[]Q[]Q[]Q[]},
-# }                     % tabularray square close
-# \toprule
-# \SetCell[c=2]{c} Blah blah & 1-2 & \SetCell[c=2]{c} Oh yeah & 1-4 \\
-# \cmidrule[r]{1-2}
-# \cmidrule[l]{3-4}
-# car & mpg & qsec & carb\\
-# \midrule
-# Mazda RX4 & 21.0 & 16.46 & 4\\
-# Mazda RX4 Wag & 21.0 & 17.02 & 4\\
-# Datsun 710 & 22.8 & 18.61 & 1\\
-# Hornet 4 Drive & 21.4 & 19.44 & 1\\
-# \bottomrule
-# \end{tblr}

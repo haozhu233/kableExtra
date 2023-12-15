@@ -297,6 +297,22 @@ kbl(df, tabular = "talltblr", escape = FALSE) |>
     )
 ```
 
+# `add_header_above()`
+
+The `add_header_above()` function can create spanning column labels using the `\SetCel[c=2]{}` command from `tabularray`:
+
+```{r}
+mtcars[1:4, 1:5] |>
+    kbl(tabular = "tblr", align = "c", booktabs = TRUE) |> 
+    add_header_above(
+        c(" " = 1, "$\\alpha$" = 2, "$\\beta$" = 3),
+        escape = FALSE) |>
+    add_header_above(
+        c( "First Three" = 3, " " = 1, "Penultimate" = 1, " " = 1),
+        italic = TRUE) |> 
+        attr("kable_meta")
+```
+
 # Solved bugs
 
 This section prints several tables which previous included bugs, as reported by `kableExtra` users on the issue tracker. This illustrates that `tabularray` solves many longstanding problems.

@@ -103,19 +103,55 @@ add_header_above <- function(kable_input, header = NULL,
   else {
     header <- standardize_header_input(header)
   }
-  if (kable_format == "html") {
-    return(htmlTable_add_header_above(
+
+  table_info <- magic_mirror(kable_input)
+
+  if (table_info$tabular %in% c("tblr", "longtblr", "talltblr")) {
+    out <- add_header_above_tabularray(
+      kable_input = kable_input,
+      header = header,
+      bold = bold,
+      italic = italic,
+      monospace = monospace,
+      underline = underline,
+      strikeout = strikeout,
+      align = align,
+      color = color,
+      background = background,
+      font_size = font_size,
+      angle = angle,
+      escape = escape,
+      line = line,
+      line_sep = line_sep,
+      border_left = border_left,
+      border_right = border_right
+    )
+
+  } else if (kable_format == "html") {
+    out <- htmlTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
       align, color, background, font_size, angle, escape, line, line_sep,
       extra_css, include_empty
-    ))
-  }
-  if (kable_format == "latex") {
-    return(pdfTable_add_header_above(
+    )
+
+  } else if (kable_format == "latex") {
+    out <- pdfTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
       align, color, background, font_size, angle, escape, line, line_sep,
-      border_left, border_right))
+      border_left, border_right
+    )
   }
+
+  # store header information in the kable_meta attribute may be useful for other
+  # packages and programmers who want to interact with kableExtra objects.
+  if (is.null(table_info[["add_header_above"]])) {
+    table_info[["add_header_above"]] <- list(header)
+  } else {
+    table_info[["add_header_above"]] <- c(table_info[["add_header_above"]], list(header))
+  }
+
+  attr(out, "kable_meta") <- table_info
+  return(out)
 }
 
 # HTML
@@ -182,7 +218,16 @@ standardize_header_input <- function(header) {
   header_names <- names(header)
   header <- as.numeric(header)
   names(header) <- header_names
-  return(data.frame(header = names(header), colspan = header, row.names = NULL, stringsAsFactors = F))
+  end <- cumsum(header)
+  start <- end - header + 1
+  out <- data.frame(
+    header = names(header),
+    colspan = header,
+    start = start,
+    end = end,
+    row.names = NULL,
+    stringsAsFactors = F)
+  return(out)
 }
 
 htmlTable_new_header_generator <- function(header_df, bold, italic, monospace,
