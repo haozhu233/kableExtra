@@ -36,6 +36,11 @@ row_spec_tabularray <- function(kable_input,
         stop(msg, call. = FALSE)
     }
 
+    # before row settings
+    out <- define_colors_tabularray(out,background = background, color = color)
+    if (is.character(color)) color <- sub("^#", "c", color)
+    if (is.character(background)) background <- sub("^#", "c", background)
+
     row <- table_info$position_offset + row
 
     for (r in row) {
@@ -126,6 +131,11 @@ column_spec_tabularray <- function(kable_input,
 
     # tabularray calls it m instead of p
     valign <- if (latex_valign == "p") latex_valign <- "m"
+
+    # before column settings
+    out <- define_colors_tabularray(out,background = background, color = color)
+    if (is.character(color)) color <- sub("^#", "c", color)
+    if (is.character(background)) background <- sub("^#", "c", background)
 
     for (col in column) {
         if (is.character(width)) colspec[[col]][["wd"]] <- width
@@ -454,4 +464,22 @@ add_header_above_tabularray <- function(
     attr(out, "kable_meta") <- table_info
 
     return(out)
+}
+
+
+define_colors_tabularray <- function(x, background = NULL, color = NULL) {
+    colors <- unique(c(background, color))
+    colors <- Filter(function(x) grepl("^#\\w{6}", x), colors)
+    if (length(colors) > 0) {
+        colors <- sprintf(
+            "\\kableExtraDefineColor{%s}{HTML}{%s}",
+            sub("^#", "c", colors),
+            sub("^#", "", colors))
+        colors <- paste(colors, collapse = "")
+        x <- strsplit(x, "\\n")[[1]]
+        idx <- grep("% tabularray inner close", x, fixed = TRUE)[1]
+        x <- c(x[1:idx], colors, x[(idx + 1):length(x)])
+        x <- paste(x, collapse = "\n")
+    }
+    return(x)
 }

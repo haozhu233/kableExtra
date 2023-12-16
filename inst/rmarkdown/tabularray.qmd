@@ -70,8 +70,9 @@ When rendering Rmarkdown or Quarto documents, appropriate packages are automatic
 
 ```latex
 \usepackage{tabularray}
-\newcommand{\\kableExtraTabularrayUnderline}[1]{\underline}
-\newcommand{\\kableExtraTabularrayStrikeout}[1]{\sout}
+\newcommand{\kableExtraTabularrayUnderline}[1]{\underline}
+\newcommand{\kableExtraTabularrayStrikeout}[1]{\sout}
+\NewTableCommand{\kableExtraDefineColor}[3]{\\definecolor{#1}{#2}{#3}}
 \UseTblrLibrary{booktabs}
 ```
 
@@ -89,27 +90,22 @@ kbl(df, tabular = "tblr", booktabs = TRUE) |>
 
 # Colors
 
-In `tabularray`, color names are supported through the integration of the `xcolor` and `ninecolors` packages. The `xcolor` package is a comprehensive solution in LaTeX for color customization, offering a wide range of predefined color names and the ability to define custom colors using various color models like RGB, CMYK, and HTML. This flexibility allows for precise color specification and is ideal for setting text, table elements, and other document components in LaTeX.
+For `tabularray` tables, `kableExtra` supports four mechanisms to specify colors.
 
-The basic \LaTeX{} colors are: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow. 
+First, we can call one basic \LaTeX{} colors by name: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
 
-The [`ninecolors`](https://ctan.org/pkg/ninecolors) package adds suffix to 9 of those colors to set 1 of 13 different hues: gray, red, brown, yellow, olive, green, teal, cyan, azure, blue, violet, magenta, purple. For all colors, 0 means black, and 10 is white. Two colors with the same numbered suffix have the same luminance (ex: `gray3` and `olive3`).  These nine colors are carefully selected to ensure proper color contrast according to the Web Content Accessibility Guidelines (WCAG). This feature is particularly useful for creating documents with high readability and accessibility standards. To get proper WCAG Color Contrast, the `ninecolors` author recommends choosing two colors with different names, with at least a 5 unit difference in level.
+Second, we can use the color mixing syntax from the `xcolor` package in \LaTeX{}. For example, `red!30!black` is a convenient way to specify a mix of 30% red and 70% black, which gives us a darker shade of red. `red!25!green!50!blue` would gives a mix of 25% red, 50% green, and 25% blue.
 
-The `col_spec()`, `row_spec()`, and `cell_spec()` functions support these colors out of the box:
+Third, we can use one of the color names provided by the [`ninecolors` package for \LaTeX .](https://ctan.org/pkg/ninecolors) This package adds a numbered suffix to these colors: gray, red, brown, yellow, olive, green, teal, cyan, azure, blue, violet, magenta, purple. For all colors, 0 means black, and 10 is white. Two colors with the same numbered suffix have the same luminance (ex: `gray3` and `olive3`).  These nine colors are carefully selected to ensure proper color contrast according to the Web Content Accessibility Guidelines (WCAG).
 
-```{r}
-df |>
-  kbl(tabular = "tblr", booktabs = TRUE) |>
-  column_spec(1, color = "green!30!black") |>
-  row_spec(2:3, background = "azure9")
-```
-
-Of course, `kableExtra` themes are also supported:
+Finally, the `row_spec()` and `column_spec()` functions also support HTML colors defined by a # followed by 6 hexadecimal digits.
 
 ```{r}
 df |>
   kbl(tabular = "tblr", booktabs = TRUE) |>
-  kable_styling(latex_options = "striped")
+  column_spec(1, background = "#FFC0CB", color = "blue") |>
+  row_spec(2, background = "azure9") |>
+  row_spec(3, color = "green!70!black")
 ```
 
 

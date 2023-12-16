@@ -62,6 +62,7 @@ use_latex_packages <- function() {
     usepackage_latex("tabularray", options = NULL, extra_lines = c(
       "\\newcommand{\\kableExtraTabularrayUnderline}[1]{\\underline}",
       "\\newcommand{\\kableExtraTabularrayStrikeout}[1]{\\sout}",
+      "\\NewTableCommand{\\kableExtraDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
       "\\UseTblrLibrary{booktabs}")
     )
     usepackage_latex("threeparttable")

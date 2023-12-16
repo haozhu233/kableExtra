@@ -130,6 +130,32 @@
       \bottomrule
       \end{tblr}
 
+---
+
+    Code
+      row_spec(row_spec(column_spec(column_spec(kbl(df, format = "latex", tabular = "tblr",
+        booktabs = TRUE), 1, background = "#FFC0CB", color = "blue"), 3, background = "#FFC0CB",
+      color = "#964B00"), 2, background = "azure9"), 3, color = "green!70!black")
+    Output
+      
+      \begin{tblr}[         % tabularray outer open
+      ]                     % tabularray outer close
+      {                     % tabularray inner open
+      colspec={Q[halign=l, fg=blue, bg=cFFC0CB, valign=m]Q[halign=r]Q[halign=r, fg=c964B00, bg=cFFC0CB, valign=m]Q[halign=r]},
+      rowspec={Q[]Q[]Q[bg=azure9]Q[fg=green!70!black]Q[]Q[]},
+      }                     % tabularray inner close
+      \kableExtraDefineColor{cFFC0CB}{HTML}{FFC0CB}\kableExtraDefineColor{c964B00}{HTML}{964B00}
+      \kableExtraDefineColor{cFFC0CB}{HTML}{FFC0CB}
+      \toprule
+      car & mpg & cyl & disp\\
+      \midrule
+      Mazda RX4 & 21.0 & 6 & 160\\
+      Mazda RX4 Wag & 21.0 & 6 & 160\\
+      Datsun 710 & 22.8 & 4 & 108\\
+      Hornet 4 Drive & 21.4 & 6 & 258\\
+      \bottomrule
+      \end{tblr}
+
 # tabularray outer options
 
     Code

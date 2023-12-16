@@ -47,23 +47,31 @@ test_that('basic', {
     )
 })
 
-test_that('style and color', {
+test_that("style and color", {
     expect_snapshot(
-      kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
-      row_spec(2:3, bold = TRUE) |>
-      column_spec(1, strikeout = TRUE)
+        kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
+            row_spec(2:3, bold = TRUE) |>
+            column_spec(1, strikeout = TRUE)
     )
 
     expect_snapshot(
-      kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
-      column_spec(1, color = "green!30!black") |>
-      row_spec(2:3, background = "azure9")
+        kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
+            column_spec(1, color = "green!30!black") |>
+            row_spec(2:3, background = "azure9")
     )
 
     expect_snapshot(
-      kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
-      row_spec(2:3, background = "azure9") |>
-      column_spec(1, color = "green!30!black", strikeout = TRUE)
+        kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
+            row_spec(2:3, background = "azure9") |>
+            column_spec(1, color = "green!30!black", strikeout = TRUE)
+    )
+
+    expect_snapshot(
+        kbl(df, format = "latex", tabular = "tblr", booktabs = TRUE) |>
+            column_spec(1, background = "#FFC0CB", color = "blue") |>
+            column_spec(3, background = "#FFC0CB", color = "#964B00") |>
+            row_spec(2, background = "azure9") |>
+            row_spec(3, color = "green!70!black")
     )
 })
 
