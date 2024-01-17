@@ -229,8 +229,9 @@ xml_cell_style <- function(x, bold, italic, monospace,
                                    "text-align: ", align, ";")
   }
   if (!is.null(font_size)) {
+    if (is.numeric(font_size)) font_size <- paste0(font_size, "px")
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                   "font-size: ", font_size, "px;")
+                                   "font-size: ", font_size, ";")
   }
   if (!is.null(angle)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -272,12 +273,25 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                    !is.null(table_info$repeat_header_latex)),
                        gsub, sub)
     if (length(new_row) == 1) {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                      paste0(new_row, "\\\\\\\\"), out, perl = T)
+      # fixed=TRUE is safer but does not always work
+      regex <- paste0("\\Q", target_row, "\\E")
+      if (grepl(regex, out)) {
+        out <- temp_sub(regex, new_row, out, perl = TRUE)
+      } else {
+        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                        paste0(new_row, "\\\\\\\\"), out, perl = TRUE)
+      }
       table_info$contents[i] <- new_row
     } else {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                      paste(new_row, collapse = ""), out, perl = T)
+      # fixed=TRUE is safer but does not always work
+      regex <- paste0("\\Q", target_row, "\\E")
+      if (any(grepl(regex, out))) {
+        out <- temp_sub(regex,
+          paste(new_row, collapse = ""), out, perl = TRUE)
+      } else {
+        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                    paste(new_row, collapse = ""), out, perl = TRUE)
+      }
       table_info$contents[i] <- new_row[1]
     }
   }

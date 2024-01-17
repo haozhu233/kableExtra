@@ -27,9 +27,14 @@ spec_color <- function(x, alpha = 1, begin = 0, end = 1,
 }
 
 html_color_ <- function(color) {
-  if (substr(color, 1, 1) != "#" | nchar(color) != 9) return(color)
+  # HTML colors are a subset of R colors, not including
+  # numbered versions like darkgoldenrod2 (issue #726)
+  if (substr(color, 1, 1) != "#" &&
+      !grepl("[[:digit:]]", color) )
+    return(color)
+
   rgba_code <- col2rgb(color, alpha = TRUE)
-  rgba_code[4] <- round(rgba_code[4] / 255, 2)
+  rgba_code[4] <- round(rgba_code[4])
   return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
 }
 

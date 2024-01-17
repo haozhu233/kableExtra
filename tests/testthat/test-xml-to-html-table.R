@@ -26,5 +26,5 @@ for (test_case in list(
 )) {
   returned_table <- read_table_data_from_xml(kable_as_xml(test_case))
   returned_table[] <- lapply(returned_table, as.numeric)
-  testthat::expect_equivalent(returned_table,expected_table)
+  testthat::expect_equal(returned_table,expected_table, ignore_attr = TRUE)
 }

@@ -1,5 +1,3 @@
-context("add_indent")
-
 test_that("add_indent can add to 1 row", {
   observed <- kable(mtcars[1:4, 1:3], "html") %>%
     add_indent(1) %>%
