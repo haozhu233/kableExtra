@@ -66,4 +66,36 @@ align the table, \code{kable_styling(kable(...), position = "left")} will work
 in both HTML and PDF.
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://haozhu233.github.io/kableExtra/}
+  \item \url{https://github.com/haozhu233/kableExtra}
+  \item Report bugs at \url{https://github.com/haozhu233/kableExtra/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Hao Zhu \email{haozhu233@gmail.com} (\href{https://orcid.org/0000-0002-3386-6076}{ORCID})
+
+Other contributors:
+\itemize{
+  \item Thomas Travison [contributor]
+  \item Timothy Tsai [contributor]
+  \item Will Beasley \email{wibeasley@hotmail.com} [contributor]
+  \item Yihui Xie \email{xie@yihui.name} [contributor]
+  \item GuangChuang Yu \email{guangchuangyu@gmail.com} [contributor]
+  \item Stéphane Laurent [contributor]
+  \item Rob Shepherd [contributor]
+  \item Yoni Sidi [contributor]
+  \item Brian Salzer [contributor]
+  \item George Gui [contributor]
+  \item Yeliang Fan [contributor]
+  \item Duncan Murdoch [contributor]
+  \item Vincent Arel-Bundock [contributor]
+  \item Bill Evans [contributor]
+  \item Greg Warnes \email{greg@warnes.net} [contributor]
+}
+
+}
 \keyword{package}
