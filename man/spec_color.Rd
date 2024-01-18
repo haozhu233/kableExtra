@@ -19,29 +19,20 @@ spec_color(
 \arguments{
 \item{x}{continuous vectors of values}
 
-\item{alpha}{The alpha transparency, a number in [0,1], see argument alpha in
-\code{\link[grDevices]{hsv}}.}
+\item{alpha}{The alpha transparency, a number in \link{0,1},}
 
-\item{begin}{The (corrected) hue in [0,1] at which the color map begins.}
+\item{begin}{The (corrected) hue in \link{0,1} at which the color map begins.}
 
-\item{end}{The (corrected) hue in [0,1] at which the color map ends.}
+\item{end}{The (corrected) hue in \link{0,1} at which the color map ends.}
 
 \item{direction}{Sets the order of colors in the scale. If 1, the default,
 colors are ordered from darkest to lightest. If -1, the order of colors is
 reversed.}
 
 \item{option}{A character string indicating the color map option to use.
-Eight options are available:
-\itemize{
- \item{}{"magma" (or "A")}
- \item{}{"inferno" (or "B")}
- \item{}{"plasma" (or "C")}
- \item{}{"viridis" (or "D")}
- \item{}{"cividis" (or "E")}
- \item{}{"rocket" (or "F")}
- \item{}{"mako" (or "G")}
- \item{}{"turbo" (or "H")}
-}}
+Eight options are available: "magma" (or "A"), "inferno" (or "B"),
+"plasma" (or "C"), "viridis" (or "D"), "cividis" (or "E"),
+"rocket" (or "F"), "mako" (or "G") and "turbo" (or "H").}
 
 \item{na_color}{color code for NA values}
 
