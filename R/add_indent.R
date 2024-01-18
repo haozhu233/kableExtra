@@ -35,10 +35,14 @@ add_indent <- function(kable_input, positions,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(add_indent_html(kable_input, positions, level_of_indent, all_cols, target_cols))
+    return(add_indent_html(
+      kable_input, positions, level_of_indent, all_cols, target_cols
+      ))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions, level_of_indent, all_cols, target_cols))
+    return(add_indent_latex(
+      kable_input, positions, level_of_indent, all_cols, target_cols
+      ))
   }
 }
 
@@ -73,7 +77,8 @@ add_indent_latex <- function(kable_input, positions,
       new_rowtext <- paste(unlist(new_rowtext), collapse = " & ")
     } else {
       if (all(target_cols %in% seq_along(new_rowtext))) {
-        new_rowtext[target_cols] <- latex_indent_unit(new_rowtext[target_cols], level_of_indent)
+        new_rowtext[target_cols] <- latex_indent_unit(
+          new_rowtext[target_cols], level_of_indent)
       } else {
         stop("There aren't that many columns in the row. Check target_cols in ",
          "add_indent_latex.")
@@ -123,7 +128,8 @@ add_indent_html <- function(kable_input, positions,
       node_to_edit <- xml_child(row_to_edit, j)
       if (!xml_has_attr(node_to_edit, "indentlevel")) {
         xml_attr(node_to_edit, "style") <- paste0(
-          xml_attr(node_to_edit, "style"), "padding-left: ",paste0(level_of_indent*2,"em;")
+          xml_attr(node_to_edit, "style"), "padding-left: ",
+          paste0(level_of_indent*2,"em;")
         )
         xml_attr(node_to_edit, "indentlevel") <- 1
       } else {
