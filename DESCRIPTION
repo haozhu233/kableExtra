@@ -50,6 +50,7 @@ Imports:
 Suggests:
     testthat,
     magick,
+    tinytex,
     formattable,
     sparkline,
     webshot2
