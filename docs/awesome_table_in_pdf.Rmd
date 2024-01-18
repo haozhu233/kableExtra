@@ -61,10 +61,10 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
-> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper funciton `kbl` to the original `kable` function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environement variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new `kbl` function for all its convenience but the support for the original `kable` function is still there. In this doc, we will use `kbl` instead of `kable`.
+> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper function `kbl` to the original `kable` function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environment variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new `kbl` function for all its convenience but the support for the original `kable` function is still there. In this doc, we will use `kbl` instead of `kable`.
 
 
-**This paragraph is a little outdated. It's here only for education purpose because it's helpful to understand how `kable` works under the hood**. When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* **Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
+**This paragraph is a little outdated. It's here only for education purpose because it's helpful to understand how `kable` works under the hood**. When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let Pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step every time.* **Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
 
 ```{r}
 # If you are using kableExtra < 0.9.0, you are recommended to set a global option first.
@@ -74,7 +74,7 @@ dt <- mtcars[1:5, 1:6]
 ```
 
 ## LaTeX packages used in this package
-If you are using a recent version of rmarkdown, you are recommended to load this package entirely via `library(kableExtra)` or `require(kableExtra)` because this package will load all necessary LaTeX packages, such as `booktabs` or `multirow`, for you automatically. Note that, if you are calling functions from `kableExtra` via `kableExtra::kable_styling()` or if you put `library(kableExtra)` in a separate R file that is **sourced** by the rmarkdown document, these packages won't be loaded. Furthermore, you can suppress this auto-loading behavior by setting a global option `kableExtra.latex.load_packages` to be `FALSE` before you load `kableExtra`.
+If you are using a recent version of R Markdown, you are recommended to load this package entirely via `library(kableExtra)` or `require(kableExtra)` because this package will load all necessary LaTeX packages, such as `booktabs` or `multirow`, for you automatically. Note that, if you are calling functions from `kableExtra` via `kableExtra::kable_styling()` or if you put `library(kableExtra)` in a separate R file that is **sourced** by the R Markdown document, these packages won't be loaded. Furthermore, you can suppress this auto-loading behavior by setting a global option `kableExtra.latex.load_packages` to be `FALSE` before you load `kableExtra`.
 
 ```{r, eval = FALSE}
 # Not evaluated. Illustration purpose
@@ -82,7 +82,7 @@ options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)
 ```
 
-If you are using R Sweave, beamer, R package vignette template, tufte or some customized rmarkdown templates, you can put the following meta data into the `yaml` section. If you are familar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
+If you are using R Sweave, beamer, R package vignette template, tufte or some customized R Markdown templates, you can put the following meta data into the YAML section. If you are familiar with LaTeX and you know what you are doing, feel free to remove unnecessary packages from the list. 
 
 ```
 header-includes:
@@ -104,7 +104,7 @@ header-includes:
 
 Note: `kableExtra` was using `xcolor` with the `table` option for alternative row color before 1.0. However, the recent updates in `fancyvbr` causes a clash in `xcolor` option. Therefore, we removed the `xcolor` dependency in version 1.0 and started to rely on `colortbl` completely. 
 
-In reality, most cases, you still need `xcolor` to define new colors. The tricky part is that, if you are using a older version of `rmarkdown`, `xcolor` is not included in the template while in recent version, after `rmarkdown` started to use the default pandoc template, `xcolor` is included by default. To minimize the effort, we chose to load `xcolor` in the end. 
+In reality, most cases, you still need `xcolor` to define new colors. The tricky part is that, if you are using an older version of `rmarkdown`, `xcolor` is not included in the template while in recent version, after `rmarkdown` started to use the default Pandoc template, `xcolor` is included by default. To minimize the effort, we chose to load `xcolor` in the end. 
 
 ## Plain LaTeX
 Plain LaTeX table looks relatively ugly in 2017.
@@ -129,7 +129,7 @@ kbl(dt, booktabs = T)
 Similar with `bootstap_options`, `latex_options` is also a charter vector with a bunch of options including `striped`, `hold_position` and `scale_down`.
 
 ### Striped
-Even though in the LaTeX world, people usually call it `alternative row colors` but here I'm using its bootstrap name for consistency. Note that to make it happen, LaTeX package `xcolor` is required to be loaded. In an environment like rmarkdown::pdf_document (rmarkdown 1.4.0 +), `kable_styling` will load it automatically if `striped` is enabled. However, in other cases, you probably need to import that package by yourself. 
+Even though in the LaTeX world, people usually call it `alternative row colors` but here I'm using its bootstrap name for consistency. Note that to make it happen, LaTeX package `xcolor` is required to be loaded. In an environment like `rmarkdown::pdf_document` (`rmarkdown` 1.4.0 +), `kable_styling` will load it automatically if `striped` is enabled. However, in other cases, you probably need to import that package by yourself. 
 ```{r}
 kbl(dt, booktabs = T) %>%
   kable_styling(latex_options = "striped")
@@ -152,7 +152,7 @@ kbl(dt, caption = "Demo table", booktabs = T) %>%
 If you find `hold_position` is not powerful enough to literally PIN your table in the exact position, you may want to use `HOLD_position`, which is a more powerful version of this feature. For those who are familiar with LaTeX, `hold_position` uses `[!h]` and `HOLD_position` uses `[H]` and the `float` package.
 
 ### Scale down
-When you have a wide table that will normally go out of the page, and you want to scale down the table to fit the page, you can use the `scale_down` option here. Note that, if your table is too small, it will also scale up your table. It was named in this way only because scaling up isn't very useful in most cases. You should also note that `scale_down` does not work with `longtable`. If you `longtable` is too wide, you should manually adjust your fontsize or switch to landscape layout. 
+When you have a wide table that will normally go out of the page, and you want to scale down the table to fit the page, you can use the `scale_down` option here. Similarly if you want scale up a table to use the full page width you can use the `scale_up` option. Having both options available ensures that your table is only scaled in the direction you intended to scale it. You should also note that `scale_down` does not work with `longtable`. If your `longtable` is too wide, you should manually adjust your fontsize or switch to landscape layout. 
 ```{r}
 kbl(cbind(dt, dt, dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
@@ -160,6 +160,10 @@ kbl(cbind(dt, dt, dt), booktabs = T) %>%
 ```{r}
 kbl(cbind(dt), booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
+```
+```{r}
+kbl(cbind(dt), booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "scale_up"))
 ```
 
 ### Repeat header in longtable
@@ -190,7 +194,7 @@ kbl(dt, booktabs = T) %>%
   kable_styling(position = "center")
 ```
 
-Besides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires rmarkdown 1.4.0 +. If you rmarkdown version < 1.4.0, you need to load the package through a customed LaTeX template file. 
+Besides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. Note that, like `striped`, this feature will load another non-default LaTeX package `wrapfig` which requires `rmarkdown` 1.4.0 +. If you use `rmarkdown` version < 1.4.0, you need to load the package through a customized LaTeX template file. 
 ```{r}
 kbl(dt, booktabs = T) %>%
   kable_styling(position = "float_right")
@@ -493,7 +497,9 @@ kbl(dt, booktabs = T, align = "l") %>%
 ## Group rows via multi-row cell
 Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider using `collapse_rows` instead, which will put repeating cells in columns into multi-row cells.  
 
-In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`. Vertical alignment of cells is controlled by the `valign` option. You can choose from "top", "middle"(default) and "bottom". Be cautious that the vertical alignment option was only introduced in multirow in 2016. If you are using a legacy LaTeX distribution, you will run into trouble if you set `valign` to be either "top" or "bottom".
+In LaTeX, `collapse_rows` adds some extra hlines to help differentiate groups. You can customize this behavior using the `latex_hline` argument. You can choose from `full` (default), `major` and `none`.
+
+Vertical alignment of cells (with the default `row_group_label_position = "identity")`) is controlled by the `valign` option. You can choose from "top", "middle" (default) and "bottom". Be cautious that the vertical alignment option was only introduced in multirow in 2016. If you are using a legacy LaTeX distribution, you will run into trouble if you set `valign` to be either "top" or "bottom". Alternatively, use `row_group_label_position = "first"`, which will put the row group labels into the first row without using the `\multirow` LaTeX command at all.
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -502,7 +508,7 @@ collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
                  C4 = sample(c(0,1), 15, replace = TRUE))
 kbl(collapse_rows_dt, booktabs = T, align = "c") %>%
   column_spec(1, bold=T) %>%
-  collapse_rows(columns = 1:2, latex_hline = "major", valign = "middle")
+  collapse_rows(columns = 1:2, latex_hline = "major", row_group_label_position = "first")
 ```
 
 Right now, you can't automatically make striped rows based on collapsed rows but you can do it manually via the `extra_latex_after` option in `row_spec`. This feature is not officially supported. I'm only document it here if you want to give it a try. 
@@ -642,9 +648,9 @@ kbl(dt, caption = "Demo Table (Landscape)[note]", booktabs = T) %>%
 ```
 
 ## Decimal Alignment
-Decimal alignment has been a requested feature by many LaTeX users. However, since the syntax for either `siunitx` or `dcolumn` are a little different, it is sort of difficult to integrate them into the pipeline of this package without breaking other features. If you need this feature, Brandon Bertelsen (@1beb) provided a very nice solution on github (https://github.com/haozhu233/kableExtra/issues/174, thanks). Here is a working example. 
+Decimal alignment has been a requested feature by many LaTeX users. However, since the syntax for either `siunitx` or `dcolumn` are a little different, it is sort of difficult to integrate them into the pipeline of this package without breaking other features. If you need this feature, Brandon Bertelsen (@1beb) provided a very nice solution on Github (https://github.com/haozhu233/kableExtra/issues/174, thanks). Here is a working example. 
 
-In the `header-includes` section of the yaml header, include the following settings. If you need different rounding options, you can make changes here. 
+In the `header-includes` section of the YAML header, include the following settings. If you need different rounding options, you can make changes here. 
 
 ```
 \usepackage{siunitx}
@@ -669,7 +675,7 @@ If you want to save a LaTeX table to a image, you may consider using `save_kable
 ```{r, eval = F}
 # Not evaluated. 
 
-# The code below will automatically include the image in the rmarkdown document
+# The code below will automatically include the image in the R Markdown document
 kbl(dt, booktabs = T) %>%
   column_spec(1, bold = T) %>%
   as_image()
@@ -684,7 +690,7 @@ kbl(dt, booktabs = T) %>%
 Since the structure of `kable` is relatively simple, it shouldn't be too difficult to convert HTML or LaTeX tables generated by other packages to a `kable` object and then use `kableExtra` to modify the outputs. If you are a package author, feel free to reach out to me and we can collaborate. 
 
 ## `tables`
-The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
+The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatible with functions in `kableExtra` (>=0.9.0).
 
 ## `xtable`
 For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. I personally have been using this function to place table caption below tables and solve some tricky case when I use `tufte_handout`. 
