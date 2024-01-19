@@ -108,15 +108,10 @@ regex_escape <- function(x, double_backslash = FALSE) {
   return(x)
 }
 
-as_kable_xml <- function(x, pre = NULL, post = NULL) {
-  out <- structure(paste(c(pre, as.character(x), post), collapse = "\n"),
+as_kable_xml <- function(bodynode) {
+  out <- structure(as.character(bodynode),
                    format = "html", class = "knitr_kable")
   return(out)
-}
-
-is_html_table <- function(x) {
-  xml_length(x) == 1 &&
-    xml_name(xml_child(x, 1)) == "table"
 }
 
 child_to_character <- function(x) {
@@ -129,24 +124,26 @@ child_to_character <- function(x) {
   result
 }
 
-read_kable_as_xml <- function(x) {
-  kable_html <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
-  children <- lapply(seq_len(xml_length(kable_html)),
-                     function(num) xml_child(kable_html, num))
-  pre <- character(0)
-  post <- character(0)
-  result <- list()
-  for (i in seq_along(children)) {
-    if (!is_html_table(children[[i]]))
-      pre <- c(pre, child_to_character(children[[i]]))
-    else {
-      result <- xml_child(children[[i]], 1)
-      for (j in seq_along(children)[-seq_len(i)])
-        post <- c(post, child_to_character(children[[i]]))
-      break;
+dfs <- function(node, node_name='table') {
+  if (is.null(node)) return(NULL)
+  if (xml_name(node) == node_name) return(node)
+  for (child in xml_children(node)) {
+    found <- dfs(child, node_name)
+    if (!is.null(found)) {
+      return(found)
     }
   }
-  structure(result, pre = pre, post = post)
+  return(NULL)
+}
+
+read_kable_as_xml <- function(x) {
+  source_node <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
+  body_node <- xml_children(dfs(source_node, 'body'))
+  table_node <- dfs(source_node, 'table')
+  if (is.null(table_node)) {
+    stop('Did not find a HTML table tag in the provided HTML. ')
+  }
+  return(list(body=body_node, table=table_node))
 }
 
 get_xml_text <- function(xml_node) {

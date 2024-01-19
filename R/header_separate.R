@@ -42,7 +42,9 @@ header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
 
 header_separate_html <- function(kable_input, sep, ...) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
 
   kable_thead <- xml_tpart(kable_xml, "thead")
   thead_depth <- length(xml_children(kable_thead))
@@ -74,7 +76,7 @@ header_separate_html <- function(kable_input, sep, ...) {
                       new_header_row_one[[i]])
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
 

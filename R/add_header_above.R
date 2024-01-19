@@ -125,7 +125,9 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        angle, escape, line, line_sep,
                                        extra_css, include_empty) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_xml_thead <- xml_tpart(kable_xml, "thead")
 
   if (escape) {
@@ -159,7 +161,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
     include_empty, attr(kable_input, 'lightable_class')
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   if (is.null(kable_attrs$header_above)) {
     kable_attrs$header_above <- 1
   } else {

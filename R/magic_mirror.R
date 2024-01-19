@@ -132,7 +132,9 @@ extra_header_to_header_df_ <- function(x) {
 # Magic Mirror for html table --------
 magic_mirror_html <- function(kable_input){
   table_info <- list()
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   # Caption
   table_info$caption <- xml_text(xml_child(kable_xml, "caption"))
   # colnames

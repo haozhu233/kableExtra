@@ -80,7 +80,9 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
                           color, background, align, font_size, angle,
                           extra_css) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
 
   if (!is.null(align)) {
     if (align %in% c("l", "c", "r")) {
@@ -120,7 +122,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)

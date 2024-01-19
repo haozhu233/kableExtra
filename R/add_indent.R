@@ -109,7 +109,9 @@ add_indent_html <- function(kable_input, positions,
                             target_cols = 1) {
   kable_attrs <- attributes(kable_input)
 
-  kable_xml <- kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
 
   group_header_rows <- attr(kable_input, "group_header_rows")
@@ -143,7 +145,7 @@ add_indent_html <- function(kable_input, positions,
       }
     }
   }
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)

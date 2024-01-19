@@ -44,7 +44,9 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
 
   if (fixed_thead$enabled) {
     box_css = "border: 1px solid #ddd; padding: 0px; "
-    kable_xml <- read_kable_as_xml(kable_input)
+    important_nodes <- read_kable_as_xml(kable_input)
+    body_node <- important_nodes$body
+    kable_xml <- important_nodes$table
     all_header_cells <- xml2::xml_find_all(kable_xml, "//thead//th")
     if (is.null(fixed_thead$background))  fixed_thead$background <- "#FFFFFF"
     for (i in seq(length(all_header_cells))) {
@@ -54,7 +56,7 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
         fixed_thead$background, ";"
       )
     }
-    out <- as.character(as_kable_xml(kable_xml))
+    out <- as.character(as_kable_xml(body_node))
   } else {
     out <- as.character(kable_input)
   }
