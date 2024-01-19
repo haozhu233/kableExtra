@@ -1,9 +1,9 @@
 #' Generate viridis or other color code for continuous values
 #'
 #' @param x continuous vectors of values
-#' @param alpha The alpha transparency, a number in [0,1],
-#' @param begin The (corrected) hue in [0,1] at which the color map begins.
-#' @param end The (corrected) hue in [0,1] at which the color map ends.
+#' @param alpha The alpha transparency, a number in \[0,1\],
+#' @param begin The (corrected) hue in \[0,1\] at which the color map begins.
+#' @param end The (corrected) hue in \[0,1\] at which the color map ends.
 #' @param direction Sets the order of colors in the scale. If 1, the default,
 #' colors are ordered from darkest to lightest. If -1, the order of colors is
 #' reversed.
