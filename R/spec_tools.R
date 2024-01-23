@@ -44,20 +44,14 @@ html_color_ <- function(color) {
       !grepl("[[:digit:]]", color) )
     return(color)
 
-  rgba_code <- col2rgb(color, alpha = TRUE)
-  rgba_code[4] <- round(rgba_code[4])
-  return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
-
-  # # 2024-01-23 Hao: Move it to a try catch flavor.
-  # tryCatch(
-  #   {rgba_code <- col2rgb(color, alpha = TRUE)},
-  #   error = function(e) {return(color)},
-  #   warning = function(w) {return(color)},
-  #   finally = function(f) {
-  #     rgba_code[4] <- round(rgba_code[4])
-  #     return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
-  #   }
-  # )
+  # 2024-01-23 Hao: Move it to a try catch flavor to catch some exception cases.
+  tryCatch({
+    rgba_code <- col2rgb(color, alpha = TRUE)
+    rgba_code[4] <- round(rgba_code[4])
+    return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
+  },
+    error = function(e) {return(as.character(color))}
+  )
 }
 
 html_color <- function(colors) {
