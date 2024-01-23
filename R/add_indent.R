@@ -76,7 +76,7 @@ add_indent_latex <- function(kable_input, positions,
       })
       new_rowtext <- paste(unlist(new_rowtext), collapse = " & ")
     } else {
-      if (all(target_cols %in% seq_along(new_rowtext))) {
+      if (all(target_cols %in% seq(table_info$ncol))) {
         new_rowtext[target_cols] <- latex_indent_unit(
           new_rowtext[target_cols], level_of_indent)
       } else {
