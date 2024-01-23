@@ -40,16 +40,24 @@ spec_color <- function(x, alpha = 1, begin = 0, end = 1,
 html_color_ <- function(color) {
   # HTML colors are a subset of R colors, not including
   # numbered versions like darkgoldenrod2 (issue #726)
-  # 2024-01-23 Hao: Move it to a try catch flavor.
-  tryCatch(
-    {rgba_code <- col2rgb(color, alpha = TRUE)},
-    error = function(e) {return(color)},
-    warning = function(w) {return(color)},
-    finally = function(f) {
-      rgba_code[4] <- round(rgba_code[4])
-      return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
-    }
-  )
+  if (substr(color, 1, 1) != "#" &&
+      !grepl("[[:digit:]]", color) )
+    return(color)
+
+  rgba_code <- col2rgb(color, alpha = TRUE)
+  rgba_code[4] <- round(rgba_code[4])
+  return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
+
+  # # 2024-01-23 Hao: Move it to a try catch flavor.
+  # tryCatch(
+  #   {rgba_code <- col2rgb(color, alpha = TRUE)},
+  #   error = function(e) {return(color)},
+  #   warning = function(w) {return(color)},
+  #   finally = function(f) {
+  #     rgba_code[4] <- round(rgba_code[4])
+  #     return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
+  #   }
+  # )
 }
 
 html_color <- function(colors) {
