@@ -1,3 +1,11 @@
+test_that("Issue #812:  table without header works in collapse_rows", {
+  tab <- kbl(mtcars[1:3, 1:4], col.names = NULL,
+             format = "html", booktabs = TRUE) |>
+    kable_styling(full_width=TRUE) |>
+    collapse_rows(columns=2:3)
+  expect_s3_class(tab, "knitr_kable")
+})
+
 test_that("Issue #806: custom rule widths", {
   expect_snapshot(
     kbl(mtcars[1:3, 1:4],
