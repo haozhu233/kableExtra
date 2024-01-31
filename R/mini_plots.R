@@ -91,108 +91,142 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' Helper functions to generate inline sparklines
 #'
 #' @description These functions helps you quickly generate sets of sparkline
-#' style plots using base R plotting system. Currently, we support histogram,
-#' boxplot, line, scatter and pointrange plots. You can use them together with
-#' `column_spec` to generate inline plot in tables. By default, this function
-#' will save images in a folder called "kableExtra" and return the address of
-#' the file.
+#'   style plots using base R plotting system. Currently, we support histogram,
+#'   boxplot, line, scatter, pointrange, barplot plots. You can use them
+#'   together with `column_spec` to generate inline plot in tables. By default,
+#'   this function will save images in a folder called "kableExtra" and return
+#'   the address of the file.
 #'
 #' @param x Vector of values or List of vectors of values.
-#' @param width The width of the plot in pixel
-#' @param height The height of the plot in pixel
 #' @param res The resolution of the plot. Default is 300.
-#' @param add_label For boxplot. T/F to add labels for min, mean and max.
-#' @param label_digits If T for add_label, rounding digits for the label.
-#' Default is 2.
 #' @param same_lim T/F. If x is a list of vectors, should all the plots be
-#' plotted in the same range? Default is True.
-#' @param lim Manually specify plotting range in the form of
-#' `c(0, 10)`.
-#' @param xaxt On/Off for xaxis text
-#' @param yaxt On/Off for yaxis text
+#'   plotted in the same range? Default is True.
+#' @param lim Manually specify plotting range in the form of `c(0, 10)`.
+#' @param xaxt On/Off for xaxis text ('n'=off, 's'=on).
+#' @param yaxt On/Off for yaxis text ('n'=off, 's'=on).
 #' @param ann On/Off for annotations (titles and axis titles)
 #' @param col Color for the fill of the histogram bar/boxplot box.
 #' @param border Color for the border.
-#' @param boxlty Boxplot - box boarder type
-#' @param medcol Boxplot - median line color
-#' @param medlwd Boxplot - median line width
 #' @param dir Directory of where the images will be saved.
 #' @param file File name. If not provided, a random name will be used
-#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
-#'   or a graphics device function (`grDevices::pdf`). This defaults
-#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
-#' @param ... extra parameters passing to boxplot
+#' @param file_type Graphic device. Can be character (e.g., `"pdf"`) or a
+#'   graphics device function (`grDevices::pdf`). This defaults to `"pdf"` if
+#'   the rendering is in LaTeX and `"svg"` otherwise.
+#' @param fixed_params Character vector of parameter names that should be kept
+#'   constant across calls to `barplot`. See details.
+#' @param devwidth,devheight image width and height
+#' @inheritParams graphics::barplot
+#' @inheritDotParams graphics::barplot -height
+#'
+#' @details Normally, the parameters that control the attributes of the
+#' `barplot` are processed to ensure they have the same number of elements as
+#' rows in `x` (scalars are recycled to create vectors), and the call to
+#' `barplot` uses the corresponding values from the parameter vectors.  This
+#' allows providing a vector of values with one value for each row (e.g. to
+#' specify a different color for each row).
+#'
+#' When it is desirable to specify that the same vector is passed to all calls
+#' to `barplot`,  this can be prevented by providing the name of the
+#' parameter(s) in `fixed_params` (e.g. to specify color for the individual bars
+#' within a barplot).
+#'
+#' @examples
+#'
+#' df <- data.frame(a=letters[1:3], b=1:3, bars="")
+#' df
+#'
+#' counts <- list(
+#'    'a' = c(red=3, blue=5, green=0),
+#'    'b' = c(red=1, blue=5, green=3),
+#'    'c' = c(red=0, blue=4, green=4)
+#'  )
+#'
+#' # Set color in each row
+#' kbl(df) |>
+#'   column_spec(3, image=spec_barplot(counts,
+#'               col=c('red','green','blue'), beside=TRUE, space=0.2)
+#'               )
+#'
+#' # Set color of each bar
+#' kbl(df) |>
+#'   column_spec(3,
+#'               image=spec_barplot(counts, col=c('red','green','blue'),
+#'                                  beside=TRUE, space=0.2, fixed_params='col')
+#'               )
 #'
 #' @export
-spec_boxplot <- function(x, width = 200, height = 50, res = 300,
-                         add_label = FALSE, label_digits = 2,
-                         same_lim = TRUE, lim = NULL,
-                         xaxt = 'n', yaxt = 'n', ann = FALSE,
-                         col = "lightgray", border = NULL,
-                         boxlty = 0, medcol = "red", medlwd = 1,
-                         dir = if (is_latex()) rmd_files_dir() else tempdir(),
-                         file = NULL,
-                         file_type = if (is_latex()) "pdf" else svglite::svglite,
-                         ...) {
+spec_barplot <- function(
+    x,
+    devwidth = 200,
+    devheight = 40,
+    res = 300,
+    beside = F,
+    horiz = F,
+    same_lim = TRUE, lim = NULL,
+    xaxt = 'n', yaxt = 'n', ann = FALSE,
+    col = NULL, border = NA,
+    dir = if (is_latex()) rmd_files_dir() else tempdir(),
+    file = NULL,
+    file_type = if (is_latex()) "pdf" else svglite::svglite,
+    fixed_params = NULL,
+    ...
+) {
   if (is.list(x)) {
     if (same_lim & is.null(lim)) {
       lim <- base::range(unlist(x), na.rm=TRUE)
     }
 
-    dots <- listify_args(x, width, height, res,
-                         add_label, label_digits,
-                         lim, xaxt, yaxt, ann, col, border,
-                         dir, file, file_type,
-                         lengths = c(1, length(x)))
-    return(do.call(Map, c(list(f = spec_boxplot), dots)))
+    # Arguments that should be iterated over
+    row_dots <- listify_args(x, devwidth, devheight, res, beside,horiz,
+                             lim, xaxt, yaxt, ann, col, border,
+                             dir, file, file_type, ...,
+                             lengths = c(1, length(x)),
+                             ignore = fixed_params)
+
+    # 'static' arguments for the function
+    if(length(fixed_params)>0)
+      static_dots <- mget(fixed_params)
+    else
+      static_dots <- NULL
+
+    return(.mapply(spec_barplot, dots=row_dots, MoreArgs = static_dots))
   }
 
   if (is.null(x)) return(NULL)
 
   if (is.null(lim)) {
     lim <- base::range(x, na.rm=TRUE)
-    lim[1] <- lim[1] - (lim[2] - lim[1]) / 10
-    lim[2] <- (lim[2] - lim[1]) / 10 + lim[2]
   }
 
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
+  height<-matrix(x)
+  #height<-cbind(height,0)
 
   file_ext <- dev_chr(file_type)
   if (is.null(file)) {
     file <- normalizePath(
-      tempfile(pattern = "boxplot_", tmpdir = dir, fileext = paste0(".", file_ext)),
+      tempfile(pattern = "barplot_", tmpdir = dir, fileext = paste0(".", file_ext)),
       winslash = "/", mustWork = FALSE)
   }
 
   graphics_dev(filename = file, dev = file_type,
-               width = width, height = height, res = res,
+               width = devwidth, height = devheight, res = res,
                bg = "transparent")
   curdev <- grDevices::dev.cur()
   on.exit(grDevices::dev.off(curdev), add = TRUE)
 
-  graphics::par(mar = c(0, 0, 0, 0))
-
-  graphics::boxplot(x, horizontal = TRUE, ann = ann, frame = FALSE, bty = 'n', ylim = lim,
-                    col = col, border = border,
-                    boxlty = boxlty, medcol = medcol, medlwd = medlwd,
-                    axes = FALSE, outcex = 0.2, whisklty = 1,
+  graphics::par(mar = c(0, 0, 0, 0), lwd=0.5)
+  graphics::barplot(height=height, beside = beside,horiz = horiz, col = col,
+                    border = border,xaxt = xaxt, yaxt = yaxt, ann = ann,
                     ...)
-  if (add_label) {
-    x_median <- round(median(x, na.rm = T), label_digits)
-    x_min <- round(min(x, na.rm = T), label_digits)
-    x_max <- round(max(x, na.rm = T), label_digits)
-    graphics::text(x_median, y = 1.4, labels = x_median, cex = 0.5)
-    graphics::text(x_min, y = 0.6, labels = x_min, cex = 0.5)
-    graphics::text(x_max, y = 0.6, labels = x_max, cex = 0.5)
-  }
 
   grDevices::dev.off(curdev)
 
   out <- make_inline_plot(
     file, file_ext, file_type,
-    width, height, res,
+    devwidth, devheight, res,
     del = TRUE)
   return(out)
 }

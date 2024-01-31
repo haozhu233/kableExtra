@@ -6,38 +6,52 @@
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param row A numeric value or vector indicating which row(s) to be selected. You don't
 #' need to count in header rows or group labeling rows.
-#' @param bold A T/F value to control whether the text of the selected row
+#' @param bold A T/F vector to control whether the cells of the selected row
 #' need to be bolded.
-#' @param italic A T/F value to control whether the text of the selected row
+#' @param italic A T/F vector to control whether the cells of the selected row
 #' need to be emphasized.
-#' @param monospace A T/F value to control whether the text of the selected row
+#' @param monospace A T/F vector to control whether the cells of the selected row
 #' need to be monospaced (verbatim)
-#' @param underline A T/F value to control whether the text of the selected row
+#' @param underline A T/F vector to control whether the cells of the selected row
 #' need to be underlined
-#' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be struck out.
-#' @param color A character string for row text color. For example, "red" or
+#' @param strikeout A T/F vector to control whether the cells of the selected row
+#' need to be struck out out.
+#' @param color A character vector for column text color. For example, "red" or
 #' "#BBBBBB".
-#' @param background A character string for row background color. Here please
+#' @param background A character vector for cell background colors. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
-#' @param align A character string for cell alignment. For HTML, possible values could
+#' @param align A character vector for column cell alignment. For HTML, possible values could
 #' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
 #' while for LaTeX, you can only choose from `l`, `c` & `r`.
-#' @param font_size A numeric input for font size. For HTML, you can also use
+#' @param font_size A numeric vector for cell font sizes. For HTML, you can also use
 #' options including `xx-small`, `x-small`, `small`, `medium`, `large`,
 #' `x-large`, `xx-large`, `smaller`, `larger`, `initial` and `inherit`.
-#' @param angle 0-360, degree that the text will rotate.
+#' @param angle 0-360, a numeric vector of cell text rotation in degrees.
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole row.
 #' @param hline_after T/F. A replicate of `hline.after` in xtable. It
 #' adds a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
-#' with `add.to.row` in xtable
+#' with `add.to.row` in `xtable::xtable`
 #'
 #' @examples
 #' \dontrun{
-#' x <- knitr::kable(head(mtcars), "html")
-#' row_spec(x, 1:2, bold = TRUE, italic = TRUE)
+#' x <- head(mtcars)
+#' k <- knitr::kable(x, "html")
+#'
+#' # First two rows bold and italic
+#' row_spec(k, 1:2, bold = TRUE, italic = TRUE)
+#'
+#' # Color columns of header alternating grey and green, via recycling
+#' row_spec(k, 0, color=c('grey','green'))
+#'
+#' # Color columns alternating grey and green in all rows, via recycling
+#' row_spec(k, 0:nrow(x), color=c('grey','green'))
+#'
+#' # Same thing using `column_spec`:
+#' k |>
+#' column_spec(seq(1, ncol(x)+1, by=2), color='grey') |>
+#' column_spec(seq(2, ncol(x)+1, by=2), color='green')
 #' }
 #'
 #' @export
@@ -84,9 +98,36 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
   body_node <- important_nodes$body
   kable_xml <- important_nodes$table
 
+  table_info <- magic_mirror(kable_input)
+  ncol <-  table_info$ncol
+
+  # Convert scalar parameters to vector with the same length as the number of
+  # columns, recycling or trimming if needed
+  expand_values <- function(x, ncol)
+  {
+    if(!is.null(x))
+      rep(x, ncol, length.out=ncol)
+    else
+      x
+  }
+
+  bold       <- expand_values(bold,       ncol)
+  italic     <- expand_values(italic,     ncol)
+  monospace  <- expand_values(monospace,  ncol)
+  underline  <- expand_values(underline,  ncol)
+  strikeout  <- expand_values(strikeout,  ncol)
+  color      <- expand_values(color,      ncol)
+  background <- expand_values(background, ncol)
+  align      <- expand_values(align,      ncol)
+  font_size  <- expand_values(font_size,  ncol)
+  angle      <- expand_values(angle ,     ncol)
+  extra_css  <- expand_values(extra_css,  ncol)
+
+
   if (!is.null(align)) {
-    if (align %in% c("l", "c", "r")) {
-      align <- switch(align, r = "right", c = "center", l = "left")
+    # Convert any single-char alignment to string
+    if (any(align %in% c("l", "c", "r"))) {
+      align <- sapply(align, switch, r = "right", c = "center", l = "left")
     }
   }
 
@@ -95,9 +136,20 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
     for (theader_i in 1:length(xml_children(original_header_row))) {
       target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_cell_style(target_header_cell, bold, italic, monospace,
-                     underline, strikeout, color, background,
-                     align, font_size, angle, extra_css)
+      xml_cell_style(
+        target_header_cell,
+        bold      [theader_i],
+        italic    [theader_i],
+        monospace [theader_i],
+        underline [theader_i],
+        strikeout [theader_i],
+        color     [theader_i],
+        background[theader_i],
+        align     [theader_i],
+        font_size [theader_i],
+        angle     [theader_i],
+        extra_css [theader_i]
+      )
     }
     row <- row[row != 0]
   }
@@ -115,9 +167,20 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
       target_row <- xml_child(kable_tbody, j)
       for (i in 1:length(xml_children(target_row))) {
         target_cell <- xml_child(target_row, i)
-        xml_cell_style(target_cell, bold, italic, monospace,
-                       underline, strikeout, color, background,
-                       align, font_size, angle, extra_css)
+        xml_cell_style(
+          target_cell,
+          bold[i],
+          italic[i],
+          monospace[i],
+          underline[i],
+          strikeout[i],
+          color[i],
+          background[i],
+          align[i],
+          font_size[i],
+          angle[i],
+          extra_css[i]
+        )
       }
     }
   }
@@ -246,29 +309,53 @@ latex_new_row_builder <- function(target_row, table_info,
                                   color, background, align, font_size, angle,
                                   hline_after, extra_latex_after) {
   new_row <- latex_row_cells(target_row)
-  if (bold) {
+
+  ncol <- table_info$ncol
+
+  # Convert scalar parameters to vector with the same length as the number of
+  # columns, recycling or trimming if needed
+  expand_values <- function(x, ncol)
+  {
+    if(!is.null(x))
+      rep(x, ncol, length.out=ncol)
+    else
+      x
+  }
+
+  italic     <- expand_values(italic,     ncol)
+  monospace  <- expand_values(monospace,  ncol)
+  underline  <- expand_values(underline,  ncol)
+  strikeout  <- expand_values(strikeout,  ncol)
+  color      <- expand_values(color,      ncol)
+  background <- expand_values(background, ncol)
+  align      <- expand_values(align,      ncol)
+  font_size  <- expand_values(font_size,  ncol)
+  angle      <- expand_values(angle ,     ncol)
+
+
+  if (any(bold)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\textbf\\{", x, "\\}")
+      ifelse(bold, paste0("\\\\textbf\\{", x, "\\}"), x)
     })
   }
-  if (italic) {
+  if (any(italic)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\em\\{", x, "\\}")
+      ifelse(italic, paste0("\\\\em\\{", x, "\\}"), x)
     })
   }
-  if (monospace) {
+  if (any(monospace)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\ttfamily\\{", x, "\\}")
+      ifelse(monospace, paste0("\\\\ttfamily\\{", x, "\\}"), x)
     })
   }
-  if (underline) {
+  if (any(underline)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\underline\\{", x, "\\}")
+      ifelse(underline, paste0("\\\\underline\\{", x, "\\}"), x)
     })
   }
-  if (strikeout) {
+  if (any(strikeout)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\sout\\{", x, "\\}")
+      ifelse(strikeout, paste0("\\\\sout\\{", x, "\\}"), x)
     })
   }
   if (!is.null(color)) {
@@ -279,7 +366,11 @@ latex_new_row_builder <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x)
-      paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}")
+      ifelse(
+        nchar(color),
+        paste0("\\\\textcolor", latex_color(color), "\\{", x, "\\}"),
+        x
+      )
     })
   }
   if (!is.null(background)) {
@@ -290,36 +381,53 @@ latex_new_row_builder <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x, background = TRUE)
-      paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}")
+      ifelse(
+        nchar(background),
+        paste0("\\\\cellcolor", latex_color(background), "\\{", x, "\\}"),
+        x
+      )
     })
   }
   if (!is.null(font_size)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
-             as.numeric(font_size) + 2,
-             "\\}\\\\selectfont ", x, "\\\\endgroup")})
+      ifelse(
+        nchar(font_size),
+        paste0("\\\\begingroup\\\\fontsize\\{", font_size, "\\}\\{",
+               as.numeric(font_size) + 2,
+               "\\}\\\\selectfont ", x, "\\\\endgroup"),
+        x
+      )
+    })
   }
   if (!is.null(align)) {
     if (!is.null(table_info$column_width)) {
-      p_align <- switch(align,
+      p_align <- sapply(align, switch,
                         "l" = "\\\\raggedright\\\\arraybackslash",
                         "c" = "\\\\centering\\\\arraybackslash",
                         "r" = "\\\\raggedleft\\\\arraybackslash")
-      align <- rep(align, table_info$ncol)
       p_cols <- as.numeric(sub("column_", "", names(table_info$column_width)))
+      align <- expand_values("", ncol)
       for (i in 1:length(p_cols)) {
-        align[p_cols[i]] <- paste0("\\>\\{", p_align, "\\}p\\{",
+        align[p_cols[i]] <- paste0("\\>\\{", p_align[i], "\\}p\\{",
                                    table_info$column_width[[i]], "\\}")
       }
     }
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\multicolumn\\{1\\}\\{", align, "\\}\\{", x, "\\}")
+      ifelse(
+        nchar(align),
+        paste0("\\\\multicolumn\\{1\\}\\{", align, "\\}\\{", x, "\\}"),
+        x
+      )
     })
   }
 
   if (!is.null(angle)) {
     new_row <- lapply(new_row, function(x) {
-      paste0("\\\\rotatebox\\{", angle, "\\}\\{", x, "\\}")
+      ifelse(
+        nchar(angle),
+        paste0("\\\\rotatebox\\{", angle, "\\}\\{", x, "\\}"),
+        x
+      )
     })
   }
 
