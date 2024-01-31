@@ -153,13 +153,25 @@ get_xml_text <- function(xml_node) {
 read_table_data_from_xml <- function(kable_xml) {
   thead <- xml_tpart(kable_xml, "thead")
   tbody <- xml_tpart(kable_xml, "tbody")
+  if (is.null(tbody))
+    stop("table has no body!")
 
   # Header part
-  n_header_rows <- xml2::xml_length(thead)
-  col_headers_xml <- xml2::xml_children(xml2::xml_child(thead, n_header_rows))
-  col_headers <- unlist(lapply(col_headers_xml, get_xml_text))
-  n_cols <- length(col_headers)
-  first_column_as_row_names <- (col_headers[1] == '')
+  if (!is.null(thead)) {
+    n_header_rows <- xml2::xml_length(thead)
+    col_headers_xml <- xml2::xml_children(xml2::xml_child(thead, n_header_rows))
+    col_headers <- unlist(lapply(col_headers_xml, get_xml_text))
+    n_cols <- length(col_headers)
+    first_column_as_row_names <- (col_headers[1] == '')
+  } else {
+    first_column_as_row_names <- FALSE
+    col_headers <- NULL
+    # We have no header, so get the maximum number of columns in the body
+    n_cols <- vapply(xml2::xml_children(tbody),
+                     function(row) length(xml2::xml_children(row)),
+                     1L)
+    n_cols <- max(n_cols)
+  }
 
   # Content part
   filtered_rows <- lapply(xml2::xml_children(tbody), function(row) {
