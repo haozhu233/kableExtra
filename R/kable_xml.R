@@ -6,7 +6,7 @@
 #'
 #' @export
 kable_as_xml <- function(x) {
-  read_kable_as_xml(x)
+  read_kable_as_xml(x)$table
 }
 
 #' Convert XML back to kable

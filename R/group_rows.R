@@ -143,7 +143,9 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
                             bold, italic, monospace, underline, strikeout,
                             color, background) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
   if (is.null(kable_tbody))
     return(kable_input)
@@ -215,7 +217,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   xml_add_sibling(starting_node, group_header_row, .where = "before")
 
   # add indentations to items
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
   if (indent) {

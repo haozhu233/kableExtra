@@ -232,13 +232,8 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   }
 
   temp_tex <- c(
-    "\\documentclass[border=1mm, preview]{standalone}",
-    "\\usepackage[active,tightpage]{preview}",
-    "\\usepackage{varwidth}",
+    "\\documentclass[border=1mm]{standalone}",
     "\\usepackage{amssymb, amsmath}",
-    "\\usepackage{ifxetex,ifluatex}",
-    "\\usepackage{fixltx2e}",
-    "\\usepackage{polyglossia}",
     latex_pkg_list(),
     "\\usepackage{graphicx}",
     "\\usepackage{xunicode}",
@@ -257,8 +252,14 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
 
   owd <- setwd(dirname(temp_tex_file))
 
-  system(paste0('xelatex -interaction=batchmode "',
-                temp_tex_file, '"'))
+  if (!requireNamespace("tinytex", quietly = TRUE)) {
+    system(paste0("xelatex -interaction=batchmode ",
+                  gsub(pattern = " ", replacement = "\\ ",
+                       temp_tex_file, fixed = TRUE)))
+  } else {
+    tinytex::xelatex(gsub(pattern = " ", replacement = "\\ ",
+                          temp_tex_file, fixed = TRUE))
+  }
   if (!keep_tex) {
     temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
     unlink(temp_file_delete)

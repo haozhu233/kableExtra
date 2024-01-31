@@ -48,10 +48,10 @@ library(kableExtra)
 dt <- mtcars[1:5, 1:6]
 ```
 
-> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper funciton `kbl` to the original `kable` function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environement variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new `kbl` function for all its convenience but the support for the original `kable` function is still there. In this doc, we will use `kbl` instead of `kable`.
+> **Key Update:** In the latest version of this package (1.2+), we provide a wrapper function `kbl` to the original `kable` function with detailed documentation of all the hidden html/latex options. It also does auto-formatting check in every function call instead of relying on the global environment variable. As a result, it also solves an issue for multi-format R Markdown documents. I encourage you start to use the new `kbl` function for all its convenience but the support for the original `kable` function is still there. In this doc, we will use `kbl` instead of `kable`.
 
 
-**This paragraph is a little outdated. It's here only for education purpose because it's helpful to understand how `kable` works under the hood**. When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step everytime.* **Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
+**This paragraph is a little outdated. It's here only for education purpose because it's helpful to understand how `kable` works under the hood**. When you are using `kable()`, if you don't specify `format`, by default it will generate a markdown table and let Pandoc handle the conversion from markdown to HTML/PDF. This is the most favorable approach to render most simple tables as it is format independent. If you switch from HTML to pdf, you basically don't need to change anything in your code. However, markdown doesn't support complex table. For example, if you want to have a double-row header table, markdown just cannot provide you the functionality you need. As a result, when you have such a need, you should **define `format` in `kable()`** as either "html" or "latex". *You can also define a global option at the beginning using `options(knitr.table.format = "html")` so you don't repeat the step every time.* **Starting from `kableExtra` 0.9.0**, when you load this package (`library(kableExtra)`), it will automatically set up the global option 'knitr.table.format' based on your current environment. Unless you are rendering a PDF, `kableExtra` will try to render a HTML table for you. **You no longer need to manually set either the global option or the `format` option in each `kable()` function**. I'm still including the explanation above here in this vignette so you can understand what is going on behind the scene. Note that this is only an global option. You can manually set any format in `kable()` whenever you want. I just hope you can enjoy a peace of mind in most of your time. You can disable this behavior by setting `options(kableExtra.auto_format = FALSE)` before you load `kableExtra`.
 
 ```{r}
 # If you are using kableExtra < 0.9.0, you are recommended to set a global option first.
@@ -66,7 +66,7 @@ kbl(dt)
 ```
 
 ## Bootstrap theme
-When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
+When used on a HTML table, `kable_styling()` will automatically apply twitter bootstrap theme to the table. Now it should looks the same as the original Pandoc output (the one when you don't specify `format` in `kable()`) but this time, you are controlling it.
 ```{r}
 dt %>%
   kbl() %>%
@@ -139,7 +139,7 @@ kbl(dt) %>%
 ```
 
 ## Full width?
-By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing a rmarkdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
+By default, a bootstrap table takes 100% of the width. It is supposed to use together with its grid system to scale the table properly. However, when you are writing an R Markdown document, you probably don't want to write your own css/or grid. For some small tables with only few columns, a page wide table looks awful. To make it easier, you can specify whether you want the table to have  `full_width` or not in `kable_styling`. By default, `full_width` is set to be `TRUE` for HTML tables (note that for LaTeX, the default is `FALSE` since I don't want to change the "common" looks unless you specified it.)
 ```{r}
 kbl(dt) %>%
   kable_paper(bootstrap_options = "striped", full_width = F)
@@ -152,7 +152,7 @@ kbl(dt) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-Becides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. 
+Besides these three common options, you can also wrap text around the table using the `float-left` or `float-right` options. 
 ```{r}
 kbl(dt) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "float_right")
@@ -235,7 +235,7 @@ tbl_img %>%
     c("kableExtra_sm.png", "kableExtra_sm.png"), 50, 50))
 ```
 
-`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist`, `spec_boxplot`, and `spec_plot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. Note that in html, you can also use package `sparkline` to create some jquery based interactive sparklines. Check out the end of this guide for details.
+`kableExtra` also provides a few inline plotting tools. Right now, there are `spec_hist`, `spec_boxplot`, and `spec_plot`. One key feature is that by default, the limits of every subplots are fixed so you can compare across rows. Note that in html, you can also use package `sparkline` to create some jQuery based interactive sparklines. Check out the end of this guide for details.
 
 ```{r}
 mpg_list <- split(mtcars$mpg, mtcars$cyl)
@@ -303,7 +303,7 @@ kbl(dt) %>%
 
 >**Key Update: As said before, if you are using kableExtra 1.2+, you are now recommended to used `column_spec` to do conditional formatting**. 
 
-Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimentional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
+Function `cell_spec` is introduced in version 0.6.0 of `kableExtra`. Unlike `column_spec` and `row_spec`, **this function is designed to be used before the data.frame gets into the `kable` function**. Comparing with figuring out a list of 2 dimensional index for targeted cells, this design is way easier to learn and use and it fits perfectly well with `dplyr`'s `mutate` and `summarize` functions. With this design, there are two things to be noted:
 * Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
 * `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
 
@@ -342,7 +342,7 @@ kbl(cs_dt, escape = F) %>%
 ```
 
 ## Visualize data with Viridis Color
-This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any [viridis color palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
+This package also comes with a few helper functions, including `spec_color`, `spec_font_size` & `spec_angle`. These functions can rescale continuous variables to certain scales. For example, function `spec_color` would map a continuous variable to any color palettes, by default [viridis palettes](https://CRAN.R-project.org/package=viridisLite). It offers a very visually impressive representation in a tabular format. 
 
 ```{r}
 vs_dt <- iris[1:10, ]
@@ -371,7 +371,7 @@ kbl(vs_dt, escape = F, align = "c") %>%
 ```
 
 ## Text Specification
-If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing a `rmarkdown` document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
+If you check the results of `cell_spec`, you will find that this function does nothing more than wrapping the text with appropriate HTML/LaTeX formatting syntax. The result of this function is just a vector of character strings. As a result, when you are writing an R Markdown document or write some text in shiny apps, if you need extra markups other than **bold** or *italic*, you may use this function to `r text_spec("color", color = "red")`, `r text_spec("change font size ", font_size = 16)` or `r text_spec("rotate", angle = 30)` your text. 
 
 An aliased function `text_spec` is also provided for a more literal writing experience. In HTML, there is no difference between these two functions. 
 
@@ -402,12 +402,12 @@ $(document).ready(function(){
 </script>
 ```
 
-In a rmarkdown document, you can just drop it outside of any R chunks. Unfortunately however, for rmarkdown pages with a **floating TOC** (like this page), you can't use bootstrap tooltips because there is a conflict in namespace between Bootstrap and JQueryUI (tocify.js). As a result, I can't provide a live demo here. If you want to have a tooltip together with a floating TOC, you should use `popover` which has a very similar effect.
+In an R Markdown document, you can just drop it outside of any R chunks. Unfortunately however, for R Markdown pages with a **floating TOC** (like this page), you can't use bootstrap tooltips because there is a conflict in namespace between Bootstrap and jQuery UI (`tocify.js`). As a result, I can't provide a live demo here. If you want to have a tooltip together with a floating TOC, you should use `popover` which has a very similar effect.
 
 
 
 ## Popover Message
-The popover message looks very similar with tooltip but it can hold more contents. Unlike tooltip which can minimally work without you manually enable that module, you **have to** enable the `popover` module to get it work. The upper side is that there is no conflict between Bootstrap & JQueryUI this time, you can use it without any concern.
+The popover message looks very similar with tooltip but it can hold more contents. Unlike tooltip which can minimally work without you manually enable that module, you **have to** enable the `popover` module to get it work. The upper side is that there is no conflict between Bootstrap & jQuery UI this time, you can use it without any concern.
 
 ```
 <script>
@@ -523,7 +523,7 @@ conflicted::conflict_prefer("group_rows", "kableExtra", "dplyr")
 ```
 
 ## Row indentation
-Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more apporiate. 
+Unlike `pack_rows()`, which will insert a labeling row, sometimes we want to list a few sub groups under a total one. In that case, `add_indent()` is probably more appropriate. 
 For advanced users, you can even define your own css for the group labeling.
 ```{r}
 kbl(dt) %>%
@@ -532,7 +532,7 @@ kbl(dt) %>%
 ```
 
 ## Group rows via multi-row cell
-Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical allignment of the cell is controlled by `valign` with default as "top". 
+Function `pack_rows` is great for showing simple structural information on rows but sometimes people may need to show structural information with multiple layers. When it happens, you may consider to use `collapse_rows` instead, which will put repeating cells in columns into multi-row cells. The vertical alignment of the cell is controlled by `valign` with default as "top".
 
 ```{r}
 collapse_rows_dt <- data.frame(C1 = c(rep("a", 10), rep("b", 5)),
@@ -577,7 +577,7 @@ kbl(dt, align = "c") %>%
            )
 ```
 
-If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. ALso, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
+If you need to add footnote marks in table, you need to do it manually (no fancy) using `footnote_mark_***()`. Remember that similar with `cell_spec`, you need to tell this function whether you want it to do it in `HTML` (default) or `LaTeX`. You can set it for all using the `knitr.table.format` global option. Also, if you have ever use `footnote_mark_***()`, you need to put `escape = F` in your `kable` function to avoid escaping of special characters. 
 
 ```{r}
 dt_footnote <- dt
@@ -621,7 +621,7 @@ kbl(cbind(mtcars, mtcars)) %>%
 Starting from version 1.1.0, if you have a fixed-height box, the header row is fixed 
 
 ## Save HTML table directly
-If you need to save those HTML tables but you don't want to generate them through rmarkdown, you can try to use the `save_kable()` function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many. 
+If you need to save those HTML tables but you don't want to generate them through R Markdown, you can try to use the `save_kable()` function. You can choose whether to let those HTML files be self contained (default is yes). Self contained files packed CSS into the HTML file so they are quite large when there are many. 
 ```{r, eval=FALSE}
 kbl(mtcars) %>%
   kable_paper() %>%
@@ -634,13 +634,13 @@ Well, this is not a feature but rather a documentation of how to use the `sparkl
 ```{r}
 # Not evaluated
 library(sparkline)
-sparkline(0)
+sparkline::sparkline(0)
 ```
 
 ```{r}
 spk_dt <- data.frame(
   var = c("mpg", "wt"),
-  sparkline = c(spk_chr(mtcars$mpg), spk_chr(mtcars$wt))
+  sparkline = c(sparkline::spk_chr(mtcars$mpg), sparkline::spk_chr(mtcars$wt))
 )
 
 kbl(spk_dt, escape = F) %>%
@@ -651,7 +651,7 @@ kbl(spk_dt, escape = F) %>%
 Since the structure of `kable` is relatively simple, it shouldn't be too difficult to convert HTML or LaTeX tables generated by other packages to a `kable` object and then use `kableExtra` to modify the outputs. If you are a package author, feel free to reach out to me and we can collaborate. 
 
 ## `tables`
-The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatiable with functions in `kableExtra` (>=0.9.0).
+The latest version of [`tables`](https://CRAN.R-project.org/package=tables) comes with a `toKable()` function, which is compatible with functions in `kableExtra` (>=0.9.0).
 
 ## `xtable`
 For `xtable` users, if you want to use `kableExtra` functions on that, check out this `xtable2kable()` function shipped with kableExtra 1.0. 

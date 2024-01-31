@@ -108,15 +108,10 @@ regex_escape <- function(x, double_backslash = FALSE) {
   return(x)
 }
 
-as_kable_xml <- function(x, pre = NULL, post = NULL) {
-  out <- structure(paste(c(pre, as.character(x), post), collapse = "\n"),
+as_kable_xml <- function(bodynode) {
+  out <- structure(as.character(bodynode),
                    format = "html", class = "knitr_kable")
   return(out)
-}
-
-is_html_table <- function(x) {
-  xml_length(x) == 1 &&
-    xml_name(xml_child(x, 1)) == "table"
 }
 
 child_to_character <- function(x) {
@@ -129,24 +124,26 @@ child_to_character <- function(x) {
   result
 }
 
-read_kable_as_xml <- function(x) {
-  kable_html <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
-  children <- lapply(seq_len(xml_length(kable_html)),
-                     function(num) xml_child(kable_html, num))
-  pre <- character(0)
-  post <- character(0)
-  result <- list()
-  for (i in seq_along(children)) {
-    if (!is_html_table(children[[i]]))
-      pre <- c(pre, child_to_character(children[[i]]))
-    else {
-      result <- xml_child(children[[i]], 1)
-      for (j in seq_along(children)[-seq_len(i)])
-        post <- c(post, child_to_character(children[[i]]))
-      break;
+dfs <- function(node, node_name='table') {
+  if (is.null(node)) return(NULL)
+  if (xml_name(node) == node_name) return(node)
+  for (child in xml_children(node)) {
+    found <- dfs(child, node_name)
+    if (!is.null(found)) {
+      return(found)
     }
   }
-  structure(result, pre = pre, post = post)
+  return(NULL)
+}
+
+read_kable_as_xml <- function(x) {
+  source_node <- read_html(as.character(x), options = c("RECOVER", "NOERROR"))
+  body_node <- xml_children(dfs(source_node, 'body'))
+  table_node <- dfs(source_node, 'table')
+  if (is.null(table_node)) {
+    stop('Did not find a HTML table tag in the provided HTML. ')
+  }
+  return(list(body=body_node, table=table_node))
 }
 
 get_xml_text <- function(xml_node) {
@@ -156,15 +153,26 @@ get_xml_text <- function(xml_node) {
 read_table_data_from_xml <- function(kable_xml) {
   thead <- xml_tpart(kable_xml, "thead")
   tbody <- xml_tpart(kable_xml, "tbody")
-  if (is.null(thead) || is.null(tbody))
+
+  if (is.null(tbody))
     return(NULL)
 
   # Header part
-  n_header_rows <- xml2::xml_length(thead)
-  col_headers_xml <- xml2::xml_children(xml2::xml_child(thead, n_header_rows))
-  col_headers <- unlist(lapply(col_headers_xml, get_xml_text))
-  n_cols <- length(col_headers)
-  first_column_as_row_names <- (col_headers[1] == '')
+  if (!is.null(thead)) {
+    n_header_rows <- xml2::xml_length(thead)
+    col_headers_xml <- xml2::xml_children(xml2::xml_child(thead, n_header_rows))
+    col_headers <- unlist(lapply(col_headers_xml, get_xml_text))
+    n_cols <- length(col_headers)
+    first_column_as_row_names <- (col_headers[1] == '')
+  } else {
+    first_column_as_row_names <- FALSE
+    col_headers <- NULL
+    # We have no header, so get the maximum number of columns in the body
+    n_cols <- vapply(xml2::xml_children(tbody),
+                     function(row) length(xml2::xml_children(row)),
+                     1L)
+    n_cols <- max(n_cols)
+  }
 
   # Content part
   filtered_rows <- lapply(xml2::xml_children(tbody), function(row) {
@@ -338,3 +346,11 @@ md_table_parser <- function(md_table) {
              caption=table_caption, booktabs = TRUE,
              longtable = TRUE))
 }
+
+# \toprule, \midrule and \bottomrule have an optional width argument #806
+# Match it all.  Sometimes these are used with
+# the extended regex language, sometimes with PCRE
+# or ICU, so be careful!
+toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
+midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
+bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"

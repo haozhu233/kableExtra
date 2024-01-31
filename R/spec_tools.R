@@ -1,7 +1,16 @@
 #' Generate viridis or other color code for continuous values
 #'
-#' @inheritParams viridisLite::viridis
 #' @param x continuous vectors of values
+#' @param alpha The alpha transparency, a number in \[0,1\],
+#' @param begin The (corrected) hue in \[0,1\] at which the color map begins.
+#' @param end The (corrected) hue in \[0,1\] at which the color map ends.
+#' @param direction Sets the order of colors in the scale. If 1, the default,
+#' colors are ordered from darkest to lightest. If -1, the order of colors is
+#' reversed.
+#' @param option A character string indicating the color map option to use.
+#' Eight options are available: "magma" (or "A"), "inferno" (or "B"),
+#' "plasma" (or "C"), "viridis" (or "D"), "cividis" (or "E"),
+#' "rocket" (or "F"), "mako" (or "G") and "turbo" (or "H").
 #' @param na_color color code for NA values
 #' @param scale_from input range (vector of length two). If not given,
 #' is calculated from the range of x
@@ -12,7 +21,9 @@
 spec_color <- function(x, alpha = 1, begin = 0, end = 1,
                        direction = 1, option = "D",
                        na_color = "#BBBBBB", scale_from = NULL,
-                       palette = viridisLite::viridis(256, alpha, begin, end, direction, option)) {
+                       palette = viridisLite::viridis(
+                         256, alpha, begin, end, direction, option
+                         )) {
   n <- length(palette)
   if (is.null(scale_from)) {
     x <- round(rescale(x, c(1, n)))
@@ -33,9 +44,14 @@ html_color_ <- function(color) {
       !grepl("[[:digit:]]", color) )
     return(color)
 
-  rgba_code <- col2rgb(color, alpha = TRUE)
-  rgba_code[4] <- round(rgba_code[4])
-  return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
+  # 2024-01-23 Hao: Move it to a try catch flavor to catch some exception cases.
+  tryCatch({
+    rgba_code <- col2rgb(color, alpha = TRUE)
+    rgba_code[4] <- round(rgba_code[4])
+    return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
+  },
+    error = function(e) {return(as.character(color))}
+  )
 }
 
 html_color <- function(colors) {

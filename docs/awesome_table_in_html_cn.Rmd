@@ -157,14 +157,13 @@ kable(dt, format = "html") %>%
 library(dplyr)
 mtcars[1:10, 1:2] %>%
   mutate(
-    car = row.names(.),
     # You don't need format = "html" if you have ever defined options(knitr.table.format)
     mpg = cell_spec(mpg, "html", color = ifelse(mpg > 20, "red", "blue")),
     cyl = cell_spec(cyl, "html", color = "white", align = "c", angle = 45, 
                     background = factor(cyl, c(4, 6, 8), 
                                         c("#666666", "#999999", "#BBBBBB")))
   ) %>%
-  select(car, mpg, cyl) %>%
+  select(mpg, cyl) %>%
   kable("html", escape = F) %>%
   kable_styling("striped", full_width = F)
 ```
@@ -254,7 +253,6 @@ kable(popover_dt, "html", escape = FALSE) %>%
 library(formattable)
 mtcars[1:5, 1:4] %>%
   mutate(
-    car = row.names(.),
     mpg = color_tile("white", "orange")(mpg),
     cyl = cell_spec(cyl, "html", angle = (1:5)*60, 
                     background = "red", color = "white", align = "center"),
@@ -263,7 +261,6 @@ mtcars[1:5, 1:4] %>%
                   cell_spec(disp, "html", color = "green", italic = T)),
     hp = color_bar("lightgreen")(hp)
   ) %>%
-  select(car, everything()) %>%
   kable("html", escape = F) %>%
   kable_styling("hover", full_width = F) %>%
   column_spec(5, width = "3cm") %>%

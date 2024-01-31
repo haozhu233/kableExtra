@@ -35,10 +35,14 @@ add_indent <- function(kable_input, positions,
     return(kable_input)
   }
   if (kable_format == "html") {
-    return(add_indent_html(kable_input, positions, level_of_indent, all_cols, target_cols))
+    return(add_indent_html(
+      kable_input, positions, level_of_indent, all_cols, target_cols
+      ))
   }
   if (kable_format == "latex") {
-    return(add_indent_latex(kable_input, positions, level_of_indent, all_cols, target_cols))
+    return(add_indent_latex(
+      kable_input, positions, level_of_indent, all_cols, target_cols
+      ))
   }
 }
 
@@ -72,8 +76,9 @@ add_indent_latex <- function(kable_input, positions,
       })
       new_rowtext <- paste(unlist(new_rowtext), collapse = " & ")
     } else {
-      if (all(target_cols %in% seq_along(new_rowtext))) {
-        new_rowtext[target_cols] <- latex_indent_unit(new_rowtext[target_cols], level_of_indent)
+      if (all(target_cols %in% seq(table_info$ncol))) {
+        new_rowtext[target_cols] <- latex_indent_unit(
+          new_rowtext[target_cols], level_of_indent)
       } else {
         stop("There aren't that many columns in the row. Check target_cols in ",
          "add_indent_latex.")
@@ -104,7 +109,9 @@ add_indent_html <- function(kable_input, positions,
                             target_cols = 1) {
   kable_attrs <- attributes(kable_input)
 
-  kable_xml <- kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
   if (is.null(kable_tbody))
     return(kable_input)
@@ -124,7 +131,8 @@ add_indent_html <- function(kable_input, positions,
       node_to_edit <- xml_child(row_to_edit, j)
       if (!xml_has_attr(node_to_edit, "indentlevel")) {
         xml_attr(node_to_edit, "style") <- paste0(
-          xml_attr(node_to_edit, "style"), "padding-left: ",paste0(level_of_indent*2,"em;")
+          xml_attr(node_to_edit, "style"), "padding-left: ",
+          paste0(level_of_indent*2,"em;")
         )
         xml_attr(node_to_edit, "indentlevel") <- 1
       } else {
@@ -138,7 +146,7 @@ add_indent_html <- function(kable_input, positions,
       }
     }
   }
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)

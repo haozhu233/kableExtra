@@ -210,14 +210,16 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents,
 # HTML
 footnote_html <- function(kable_input, footnote_table, footnote_as_chunk) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
 
   new_html_footnote <- html_tfoot_maker(footnote_table, footnote_as_chunk)
   xml_add_child(kable_xml, new_html_footnote)
   xml2::xml_set_attr(kable_xml, "style",
                      paste0(xml2::xml_attr(kable_xml, "style"),
                             "border-bottom: 0;"))
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
@@ -283,7 +285,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                         "}\n\\\\end{ThreePartTable}"),
                  out)
       if (table_info$booktabs) {
-        out <- sub("\\\\bottomrule", "\\\\bottomrule\n\\\\insertTableNotes", out)
+        out <- sub(bottomrule_regexp, "\\1\n\\\\insertTableNotes", out)
       } else {
         out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
                    "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
@@ -308,8 +310,8 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
     }
   } else {
     if (table_info$booktabs) {
-      out <- sub("\\\\bottomrule",
-                 paste0("\\\\bottomrule\n", footnote_text), out)
+      out <- sub(bottomrule_regexp,
+                 paste0("\\1\n", footnote_text), out)
     } else {
       out <- sub(table_info$end_tabular,
                  paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
