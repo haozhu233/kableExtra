@@ -47,6 +47,9 @@ header_separate_html <- function(kable_input, sep, ...) {
   kable_xml <- important_nodes$table
 
   kable_thead <- xml_tpart(kable_xml, "thead")
+  if (is.null(kable_thead))
+    return(kable_input)
+
   thead_depth <- length(xml_children(kable_thead))
 
   if (thead_depth > 1) {

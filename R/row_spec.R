@@ -92,32 +92,39 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 
   if (0 %in% row) {
     kable_thead <- xml_tpart(kable_xml, "thead")
-    original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
-    for (theader_i in 1:length(xml_children(original_header_row))) {
-      target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_cell_style(target_header_cell, bold, italic, monospace,
-                     underline, strikeout, color, background,
-                     align, font_size, angle, extra_css)
+    if (is.null(kable_thead))
+      warning("No row 0 found.")
+    else {
+      original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
+      for (theader_i in 1:length(xml_children(original_header_row))) {
+        target_header_cell <- xml_child(original_header_row, theader_i)
+        xml_cell_style(target_header_cell, bold, italic, monospace,
+                       underline, strikeout, color, background,
+                       align, font_size, angle, extra_css)
+      }
     }
     row <- row[row != 0]
   }
 
   if (length(row) != 0) {
     kable_tbody <- xml_tpart(kable_xml, "tbody")
+    if (is.null(kable_tbody))
+      warning("No table body found")
+    else {
+      group_header_rows <- attr(kable_input, "group_header_rows")
+      if (!is.null(group_header_rows)) {
+        row <- positions_corrector(row, group_header_rows,
+                                   length(xml_children(kable_tbody)))
+      }
 
-    group_header_rows <- attr(kable_input, "group_header_rows")
-    if (!is.null(group_header_rows)) {
-      row <- positions_corrector(row, group_header_rows,
-                                 length(xml_children(kable_tbody)))
-    }
-
-    for (j in row) {
-      target_row <- xml_child(kable_tbody, j)
-      for (i in 1:length(xml_children(target_row))) {
-        target_cell <- xml_child(target_row, i)
-        xml_cell_style(target_cell, bold, italic, monospace,
-                       underline, strikeout, color, background,
-                       align, font_size, angle, extra_css)
+      for (j in row) {
+        target_row <- xml_child(kable_tbody, j)
+        for (i in 1:length(xml_children(target_row))) {
+          target_cell <- xml_child(target_row, i)
+          xml_cell_style(target_cell, bold, italic, monospace,
+                         underline, strikeout, color, background,
+                         align, font_size, angle, extra_css)
+        }
       }
     }
   }
