@@ -215,9 +215,9 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
-                                   !is.null(table_info$repeat_header_latex)),
-                       gsub, sub)
+    temp_sub <- if (i == 1 && (table_info$tabular == "longtable" ||
+                                   !is.null(table_info$repeat_header_latex)))
+                  gsub else sub
     if (length(new_row) == 1) {
       # fixed=TRUE is safer but does not always work
       regex <- paste0("\\Q", target_row, "\\E")
@@ -230,7 +230,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
       table_info$contents[i] <- new_row
     } else {
       # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", target_row, "\\E")
+      regex <- paste0("\\Q", target_row, "\\E(\\\\\\\\)?")
       if (any(grepl(regex, out))) {
         out <- temp_sub(regex,
           paste(new_row, collapse = ""), out, perl = TRUE)
