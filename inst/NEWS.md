@@ -1,10 +1,12 @@
-kableExtra 1.4.0.1
+kableExtra 1.4.0.2
 --------------------------------------------------------------------------------
 
 Bug Fixes:
 
 * Fixed a bug in `collapse_rows()`, which failed on tables
 that had no header (#812).
+* Fixed a bug in `row_spec()` which added extra 
+line breaks when `extra_latex_after` was specified (#815).
 
 
 kableExtra 1.4.0
