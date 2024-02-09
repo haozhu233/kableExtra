@@ -34,6 +34,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-tinytex@v2
+      - run: tlmgr update --self
       - run: tlmgr --version
       - run: tlmgr install colortbl grfext ae
       - run: tlmgr list --only-installed
