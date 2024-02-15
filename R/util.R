@@ -304,6 +304,13 @@ line_separator <- function(line, idx_matrix) {
   })))
 }
 
+separator_indices <- function(line) {
+  separator_indices <- which(strsplit(line, '')[[1]] == '|')
+  cell_start_indices <- separator_indices[-length(separator_indices)] + 1
+  cell_end_indices <- separator_indices[-1] - 1
+  matrix(c(cell_start_indices, cell_end_indices), ncol=2)
+}
+
 md_table_parser <- function(md_table) {
   # It seems that if there is a caption, the second row is definitely an empty
   # string
@@ -324,11 +331,7 @@ md_table_parser <- function(md_table) {
   tbody_lines <- md_table[3:length(md_table)]
 
   # Analyze separator line
-  separator_indices <- which(strsplit(separator_line, '')[[1]] == '|')
-  cell_start_indices <- separator_indices[-length(separator_indices)] + 1
-  cell_end_indices <- separator_indices[-1] - 1
-  cell_indices <- matrix(c(cell_start_indices, cell_end_indices), ncol=2)
-
+  cell_indices <- separator_indices(separator_line)
   alignment_raw <- line_separator(separator_line, cell_indices)
   alignment <- sapply(alignment_raw, function(x) {
     if (grepl("^:-+$", x)) 'l' else if (grepl("^:-+:$", x)) 'c' else 'r'
@@ -338,8 +341,14 @@ md_table_parser <- function(md_table) {
   n_rows <- length(tbody_lines)
 
   # thead and tbody
+  # Each line may have different indices if double-width
+  # characters are used (issue #821)
+  cell_indices <- separator_indices(thead_line)
   header_row <- line_separator(thead_line, cell_indices)
-  body_rows <- sapply(tbody_lines, line_separator, cell_indices)
+  body_rows <- sapply(tbody_lines, function(line) {
+    cell_indices <- separator_indices(line)
+    line_separator(line, cell_indices)
+  })
   table_matrix <- matrix(body_rows, ncol = n_cols, byrow = TRUE)
 
   return(kbl(table_matrix, col.names=header_row, align=alignment,
