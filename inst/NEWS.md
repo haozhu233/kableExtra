@@ -1,4 +1,4 @@
-kableExtra 1.4.0.3
+kableExtra 1.4.0.4
 --------------------------------------------------------------------------------
 
 Bug Fixes:
@@ -9,6 +9,9 @@ that had no header (#812).
 line breaks when `extra_latex_after` was specified (#815).
 * Fixed a bug in `kable_styling()` which didn't parse 
 "pipe" tables containing multibyte characters properly (#821).
+* Fixed a bug in `add_header_above()` which caused headers
+containing LaTeX code to be rendered incorrectly in LaTeX 
+documents (#836).
 
 
 kableExtra 1.4.0

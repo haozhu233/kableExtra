@@ -314,6 +314,11 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
 
   if (escape) {
     header$header <- input_escape(header$header, align)
+  } else {
+    # Issue 836:  backslashes in the replacement
+    # need to be escaped.  We can't use fixed() below,
+    # because we need the regexp pattern.
+    header$header <- gsub("\\\\", "\\\\\\\\", header$header)
   }
 
   align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))

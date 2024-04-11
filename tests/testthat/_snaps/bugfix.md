@@ -1,3 +1,20 @@
+# Issue #836:  latex allowed in add_header_above
+
+    Code
+      add_header_above(kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex"),
+      "\\textbf{HEADER}", escape = FALSE)
+    Output
+      
+      \begin{tabular}[t]{l|r|r}
+      \hline
+      \multicolumn{1}{c}{\textbf{HEADER}} \\
+      \cline{1-1}
+      Mazda RX4 & 21 & 6\\
+      \hline
+      Mazda RX4 Wag & 21 & 6\\
+      \hline
+      \end{tabular}
+
 # Issue #806: custom rule widths
 
     Code
