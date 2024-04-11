@@ -1,3 +1,12 @@
+test_that("Issue #836:  latex allowed in add_header_above", {
+  expect_snapshot(
+    kbl(mtcars[1:2, 1:2], col.names=NULL,
+             format = "latex") |>
+    add_header_above("\\textbf{HEADER}", escape = FALSE)
+  )
+}
+)
+
 test_that("Issue #812:  table without header works in collapse_rows", {
   tab <- kbl(mtcars[1:3, 1:4], col.names = NULL,
              format = "html", booktabs = TRUE) |>
