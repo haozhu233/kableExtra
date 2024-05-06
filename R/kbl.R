@@ -105,6 +105,20 @@ kbl <- function(x, format, digits = getOption("digits"),
       table.envir = table.envir, ...
     )
   } else if (format == "html") {
+    if (inQuarto()) {
+      for (i in seq_len(ncol(x))) {
+        col <- x[, i]
+        if (is.character(col)) {
+          hasMath <- grep("\\$.*\\$", col)
+          if (length(hasMath)) {
+            if (escape)
+              warning("Should use `escape = FALSE` in Quarto with math")
+            col[hasMath] <- make_data_qmd(col[hasMath])
+            x[, i] <- col
+          }
+        }
+      }
+    }
     out <- knitr::kable(
       x = x, format = format, digits = digits,
       row.names = row.names, col.names = col.names, align = align,

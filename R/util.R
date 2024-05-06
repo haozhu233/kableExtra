@@ -363,3 +363,15 @@ md_table_parser <- function(md_table) {
 toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
 midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
 bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"
+
+# Detect if we are running in Quarto
+
+inQuarto <- function()
+  !is.null(knitr::opts_knit$get("quarto.version"))
+
+# Modify math so Quarto handles it properly
+# Written by Christophe Dervieux in issue #746
+
+make_data_qmd <- function(content) {
+  sprintf('<span data-qmd="%s">%s</span>', content, content)
+}

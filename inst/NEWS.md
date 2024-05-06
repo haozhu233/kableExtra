@@ -1,5 +1,10 @@
-kableExtra 1.4.0.4
+kableExtra 1.4.0.5
 --------------------------------------------------------------------------------
+
+New Features:
+
+* Now attempts to handle MathJax in Quarto documents.
+This requires you to call `kbl(escape = FALSE)` (#746).
 
 Bug Fixes:
 
