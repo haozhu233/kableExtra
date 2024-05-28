@@ -88,7 +88,7 @@ kbl <- function(x, format, digits = getOption("digits"),
     use_latex_packages()
     if (utils::packageVersion("knitr") < "1.40" &&
         !missing(tabular)) {
-      warning("'tabular' is not not supported in knitr versions < 1.40")
+      warning("'tabular' is not supported in knitr versions < 1.40")
       if (missing(valign))
         valign <- "t"
     }

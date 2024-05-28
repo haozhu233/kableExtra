@@ -18,7 +18,7 @@ LaTeX output.  However, sometimes \code{kableExtra}
 is loaded before \code{knitr} runs, and then these packages
 can end up being missed, leading to LaTeX errors such as
 "Undefined control sequence."  (See
-Github issue #721 for an example.)
+GitHub issue #721 for an example.)
 
 Our \code{kbl()} wrapper for \code{knitr::kable()} calls
 this function for LaTeX output, so an explicit call
