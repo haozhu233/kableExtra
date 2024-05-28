@@ -65,7 +65,7 @@ widths (#806).
 Documentation and Maintenance:
 
 * Documented special cases and added heads-up about typo in `linebreak.R` (#679).
-* Added Github action to run R CMD check, necessitating `pdflatex` and vignette
+* Added GitHub action to run R CMD check, necessitating `pdflatex` and vignette
 compaction (#780).
 * Defaulted to `booktabs=TRUE`, `longtable=TRUE` when converting a pipe table (#778).
 * Declared LaTeX packages with each `kbl()` call and exported

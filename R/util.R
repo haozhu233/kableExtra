@@ -38,7 +38,7 @@ usepackage_latex <- function(name, options = NULL) {
 #' is loaded before `knitr` runs, and then these packages
 #' can end up being missed, leading to LaTeX errors such as
 #' "Undefined control sequence."  (See
-#' Github issue #721 for an example.)
+#' GitHub issue #721 for an example.)
 #'
 #' Our `kbl()` wrapper for `knitr::kable()` calls
 #' this function for LaTeX output, so an explicit call
