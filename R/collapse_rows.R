@@ -331,7 +331,7 @@ collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0
     "\\}",
     ifelse(vmove > 0,
            paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
-           paste0("[\\\\normalbaselineskip]"),
+           paste0("[\\\\normalbaselineskip]")
     ),
     "\\{",
     switch(align,
