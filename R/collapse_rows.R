@@ -19,8 +19,8 @@
 #' be separated by hlines.
 #' @param row_group_label_position Option controlling positions of row group
 #' labels. Choose from `identity`, `stack`, or `first` -- the latter behaves
-#' like `identity` when `row_group_label_position` is `top` but without using
-#' the multirow package.
+#' like `identity` when `valign` is `top` but without using the multirow
+#' package.
 #' @param row_group_label_fonts A list of arguments that can be supplied to
 #' group_rows function to format the row group label when
 #' `row_group_label_position` is `stack`.
@@ -29,7 +29,7 @@
 #' @param target If multiple columns are selected to do collapsing and a target
 #' column is specified, this target column will be used to collapse other
 #' columns based on the groups of this target column.
-#' @param col_names T/F. A LaTeX specific option. If you set `col.names` be
+#' @param col_names T/F. A LaTeX specific option. If you set `col_names` be
 #' `NULL` in your `kable` call, you need to set this option false to let
 #' everything work properly.
 #' @param longtable_clean_cut T/F with default T. Multirow cell sometimes are
@@ -213,10 +213,8 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
         # are to the right of this column
         num_rows <- collapse_matrix[i, j]
         num_cols <- ncol(collapse_matrix) - j
-        if (num_rows && num_cols && valign != "\\[b\\]") {
-          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0)
-          if (valign == "")
-            vmove <- 0.5*vmove
+        if (num_rows && num_cols && valign == "") {
+          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0) * 0.5
         } else
           vmove <- 0
         new_kable_dt[i, columns[j]] <- collapse_new_dt_item(
@@ -328,10 +326,13 @@ collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
-    "\\\\multirow", valign, "\\{", -span, "\\}\\{",
+    "\\\\multirow", valign, "\\{", -ifelse(valign != "\\[t\\]", span, span - 1), "\\}\\{",
     ifelse(is.null(width), "\\*", width),
     "\\}",
-    if(vmove) paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+    ifelse(vmove > 0,
+           paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+           paste0("[\\\\normalbaselineskip]"),
+    ),
     "\\{",
     switch(align,
            "l" = "\\\\raggedright\\\\arraybackslash ",
