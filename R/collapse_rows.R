@@ -29,7 +29,7 @@
 #' @param target If multiple columns are selected to do collapsing and a target
 #' column is specified, this target column will be used to collapse other
 #' columns based on the groups of this target column.
-#' @param col_names T/F. A LaTeX specific option. If you set `col_names` be
+#' @param col_names T/F. A LaTeX specific option. If you set `col.names` be
 #' `NULL` in your `kable` call, you need to set this option false to let
 #' everything work properly.
 #' @param longtable_clean_cut T/F with default T. Multirow cell sometimes are
