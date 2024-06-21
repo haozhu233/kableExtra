@@ -213,14 +213,18 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
         # are to the right of this column
         num_rows <- collapse_matrix[i, j]
         num_cols <- ncol(collapse_matrix) - j
-        if (num_rows && num_cols && valign == "") {
-          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0) * 0.5
-        } else
+        if (all(num_rows > 0, num_cols > 0, valign != "\\[b\\]", latex_hline != "none")) {
+          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0)
+          if(valign == "") {
+            vmove <- 0.5 * vmove
+          }
+        } else {
           vmove <- 0
+        }
         new_kable_dt[i, columns[j]] <- collapse_new_dt_item(
-          kable_dt[i, columns[j]], collapse_matrix[i, j], column_width,
+          x = kable_dt[i, columns[j]], span = collapse_matrix[i, j], width = column_width,
           align = column_align, valign = valign,
-          vmove = vmove
+          vmove = vmove, latex_hline = latex_hline
         )
       }
     }
@@ -322,16 +326,18 @@ kable_dt_latex <- function(x, col_names) {
   data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
 }
 
-collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0) {
+collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0, latex_hline) {
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
-    "\\\\multirow", valign, "\\{", -ifelse(valign != "\\[t\\]", span, span - 1), "\\}\\{",
+    "\\\\multirow", valign, "\\{", -ifelse(any(valign != "\\[t\\]", !latex_hline %in% c("none", "major", "linespace")), span, span - 1), "\\}\\{",
     ifelse(is.null(width), "\\*", width),
     "\\}",
-    ifelse(vmove > 0,
-           paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
-           paste0("[\\\\normalbaselineskip]")
+    switch(
+      latex_hline,
+      "full" = paste0("[", span - 1, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+      "custom" = paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+      paste0("[\\\\normalbaselineskip]")
     ),
     "\\{",
     switch(align,
