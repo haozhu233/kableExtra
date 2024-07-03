@@ -39,6 +39,7 @@ server <- function(input, output) {
      req(input$mpg)
      mtcars %>%
        mutate(car = rownames(.)) %>%
+       tibble::remove_rownames() %>% 
        select(car, everything()) %>%
        filter(mpg <= input$mpg) %>%
        knitr::kable("html") %>%
