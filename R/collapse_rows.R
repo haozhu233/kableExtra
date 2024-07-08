@@ -326,17 +326,32 @@ kable_dt_latex <- function(x, col_names) {
   data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
 }
 
-collapse_new_dt_item <- function(x, span, width = NULL, align, valign, vmove = 0, latex_hline) {
+collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
+                                 vmove = 0, latex_hline) {
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
-    "\\\\multirow", valign, "\\{", -ifelse(any(valign != "\\[t\\]", !latex_hline %in% c("none", "major", "linespace")), span, span - 1), "\\}\\{",
+    "\\\\multirow", valign, "\\{",
+    ifelse(
+      any(
+        valign != "\\[t\\]",
+        !latex_hline %in% c("none", "major", "linespace")
+      ),
+      -span,
+      -span - 1
+    ), "\\}\\{",
     ifelse(is.null(width), "\\*", width),
     "\\}",
     switch(
       latex_hline,
-      "full" = paste0("[", span - 1, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
-      "custom" = paste0("[", vmove, "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"),
+      "full" = paste0(
+        "[", span - 1,
+        "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"
+      ),
+      "custom" = paste0(
+        "[", vmove,
+        "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"
+      ),
       paste0("[\\\\normalbaselineskip]")
     ),
     "\\{",
