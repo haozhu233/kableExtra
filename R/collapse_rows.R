@@ -338,7 +338,7 @@ collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
         !latex_hline %in% c("none", "major", "linespace")
       ),
       -span,
-      -span - 1
+      -(span - 1)
     ), "\\}\\{",
     ifelse(is.null(width), "\\*", width),
     "\\}",
