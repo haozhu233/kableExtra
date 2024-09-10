@@ -27,6 +27,8 @@
 #' @param fixed_small_size T/F When you want to keep the footnote small after
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes).
+#' @param show_every_page T/F To make footnotes print at bottom of all pages for
+#' long tables.
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -64,6 +66,7 @@ footnote <- function(kable_input,
                      escape = TRUE,
                      threeparttable = FALSE,
                      fixed_small_size = FALSE,
+                     show_every_page = FALSE,
                      general_title = "Note: ",
                      number_title = "",
                      alphabet_title = "",
@@ -127,7 +130,7 @@ footnote <- function(kable_input,
   }
   if (kable_format == "latex") {
     return(footnote_latex(kable_input, footnote_table, footnote_as_chunk,
-                          threeparttable, fixed_small_size))
+                          threeparttable, fixed_small_size, show_every_page))
   }
 }
 
@@ -265,7 +268,7 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
-                           threeparttable, fixed_small_size) {
+                           threeparttable, fixed_small_size, show_every_page) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -312,9 +315,24 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
     if (table_info$booktabs) {
       out <- sub(bottomrule_regexp,
                  paste0("\\1\n", footnote_text), out)
+
     } else {
       out <- sub(table_info$end_tabular,
                  paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
+                 out)
+    }
+  }
+  if (show_every_page) {
+    if (table_info$booktabs) {
+      out <- sub("\\\\endhead\\n\\n\\\\endfoot",
+                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot",
+                 out)
+    } else {
+      out <- sub("\\\\insertTableNotes\\n",
+                 "",
+                 out)
+      out <- sub("\\\\endhead\\n",
+                 "\\\\endhead\n\\\\hline\n\\\\insertTableNotes\n\\\\endfoot\n",
                  out)
     }
   }
