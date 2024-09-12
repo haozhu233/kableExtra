@@ -1,0 +1,43 @@
+---
+output: 
+  pdf_document
+---
+```{r results='asis'}
+# i_tpt <- i_latex_opt <- i_cap_opt <- i_bt <- 1
+use_lab <- paste("lab", i_every, i_tpt, i_latex_opt, i_cap_opt, 
+                 i_bt, sep = "-")
+```
+
+### `r use_lab`
+Permutations
+\vspace{-10pt}
+
+* every page: `r is_every[i_every]`
+* TPT: `r is_tpt[i_tpt]`
+* latex option: `r latex_opt[i_latex_opt]`
+* caption: `r cap_opt[i_cap_opt]`
+* booktab: `r is_bt[i_bt]`
+
+
+```{r results='asis'}
+if (i_cap_opt == 1) {
+  a_kbl <- dat |>
+    kbl(format = "latex", 
+        label = use_lab, escape = FALSE, 
+        booktabs = is_bt[i_bt], longtable = TRUE)
+} else {
+  a_kbl <- dat |> 
+    kbl(format = "latex", caption = cap_opt[i_cap_opt], 
+        label = use_lab, escape = FALSE, 
+        booktabs = is_bt[i_bt], longtable = TRUE) 
+}
+a_kbl |>
+  kable_styling(
+    latex_options = latex_opt[i_latex_opt]) |>
+  footnote(
+    number = c("footnote text"),
+    threeparttable = is_tpt[i_tpt],
+    show_every_page = is_every[i_every])
+```
+
+\clearpage

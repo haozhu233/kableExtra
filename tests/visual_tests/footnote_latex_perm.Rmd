@@ -1,0 +1,56 @@
+---
+title: "footnote_perm"
+author: "Byron"
+date: "9/11/2024"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = !TRUE)
+devtools::load_all()
+# library(kableExtra)
+
+dat <- data.frame(
+  Col1 = LETTERS[rep(1:26, each = 2)],
+  Col2 = letters[rep(1:26, 2)],
+  n = 0:51
+)
+names(dat)[3] <- paste0(names(dat)[3], "\\tnote{1}")
+```
+
+
+```{r permute, results='asis'}
+# Define new environment
+is_every <- c(FALSE, TRUE)
+is_tpt <- c(FALSE, TRUE)
+latex_opt <- c("basic", "repeat_header")
+cap_opt <- c(NA, "Include a caption")  # if NA use default NULL
+is_bt <- c(FALSE, TRUE)
+
+child_env <- new.env()
+for(i_every in seq_along(is_every)){
+  for(i_tpt in seq_along(is_tpt)){
+    for(i_latex_opt in seq_along(latex_opt)){
+      for(i_cap_opt in seq_along(cap_opt)){
+        for(i_bt in seq_along(is_bt)){
+          child_env$i_tpt <- i_tpt
+          child_env$i_latex_opt <- i_latex_opt
+          child_env$i_cap_opt <- i_cap_opt
+          child_env$i_bt <- i_bt
+          
+          # knit the document and save the character output to an object
+          res <- knitr::knit_child(
+            "footnote_latex_perm_child.Rmd",
+            envir = child_env,
+            quiet = TRUE
+          )
+          
+          # Cat the object to make it render in your main document
+          cat(res, sep = "\n")
+        }
+      }
+    }
+  }
+}
+```
+
