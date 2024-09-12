@@ -28,7 +28,8 @@
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes).
 #' @param show_every_page T/F To make footnotes print at bottom of all pages for
-#' long tables.
+#' long tables, only works with threeparttables = TRUE and
+#' kable_styling(latex_options = "repeat").
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -322,17 +323,16 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  out)
     }
   }
-  if (show_every_page) {
+  # browser()
+  if (table_info$tabular == "longtable" & threeparttable &
+      show_every_page & !is.null(table_info$repeat_header_latex)) {
     if (table_info$booktabs) {
-      out <- sub("\\\\endhead\\n\\n\\\\endfoot",
-                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot",
+      out <- sub("\\\\endhead\\n\\n\\\\endfoot\\n",
+                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
                  out)
     } else {
-      out <- sub("\\\\insertTableNotes\\n",
-                 "",
-                 out)
       out <- sub("\\\\endhead\\n",
-                 "\\\\endhead\n\\\\hline\n\\\\insertTableNotes\n\\\\endfoot\n",
+                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
                  out)
     }
   }
