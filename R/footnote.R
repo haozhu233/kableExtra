@@ -28,8 +28,7 @@
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes).
 #' @param show_every_page T/F To make footnotes print at bottom of all pages for
-#' long tables, only works with threeparttables = TRUE and
-#' kable_styling(latex_options = "repeat").
+#' long tables, only works for threeparttables.
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -323,17 +322,29 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  out)
     }
   }
-  # browser()
+
   if (table_info$tabular == "longtable" & threeparttable &
-      show_every_page & !is.null(table_info$repeat_header_latex)) {
-    if (table_info$booktabs) {
-      out <- sub("\\\\endhead\\n\\n\\\\endfoot\\n",
-                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
-                 out)
+      show_every_page) {
+    # drop \insertTableNotes if at end so not doubled
+    out <- sub("\\\\insertTableNotes\\n\\\\end\\{longtable\\}",
+               "\\\\end\\{longtable\\}", out)
+    if (is.null(table_info$repeat_header_latex)) {
+      # need to adjust for arguments, ex \begin{longtable}[t]{l|l|r}
+      lt_start <- sub(".*\\\\begin\\{longtable\\}",
+                      "\\\\begin\\{longtable\\}", out)
+      lt_text <- sub("\n.*", "", lt_start)
+      out <- sub(lt_text,
+                 paste(lt_text, "\n\\insertTableNotes\n\\endfoot\n"),
+                 out, fixed = TRUE)
     } else {
-      out <- sub("\\\\endhead\\n",
-                 "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
-                 out)
+      pattern_start <- ifelse(
+        table_info$booktabs,
+        "\\\\endhead\\n\\n\\\\endfoot\\n",
+        "\\\\endhead\\n")
+      out <- sub(
+        pattern_start,
+        "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
+        out)
     }
   }
 
