@@ -330,9 +330,6 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   }
 
   if (table_info$tabular == "longtable" & show_every_page) {
-    # fn_regexp <- paste(
-    #   ifelse(table_info$booktabs, "\\\\midrule", ""),
-    #   ifelse(threeparttable, "\\\\insertTableNotes", footnote_text))
     fn_regexp <- ifelse(threeparttable, "\\\\insertTableNotes",
                         footnote_text)
     fn_text <- gsub("\\\\", "\\", fn_regexp, fixed = TRUE)

@@ -35,7 +35,7 @@ a_kbl |>
   kable_styling(
     latex_options = latex_opt[i_latex_opt]) |>
   footnote(
-    number = c("footnote text"),
+    number = c("footnote on colname"),
     threeparttable = is_tpt[i_tpt],
     show_every_page = is_every[i_every])
 ```

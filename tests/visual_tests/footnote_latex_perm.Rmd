@@ -15,7 +15,8 @@ dat <- data.frame(
   Col2 = letters[rep(1:26, 2)],
   n = 0:51
 )
-names(dat)[3] <- paste0(names(dat)[3], "\\tnote{1}")
+# "\\tnote{1}  is TPT only
+names(dat)[3] <- paste0(names(dat)[3], footnote_marker_number(1))
 ```
 
 
