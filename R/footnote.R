@@ -330,46 +330,53 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   }
 
   if (table_info$tabular == "longtable" & show_every_page) {
-    fn_regexp <- ifelse(threeparttable, "\\\\insertTableNotes", footnote_text)
+    fn_regexp <- paste0(
+      ifelse(table_info$booktabs, "\\\\midrule", ""),
+      ifelse(threeparttable, "\\\\insertTableNotes", footnote_text))
     fn_text <- gsub("\\\\", "\\", fn_regexp, fixed = TRUE)
-    if (is.null(table_info$repeat_header_latex)) {
+
+    if(is.null(table_info$repeat_header_latex)) {
       # need full \begin{longtable} command
       # table_info valign2 ok but align missing vertical lines
       longtable_start <- sub(".*\\\\begin\\{longtable\\}",
                              "\\\\begin\\{longtable\\}", out)
       longtable_text <- sub("\n.*", "", longtable_start)
-      out <- sub(longtable_text,
-                 paste(longtable_text,
-                       ifelse(table_info$booktabs, "\\midrule\n", ""),
-                       paste0("\n", fn_text, "\n\\endfoot\n")),
-                 out, fixed = TRUE)
+
+      if(!table_info$booktabs){
+        print(paste("basic and not bt:")) #, grepl(longtable_text, out)))
+        out <- sub(longtable_text,
+                   paste(longtable_text, "\n",
+                         fn_text, "\n\\endfoot\n"),
+                   out, fixed = TRUE)
+      } else {
+        print(paste("basic and bt")) #, grepl(longtable_text, out)))
+        out <- sub(longtable_text,
+                   paste(longtable_text, # "\n\\midrule\n",
+                         fn_text, "\n\\endfoot\n"),
+                   out, fixed = TRUE)
+      }
     } else {
-      text_pattern <- ifelse(table_info$booktabs,
-                             "\\\\endhead\\n\\n\\\\endfoot\\n",
-                             "\\\\endhead\n")
-      text_replace <- ifelse(threeparttable,
-                             paste0(
-                               "\\\\endhead\n",
-                               "\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n")
-                               # "\\\\midrule\n",
-                               # fn_regexp, "\n\\\\endlastfoot\n"),
-                             paste0("\\\\endhead\n", fn_regexp, "\n\\\\endfoot\n"))
-      out <- sub(text_pattern, text_replace, out)
-      # if (table_info$booktabs) {
-      #   out <- sub(
-      #     "\\\\endhead\\n\\n\\\\endfoot\\n",
-      #     paste0(
-      #       "\\\\endhead\n",
-      #       "\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n",
-      #       # "\\\\midrule\n",
-      #       fn_regexp, "\n\\\\endlastfoot\n"),
-      #     out)
-      # } else {
-      #   out <- sub(
-      #     "\\\\endhead\n",
-      #     paste0("\\\\endhead\n", fn_regexp, "\n\\\\endfoot\n"),
-      #     out)
-      # }
+      if(!table_info$booktabs){
+        print(paste("repeat and not bt", grepl("\\\\endhead\\n", out)))
+        out <- sub(
+          "\\\\endhead\\n",
+          paste0(
+            "\\\\endhead\n",
+            fn_regexp, "\n\\\\endfoot\n",
+            fn_regexp, "\n\\\\endlastfoot\n"),
+          out)
+      } else {
+        print(paste("repeat and bt", grepl("\\\\endhead\\n\\n\\\\endfoot\\n", out)))
+        out <- sub(
+          "\\\\endhead\\n\\n\\\\endfoot\\n",
+          paste0("\\\\endhead\n", # "\\\\midrule\n",
+                 fn_regexp, "\n\\\\endfoot\n"),
+          out)
+        out <- sub(
+          "\\\\endlastfoot",
+          paste0(fn_regexp, "\n\\\\endlastfoot\n"),
+          out)
+      }
     }
   }
 
