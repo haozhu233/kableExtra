@@ -22,19 +22,17 @@ names(dat)[3] <- paste0(names(dat)[3], "\\tnote{1}")
 ```{r permute, results='asis'}
 # Define new environment
 is_every <- c(FALSE, TRUE)
-is_tpt <- c(FALSE, TRUE)
 latex_opt <- c("basic", "repeat_header")
-cap_opt <- c(NA, "Include a caption")  # if NA use default NULL
 is_bt <- c(FALSE, TRUE)
+is_tpt <- c(FALSE, TRUE)
+cap_opt <- c(NA, "Include a caption")  # if NA use default NULL
 
 child_env <- new.env()
-# for(i_every in seq_along(is_every)){
-for(i_every in 2){
+for(i_every in seq_along(is_every)){
   for(i_latex_opt in seq_along(latex_opt)){
     for(i_bt in seq_along(is_bt)){
       for(i_tpt in seq_along(is_tpt)){
-        # for(i_cap_opt in seq_along(cap_opt)){
-        for(i_cap_opt in 2){
+        for(i_cap_opt in seq_along(cap_opt)){
           child_env$i_tpt <- i_tpt
           child_env$i_latex_opt <- i_latex_opt
           child_env$i_cap_opt <- i_cap_opt
