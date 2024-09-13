@@ -4,8 +4,8 @@ output:
 ---
 ```{r results='asis'}
 # i_tpt <- i_latex_opt <- i_cap_opt <- i_bt <- 1
-use_lab <- paste("lab", i_every, i_tpt, i_latex_opt, i_cap_opt, 
-                 i_bt, sep = "-")
+use_lab <- paste("lab", i_every, i_latex_opt, i_bt, i_tpt, 
+                 i_cap_opt, sep = "-")
 ```
 
 ### `r use_lab`
@@ -13,10 +13,10 @@ Permutations
 \vspace{-10pt}
 
 * every page: `r is_every[i_every]`
-* TPT: `r is_tpt[i_tpt]`
 * latex option: `r latex_opt[i_latex_opt]`
-* caption: `r cap_opt[i_cap_opt]`
 * booktab: `r is_bt[i_bt]`
+* TPT: `r is_tpt[i_tpt]`
+* caption: `r cap_opt[i_cap_opt]`
 
 
 ```{r results='asis'}

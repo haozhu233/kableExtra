@@ -28,11 +28,13 @@ cap_opt <- c(NA, "Include a caption")  # if NA use default NULL
 is_bt <- c(FALSE, TRUE)
 
 child_env <- new.env()
-for(i_every in seq_along(is_every)){
-  for(i_tpt in seq_along(is_tpt)){
-    for(i_latex_opt in seq_along(latex_opt)){
-      for(i_cap_opt in seq_along(cap_opt)){
-        for(i_bt in seq_along(is_bt)){
+# for(i_every in seq_along(is_every)){
+for(i_every in 2){
+  for(i_latex_opt in seq_along(latex_opt)){
+    for(i_bt in seq_along(is_bt)){
+      for(i_tpt in seq_along(is_tpt)){
+        # for(i_cap_opt in seq_along(cap_opt)){
+        for(i_cap_opt in 2){
           child_env$i_tpt <- i_tpt
           child_env$i_latex_opt <- i_latex_opt
           child_env$i_cap_opt <- i_cap_opt

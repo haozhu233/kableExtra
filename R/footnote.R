@@ -28,7 +28,7 @@
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes).
 #' @param show_every_page T/F To make footnotes print at bottom of all pages for
-#' long tables, only works for threeparttables.
+#' long tables.  Only applies to pdf threeparttables.
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
@@ -287,12 +287,16 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  paste0("\\\\end{", table_info$tabular,
                         "}\n\\\\end{ThreePartTable}"),
                  out)
-      if (table_info$booktabs) {
-        out <- sub(bottomrule_regexp, "\\1\n\\\\insertTableNotes", out)
-      } else {
-        out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
-                   "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
-                   out)
+      if (!show_every_page) {
+        if (table_info$booktabs) {
+          out <- sub(bottomrule_regexp,
+                     "\\1\n\\\\insertTableNotes",
+                     out)
+        } else if (!show_every_page) {
+          out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
+                     "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
+                     out)
+        }
       }
     } else {
       if (table_info$tabular == "tabu") {
@@ -312,39 +316,60 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  out)
     }
   } else {
-    if (table_info$booktabs) {
-      out <- sub(bottomrule_regexp,
-                 paste0("\\1\n", footnote_text), out)
-
-    } else {
-      out <- sub(table_info$end_tabular,
-                 paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
-                 out)
+    if(!show_every_page) {
+      if (table_info$booktabs) {
+        out <- sub(bottomrule_regexp,
+                   paste0("\\1\n", footnote_text),
+                   out)
+      } else {
+        out <- sub(table_info$end_tabular,
+                   paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
+                   out)
+      }
     }
   }
 
-  if (table_info$tabular == "longtable" & threeparttable &
-      show_every_page) {
-    # drop \insertTableNotes if at end so not doubled
-    out <- sub("\\\\insertTableNotes\\n\\\\end\\{longtable\\}",
-               "\\\\end\\{longtable\\}", out)
+  if (table_info$tabular == "longtable" & show_every_page) {
+    fn_regexp <- ifelse(threeparttable, "\\\\insertTableNotes", footnote_text)
+    fn_text <- gsub("\\\\", "\\", fn_regexp, fixed = TRUE)
     if (is.null(table_info$repeat_header_latex)) {
-      # need to adjust for arguments, ex \begin{longtable}[t]{l|l|r}
-      lt_start <- sub(".*\\\\begin\\{longtable\\}",
-                      "\\\\begin\\{longtable\\}", out)
-      lt_text <- sub("\n.*", "", lt_start)
-      out <- sub(lt_text,
-                 paste(lt_text, "\n\\insertTableNotes\n\\endfoot\n"),
+      # need full \begin{longtable} command
+      # table_info valign2 ok but align missing vertical lines
+      longtable_start <- sub(".*\\\\begin\\{longtable\\}",
+                             "\\\\begin\\{longtable\\}", out)
+      longtable_text <- sub("\n.*", "", longtable_start)
+      out <- sub(longtable_text,
+                 paste(longtable_text,
+                       ifelse(table_info$booktabs, "\\midrule\n", ""),
+                       paste0("\n", fn_text, "\n\\endfoot\n")),
                  out, fixed = TRUE)
     } else {
-      pattern_start <- ifelse(
-        table_info$booktabs,
-        "\\\\endhead\\n\\n\\\\endfoot\\n",
-        "\\\\endhead\\n")
-      out <- sub(
-        pattern_start,
-        "\\\\endhead\n\\\\midrule\n\\\\insertTableNotes\n\\\\endfoot\n",
-        out)
+      text_pattern <- ifelse(table_info$booktabs,
+                             "\\\\endhead\\n\\n\\\\endfoot\\n",
+                             "\\\\endhead\n")
+      text_replace <- ifelse(threeparttable,
+                             paste0(
+                               "\\\\endhead\n",
+                               "\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n")
+                               # "\\\\midrule\n",
+                               # fn_regexp, "\n\\\\endlastfoot\n"),
+                             paste0("\\\\endhead\n", fn_regexp, "\n\\\\endfoot\n"))
+      out <- sub(text_pattern, text_replace, out)
+      # if (table_info$booktabs) {
+      #   out <- sub(
+      #     "\\\\endhead\\n\\n\\\\endfoot\\n",
+      #     paste0(
+      #       "\\\\endhead\n",
+      #       "\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n",
+      #       # "\\\\midrule\n",
+      #       fn_regexp, "\n\\\\endlastfoot\n"),
+      #     out)
+      # } else {
+      #   out <- sub(
+      #     "\\\\endhead\n",
+      #     paste0("\\\\endhead\n", fn_regexp, "\n\\\\endfoot\n"),
+      #     out)
+      # }
     }
   }
 
