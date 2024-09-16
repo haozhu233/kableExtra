@@ -28,7 +28,7 @@
 #' specifying large font size with the kable_styling() (e.g. ideal font for headers
 #' and table content with small font in footnotes).
 #' @param show_every_page T/F To make footnotes print at bottom of all pages for
-#' long tables.  Only applies to pdf threeparttables.
+#' long tables.  Only applies to pdf longtables.
 #' @param general_title Section header for general footnotes. Default is
 #' "Note: ".
 #' @param number_title Section header for number footnotes. Default is "".
