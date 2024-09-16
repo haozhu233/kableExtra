@@ -15,6 +15,7 @@ footnote(
   escape = TRUE,
   threeparttable = FALSE,
   fixed_small_size = FALSE,
+  show_every_page = FALSE,
   general_title = "Note: ",
   number_title = "",
   alphabet_title = "",
@@ -55,6 +56,9 @@ long paragraph of footnotes.}
 \item{fixed_small_size}{T/F When you want to keep the footnote small after
 specifying large font size with the kable_styling() (e.g. ideal font for headers
 and table content with small font in footnotes).}
+
+\item{show_every_page}{T/F To make footnotes print at bottom of all pages for
+long tables.  Only applies to pdf longtables.}
 
 \item{general_title}{Section header for general footnotes. Default is
 "Note: ".}
