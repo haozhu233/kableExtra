@@ -342,29 +342,21 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
       longtable_start <- sub(".*\\\\begin\\{longtable\\}",
                              "\\\\begin\\{longtable\\}", out)
       longtable_text <- sub("\n.*", "", longtable_start)
-
-      if(!table_info$booktabs){
-        out <- sub(longtable_text,
-                   paste(longtable_text, "\n", fn_text, "\n\\endfoot\n"),
-                   out, fixed = TRUE)
-      } else {
-        out <- sub(longtable_text,
-                   paste(longtable_text, fn_text, "\n\\endfoot\n"),
-                   out, fixed = TRUE)
-      }
+      out <- sub(longtable_text,
+                 paste(longtable_text, fn_text, "\n\\endfoot\n"),
+                 out, fixed = TRUE)
     } else {
       if(!table_info$booktabs){
         out <- sub(
           "\\\\endhead\\n",
           paste0("\\\\endhead\n",
-            fn_regexp, "\n\\\\endfoot\n",
-            fn_regexp, "\n\\\\endlastfoot\n"),
+                 fn_regexp, "\n\\\\endfoot\n",
+                 fn_regexp, "\n\\\\endlastfoot\n"),
           out)
       } else {
         out <- sub(
           "\\\\endhead\\n\\n\\\\endfoot\\n",
-          paste0("\\\\endhead\n\\\\midrule\n", fn_regexp,
-                 "\n\\\\endfoot\n"),
+          paste0("\\\\endhead\n\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n"),
           out)
         out <- sub(
           "\\\\endlastfoot",
