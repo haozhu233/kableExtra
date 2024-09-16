@@ -269,8 +269,11 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                            threeparttable, fixed_small_size, show_every_page) {
+  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
+
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
+  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
 
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
