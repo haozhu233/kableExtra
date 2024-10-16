@@ -22,22 +22,23 @@ names(dat)[3] <- paste0(names(dat)[3], footnote_marker_number(1))
 
 ```{r permute, results='asis'}
 # Define new environment
-is_every <- c(FALSE, TRUE)
-latex_opt <- c("basic", "repeat_header")
+latex_opt <- c("basic", "repeat_header")  # test basic to show doesn't cause trouble
 is_bt <- c(FALSE, TRUE)
 is_tpt <- c(FALSE, TRUE)
-cap_opt <- c(NA, "Include a caption")  # if NA use default NULL
+is_cont_at_btm <- c(FALSE, TRUE)  # only shows for booktabs
+is_every <- c(FALSE, TRUE)
 
 child_env <- new.env()
-for(i_every in seq_along(is_every)){
-  for(i_latex_opt in seq_along(latex_opt)){
-    for(i_bt in seq_along(is_bt)){
-      for(i_tpt in seq_along(is_tpt)){
-        for(i_cap_opt in seq_along(cap_opt)){
-          child_env$i_tpt <- i_tpt
+for(i_latex_opt in seq_along(latex_opt)){
+  for(i_bt in seq_along(is_bt)){
+    for(i_tpt in seq_along(is_tpt)){
+      for(i_is_cont_at_btm in seq_along(is_cont_at_btm)){
+        for(i_every in seq_along(is_every)){
           child_env$i_latex_opt <- i_latex_opt
-          child_env$i_cap_opt <- i_cap_opt
-          child_env$i_bt <- i_bt
+          child_env$i_bt <- i_bt          
+          child_env$i_tpt <- i_tpt
+          child_env$i_is_cont_at_btm <- i_is_cont_at_btm
+          child_env$i_every <- i_every          
           
           # knit the document and save the character output to an object
           res <- knitr::knit_child(

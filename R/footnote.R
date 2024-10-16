@@ -354,10 +354,19 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                  fn_regexp, "\n\\\\endlastfoot\n"),
           out)
       } else {
-        out <- sub(
-          "\\\\endhead\\n\\n\\\\endfoot\\n",
-          paste0("\\\\endhead\n\\\\midrule\n", fn_regexp, "\n\\\\endfoot\n"),
-          out)
+        if (grepl(  # no repeat_header_continued in kable_styling
+          "\\\\endhead\\n\\n\\\\endfoot",
+          out)) {
+          out <- sub(
+            "\\\\endhead\\n\\n\\\\endfoot",
+            paste0("\\\\endhead\n\\\\midrule\n", fn_regexp, "\n\\\\endfoot"),
+            out)
+        } else {  # repeat_header_continued in kable_styling
+          out <- sub(
+            "\\\\endfoot",
+            paste0(fn_regexp, "\n\\\\endfoot"),
+            out)
+        }
         out <- sub(
           "\\\\endlastfoot",
           paste0(fn_regexp, "\n\\\\endlastfoot\n"),

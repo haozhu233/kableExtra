@@ -3,37 +3,30 @@ output:
   pdf_document
 ---
 ```{r results='asis'}
-# i_tpt <- i_latex_opt <- i_cap_opt <- i_bt <- 1
-use_lab <- paste("lab", i_every, i_latex_opt, i_bt, i_tpt, 
-                 i_cap_opt, sep = "-")
+# i_latex_opt <- i_bt <- i_tpt <- i_is_cont_at_btm <- i_every <- 2
+use_lab <- paste("lab", i_latex_opt, i_bt, i_tpt, 
+                 i_is_cont_at_btm, i_every, sep = "-")
 ```
 
 ### `r use_lab`
 Permutations
 \vspace{-10pt}
 
-* every page: `r is_every[i_every]`
 * latex option: `r latex_opt[i_latex_opt]`
 * booktab: `r is_bt[i_bt]`
 * TPT: `r is_tpt[i_tpt]`
-* caption: `r cap_opt[i_cap_opt]`
+* continue on bottom: `r is_cont_at_btm[i_is_cont_at_btm]`
+* every page: `r is_every[i_every]`
 
 
 ```{r results='asis'}
-if (i_cap_opt == 1) {
-  a_kbl <- dat |>
-    kbl(format = "latex", 
-        label = use_lab, escape = FALSE, 
-        booktabs = is_bt[i_bt], longtable = TRUE)
-} else {
-  a_kbl <- dat |> 
-    kbl(format = "latex", caption = cap_opt[i_cap_opt], 
-        label = use_lab, escape = FALSE, 
-        booktabs = is_bt[i_bt], longtable = TRUE) 
-}
-a_kbl |>
+dat |>
+  kbl(format = "latex", caption = "Table caption",
+      label = use_lab, escape = FALSE, 
+      booktabs = is_bt[i_bt], longtable = TRUE) |>
   kable_styling(
-    latex_options = latex_opt[i_latex_opt]) |>
+    latex_options = latex_opt[i_latex_opt],
+    repeat_header_continued = is_cont_at_btm[i_is_cont_at_btm]) |>
   footnote(
     number = c("footnote on colname"),
     threeparttable = is_tpt[i_tpt],
