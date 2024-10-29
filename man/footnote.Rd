@@ -33,7 +33,7 @@ won't be labeled with any notations}
 There is no upper cap for the number of footnotes here}
 
 \item{alphabet}{A vector of footnote texts, Footnotes here will be labeled
-with abc. The vector here should not have more than 26 elements.}
+with "a,b,c". The vector here should not have more than 26 elements.}
 
 \item{symbol}{A vector of footnote texts, Footnotes here will be labeled
 with special symbols. The vector here should not have more than 20 elements.}
@@ -73,14 +73,24 @@ latex symbols. For example, \code{symbol_manual = c('*', '\\\\\\\\dag', '\\\\\\\
 }
 \description{
 \code{footnote} provides a more flexible way to add footnote. You
-can add mutiple sets of footnote using differeny notation system. It is
+can add multiple sets of footnote using different notation systems. It is
 also possible to specify footnote section header one by one and print
 footnotes as a chunk of texts.
 }
 \examples{
 \dontrun{
 dt <- mtcars[1:5, 1:5]
-footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+colnames(dt)[1] <- paste0("mpg",
+                          footnote_marker_alphabet(2))
+rownames(dt)[2] <- paste0(rownames(dt)[2],
+                          footnote_marker_alphabet(1))
+dt[1,2] <- paste0(dt[1,2], footnote_marker_alphabet(3))
+
+kbl(dt, escape = FALSE) |>
+  footnote(alphabet = c("Note a", "Note b", "Note c"))
 }
 
+}
+\seealso{
+\code{\link[=add_footnote]{add_footnote()}}, \code{\link[=footnote_marker_number]{footnote_marker_number()}}
 }

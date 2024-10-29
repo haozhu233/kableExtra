@@ -1,7 +1,7 @@
 #' Add footnote (new)
 #'
 #' @description `footnote` provides a more flexible way to add footnote. You
-#' can add mutiple sets of footnote using different notation systems. It is
+#' can add multiple sets of footnote using different notation systems. It is
 #' also possible to specify footnote section header one by one and print
 #' footnotes as a chunk of texts.
 #'
@@ -11,7 +11,7 @@
 #' @param number A vector of footnote texts. Footnotes here will be numbered.
 #' There is no upper cap for the number of footnotes here
 #' @param alphabet A vector of footnote texts, Footnotes here will be labeled
-#' with abc. The vector here should not have more than 26 elements.
+#' with "a,b,c". The vector here should not have more than 26 elements.
 #' @param symbol A vector of footnote texts, Footnotes here will be labeled
 #' with special symbols. The vector here should not have more than 20 elements.
 #' @param footnote_order The order of how to arrange `general`, `number`,
@@ -37,10 +37,19 @@
 #' @param symbol_manual User can manually supply a vector of either html or
 #' latex symbols. For example, `symbol_manual = c('*', '\\\\dag', '\\\\ddag')`.`
 #'
+#' @seealso [add_footnote()], [footnote_marker_number()]
+#'
 #' @examples
 #' \dontrun{
 #' dt <- mtcars[1:5, 1:5]
-#' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+#' colnames(dt)[1] <- paste0("mpg",
+#'                           footnote_marker_alphabet(2))
+#' rownames(dt)[2] <- paste0(rownames(dt)[2],
+#'                           footnote_marker_alphabet(1))
+#' dt[1,2] <- paste0(dt[1,2], footnote_marker_alphabet(3))
+#'
+#' kbl(dt, escape = FALSE) |>
+#'   footnote(alphabet = c("Note a", "Note b", "Note c"))
 #' }
 #'
 #' @export
@@ -63,6 +72,10 @@ footnote <- function(kable_input,
                      symbol_manual = NULL
 ) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -197,14 +210,16 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents,
 # HTML
 footnote_html <- function(kable_input, footnote_table, footnote_as_chunk) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
 
   new_html_footnote <- html_tfoot_maker(footnote_table, footnote_as_chunk)
   xml_add_child(kable_xml, new_html_footnote)
   xml2::xml_set_attr(kable_xml, "style",
                      paste0(xml2::xml_attr(kable_xml, "style"),
                             "border-bottom: 0;"))
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
@@ -270,7 +285,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                         "}\n\\\\end{ThreePartTable}"),
                  out)
       if (table_info$booktabs) {
-        out <- sub("\\\\bottomrule", "\\\\bottomrule\n\\\\insertTableNotes", out)
+        out <- sub(bottomrule_regexp, "\\1\n\\\\insertTableNotes", out)
       } else {
         out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
                    "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
@@ -295,8 +310,8 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
     }
   } else {
     if (table_info$booktabs) {
-      out <- sub("\\\\bottomrule",
-                 paste0("\\\\bottomrule\n", footnote_text), out)
+      out <- sub(bottomrule_regexp,
+                 paste0("\\1\n", footnote_text), out)
     } else {
       out <- sub(table_info$end_tabular,
                  paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),

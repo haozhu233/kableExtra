@@ -67,14 +67,14 @@ argument defaults to use this value for \code{cex} for points. Default is 2.}
 \item{pch, cex}{Shape and size for points (if type is other than "l").}
 
 \item{type}{Passed to \code{plot}, often one of "l", "p", or "b", see
-\code{\link[graphics:plot.default]{graphics::plot.default()}} for more details. Ignored when 'polymin' is
-not 'NA'.}
+\code{\link[graphics:plot.default]{graphics::plot.default()}} for more details. Ignored when \code{polymin} is
+not \code{NA}.}
 
 \item{polymin}{Special argument that converts a "line" to a polygon,
 where the flat portion is this value, and the other side of the polygon
-is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
+is the 'y' value ('x' if no 'y' provided). If \code{NA} (the default), then
 this is ignored; otherwise if this is numeric then a polygon is
-created (and 'type' is ignored). Note that if 'polymin' is in the middle
+created (and 'type' is ignored). Note that if \code{polymin} is in the middle
 of the 'y' values, it will generate up/down polygons around this value.}
 
 \item{minmax, min, max}{Arguments passed to \code{points} to highlight minimum

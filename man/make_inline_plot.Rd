@@ -2,7 +2,7 @@
 % Please edit documentation in R/graphics_helpers.R
 \name{make_inline_plot}
 \alias{make_inline_plot}
-\title{Combine file (or svg text) and parameters into a 'kableExtraInlinePlots' object}
+\title{Combine file (or svg text) and parameters into a \code{kableExtraInlinePlots} object}
 \usage{
 make_inline_plot(filename, file_ext, dev, width, height, res, del = TRUE)
 }
@@ -23,8 +23,8 @@ no longer used. The default action is to delete this file early,
 set this to 'FALSE' to keep the file.}
 }
 \value{
-list object, with class 'kableExtraInlinePlots'
+list object, with class \code{kableExtraInlinePlots}
 }
 \description{
-Combine file (or svg text) and parameters into a 'kableExtraInlinePlots' object
+Combine file (or svg text) and parameters into a \code{kableExtraInlinePlots} object
 }

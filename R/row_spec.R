@@ -15,7 +15,7 @@
 #' @param underline A T/F value to control whether the text of the selected row
 #' need to be underlined
 #' @param strikeout A T/F value to control whether the text of the selected row
-#' need to be stricked out.
+#' need to be struck out.
 #' @param color A character string for row text color. For example, "red" or
 #' "#BBBBBB".
 #' @param background A character string for row background color. Here please
@@ -30,7 +30,7 @@
 #' @param extra_css Extra css text to be passed into the cells of the row. Note
 #' that it's not for the whole row.
 #' @param hline_after T/F. A replicate of `hline.after` in xtable. It
-#' addes a hline after ther row
+#' adds a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row. Similar
 #' with `add.to.row` in xtable
 #'
@@ -51,6 +51,10 @@ row_spec <- function(kable_input, row,
     stop("row must be numeric. ")
   }
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -76,7 +80,9 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
                           color, background, align, font_size, angle,
                           extra_css) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
 
   if (!is.null(align)) {
     if (align %in% c("l", "c", "r")) {
@@ -86,37 +92,44 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
 
   if (0 %in% row) {
     kable_thead <- xml_tpart(kable_xml, "thead")
-    original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
-    for (theader_i in 1:length(xml_children(original_header_row))) {
-      target_header_cell <- xml_child(original_header_row, theader_i)
-      xml_cell_style(target_header_cell, bold, italic, monospace,
-                     underline, strikeout, color, background,
-                     align, font_size, angle, extra_css)
+    if (is.null(kable_thead))
+      warning("No row 0 found.")
+    else {
+      original_header_row <- xml_child(kable_thead, length(xml_children(kable_thead)))
+      for (theader_i in 1:length(xml_children(original_header_row))) {
+        target_header_cell <- xml_child(original_header_row, theader_i)
+        xml_cell_style(target_header_cell, bold, italic, monospace,
+                       underline, strikeout, color, background,
+                       align, font_size, angle, extra_css)
+      }
     }
     row <- row[row != 0]
   }
 
   if (length(row) != 0) {
     kable_tbody <- xml_tpart(kable_xml, "tbody")
+    if (is.null(kable_tbody))
+      warning("No table body found")
+    else {
+      group_header_rows <- attr(kable_input, "group_header_rows")
+      if (!is.null(group_header_rows)) {
+        row <- positions_corrector(row, group_header_rows,
+                                   length(xml_children(kable_tbody)))
+      }
 
-    group_header_rows <- attr(kable_input, "group_header_rows")
-    if (!is.null(group_header_rows)) {
-      row <- positions_corrector(row, group_header_rows,
-                                 length(xml_children(kable_tbody)))
-    }
-
-    for (j in row) {
-      target_row <- xml_child(kable_tbody, j)
-      for (i in 1:length(xml_children(target_row))) {
-        target_cell <- xml_child(target_row, i)
-        xml_cell_style(target_cell, bold, italic, monospace,
-                       underline, strikeout, color, background,
-                       align, font_size, angle, extra_css)
+      for (j in row) {
+        target_row <- xml_child(kable_tbody, j)
+        for (i in 1:length(xml_children(target_row))) {
+          target_cell <- xml_child(target_row, i)
+          xml_cell_style(target_cell, bold, italic, monospace,
+                         underline, strikeout, color, background,
+                         align, font_size, angle, extra_css)
+        }
       }
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
@@ -162,8 +175,9 @@ xml_cell_style <- function(x, bold, italic, monospace,
                                    "text-align: ", align, ";")
   }
   if (!is.null(font_size)) {
+    if (is.numeric(font_size)) font_size <- paste0(font_size, "px")
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
-                                   "font-size: ", font_size, "px;")
+                                   "font-size: ", font_size, ";")
   }
   if (!is.null(angle)) {
     xml_attr(x, "style") <- paste0(xml_attr(x, "style"),
@@ -201,16 +215,29 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                                      underline, strikeout,
                                      color, background, align, font_size, angle,
                                      hline_after, extra_latex_after)
-    temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
-                                   !is.null(table_info$repeat_header_latex)),
-                       gsub, sub)
+    temp_sub <- if (i == 1 && (table_info$tabular == "longtable" ||
+                                   !is.null(table_info$repeat_header_latex)))
+                  gsub else sub
     if (length(new_row) == 1) {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                      paste0(new_row, "\\\\\\\\"), out, perl = T)
+      # fixed=TRUE is safer but does not always work
+      regex <- paste0("\\Q", target_row, "\\E")
+      if (grepl(regex, out)) {
+        out <- temp_sub(regex, new_row, out, perl = TRUE)
+      } else {
+        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                        paste0(new_row, "\\\\\\\\"), out, perl = TRUE)
+      }
       table_info$contents[i] <- new_row
     } else {
-      out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                  paste(new_row, collapse = ""), out, perl = T)
+      # fixed=TRUE is safer but does not always work
+      regex <- paste0("\\Q", target_row, "\\E(\\\\\\\\)?")
+      if (any(grepl(regex, out))) {
+        out <- temp_sub(regex,
+          paste(new_row, collapse = ""), out, perl = TRUE)
+      } else {
+        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
+                    paste(new_row, collapse = ""), out, perl = TRUE)
+      }
       table_info$contents[i] <- new_row[1]
     }
   }

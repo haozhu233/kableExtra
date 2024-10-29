@@ -71,7 +71,7 @@ plotted in the same range? Default is True.}
 or a graphics device function (\code{grDevices::pdf}). This defaults
 to \code{"pdf"} if the rendering is in LaTeX and \code{"svg"} otherwise.}
 
-\item{...}{extraparameters passing to boxplot}
+\item{...}{extra parameters passing to boxplot}
 }
 \description{
 These functions helps you quickly generate sets of sparkline

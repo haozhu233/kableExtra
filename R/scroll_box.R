@@ -4,8 +4,8 @@
 #' fixed-width or both box and make it scrollable.
 #'
 #' @param kable_input A HTML kable object
-#' @param height A character string indicating the height of the box, e.g. "50px"
-#' @param width A character string indicating the width of the box, e.g. "100px"
+#' @param height A character string indicating the height of the box, e.g. `"50px"`
+#' @param width A character string indicating the width of the box, e.g. `"100px"`
 #' @param box_css CSS text for the box
 #' @param extra_css Extra CSS styles
 #' @param fixed_thead HTML table option so table header row is fixed at top.
@@ -31,6 +31,10 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
                        fixed_thead = TRUE
                        ) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (kable_format != "html") {
     return(kable_input)
   }
@@ -40,7 +44,9 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
 
   if (fixed_thead$enabled) {
     box_css = "border: 1px solid #ddd; padding: 0px; "
-    kable_xml <- read_kable_as_xml(kable_input)
+    important_nodes <- read_kable_as_xml(kable_input)
+    body_node <- important_nodes$body
+    kable_xml <- important_nodes$table
     all_header_cells <- xml2::xml_find_all(kable_xml, "//thead//th")
     if (is.null(fixed_thead$background))  fixed_thead$background <- "#FFFFFF"
     for (i in seq(length(all_header_cells))) {
@@ -50,7 +56,7 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
         fixed_thead$background, ";"
       )
     }
-    out <- as.character(as_kable_xml(kable_xml))
+    out <- as.character(as_kable_xml(body_node))
   } else {
     out <- as.character(kable_input)
   }

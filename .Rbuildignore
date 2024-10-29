@@ -3,3 +3,4 @@
 ^tests$
 ^docs$
 ^.github$
+^\.github$

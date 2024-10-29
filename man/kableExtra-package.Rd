@@ -42,11 +42,11 @@ for more information
 \note{
 If you found a feature on the documentation site that is not available
 in the version of \code{kableExtra} you are using, try to install the pre-release
-version from github. You can do so by running
+version from GitHub. You can do so by running
 \code{devtools::install_github("haozhu233/kableExtra")}.
 
 Also, note that This package can load required LaTeX package automatically in
-vanilla rmarkdown. For customized rmarkdown templates, it is recommended to
+vanilla R Markdown. For customized R Markdown templates, it is recommended to
 load related LaTeX packages manually.
 }
 \section{Features}{

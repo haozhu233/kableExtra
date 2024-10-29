@@ -15,7 +15,7 @@ kable_styling(
   repeat_header_text = "\\\\textit{(continued)}",
   repeat_header_method = c("append", "replace"),
   repeat_header_continued = FALSE,
-  stripe_color = "gray!6",
+  stripe_color = "gray!10",
   stripe_index = NULL,
   latex_table_env = NULL,
   protect_latex = TRUE,
@@ -37,7 +37,7 @@ for more information. Possible options include \code{basic}, \code{striped},
 
 \item{latex_options}{A character vector for LaTeX table options. Please see
 package vignette for more information. Possible options include
-\code{basic}, \code{striped}, \code{hold_position}, \code{HOLD_position}, \code{scale_down} & \code{repeat_header}.
+\code{basic}, \code{striped}, \code{hold_position}, \code{HOLD_position}, \code{scale_down}, \code{scale_up} & \code{repeat_header}.
 \code{striped} will add alternative row colors to the table. It will imports
 \code{LaTeX} package \code{xcolor} if enabled. \code{hold_position} will "hold" the floating
 table to the exact position. It is useful when the \code{LaTeX} table is contained
@@ -64,8 +64,8 @@ imported.}
 \item{font_size}{A numeric input for table font size}
 
 \item{row_label_position}{A character string determining the justification
-of the row labels in a table.  Possible values inclued \code{l} for left, \code{c} for
-center, and \code{r} for right.  The default value is \code{l} for left justifcation.}
+of the row labels in a table.  Possible values include \code{l} for left, \code{c} for
+center, and \code{r} for right.  The default value is \code{l} for left justification.}
 
 \item{repeat_header_text}{LaTeX option. A text string you want to append on
 or replace the caption.}
@@ -114,7 +114,7 @@ determination but you may specify it manually.}
 \description{
 This function provides a cleaner approach to modify the style
 of HTML tables other than using the \code{table.attr} option in \code{knitr::kable()}. Note
-that those bootstrap options requires Twitter bootstrap theme, which is not avaiable
+that those bootstrap options requires Twitter bootstrap theme, which is not available
 in some customized template being loaded.
 }
 \details{
@@ -122,7 +122,7 @@ For LaTeX, if you use other than English environment
 \itemize{
 \item all tables are converted to 'UTF-8'. If you use, for example, Hungarian
 characters on a Windows machine, make sure to use
-Sys.setlocale("LC_ALL","Hungarian") to avoid unexpected conversions.
+\code{Sys.setlocale("LC_ALL","Hungarian")} to avoid unexpected conversions.
 \item \code{protect_latex = TRUE} has no effect.
 }
 

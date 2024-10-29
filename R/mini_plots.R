@@ -121,7 +121,7 @@ spec_hist <- function(x, width = 200, height = 50, res = 300,
 #' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
 #'   or a graphics device function (`grDevices::pdf`). This defaults
 #'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
-#' @param ... extraparameters passing to boxplot
+#' @param ... extra parameters passing to boxplot
 #'
 #' @export
 spec_boxplot <- function(x, width = 200, height = 50, res = 300,
@@ -196,99 +196,6 @@ spec_boxplot <- function(x, width = 200, height = 50, res = 300,
     del = TRUE)
   return(out)
 }
-#' Helper functions to generate inline sparklines
-#'
-#' @description These functions helps you quickly generate sets of sparkline
-#' style plots using base R plotting system. Currently, we support histogram,
-#' boxplot, line, scatter, pointrange, barplot plots. You can use them together with
-#' `column_spec` to generate inline plot in tables. By default, this function
-#' will save images in a folder called "kableExtra" and return the address of
-#' the file.
-#'
-#' @param x Vector of values or List of vectors of values.
-#' @param width The width of the plot in pixel
-#' @param height The height of the plot in pixel
-#' @param res The resolution of the plot. Default is 300.
-#' @param add_label For boxplot. T/F to add labels for min, mean and max.
-#' @param label_digits If T for add_label, rounding digits for the label.
-#' Default is 2.
-#' @param same_lim T/F. If x is a list of vectors, should all the plots be
-#' plotted in the same range? Default is True.
-#' @param lim Manually specify plotting range in the form of
-#' `c(0, 10)`.
-#' @param xaxt On/Off for xaxis text
-#' @param yaxt On/Off for yaxis text
-#' @param ann On/Off for annotations (titles and axis titles)
-#' @param col Color for the fill of the histogram bar/boxplot box.
-#' @param border Color for the border.
-#' @param boxlty Boxplot - box boarder type
-#' @param medcol Boxplot - median line color
-#' @param medlwd Boxplot - median line width
-#' @param dir Directory of where the images will be saved.
-#' @param file File name. If not provided, a random name will be used
-#' @param file_type Graphic device. Can be character (e.g., `"pdf"`)
-#'   or a graphics device function (`grDevices::pdf`). This defaults
-#'   to `"pdf"` if the rendering is in LaTeX and `"svg"` otherwise.
-#' @param ... extraparameters passing to boxplot
-#'
-#' @export
-spec_barplot <- function(x, devwidth = 200, devheight = 40, res = 300,
-                      beside = F,
-                      horiz = F,
-                      same_lim = TRUE, lim = NULL,
-                      xaxt = 'n', yaxt = 'n', ann = FALSE,
-                      col = NULL, border = NA,
-                      dir = if (is_latex()) rmd_files_dir() else tempdir(),
-                      file = NULL,
-                      file_type = if (is_latex()) "pdf" else svglite::svglite,
-                      ...) {
-  if (is.list(x)) {
-    if (same_lim & is.null(lim)) {
-      lim <- base::range(unlist(x), na.rm=TRUE)
-    }
-    
-    dots <- listify_args(x, devwidth, devheight, res, beside,horiz,
-                         lim, xaxt, yaxt, ann, col, border,
-                         dir, file, file_type,
-                         lengths = c(1, length(x)))
-    return(do.call(Map, c(list(f = spec_barplot), dots)))
-  }
-  
-  if (is.null(x)) return(NULL)
-  
-  if (is.null(lim)) {
-    lim <- base::range(x, na.rm=TRUE)
-  }
-  
-  if (!dir.exists(dir)) {
-    dir.create(dir)
-  }
-  height<-matrix(x)
-  height<-cbind(height,0)
-  file_ext <- dev_chr(file_type)
-  if (is.null(file)) {
-    file <- normalizePath(
-      tempfile(pattern = "barplot_", tmpdir = dir, fileext = paste0(".", file_ext)),
-      winslash = "/", mustWork = FALSE)
-  }
-  
-  graphics_dev(filename = file, dev = file_type,
-               width = devwidth, height = devheight, res = res,
-               bg = "transparent")
-  curdev <- grDevices::dev.cur()
-  on.exit(grDevices::dev.off(curdev), add = TRUE)
-  
-  graphics::par(mar = c(0, 0, 0, 0), lwd=0.5)
-  graphics::barplot(height=height, beside = beside,horiz = horiz, col = col, border = border,xaxt = xaxt, yaxt = yaxt, ann = ann)#,xlim = lim, ann = ann, ...)
-  
-  grDevices::dev.off(curdev)
-
-  out <- make_inline_plot(
-    file, file_ext, file_type,
-    devwidth, devheight, res,
-    del = TRUE)
-  return(out)
-}
 
 is_latex <- knitr::is_latex_output
 
@@ -329,13 +236,13 @@ rmd_files_dir <- function(create = TRUE) {
 #' argument defaults to use this value for `cex` for points. Default is 2.
 #' @param pch,cex Shape and size for points (if type is other than "l").
 #' @param type Passed to `plot`, often one of "l", "p", or "b", see
-#' [graphics::plot.default()] for more details. Ignored when 'polymin' is
-#' not 'NA'.
+#' [graphics::plot.default()] for more details. Ignored when `polymin` is
+#' not `NA`.
 #' @param polymin Special argument that converts a "line" to a polygon,
 #' where the flat portion is this value, and the other side of the polygon
-#' is the 'y' value ('x' if no 'y' provided). If 'NA' (the default), then
+#' is the 'y' value ('x' if no 'y' provided). If `NA` (the default), then
 #' this is ignored; otherwise if this is numeric then a polygon is
-#' created (and 'type' is ignored). Note that if 'polymin' is in the middle
+#' created (and 'type' is ignored). Note that if `polymin` is in the middle
 #' of the 'y' values, it will generate up/down polygons around this value.
 #' @param minmax,min,max Arguments passed to `points` to highlight minimum
 #' and maximum values in `spec_plot`. If `min` or `max` are `NULL`, they
@@ -486,7 +393,7 @@ spec_plot <- function(x, y = NULL, width = 200, height = 50, res = 300,
 #' the file.
 #'
 #' @param x,xmin,xmax A scalar value or List of scalar values for dot, left
-#' and right errorbar.
+#' and right error bar.
 #' @param vline A scalar value for where to draw a vertical line.
 #' @param width The width of the plot in pixel
 #' @param height The height of the plot in pixel

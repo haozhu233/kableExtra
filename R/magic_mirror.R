@@ -45,7 +45,7 @@ magic_mirror_latex <- function(kable_input){
     "tabular", "longtable"
   )
   # Booktabs
-  table_info$booktabs <- grepl("\\\\toprule", kable_input)
+  table_info$booktabs <- grepl(toprule_regexp, kable_input)
   # Align
   table_info$align <- gsub("\\|", "", str_match(
     kable_input, paste0("\\\\begin\\{",
@@ -96,7 +96,7 @@ magic_mirror_latex <- function(kable_input){
   table_info$nrow <- length(table_info$contents)
   table_info$duplicated_rows <- (sum(duplicated(table_info$contents)) != 0)
   # Column names
-  if (table_info$booktabs & !grepl("\\\\midrule", kable_input)) {
+  if (table_info$booktabs & !grepl(midrule_regexp, kable_input)) {
     table_info$colnames <- NULL
     table_info$position_offset <- 0
   } else {
@@ -132,11 +132,11 @@ extra_header_to_header_df_ <- function(x) {
 # Magic Mirror for html table --------
 magic_mirror_html <- function(kable_input){
   table_info <- list()
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   # Caption
   table_info$caption <- xml_text(xml_child(kable_xml, "caption"))
-  # Contents
-  # table_info$contents <- html_table(read_html(as.character(kable_input)))[[1]]
   # colnames
   table_info$colnames <- lapply(xml_children(xml_child(kable_xml, "thead")),
                                 xml_children)

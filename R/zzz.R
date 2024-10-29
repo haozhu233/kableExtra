@@ -1,28 +1,15 @@
 .onLoad <- function(libname = find.package("kableExtra"), pkgname = "kableExtra") {
-  if (knitr::is_latex_output()) {
-    load_packages <- getOption("kableExtra.latex.load_packages", default = TRUE)
-    if (load_packages) {
-      usepackage_latex("booktabs")
-      usepackage_latex("longtable")
-      usepackage_latex("array")
-      usepackage_latex("multirow")
-      usepackage_latex("wrapfig")
-      usepackage_latex("float")
-      usepackage_latex("colortbl")
-      usepackage_latex("pdflscape")
-      usepackage_latex("tabu")
-      usepackage_latex("threeparttable")
-      usepackage_latex("threeparttablex")
-      usepackage_latex("ulem", "normalem")
-      usepackage_latex("makecell")
-      usepackage_latex("xcolor")
-    }
-  }
-  auto_format <- getOption("kableExtra.auto_format", default = TRUE)
-  if (auto_format) auto_set_format()
+  if (knitr::is_latex_output())
+    use_latex_packages()
 
-  if (!is.null(rmarkdown::metadata$output[[1]]) &&
-      rmarkdown::metadata$output %in% c(
+  # auto_format <- getOption("kableExtra.auto_format", default = FALSE)
+  # if (auto_format) auto_set_format()
+
+  output_type <- rmarkdown::metadata$output[1]
+  if (is.list(output_type))
+    output_type <- names(output_type)
+
+  if (!is.null(output_type) && output_type %in% c(
         "ioslides_presentation", "slidy_presentation",
         "gitbook", "bookdown::gitbook", "radix_article", "radix::radix_article",
         "distill_article", "distill::distill_article"

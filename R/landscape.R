@@ -1,7 +1,7 @@
 #' Print the table on an isolated landscape page in PDF
 #'
 #' @description This function will put the table on an single landscape page.
-#' It's useful for wide tables that cann't be printed on a portrait page.
+#' It's useful for wide tables that can't be printed on a portrait page.
 #'
 #' @param kable_input Output of `knitr::kable()` with `format` specified
 #' @param margin Customizable page margin for special needs. Values can be
@@ -15,6 +15,10 @@
 #' @export
 landscape <- function(kable_input, margin = NULL) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",

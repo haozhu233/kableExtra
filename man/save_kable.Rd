@@ -21,7 +21,7 @@ save_kable(
 kableExtra}
 
 \item{file}{save to files. If the input table is in HTML and the output file
-ends with \code{.png}, \code{.pdf} and \code{.jpeg}, \code{webshot} will be used to do the
+ends with \code{.png}, \code{.pdf} and \code{.jpeg}, \code{webshot2} will be used to do the
 conversion.}
 
 \item{bs_theme}{Which Bootstrap theme to use}
@@ -31,7 +31,7 @@ conversion.}
 \item{extra_dependencies}{Additional HTML dependencies. For example,
 \verb{list(}}
 
-\item{...}{Additional variables being passed to \code{webshot::webshot}. This
+\item{...}{Additional variables being passed to \code{webshot2::webshot}. This
 is for HTML only.}
 
 \item{latex_header_includes}{A character vector of extra LaTeX header stuff.

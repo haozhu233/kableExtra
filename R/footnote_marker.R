@@ -17,19 +17,24 @@
 #' @examples
 #' \dontrun{
 #' dt <- mtcars[1:5, 1:5]
-#' colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "html"))
-#' rownames(dt)[2] <- paste0(rownames(dt)[2], footnote_marker_alphabet(1, "html"))
-#' footnote(knitr::kable(dt, "html"), alphabet = c("Note a", "Note b"))
+#' colnames(dt)[1] <- paste0("mpg",
+#'                           footnote_marker_alphabet(2))
+#' rownames(dt)[2] <- paste0(rownames(dt)[2],
+#'                           footnote_marker_alphabet(1))
+#' dt[1,2] <- paste0(dt[1,2], footnote_marker_alphabet(3))
+#'
+#' kbl(dt, escape = FALSE) |>
+#'   footnote(alphabet = c("Note a", "Note b", "Note c"))
 #' }
 #'
 #' @export
 footnote_marker_number <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_number format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   if (format == "html") {
     return(paste0("<sup>", x, "</sup>"))
@@ -44,11 +49,11 @@ footnote_marker_number <- function(x, format, double_escape = FALSE) {
 #' @export
 footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_alphabet format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   if (is.numeric(x)) x <- letters[x]
   if (format == "html") {
@@ -64,11 +69,11 @@ footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
 #' @export
 footnote_marker_symbol <- function(x, format, double_escape = FALSE) {
   if (missing(format) || is.null(format)) {
-    format <- getOption('knitr.table.format')
-  }
-  if (is.null(format)) {
-    message("Setting footnote_marker_symbol format as html")
-    format <- "html"
+    if (knitr::is_latex_output()) {
+      format <- "latex"
+    } else {
+      format <- "html"
+    }
   }
   number_index <- read.csv(system.file("symbol_index.csv",
                                        package = "kableExtra"))

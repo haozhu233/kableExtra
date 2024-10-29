@@ -15,10 +15,11 @@ kbl(
   label = NULL,
   format.args = list(),
   escape = TRUE,
-  table.attr = "",
+  table.attr = getOption("knitr.table.html.attr", ""),
   booktabs = FALSE,
   longtable = FALSE,
-  valign = "t",
+  tabular = if (longtable) "longtable" else "tabular",
+  valign = if (tabular \%in\% c("tabularx", "xltabular")) "{\\\\linewidth}" else "[t]",
   position = "",
   centering = TRUE,
   vline = getOption("knitr.table.vline", if (booktabs) "" else "|"),
@@ -41,11 +42,11 @@ returned value from \code{kable()}.}
 
 \item{format}{A character string. Possible values are \code{latex},
 \code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
+simple tables), \code{rst}, \code{jira}, and \code{org} (Emacs Org-mode).
+The value of this argument will be automatically determined if the function
+is called within a \pkg{knitr} document. The \code{format} value can also
+be set in the global option \code{knitr.table.format}. If \code{format} is
+a function, it must return a character string.}
 
 \item{digits}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
@@ -88,9 +89,12 @@ some special cases.}
 \item{longtable}{T/F for whether to use the longtable format. If you have a
 table that will span over two or more pages, you will have to turn this on.}
 
+\item{tabular}{The "inner environment" to use for the
+table, e.g. "tabularx".}
+
 \item{valign}{You probably won't need to adjust this latex option very often.
-If you are familar with latex tables, this is the optional position for the
-tabular environment controling the vertical position of the table relative
+If you are familiar with latex tables, this is the optional position for the
+tabular environment controlling the vertical position of the table relative
 to the baseline of the surrounding text. Possible choices are \code{b}, \code{c} and
 \code{t} (default).}
 
@@ -130,9 +134,21 @@ caption is provided.}
 \item{...}{Other arguments (see Examples and References).}
 }
 \description{
-knitr's kable function is the foundation of this package.
+The \code{knitr::kable()} function is the foundation of this package.
 However, it has many latex/html specific arguments hidden under the ground
 unless you check its source code. This wrapper function is created to
 provide better documentation (and auto-complete yay) and at the same time,
 solve the auto format setting in a better way.
+}
+\note{
+The current set of arguments were written for
+\code{knitr} version 1.45.  If you are using an older
+or newer version, some of the default values may be different.
+
+In \code{knitr::kable()}, the \code{escape} parameter does not affect the text
+in the \code{caption} argument, and \code{kbl()} inherits this
+behavior.  This means that special characters
+in the caption (such as "\%" for LaTeX output)
+need to be escaped by the user, e.g.
+written as \code{"\\\\\%"}.
 }

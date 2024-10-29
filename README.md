@@ -1,9 +1,11 @@
 # kableExtra <img src="https://haozhu233.github.io/kableExtra/kableExtra.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+<!-- badges: start -->
 [![CRAN_version](http://www.r-pkg.org/badges/version/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download](http://cranlogs.r-pkg.org/badges/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![CRAN_download_total](http://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=kableExtra)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1035917.svg)](https://doi.org/10.5281/zenodo.1035917)
-
+[![R-CMD-check](https://github.com/haozhu233/kableExtra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/haozhu233/kableExtra/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 ***
 
@@ -21,7 +23,7 @@ I hope with `kableExtra`, you can
 
 ***
 
-This package can load required LaTeX package automatically in vanilla rmarkdown. For customized rmarkdown templates, it is recommended to load related LaTeX packages manually.
+This package can load required LaTeX package automatically in vanilla R Markdown. For customized R Markdown templates, it is recommended to load related LaTeX packages manually.
 
 ***
 

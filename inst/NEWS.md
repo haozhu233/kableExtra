@@ -1,7 +1,85 @@
-kableExtra 1.3.5
+kableExtra 1.4.0.4
 --------------------------------------------------------------------------------
 
+Bug Fixes:
+
+* Fixed a bug in `collapse_rows()`, which failed on tables
+that had no header (#812).
+* Fixed a bug in `row_spec()` which added extra 
+line breaks when `extra_latex_after` was specified (#815).
+* Fixed a bug in `kable_styling()` which didn't parse 
+"pipe" tables containing multibyte characters properly (#821).
+* Fixed a bug in `add_header_above()` which caused headers
+containing LaTeX code to be rendered incorrectly in LaTeX 
+documents (#836).
+
+
+kableExtra 1.4.0
+--------------------------------------------------------------------------------
+
+New Features:
+
+* Added live preview of inline plots (#777).
+* Add feature to scale_up and scale_down latex tables (#753)
+* Added row grouping feature with `row_group_label_position = first` option (#711).
+* Expanded the functionality of `spec_color` to allow arbitrary palettes.
+* Removed dependency on `rvest` and `glue`
+* In previous versions, kableExtra manipulated knitr's global settings to auto
+format tables. In 1.4.0, we introduced a markdown table parser, which will
+parse the inputting markdown table back to a dataframe and resend it to the
+kbl function. In this way, all the auto formatting happens within this
+package. In terms of latex table specifically, we also turned on booktabs and
+longtable by default to mimic the default behavior of how pandoc handle
+markdown tables. As a result, most users won't even feel the change. The only
+part that gets impacted is the table labels or references set within the kable
+function through the label option. For this part, first, people can set labels
+using knitr chunk options. Also, people can easily overcome it by either using
+kbl or setting format in kable.
 * Added line_col to spec_pointrange()
+
+Improvements:
+
+* Updated `kbl()` parameters to match current `knitr` version 1.45 (#784).
+* Adjusted placement of collapsed row labels to account for `cmidrules` within a
+section (#787).
+* Enhanced footnote examples and fixed footnote label when notation is "none" in
+"pipe" output (#792).
+* Enhanced text input for `font_size` for better customization (#576).
+
+Bug Fixes:
+
+* Fixed a bug in current `column_spec` that prevents finding the correct rows
+(#791).
+* Resolved centering issue of three-part tables (#789).
+* Corrected behavior of special characters in captions (#788).
+* Fixed obscure but legal case with YAML in multi-output context (#781).
+* Addressed issue with blank table in Rmarkdown inline rendering with
+dark-themed Rstudio (#689).
+* Fixed output type detection in `.onLoad` and handled HTML `kable` object
+including extra stuff, like a style block.
+* Fixed minor spelling errors and typos in various places (#779, #709, #710, #676).
+* Resolved issue with `auto_format` default setting (#749).
+* Some table additions didn't work with custom rule
+widths (#806).
+
+Documentation and Maintenance:
+
+* Documented special cases and added heads-up about typo in `linebreak.R` (#679).
+* Added GitHub action to run R CMD check, necessitating `pdflatex` and vignette
+compaction (#780).
+* Defaulted to `booktabs=TRUE`, `longtable=TRUE` when converting a pipe table (#778).
+* Declared LaTeX packages with each `kbl()` call and exported
+`use_latex_packages()` for user flexibility (#782).
+
+Misc:
+
+* Converted CSS colors like "darkgoldenrod2" to rgba() form for better
+compatibility (#785).
+* Made various minor changes and namespace qualifications for improved
+functionality.
+* Merged various pull requests improving codebase and resolving issues (#800,
+#799, #797, #798, #794, #793, #768, #632, #628, etc.).
+
 
 kableExtra 1.3.1, 1.3.3, 1.3.4
 --------------------------------------------------------------------------------
@@ -177,7 +255,7 @@ kableExtra 0.9.0
 --------------------------------------------------------------------------------
 * Major Change: Now when you load `kableExtra` package, it will automatically 
 set format for `kable()` based on the working environment: only if you are using
-rmarkdown/r sweave to render PDFs, the default format will be set to "latex". 
+R Markdown or R Sweave to render PDFs, the default format will be set to "latex". 
 Otherwise it will be set to "html".
 
 * Major Change: Now `kableExtra` will try to load the table section of the 
@@ -358,7 +436,7 @@ behavior
 
 * Added kable_as_image() for LaTeX tables. This function will render the LaTeX
 code snippet to a piece of standalone PDF file and then convert that to an 
-image, which will then be included in the rmarkdown document, if the 
+image, which will then be included in the R Markdown document, if the 
 environment exists. It's useful for people who have a strong need of 
 generating Word documents and producing well-formatted LaTeX table at the same
 time.

@@ -16,7 +16,7 @@
 #' @param underline T/F value or vector to control whether the text of the
 #' selected row need to be underlined
 #' @param strikeout T/F value or vector to control whether the text of the
-#' selected row need to be striked out.
+#' selected row need to be struck out.
 #' @param color A character string or vector for column text color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string or vector for column background color. Here please
@@ -35,7 +35,7 @@
 #' of table columns.
 #' @param extra_css A vector of extra css text to be passed into the cells of
 #' the column.
-#' @param include_thead T/F. A HTML only feature to contoll whether the
+#' @param include_thead T/F. A HTML only feature to control whether the
 #' header row will be manipulated. Default is `FALSE`.
 #' @param latex_column_spec Only for LaTeX tables.  Code to replace the column
 #' specification.  If not `NULL`, will override all other arguments.
@@ -79,6 +79,11 @@ column_spec <- function(kable_input, column,
     stop("column must be numeric. ")
   }
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -115,8 +120,12 @@ column_spec_html <- function(kable_input, column, width,
                              extra_css, include_thead,
                              link, new_tab, tooltip, popover, image) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
+  if (is.null(kable_tbody))
+    return(kable_input)
 
   group_header_rows <- attr(kable_input, "group_header_rows")
   all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
@@ -138,39 +147,41 @@ column_spec_html <- function(kable_input, column, width,
     border_right <- T
   }
 
+  off <- 0
   if (include_thead) {
-    nrows <- length(all_contents_rows) + 1
-    off <- 1
-
-    bold <- ensure_len_html(bold, nrows, "bold")
-    italic <- ensure_len_html(italic, nrows, "italic")
-    monospace <- ensure_len_html(monospace, nrows, "monospace")
-    underline <- ensure_len_html(underline, nrows, "underline")
-    strikeout <- ensure_len_html(strikeout, nrows, "strikeout")
-    color <- ensure_len_html(color, nrows, "color")
-    background <- ensure_len_html(background, nrows,"background")
-    link <- ensure_len_html(link, nrows, "link")
-    new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
-    tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
-    popover <- ensure_len_html(popover, nrows, "popover")
-    image <- ensure_len_html(image, nrows, "image")
-
     kable_thead <- xml_tpart(kable_xml, "thead")
-    nrow_thead <- length(xml_children(kable_thead))
-    for (j in column) {
-      target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
-      column_spec_html_cell(
-        target_cell, width, width_min, width_max,
-        bold[1], italic[1], monospace[1], underline[1], strikeout[1],
-        color[1], background[1], border_left, border_right,
-        border_l_css, border_r_css,
-        extra_css,
-        link[1], new_tab[1], tooltip[1], popover[1], image[1]
-      )
+    if (!is.null(kable_thead)) {
+      nrows <- length(all_contents_rows) + 1
+      off <- 1
+
+      bold <- ensure_len_html(bold, nrows, "bold")
+      italic <- ensure_len_html(italic, nrows, "italic")
+      monospace <- ensure_len_html(monospace, nrows, "monospace")
+      underline <- ensure_len_html(underline, nrows, "underline")
+      strikeout <- ensure_len_html(strikeout, nrows, "strikeout")
+      color <- ensure_len_html(color, nrows, "color")
+      background <- ensure_len_html(background, nrows,"background")
+      link <- ensure_len_html(link, nrows, "link")
+      new_tab <- ensure_len_html(new_tab, nrows, "new_tab")
+      tooltip <- ensure_len_html(tooltip, nrows, "tooltip")
+      popover <- ensure_len_html(popover, nrows, "popover")
+      image <- ensure_len_html(image, nrows, "image")
+
+      nrow_thead <- length(xml_children(kable_thead))
+      for (j in column) {
+        target_cell <- xml_child(xml_child(kable_thead, nrow_thead), j)
+        column_spec_html_cell(
+          target_cell, width, width_min, width_max,
+          bold[1], italic[1], monospace[1], underline[1], strikeout[1],
+          color[1], background[1], border_left, border_right,
+          border_l_css, border_r_css,
+          extra_css,
+          link[1], new_tab[1], tooltip[1], popover[1], image[1]
+        )
+      }
     }
   } else {
     nrows <- length(all_contents_rows)
-    off <- 0
 
     bold <- ensure_len_html(bold, nrows, "bold")
     italic <- ensure_len_html(italic, nrows, "italic")
@@ -189,7 +200,7 @@ column_spec_html <- function(kable_input, column, width,
   for (i in seq(length(all_contents_rows))) {
     for (j in column) {
       io <- i + off
-      target_cell <- xml_child(xml_child(kable_tbody, all_contents_rows[io]), j)
+      target_cell <- xml_child(xml_child(kable_tbody, all_contents_rows[i]), j)
       column_spec_html_cell(
         target_cell, width, width_min, width_max,
         bold[io], italic[io], monospace[io], underline[io], strikeout[io],
@@ -201,7 +212,7 @@ column_spec_html <- function(kable_input, column, width,
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   return(out)
@@ -393,6 +404,9 @@ column_spec_latex <- function(kable_input, column, width,
   } else {
     rows <- seq(1 + off, nrows)
   }
+
+  # issue #658: offset generates bad indices with single row tables
+  rows <- intersect(rows, seq(nrows))
 
   for (i in rows) {
     target_row <- table_info$contents[i]

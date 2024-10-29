@@ -2,7 +2,7 @@
 % Please edit documentation in R/spec_tools.R
 \name{spec_color}
 \alias{spec_color}
-\title{Generate viridis Color code for continuous values}
+\title{Generate viridis or other color code for continuous values}
 \usage{
 spec_color(
   x,
@@ -12,14 +12,14 @@ spec_color(
   direction = 1,
   option = "D",
   na_color = "#BBBBBB",
-  scale_from = NULL
+  scale_from = NULL,
+  palette = viridisLite::viridis(256, alpha, begin, end, direction, option)
 )
 }
 \arguments{
 \item{x}{continuous vectors of values}
 
-\item{alpha}{The alpha transparency, a number in [0,1], see argument alpha in
-\code{\link[grDevices]{hsv}}.}
+\item{alpha}{The alpha transparency, a number in [0,1],}
 
 \item{begin}{The (corrected) hue in [0,1] at which the color map begins.}
 
@@ -30,23 +30,19 @@ colors are ordered from darkest to lightest. If -1, the order of colors is
 reversed.}
 
 \item{option}{A character string indicating the color map option to use.
-Eight options are available:
-\itemize{
- \item "magma" (or "A")
- \item "inferno" (or "B")
- \item "plasma" (or "C")
- \item "viridis" (or "D")
- \item "cividis" (or "E")
- \item "rocket" (or "F")
- \item "mako" (or "G")
- \item "turbo" (or "H")
-}}
+Eight options are available: "magma" (or "A"), "inferno" (or "B"),
+"plasma" (or "C"), "viridis" (or "D"), "cividis" (or "E"),
+"rocket" (or "F"), "mako" (or "G") and "turbo" (or "H").}
 
 \item{na_color}{color code for NA values}
 
 \item{scale_from}{input range (vector of length two). If not given,
 is calculated from the range of x}
+
+\item{palette}{The palette to use as a character vector of colors.  If
+this is specified, parameters other than \code{x}, \code{na_color} and \code{scale_from}
+are ignored.}
 }
 \description{
-Generate viridis Color code for continuous values
+Generate viridis or other color code for continuous values
 }

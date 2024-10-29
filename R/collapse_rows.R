@@ -19,8 +19,8 @@
 #' be separated by hlines.
 #' @param row_group_label_position Option controlling positions of row group
 #' labels. Choose from `identity`, `stack`, or `first` -- the latter behaves
-#' like `identity` when `row_group_label_position` is `top` but without using
-#' the multirow package.
+#' like `identity` when `valign` is `top` but without using the multirow
+#' package.
 #' @param row_group_label_fonts A list of arguments that can be supplied to
 #' group_rows function to format the row group label when
 #' `row_group_label_position` is `stack`.
@@ -57,6 +57,10 @@ collapse_rows <- function(kable_input, columns = NULL,
                           col_names = TRUE,
                           longtable_clean_cut = TRUE) {
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -84,11 +88,13 @@ collapse_rows <- function(kable_input, columns = NULL,
 
 collapse_rows_html <- function(kable_input, columns, valign, target) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
-
-  kable_dt <- rvest::html_table(xml2::read_html(as.character(kable_input)))[[1]]
-  kable_dt <- as.data.frame(kable_dt)
+  if (is.null(kable_tbody))
+    return(kable_input)
+  kable_dt <- read_table_data_from_xml(kable_xml)
   if (is.null(columns)) {
     columns <- seq(1, ncol(kable_dt))
   }
@@ -96,11 +102,6 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
     if (!target %in% columns) {
       stop("target has to be within the range of columns")
     }
-  }
-  if (!is.null(kable_attrs$header_above)) {
-    kable_dt_col_names <- unlist(kable_dt[kable_attrs$header_above, ])
-    kable_dt <- kable_dt[-(1:kable_attrs$header_above),]
-    names(kable_dt) <- kable_dt_col_names
   }
   collapse_matrix <- collapse_row_matrix(kable_dt, columns, target = target)
 
@@ -125,7 +126,7 @@ collapse_rows_html <- function(kable_input, columns, valign, target) {
     }
   }
 
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   kable_attrs$collapse_matrix <- collapse_matrix
   attributes(out) <- kable_attrs
   if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
@@ -208,9 +209,22 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
           new_kable_dt[i, columns[j]] <- ''
         }
       } else {
+        # We need to account for the cmidrules that
+        # are to the right of this column
+        num_rows <- collapse_matrix[i, j]
+        num_cols <- ncol(collapse_matrix) - j
+        if (all(num_rows > 0, num_cols > 0, valign != "\\[b\\]", latex_hline != "none")) {
+          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0)
+          if(valign == "") {
+            vmove <- 0.5 * vmove
+          }
+        } else {
+          vmove <- 0
+        }
         new_kable_dt[i, columns[j]] <- collapse_new_dt_item(
-          kable_dt[i, columns[j]], collapse_matrix[i, j], column_width,
-          align = column_align, valign = valign
+          x = kable_dt[i, columns[j]], span = collapse_matrix[i, j], width = column_width,
+          align = column_align, valign = valign,
+          vmove = vmove, latex_hline = latex_hline
         )
       }
     }
@@ -312,13 +326,35 @@ kable_dt_latex <- function(x, col_names) {
   data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
 }
 
-collapse_new_dt_item <- function(x, span, width = NULL, align, valign) {
+collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
+                                 vmove = 0, latex_hline) {
   if (span == 0) return("")
   if (span == 1) return(x)
   out <- paste0(
-    "\\\\multirow", valign, "\\{", -span, "\\}\\{",
+    "\\\\multirow", valign, "\\{",
+    ifelse(
+      any(
+        valign != "\\[t\\]",
+        !latex_hline %in% c("none", "major", "linespace")
+      ),
+      -span,
+      -(span - 1)
+    ), "\\}\\{",
     ifelse(is.null(width), "\\*", width),
-    "\\}\\{",
+    "\\}",
+    switch(
+      latex_hline,
+      "full" = paste0(
+        "[", span - 1,
+        "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"
+      ),
+      "custom" = paste0(
+        "[", vmove,
+        "\\\\dimexpr\\\\aboverulesep+\\\\belowrulesep+\\\\cmidrulewidth]"
+      ),
+      paste0("[\\\\normalbaselineskip]")
+    ),
+    "\\{",
     switch(align,
            "l" = "\\\\raggedright\\\\arraybackslash ",
            "c" = "\\\\centering\\\\arraybackslash ",

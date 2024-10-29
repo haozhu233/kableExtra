@@ -30,10 +30,10 @@
 #' The default setting will have the text span the entire length.
 #' @param bold A T/F value to control whether the text should be bolded.
 #' @param italic A T/F value to control whether the text should to be emphasized.
-#' @param hline_before A T/F value that addes a horizontal line before the group_row label.  Default
+#' @param hline_before A T/F value that adds a horizontal line before the group_row label.  Default
 #' value is False.
 #' @param hline_after A replicate of `hline.after` in xtable. It
-#' addes a hline after the row
+#' adds a hline after the row
 #' @param extra_latex_after Extra LaTeX text to be added after the row.
 #' @param indent A T/F value to control whether list items are indented.
 #' @param monospace T/F value to control whether the text of the
@@ -41,7 +41,7 @@
 #' @param underline T/F value to control whether the text of the
 #' selected row need to be underlined
 #' @param strikeout T/F value to control whether the text of the
-#' selected row need to be striked out.
+#' selected row need to be struck out.
 #' @param color A character string for column text color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string for column background color. Here please
@@ -73,6 +73,10 @@ group_rows <- function(kable_input, group_label = NULL,
                        color = NULL, background = NULL) {
 
   kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
             "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
@@ -139,9 +143,12 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
                             bold, italic, monospace, underline, strikeout,
                             color, background) {
   kable_attrs <- attributes(kable_input)
-  kable_xml <- read_kable_as_xml(kable_input)
+  important_nodes <- read_kable_as_xml(kable_input)
+  body_node <- important_nodes$body
+  kable_xml <- important_nodes$table
   kable_tbody <- xml_tpart(kable_xml, "tbody")
-
+  if (is.null(kable_tbody))
+    return(kable_input)
   if (escape) {
     group_label <- escape_html(group_label)
   }
@@ -210,7 +217,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   xml_add_sibling(starting_node, group_header_row, .where = "before")
 
   # add indentations to items
-  out <- as_kable_xml(kable_xml)
+  out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
   attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
   if (indent) {
