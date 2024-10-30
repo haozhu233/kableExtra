@@ -251,6 +251,12 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   file_no_ext <- tools::file_path_sans_ext(temp_tex_file)
 
   owd <- setwd(dirname(temp_tex_file))
+  on.exit(setwd(owd), add = TRUE)
+
+  if (!keep_tex) {
+    temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
+    on.exit(unlink(temp_file_delete), add = TRUE)
+  }
 
   if (!requireNamespace("tinytex", quietly = TRUE)) {
     system(paste0("xelatex -interaction=batchmode ",
@@ -259,10 +265,6 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   } else {
     tinytex::xelatex(gsub(pattern = " ", replacement = "\\ ",
                           temp_tex_file, fixed = TRUE))
-  }
-  if (!keep_tex) {
-    temp_file_delete <- paste0(file_no_ext, c(".tex", ".aux", ".log"))
-    unlink(temp_file_delete)
   }
 
   table_img_info <- NULL
@@ -284,8 +286,6 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
                         paste0(file_no_ext, ".", tools::file_ext(file)),
                         density = density)
   }
-
-  setwd(owd)
 
   out <- paste0(file_no_ext, ".", tools::file_ext(file))
   attr(out, "info") <- table_img_info
