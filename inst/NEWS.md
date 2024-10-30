@@ -1,4 +1,4 @@
-kableExtra 1.4.0.4
+kableExtra 1.4.0.5
 --------------------------------------------------------------------------------
 
 Bug Fixes:
@@ -12,6 +12,8 @@ line breaks when `extra_latex_after` was specified (#815).
 * Fixed a bug in `add_header_above()` which caused headers
 containing LaTeX code to be rendered incorrectly in LaTeX 
 documents (#836).
+* Fixed a bug in `save_kable_latex()` which left the user
+in the wrong directory if an error occurred (#865).
 
 
 kableExtra 1.4.0
