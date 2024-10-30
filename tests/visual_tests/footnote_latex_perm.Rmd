@@ -1,0 +1,58 @@
+---
+title: "footnote_perm"
+author: "Byron"
+date: "9/11/2024"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = !TRUE)
+devtools::load_all()
+# library(kableExtra)
+
+dat <- data.frame(
+  Col1 = LETTERS[rep(1:26, each = 2)],
+  Col2 = letters[rep(1:26, 2)],
+  n = 0:51
+)
+# "\\tnote{1}  is TPT only
+names(dat)[3] <- paste0(names(dat)[3], footnote_marker_number(1))
+```
+
+
+```{r permute, results='asis'}
+# Define new environment
+latex_opt <- c("basic", "repeat_header")  # test basic to show doesn't cause trouble
+is_bt <- c(FALSE, TRUE)
+is_tpt <- c(FALSE, TRUE)
+is_cont_at_btm <- c(FALSE, TRUE)  # only shows for booktabs
+is_every <- c(FALSE, TRUE)
+
+child_env <- new.env()
+for(i_latex_opt in seq_along(latex_opt)){
+  for(i_bt in seq_along(is_bt)){
+    for(i_tpt in seq_along(is_tpt)){
+      for(i_is_cont_at_btm in seq_along(is_cont_at_btm)){
+        for(i_every in seq_along(is_every)){
+          child_env$i_latex_opt <- i_latex_opt
+          child_env$i_bt <- i_bt          
+          child_env$i_tpt <- i_tpt
+          child_env$i_is_cont_at_btm <- i_is_cont_at_btm
+          child_env$i_every <- i_every          
+          
+          # knit the document and save the character output to an object
+          res <- knitr::knit_child(
+            "footnote_latex_perm_child.Rmd",
+            envir = child_env,
+            quiet = TRUE
+          )
+          
+          # Cat the object to make it render in your main document
+          cat(res, sep = "\n")
+        }
+      }
+    }
+  }
+}
+```
+
