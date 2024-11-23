@@ -42,8 +42,14 @@ magic_mirror_latex <- function(kable_input){
   # Tabular
   table_info$tabular <- ifelse(
     grepl("\\\\begin\\{tabular\\}", kable_input),
-    "tabular", "longtable"
+    "tabular",
+    ifelse(
+      grepl("\\\\begin\\{tabularx\\}", kable_input),
+      "tabularx",
+      "longtable"
+    )
   )
+
   # Booktabs
   table_info$booktabs <- grepl(toprule_regexp, kable_input)
   # Align
