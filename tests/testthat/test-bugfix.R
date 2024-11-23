@@ -1,3 +1,13 @@
+test_that("Issue #861:  pack_rows with tabularx", {
+  expect_snapshot(
+    kbl(mtcars, format="latex", tabular = "tabularx",
+        valign="{\\textwidth}") %>%
+      kableExtra::pack_rows("XXX", 1,2)
+
+  )
+}
+)
+
 test_that("Issue #836:  latex allowed in add_header_above", {
   expect_snapshot(
     kbl(mtcars[1:2, 1:2], col.names=NULL,
