@@ -38,6 +38,7 @@
 #' tooltip and popover.
 #' @param new_tab T/F for whether to open up the new link in new tab.
 #' @param extra_css Extra css text to be passed into the cell
+#' @param class Optional HTML class to apply to the cell
 #' @param escape T/F value showing whether special characters should be escaped.
 #' @param background_as_tile T/F value indicating if you want to have round
 #' cornered tile as background in HTML.
@@ -45,6 +46,10 @@
 #' when `background` provided, Default value is `TRUE`. If it's `TRUE`, the
 #' background only works in a table cell. If it's `FALSE`, it works outside of a
 #' table environment.
+#'
+#' @examples
+#' cell_spec("The Title", format = "html", class = "title")
+#' cell_spec("The Title", format = "latex", underline = TRUE)
 #'
 #' @export
 cell_spec <- function(x, format,
@@ -54,6 +59,7 @@ cell_spec <- function(x, format,
                       align = NULL, font_size = NULL, angle = NULL,
                       tooltip = NULL, popover = NULL, link = NULL,
                       new_tab = FALSE, extra_css = NULL,
+                      class = NULL,
                       escape = TRUE,
                       background_as_tile = TRUE,
                       latex_background_in_cell = TRUE) {
@@ -69,7 +75,7 @@ cell_spec <- function(x, format,
     return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
                           color, background, align, font_size, angle,
                           tooltip, popover, link, new_tab, extra_css,
-                          escape, background_as_tile))
+                          class, escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
     return(cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
@@ -80,7 +86,7 @@ cell_spec <- function(x, format,
 
 cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle,
-                           tooltip, popover, link, new_tab, extra_css,
+                           tooltip, popover, link, new_tab, extra_css, class,
                            escape, background_as_tile) {
   if (escape) x <- escape_html(x)
   cell_style <- NULL
@@ -107,6 +113,9 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
   if (!is.null(extra_css)) {
     cell_style <- paste0(cell_style, extra_css)
   }
+  if (!is.null(class)) {
+    class <- paste0(' class="', class, '" ')
+  }
   if (!is.null(align)) {
     cell_style <- paste0(cell_style, "text-align: ", align, ";")
   }
@@ -126,17 +135,23 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
     tooltip_n_popover <- NULL
   }
 
+  if (!all(grepl("^ *$", cell_style))) {
+    cell_style <- paste0('style="', cell_style, '" ')
+  } else {
+    cell_style <- NULL
+  }
+
   if (!is.null(link)) {
     if (new_tab) {
       target_blank = 'target="_blank" '
     } else {
       target_blank = NULL
     }
-    x <- paste0('<a href="', link, '" style="', cell_style, '" ', target_blank,
-                tooltip_n_popover, '>', x, '</a>')
+    x <- paste0('<a href="', link, '" ', cell_style, target_blank,
+                tooltip_n_popover, class, '>', x, '</a>')
   } else {
-    x <- paste0('<span style="', cell_style, '" ',
-                tooltip_n_popover, '>', x, '</span>')
+    x <- paste0('<span ', cell_style,
+                tooltip_n_popover, class, '>', x, '</span>')
   }
 
   # if (!is.null(link)) {

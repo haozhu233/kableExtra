@@ -1,10 +1,11 @@
 
-kableExtra 1.4.0.7
+kableExtra 1.4.0.8
 --------------------------------------------------------------------------------
 
 New Features:
 
 * Added `show_every_page` argument to `footnote()` (#867).
+* Added `class` argument to `cell_spec()` (#871).
 
 Bug Fixes:
 
