@@ -77,9 +77,8 @@
 #' @import htmltools
 #' @name kableExtra-package
 #' @aliases kableExtra
-#' @docType package
 #' @keywords package
-NULL
+"_PACKAGE"
 
 #' @export
 magrittr::`%>%`
