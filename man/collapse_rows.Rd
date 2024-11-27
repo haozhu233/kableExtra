@@ -34,8 +34,8 @@ Choose from \code{full}, \code{major}, \code{none}, \code{custom} and \code{line
 
 \item{row_group_label_position}{Option controlling positions of row group
 labels. Choose from \code{identity}, \code{stack}, or \code{first} -- the latter behaves
-like \code{identity} when \code{row_group_label_position} is \code{top} but without using
-the multirow package.}
+like \code{identity} when \code{valign} is \code{top} but without using the multirow
+package.}
 
 \item{custom_latex_hline}{Numeric column positions whose collapsed rows will
 be separated by hlines.}
