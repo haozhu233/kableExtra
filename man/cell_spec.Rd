@@ -23,6 +23,7 @@ cell_spec(
   link = NULL,
   new_tab = FALSE,
   extra_css = NULL,
+  class = NULL,
   escape = TRUE,
   background_as_tile = TRUE,
   latex_background_in_cell = TRUE
@@ -105,6 +106,8 @@ tooltip and popover.}
 
 \item{extra_css}{Extra css text to be passed into the cell}
 
+\item{class}{Optional HTML class to apply to the cell}
+
 \item{escape}{T/F value showing whether special characters should be escaped.}
 
 \item{background_as_tile}{T/F value indicating if you want to have round
@@ -117,4 +120,10 @@ table environment.}
 }
 \description{
 Specify Cell format before it gets into kable
+}
+\examples{
+message(cell_spec("The Title", format = "html", class = "title"))
+message(cell_spec("The Title", format = "html", underline = TRUE))
+message(cell_spec("The Title", format = "latex", underline = TRUE))
+
 }
