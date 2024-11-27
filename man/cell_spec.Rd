@@ -122,7 +122,8 @@ table environment.}
 Specify Cell format before it gets into kable
 }
 \examples{
-cell_spec("The Title", format = "html", class = "title")
-cell_spec("The Title", format = "latex", underline = TRUE)
+message(cell_spec("The Title", format = "html", class = "title"))
+message(cell_spec("The Title", format = "html", underline = TRUE))
+message(cell_spec("The Title", format = "latex", underline = TRUE))
 
 }

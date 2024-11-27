@@ -48,8 +48,9 @@
 #' table environment.
 #'
 #' @examples
-#' cell_spec("The Title", format = "html", class = "title")
-#' cell_spec("The Title", format = "latex", underline = TRUE)
+#' message(cell_spec("The Title", format = "html", class = "title"))
+#' message(cell_spec("The Title", format = "html", underline = TRUE))
+#' message(cell_spec("The Title", format = "latex", underline = TRUE))
 #'
 #' @export
 cell_spec <- function(x, format,
@@ -135,8 +136,12 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
     tooltip_n_popover <- NULL
   }
 
-  if (!all(grepl("^ *$", cell_style))) {
-    cell_style <- paste0('style="', cell_style, '" ')
+  # Clean up cell_style
+  cell_style <- sub("^ *", "", cell_style)
+  cell_style <- sub(" *$", "", cell_style)
+  if (!all(cell_style == "")) {
+    cell_style <- ifelse(cell_style == "", "",
+      paste0('style="', cell_style, '" '))
   } else {
     cell_style <- NULL
   }
