@@ -139,12 +139,9 @@ cell_spec_html <- function(x, bold, italic, monospace, underline, strikeout,
   # Clean up cell_style
   cell_style <- sub("^ *", "", cell_style)
   cell_style <- sub(" *$", "", cell_style)
-  if (!all(cell_style == "")) {
-    cell_style <- ifelse(cell_style == "", "",
+  cell_style <- ifelse(cell_style == "",
+      "",
       paste0('style="', cell_style, '" '))
-  } else {
-    cell_style <- NULL
-  }
 
   if (!is.null(link)) {
     if (new_tab) {
