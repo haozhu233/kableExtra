@@ -1,11 +1,13 @@
 
-kableExtra 1.4.0.8
+kableExtra 1.4.0.9
 --------------------------------------------------------------------------------
 
 New Features:
 
 * Added `show_every_page` argument to `footnote()` (#867).
 * Added `class` argument to `cell_spec()` (#871).
+* `add_header_above()` now supports specifying
+`line` as a vector (#700).
 
 Bug Fixes:
 
