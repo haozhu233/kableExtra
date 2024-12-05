@@ -37,7 +37,7 @@
 #' @param angle 0-360, degree that the text will rotate.
 #' @param escape A T/F value showing whether special characters should be
 #' escaped.
-#' @param line A T/F value to control whether a line will appear underneath the
+#' @param line A T/F value/vector to control whether a line will appear underneath the
 #' header
 #' @param line_sep A numeric value indicating how much the midlines should be
 #' separated by space. Default is 3.
@@ -50,7 +50,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' x <- knitr::kable(head(mtcars), "html")
+#' x <- kbl(head(mtcars), "html")
 #' # Add a row of header with 3 columns on the top of the table. The column
 #' # span for the 2nd and 3rd one are 5 & 6.
 #' add_header_above(x, c(" ", "Group 1" = 5, "Group 2" = 6))
@@ -327,8 +327,8 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   new_header_split <- pdfTable_new_header_generator(
     header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
     align, color, background, font_size, angle, line_sep,
-    border_left, border_right)
-  if (line) {
+    border_left, border_right, line)
+  if (any(line)) {
     new_header <- paste0(new_header_split[1], "\n", new_header_split[2])
   } else {
     new_header <- new_header_split[1]
@@ -359,7 +359,7 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
                                           bold, italic, monospace,
                                           underline, strikeout, align,
                                           color, background, font_size, angle,
-                                          line_sep, border_left, border_right) {
+                                          line_sep, border_left, border_right, line) {
   n <- nrow(header_df)
   bold <- ez_rep(bold, n)
   italic <- ez_rep(italic, n)
@@ -410,11 +410,11 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   )
 
   header_text <- paste(paste(header_items, collapse = " & "), "\\\\\\\\")
-  cline <- cline_gen(header_df, booktabs, line_sep)
+  cline <- cline_gen(header_df, booktabs, line_sep, line)
   return(c(header_text, cline))
 }
 
-cline_gen <- function(header_df, booktabs, line_sep) {
+cline_gen <- function(header_df, booktabs, line_sep, line) {
   cline_end <- cumsum(header_df$colspan)
   cline_start <- c(0, cline_end) + 1
   cline_start <- cline_start[-length(cline_start)]
@@ -423,8 +423,11 @@ cline_gen <- function(header_df, booktabs, line_sep) {
     "\\\\cline{",
     paste0("\\\\cmidrule(l{", line_sep, "pt}r{", line_sep, "pt}){"))
   cline <- paste0(cline_type, cline_start, "-", cline_end, "}")
-  cline <- cline[trimws(header_df$header) != ""]
-  cline <- paste(cline, collapse = " ")
+  line <- rep_len(line, length(cline))
+  keep <- trimws(header_df$header) != ""
+  cline <- cline[keep]
+  line <- line[keep]
+  cline <- paste(cline[line], collapse = " ")
   return(cline)
 }
 
