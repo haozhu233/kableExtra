@@ -4,19 +4,23 @@
 #' can have linebreaks in their table
 #'
 #' @param x A character vector
-#' @param align Choose from "l", "c" or "r".  Defaults to "l".
+#' @param align Alignment of the text
 #' @param double_escape Whether special character should be double escaped.
 #' Default is FALSE.
 #' @param linebreaker Symbol for linebreaks to replace. Default is `\n`.
+#' @details
+#' Not all `align` settings are supported, but
+#' simple ones such as `l`, `c`, `r` should be fine.
+#' More exotic ones like `p{3cm}` should work too,
+#' but may not if they are too complicated.
+#'
 #'
 #' @export
-linebreak <- function(x, align = c("l", "c", "r"), double_escape = F,
+linebreak <- function(x, align = "l", double_escape = F,
                       linebreaker = "\n") {
   if (is.numeric(x) | is.logical(x)) return(x)
   x <- as.character(x)
-  if (missing(align))
-    align <- "l"
-  align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
+
   if (double_escape) {
     ifelse(str_detect(x, linebreaker),
            paste0("\\\\makecell[", align, "]{",

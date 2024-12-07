@@ -4,12 +4,12 @@
 \alias{linebreak}
 \title{Make linebreak in LaTeX Table cells}
 \usage{
-linebreak(x, align = c("l", "c", "r"), double_escape = F, linebreaker = "\\n")
+linebreak(x, align = "l", double_escape = F, linebreaker = "\\n")
 }
 \arguments{
 \item{x}{A character vector}
 
-\item{align}{Choose from "l", "c" or "r".  Defaults to "l".}
+\item{align}{Alignment of the text}
 
 \item{double_escape}{Whether special character should be double escaped.
 Default is FALSE.}
@@ -19,4 +19,10 @@ Default is FALSE.}
 \description{
 This function generates LaTeX code of \code{makecell} so that users
 can have linebreaks in their table
+}
+\details{
+Not all \code{align} settings are supported, but
+simple ones such as \code{l}, \code{c}, \code{r} should be fine.
+More exotic ones like \verb{p\{3cm\}} should work too,
+but may not if they are too complicated.
 }

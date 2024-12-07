@@ -1,5 +1,5 @@
 
-kableExtra 1.4.0.10
+kableExtra 1.4.0.11
 --------------------------------------------------------------------------------
 
 New Features:
@@ -8,6 +8,8 @@ New Features:
 * Added `class` argument to `cell_spec()` (#871).
 * `add_header_above()` now supports specifying
 `line` as a vector (#700).
+* `add_header_above()` and `linebreak()` now accept more exotic 
+`align` specifications, e.g. `p{2cm}`.
 
 Bug Fixes:
 

@@ -23,8 +23,11 @@
 #' @param strikeout A T/F value to control whether the text of the selected row
 #' need to be struck out.
 #' @param align A character string for cell alignment. For HTML, possible values could
-#' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`
-#' while for LaTeX, you can only choose from `l`, `c` & `r`.
+#' be `l`, `c`, `r` plus `left`, `center`, `right`, `justify`, `initial` and `inherit`.  All
+#' legal values should be accepted for LaTeX, e.g.
+#' `l`, `c`, `r`, `p{2cm}`, but the more exotic ones
+#' may cause problems.  If so, please post a bug
+#' report!
 #' @param color A character string/vector for text color. Here please pay
 #' attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string/vector for background color. Here please
@@ -320,8 +323,6 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
     # because we need the regexp pattern.
     header$header <- gsub("\\\\", "\\\\\\\\", header$header)
   }
-
-  align <- vapply(align, match.arg, 'a', choices = c("l", "c", "r"))
 
   hline_type <- switch(table_info$booktabs + 1, "(\\\\hline)", toprule_regexp)
   new_header_split <- pdfTable_new_header_generator(
