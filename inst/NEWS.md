@@ -1,5 +1,5 @@
 
-kableExtra 1.4.0.9
+kableExtra 1.4.0.10
 --------------------------------------------------------------------------------
 
 New Features:
@@ -24,6 +24,8 @@ documents (#836).
 in the wrong directory if an error occurred (#865).
 * Fixed a bug in `magic_mirror_latex()` which
 stopped it from working with `tabularx` tables (#861).
+* Complex alignment options like `p{1cm}` were not
+handled properly by `kable_styling()` (#876).
 
 
 kableExtra 1.4.0

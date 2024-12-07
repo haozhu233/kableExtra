@@ -52,15 +52,21 @@ magic_mirror_latex <- function(kable_input){
 
   # Booktabs
   table_info$booktabs <- grepl(toprule_regexp, kable_input)
-  # Align
-  table_info$align <- gsub("\\|", "", str_match(
-    kable_input, paste0("\\\\begin\\{",
-                        table_info$tabular,"\\}.*\\{(.*?)\\}"))[2])
-  table_info$align_vector <- unlist(strsplit(table_info$align, ""))
+  # Alignment is a sequence with each element being a single letter, or a
+  # single letter followed by a measurement in braces, e.g. "p{1cm}"
+  align1 <- "[[:alpha:]](?:\\{[^{}]*\\})?\\|*"
+  align_pattern <- paste0("(?:", align1, ")*")
+  align <- str_match(kable_input,
+                     paste0("\\\\begin\\{",
+                        table_info$tabular,
+                        "\\}[^{]*(?:\\{[^{]*\\})?\\{(",
+                        align_pattern, ")\\}"))[1,2]
+  table_info$align <- gsub("\\|", "", align)
+  table_info$align_vector <- regmatches(table_info$align, gregexpr("[[:alpha:]](\\{[^{}]*\\})?", table_info$align))[[1]]
   table_info$align_vector_origin <- table_info$align_vector
   # valign
   table_info$valign <- gsub("\\|", "", str_match(
-    kable_input, paste0("\\\\begin\\{", table_info$tabular,"\\}(.*)\\{.*?\\}"))[2])
+    kable_input, paste0("\\\\begin\\{", table_info$tabular,"\\}([^{]*)\\{.*?\\}"))[2])
   table_info$valign2 <- sub("\\[", "\\\\[", table_info$valign)
   table_info$valign2 <- sub("\\]", "\\\\]", table_info$valign2)
   table_info$valign3 <- sub("\\[", "", table_info$valign)
@@ -69,7 +75,7 @@ magic_mirror_latex <- function(kable_input){
                                      table_info$valign2)
   table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
   # N of columns
-  table_info$ncol <- nchar(table_info$align)
+  table_info$ncol <- length(table_info$align_vector)
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
     caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]

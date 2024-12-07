@@ -1,3 +1,23 @@
+# Issue #876: complex alignment
+
+    Code
+      kbl(x = mtcars[1:2, 1:2], format = "latex", align = rep("p{2cm}", 2)) %>%
+        kable_styling(latex_options = "scale_down")
+    Output
+      \begin{table}
+      \centering
+      \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+      \begin{tabular}[t]{l|p{2cm}|p{2cm}}
+      \hline
+        & mpg & cyl\\
+      \hline
+      Mazda RX4 & 21 & 6\\
+      \hline
+      Mazda RX4 Wag & 21 & 6\\
+      \hline
+      \end{tabular}}
+      \end{table}
+
 # Issue #861:  pack_rows with tabularx
 
     Code
