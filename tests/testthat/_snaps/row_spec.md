@@ -94,7 +94,7 @@
       1 & 4\\
       2 & 5\\
       3 & 6\\
-      \midrule\\
+      \midrule
       4 & 7\\
       \bottomrule
       \end{tabular}
@@ -147,7 +147,7 @@
       \begin{tabular}[t]{>{\centering\arraybackslash}p{5em}cc}
       \toprule
       C2 & C3 & C4\\
-      \rowcolor{gray!6}\\
+      \rowcolor{gray!6}
       \midrule
        & 1 & 0\\
       
@@ -167,25 +167,25 @@
        & 6 & 0\\
       
       \rowcolor{gray!6}
-      \multirow{-7}{5em}{\centering\arraybackslash \textbf{c}} & 7 & 1\\
+      \multirow{-7}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{c}} & 7 & 1\\
       
        & 8 & 0\\
       
        & 9 & 1\\
       
-      \multirow{-3}{5em}{\centering\arraybackslash \textbf{d}} & 10 & 0\\
+      \multirow{-3}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{d}} & 10 & 0\\
       
       \rowcolor{gray!6}
        & 11 & 1\\
       
       \rowcolor{gray!6}
-      \multirow{-2}{5em}{\centering\arraybackslash \textbf{c}} & 12 & 1\\
+      \multirow{-2}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{c}} & 12 & 1\\
       
        & 13 & 0\\
       
        & 14 & 0\\
       
-      \multirow{-3}{5em}{\centering\arraybackslash \textbf{d}} & 15 & 1\\
+      \multirow{-3}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{d}} & 15 & 1\\
       \bottomrule
       \end{tabular}
 

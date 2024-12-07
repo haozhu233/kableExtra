@@ -1,3 +1,13 @@
+test_that("Issue #876: complex alignment", {
+  expect_snapshot(
+    kbl(x = mtcars[1:2,1:2],
+        format = "latex",
+        align = rep("p{2cm}",2)) %>%
+      kable_styling(latex_options = "scale_down")
+  )
+})
+
+
 test_that("Issue #861:  pack_rows with tabularx", {
   expect_snapshot(
     kbl(mtcars, format="latex", tabular = "tabularx",

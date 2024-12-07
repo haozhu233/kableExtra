@@ -58,7 +58,9 @@ magic_mirror_latex <- function(kable_input){
   align_pattern <- paste0("(?:", align1, ")*")
   align <- str_match(kable_input,
                      paste0("\\\\begin\\{",
-                        table_info$tabular,"\\}[^{]*\\{(", align_pattern, ")\\}"))[1,2]
+                        table_info$tabular,
+                        "\\}[^{]*(?:\\{[^{]*\\})?\\{(",
+                        align_pattern, ")\\}"))[1,2]
   table_info$align <- gsub("\\|", "", align)
   table_info$align_vector <- regmatches(table_info$align, gregexpr("[[:alpha:]](\\{[^{}]*\\})?", table_info$align))[[1]]
   table_info$align_vector_origin <- table_info$align_vector
@@ -73,7 +75,7 @@ magic_mirror_latex <- function(kable_input){
                                      table_info$valign2)
   table_info$end_tabular <- paste0("\\\\end\\{", table_info$tabular, "\\}")
   # N of columns
-  table_info$ncol <- nchar(table_info$align)
+  table_info$ncol <- length(table_info$align_vector)
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
     caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]
