@@ -53,8 +53,11 @@ need to be underlined}
 need to be struck out.}
 
 \item{align}{A character string for cell alignment. For HTML, possible values could
-be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
-while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
+be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}.  All
+legal values should be accepted for LaTeX, e.g.
+\code{l}, \code{c}, \code{r}, \verb{p\{2cm\}}, but the more exotic ones
+may cause problems.  If so, please post a bug
+report!}
 
 \item{color}{A character string/vector for text color. Here please pay
 attention to the differences in color codes between HTML and LaTeX.}
