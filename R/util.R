@@ -89,6 +89,13 @@ latex_row_cells <- function(x) {
   stringr::str_split(x, " \\& ")
 }
 
+latex_row_cells2 <- function(x) {
+  if (!inherits(x, "LaTeX2"))
+    x <- parseLatex(x)
+  result <- parseLatex::split_latex(x, c(find_char(x, "&"), find_macro(x, "\\\\")))
+  result[-length(result)]
+}
+
 regex_escape <- function(x, double_backslash = FALSE) {
   if (double_backslash) {
     x <- gsub("\\\\", "\\\\\\\\", x)
@@ -290,6 +297,20 @@ clear_color_latex <- function(x, background = F) {
   x <- stringr::str_remove(x, regex_1)
   x <- stringr::str_remove(x, regex_2)
   return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
+}
+
+clear_color_latex2 <- function(x, background = F) {
+  term <- if (background) "\\cellcolor" else "\\textcolor"
+  locs <- find_macro(x, term)
+  del <- integer()
+  for (loc in locs) {
+    del <- c(del, loc, find_bracket_options(x, start = loc + 1),
+                  find_brace_options(x, start = loc + 1))
+  }
+  if (length(del))
+    drop_items(x, del)
+  else
+    x
 }
 
 sim_double_escape <- function(x) {

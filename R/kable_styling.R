@@ -175,6 +175,89 @@ kable_styling <- function(kable_input,
   }
 }
 
+kable_styling2 <- function(kable_input,
+                          bootstrap_options = "basic",
+                          latex_options = "basic",
+                          full_width = NULL,
+                          position = "center",
+                          font_size = NULL,
+                          row_label_position = "l",
+                          repeat_header_text = "\\textit{(continued)}",
+                          repeat_header_method = c("append", "replace"),
+                          repeat_header_continued = FALSE,
+                          stripe_color = "gray!10",
+                          stripe_index = NULL,
+                          latex_table_env = NULL,
+                          protect_latex = TRUE,
+                          table.envir = "table",
+                          fixed_thead = FALSE,
+                          htmltable_class = NULL,
+                          html_font = NULL,
+                          wraptable_width = '0pt') {
+
+  if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
+    bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
+  }
+  if (length(latex_options) == 1 && latex_options == "basic") {
+    latex_options <- getOption("kable_styling_latex_options", "basic")
+  }
+  if (position == "center") {
+    position <- getOption("kable_styling_position", "center")
+  }
+  position <- match.arg(position,
+                        c("center", "left", "right", "float_left", "float_right"))
+  if (is.null(font_size)) {
+    font_size <- getOption("kable_styling_font_size", NULL)
+  }
+
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  if (kable_format == "html") {
+    if (is.null(full_width)) {
+      full_width <- getOption("kable_styling_full_width", T)
+    }
+    return(htmlTable_styling(kable_input,
+                             bootstrap_options = bootstrap_options,
+                             full_width = full_width,
+                             position = position,
+                             font_size = font_size,
+                             protect_latex = protect_latex,
+                             fixed_thead = fixed_thead,
+                             htmltable_class = htmltable_class,
+                             html_font = html_font))
+  }
+  if (kable_format == "latex") {
+    if (is.null(full_width)) {
+      full_width <- getOption("kable_styling_full_width", F)
+    }
+    repeat_header_method <- match.arg(repeat_header_method)
+    return(pdfTable_styling2(kable_input,
+                            latex_options = latex_options,
+                            full_width = full_width,
+                            position = position,
+                            font_size = font_size,
+                            row_label_position = row_label_position,
+                            repeat_header_text = repeat_header_text,
+                            repeat_header_method = repeat_header_method,
+                            repeat_header_continued = repeat_header_continued,
+                            stripe_color = stripe_color,
+                            stripe_index = stripe_index,
+                            latex_table_env = latex_table_env,
+                            table.envir = table.envir,
+                            wraptable_width = wraptable_width))
+  }
+}
+
 extract_latex_from_kable <- function(kable_input) {
   kable_attrs <- attributes(kable_input)
   regexp <- paste0("(?<!\\e)",   # Not escaped
@@ -420,6 +503,105 @@ pdfTable_styling <- function(kable_input,
   return(out)
 }
 
+pdfTable_styling2 <- function(kable_input,
+                             latex_options = "basic",
+                             full_width = FALSE,
+                             position,
+                             font_size,
+                             row_label_position,
+                             repeat_header_text,
+                             repeat_header_method,
+                             repeat_header_continued,
+                             stripe_color,
+                             stripe_index,
+                             latex_table_env,
+                             table.envir,
+                             wraptable_width) {
+
+  latex_options <- match.arg(
+    latex_options,
+    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
+    several.ok = TRUE
+  )
+
+  out <- NULL
+  out <- solve_enc(kable_input)
+
+  table_info <- magic_mirror2(kable_input)
+
+  if ("striped" %in% latex_options) {
+    out <- styling_latex_striped2(out, table_info, stripe_color, stripe_index)
+    table_info <- magic_mirror2(out)
+  }
+
+  # hold_position is only meaningful in a table environment
+  if ("hold_position" %in% latex_options & table_info$table_env) {
+    out <- styling_latex_hold_position(out)
+  }
+
+  # HOLD_position is only meaningful in a table environment
+  if ("HOLD_position" %in% latex_options & table_info$table_env) {
+    out <- styling_latex_HOLD_position(out)
+  }
+
+  if ("scale_down" %in% latex_options) {
+    out <- styling_latex_scale(out, table_info, "down")
+  }
+
+  if ("scale_up" %in% latex_options) {
+    out <- styling_latex_scale(out, table_info, "up")
+  }
+
+  if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
+    out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
+                                       repeat_header_method, repeat_header_continued)
+    table_info$repeat_header_latex <- TRUE
+  }
+
+  if (full_width) {
+    latex_table_env <- ifelse(table_info$tabular == "longtable",
+                              "longtabu", "tabu")
+    full_width_return <- styling_latex_full_width(out, table_info)
+    out <- full_width_return[[1]]
+    table_info$align_vector <- full_width_return[[2]]
+  }
+
+  if (!is.null(font_size)) {
+    out <- styling_latex_font_size(out, table_info, font_size)
+  }
+
+  if (!is.null(latex_table_env)) {
+    out <- styling_latex_table_env(out, table_info$tabular, latex_table_env)
+    table_info$tabular <- latex_table_env
+    table_info$begin_tabular <- sub("tabular", latex_table_env,
+                                    table_info$begin_tabular)
+    table_info$end_tabular <- sub("tabular", latex_table_env,
+                                  table_info$end_tabular)
+  }
+
+  out <- styling_latex_position(out, table_info, position, latex_options,
+                                table.envir, wraptable_width)
+
+  out <- structure(out, format = "latex", class = "knitr_kable")
+  attr(out, "kable_meta") <- table_info
+
+  if (row_label_position != "l") {
+    if (table_info$tabular == "longtable") {
+      out <- sub("\\\\begin\\{longtable\\}\\{l",
+                 paste0("\\\\begin\\{longtable\\}\\{",
+                        row_label_position),
+                 out)
+    } else {
+      out <- sub("\\\\begin\\{tabular\\}\\{l",
+                 paste0("\\\\begin\\{tabular\\}\\{",
+                        row_label_position),
+                 out)
+    }
+  }
+
+  return(out)
+}
+
 styling_latex_striped <- function(x, table_info, color, stripe_index) {
   if (is.null(stripe_index)) {
     stripe_index <- seq(
@@ -429,6 +611,17 @@ styling_latex_striped <- function(x, table_info, color, stripe_index) {
       2)
   }
   row_spec(x, stripe_index, background = color)
+}
+
+styling_latex_striped2 <- function(x, table_info, color, stripe_index) {
+  if (is.null(stripe_index)) {
+    stripe_index <- seq(
+      1,
+      # Issue #613
+      max(1, table_info$nrow - table_info$position_offset),
+      2)
+  }
+  row_spec2(x, stripe_index, background = color)
 }
 
 styling_latex_hold_position <- function(x) {

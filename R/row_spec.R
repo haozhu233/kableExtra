@@ -75,6 +75,40 @@ row_spec <- function(kable_input, row,
   }
 }
 
+row_spec2 <- function(kable_input, row,
+                     bold = FALSE, italic = FALSE, monospace = FALSE,
+                     underline = FALSE, strikeout = FALSE,
+                     color = NULL, background = NULL, align = NULL,
+                     font_size = NULL, angle = NULL, extra_css = NULL,
+                     hline_after = FALSE, extra_latex_after = NULL) {
+  if (!is.numeric(row)) {
+    stop("row must be numeric. ")
+  }
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  if (kable_format == "html") {
+    return(row_spec_html(kable_input, row, bold, italic, monospace,
+                         underline, strikeout,
+                         color, background, align, font_size, angle,
+                         extra_css))
+  }
+  if (kable_format == "latex") {
+    return(row_spec_latex2(kable_input, row, bold, italic, monospace,
+                          underline, strikeout,
+                          color, background, align, font_size, angle,
+                          hline_after, extra_latex_after))
+  }
+}
+
 row_spec_html <- function(kable_input, row, bold, italic, monospace,
                           underline, strikeout,
                           color, background, align, font_size, angle,
@@ -247,6 +281,42 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
+row_spec_latex2 <- function(kable_input, row, bold, italic, monospace,
+                           underline, strikeout,
+                           color, background, align, font_size, angle,
+                           hline_after, extra_latex_after) {
+  table_info <- magic_mirror2(kable_input)
+  out <- solve_enc(kable_input)
+
+  if (table_info$duplicated_rows) {
+    dup_fx_out <- fix_duplicated_rows_latex2(out, table_info)
+    out <- dup_fx_out[[1]]
+    table_info <- dup_fx_out[[2]]
+  }
+
+  row <- row + table_info$position_offset
+  table <- get_item(table_info$parsedInput,
+                    table_info$tablePath)
+
+  for (i in row) {
+    target_row <- parseLatex(table_info$contents[i])
+    new_row <- latex_new_row_builder2(target_row, table_info,
+                                     bold, italic, monospace,
+                                     underline, strikeout,
+                                     color, background, align, font_size, angle,
+                                     hline_after, extra_latex_after)
+
+    tableRow(table, i) <- new_row
+    table_info$contents[i] <- deparseLatex(new_row)
+  }
+  result <- table_info$parsedInput <- set_item(table_info$parsedInput,
+           table_info$tablePath,
+           table)
+  out <- structure(deparseLatex(result), format = "latex", class = "knitr_kable")
+  attr(out, "kable_meta") <- table_info
+  return(out)
+}
+
 latex_new_row_builder <- function(target_row, table_info,
                                   bold, italic, monospace,
                                   underline, strikeout,
@@ -356,4 +426,112 @@ latex_new_row_builder <- function(target_row, table_info,
   }
 }
 
+latex_new_row_builder2 <- function(target_row, table_info,
+                                  bold, italic, monospace,
+                                  underline, strikeout,
+                                  color, background, align, font_size, angle,
+                                  hline_after, extra_latex_after) {
+  new_row <- latex_row_cells2(target_row)
+  if (bold) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\textbf", new_block(x))
+    })
+  }
+  if (italic) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\em", new_block(x))
+    })
+  }
+  if (monospace) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\ttfamily", new_block(x))
+    })
+  }
+  if (underline) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\underline", new_block(x))
+    })
+  }
+  if (strikeout) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\sout", new_block(x))
+    })
+  }
+  if (!is.null(color)) {
+    if (table_info$tabular == "tabu") {
+      warning("Setting full_width = TRUE will turn the table into a tabu ",
+              "environment where colors are not really easily configurable ",
+              "with this package. Please consider turn off full_width.")
+    }
+    new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex2(x)
+      latex2("\\textcolor", latex_color2(color), new_block(x))
+    })
+  }
+  if (!is.null(background)) {
+    if (table_info$tabular == "tabu") {
+      warning("Setting full_width = TRUE will turn the table into a tabu ",
+              "environment where colors are not really easily configable ",
+              "with this package. Please consider turn off full_width.")
+    }
+    if (length(background) > 1)
+      stop("Oops, assumed only one color")
+    new_row <- lapply(new_row, function(x) {
+      x <- clear_color_latex2(x, background = TRUE)
+      latex2("\\cellcolor", latex_color2(background)[[1]], new_block(x))
+    })
+  }
+  if (!is.null(font_size)) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\begingroup\\fontsize",
+                new_block(font_size),
+                new_block(as.numeric(font_size) + 2),
+                "\\selectfont", x, "\\endgroup")
+    })
+  }
+  if (!is.null(align)) {
+    if (!is.null(table_info$column_width)) {
+      p_align <- switch(align,
+                        "l" = "\\raggedright\\arraybackslash",
+                        "c" = "\\centering\\arraybackslash",
+                        "r" = "\\raggedleft\\arraybackslash")
+      align <- rep(align, table_info$ncol)
+      stop("this one is not finished yet...")
+      p_cols <- as.numeric(sub("column_", "", names(table_info$column_width)))
+      for (i in 1:length(p_cols)) {
+        align[p_cols[i]] <- paste0("\\>\\{", p_align, "\\}p\\{",
+                                   table_info$column_width[[i]], "\\}")
+      }
+    }
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\multicolumn{1}", new_block(align), new_block(x))
+    })
+  }
 
+  if (!is.null(angle)) {
+    new_row <- lapply(new_row, function(x) {
+      latex2("\\rotatebox", new_block(angle), new_block(x))
+    })
+  }
+
+  new_row <- vector_to_row(new_row, linebreak = FALSE)
+
+  if (!hline_after & is.null(extra_latex_after)) {
+    return(new_row)
+  } else {
+    latex_after <- latex2("\\\\")
+    if (hline_after) {
+      if (table_info$booktabs) {
+        latex_after <- latex2(latex_after, "\n\\midrule")
+      } else {
+        latex_after <- latex2(latex_after, "\n\\hline")
+      }
+    }
+    if (!is.null(extra_latex_after)) {
+      latex_after <- latex2(latex_after, "\n",
+                            extra_latex_after)
+
+    }
+    return(c(new_row, latex_after))
+  }
+}

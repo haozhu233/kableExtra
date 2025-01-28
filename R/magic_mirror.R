@@ -5,6 +5,7 @@
 #' @param kable_input The output of kable
 #'
 #' @examples magic_mirror(knitr::kable(head(mtcars), "html"))
+#' @import parseLatex
 #' @export
 
 magic_mirror <- function(kable_input){
@@ -23,6 +24,31 @@ magic_mirror <- function(kable_input){
     # happen.
     if (kable_format == "latex") {
       table_info <- magic_mirror_latex(kable_input)
+      if (table_info$table_env && !out$table_env) {
+        out$table_env <- table_info$table_env
+      }
+    }
+    return(out)
+  }
+  return(table_info)
+}
+
+magic_mirror2 <- function(kable_input){
+  kable_format <- attr(kable_input, "format")
+  if (kable_format == "latex") {
+    table_info <- magic_mirror_latex2(kable_input)
+  }
+  if (kable_format == "html") {
+    table_info <- magic_mirror_html(kable_input)
+  }
+  if ("kable_meta" %in% names(attributes(kable_input))) {
+    out <- attr(kable_input, "kable_meta")
+    # if we return `kable_meta` immediately, `kable_styling` will use the
+    # original `table_env` value. So if we call `kable_styling` twice on the
+    # same object, it will nest a table within a table. Make sure this does not
+    # happen.
+    if (kable_format == "latex") {
+      table_info <- magic_mirror_latex2(kable_input)
       if (table_info$table_env && !out$table_env) {
         out$table_env <- table_info$table_env
       }
@@ -123,6 +149,80 @@ magic_mirror_latex <- function(kable_input){
   table_info$table_env <- (!is.na(table_info$caption) &
                            table_info$tabular != "longtable") ||
                           grepl("\\\\begin\\{table\\}", kable_input)
+
+  return(table_info)
+}
+
+magic_mirror_latex2 <- function(kable_input){
+  table_info <- list(tabular = NULL, booktabs = FALSE, align = NULL,
+                     valign = NULL, ncol = NULL, nrow = NULL, colnames = NULL,
+                     rownames = NULL, caption = NULL, caption.short = NULL,
+                     contents = NULL,
+                     centering = FALSE, table_env = FALSE,
+                     parsedInput = NULL,
+                     tablePath = NULL,
+                     parsedTable = NULL)
+  parsed <- parseLatex(kable_input)
+  table_info$parsedInput <- parsed
+  tablepath <- path_to(parsed, is_fn = is_env,
+                       envtypes = c("tabular", "tabularx", "longtable"))
+  table_info$tablePath <- tablepath
+  table <- parsed[[tablepath]]
+
+  # Tabular
+  table_info$tabular <- envName(table)
+
+  # Booktabs
+  table_info$booktabs <- length(path_to(table, is_fn = is_macro, "\\toprule")) > 0
+
+  # Alignment is a sequence with each element being a single letter, or a
+  # single letter followed by a measurement in braces, e.g. "p{1cm}"
+  align <- get_contents(columnOptions(table))
+  align <- drop_items(align, find_char(align, "|"))
+  table_info$align <- deparseLatex(align)
+
+  # valign
+  table_info$valign <- deparseLatex(posOption(table))
+
+  # N of columns
+  table_info$ncol <- tableNcol(table)
+
+  # Caption
+  path <- path_to(parsed, is_macro, "\\caption")
+  if (length(path)) {
+    container <- get_container(parsed, path)
+    which <- get_which(path)
+    table_info$caption.short <- bracket_options(container, start = which + 1)
+    table_info$caption <- brace_options(container, start = which + 1)
+  }
+
+  table_info$caption <- deparseLatex(get_contents(table_info$caption))
+  if (!length(table_info$caption.short)) table_info["caption.short"] <- list(NULL)
+
+  table_info$contents <- sapply(seq_len(tableNrow(table)),
+                                function(i) deparseLatex(tableRow(table, i)))
+
+  if (!is.null(attr(kable_input, "n_head"))) {
+    n_head <- attr(kable_input, "n_head")
+    table_info$new_header_row <- table_info$contents[seq(n_head - 1, 1)]
+    table_info$contents <- table_info$contents[-seq(1, n_head - 1)]
+    table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)
+    table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
+  }
+  table_info$nrow <- tableNrow(table)
+  table_info$duplicated_rows <- (sum(duplicated(table_info$contents)) != 0)
+  # Column names
+  if (table_info$booktabs & !grepl(midrule_regexp, kable_input)) {
+    table_info$colnames <- NULL
+    table_info$position_offset <- 0
+  } else {
+    table_info$colnames <- str_split(table_info$contents[1], " \\& ")[[1]]
+    table_info$position_offset <- 1
+  }
+  # Row names
+  table_info$rownames <- str_extract(table_info$contents, "^[^ &]*")
+
+  table_info$centering <- find_macro(parsed, "\\centering")
 
   return(table_info)
 }
