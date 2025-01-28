@@ -46,7 +46,8 @@ Imports:
     tools,
     digest,
     graphics,
-    svglite
+    svglite,
+    parseLatex
 Suggests:
     testthat,
     magick,
@@ -60,3 +61,4 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 Language: en-US
+Remotes: dmurdoch/parseLatex
