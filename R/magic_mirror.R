@@ -224,6 +224,8 @@ magic_mirror_latex2 <- function(kable_input){
 
   table_info$centering <- find_macro(parsed, "\\centering")
 
+  table_info$table_env <- length(find_env(parsed, envtypes = "table")) > 0
+
   return(table_info)
 }
 

@@ -175,6 +175,7 @@ kable_styling <- function(kable_input,
   }
 }
 
+#' @export
 kable_styling2 <- function(kable_input,
                           bootstrap_options = "basic",
                           latex_options = "basic",
@@ -259,6 +260,7 @@ kable_styling2 <- function(kable_input,
 }
 
 extract_latex_from_kable <- function(kable_input) {
+  stop("Not parseLatex compatible")
   kable_attrs <- attributes(kable_input)
   regexp <- paste0("(?<!\\e)",   # Not escaped
                    "([$]{1}(?![ ])[^$]+(?<![$\\\\ ])[$]{1}", # $...$
@@ -277,6 +279,7 @@ extract_latex_from_kable <- function(kable_input) {
 }
 
 replace_latex_in_kable <- function(kable_input, latex) {
+  stop("Not parseLatex compatible")
   kable_attrs <- attributes(kable_input)
   for (n in names(latex)) {
     kable_input <- str_replace_all(kable_input, fixed(n), latex[n])
@@ -541,19 +544,19 @@ pdfTable_styling2 <- function(kable_input,
 
   # HOLD_position is only meaningful in a table environment
   if ("HOLD_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_HOLD_position(out)
+    out <- styling_latex_HOLD_position2(out)
   }
 
   if ("scale_down" %in% latex_options) {
-    out <- styling_latex_scale(out, table_info, "down")
+    out <- styling_latex_scale2(out, table_info, "down")
   }
 
   if ("scale_up" %in% latex_options) {
-    out <- styling_latex_scale(out, table_info, "up")
+    out <- styling_latex_scale2(out, table_info, "up")
   }
 
   if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
-    out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
+    out <- styling_latex_repeat_header2(out, table_info, repeat_header_text,
                                        repeat_header_method, repeat_header_continued)
     table_info$repeat_header_latex <- TRUE
   }
@@ -579,13 +582,14 @@ pdfTable_styling2 <- function(kable_input,
                                   table_info$end_tabular)
   }
 
-  out <- styling_latex_position(out, table_info, position, latex_options,
+  out <- styling_latex_position2(out, table_info, position, latex_options,
                                 table.envir, wraptable_width)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info
 
   if (row_label_position != "l") {
+    stop("not parseLatex compatible")
     if (table_info$tabular == "longtable") {
       out <- sub("\\\\begin\\{longtable\\}\\{l",
                  paste0("\\\\begin\\{longtable\\}\\{",
@@ -625,6 +629,7 @@ styling_latex_striped2 <- function(x, table_info, color, stripe_index) {
 }
 
 styling_latex_hold_position <- function(x) {
+  stop("Not parseLatex compatible")
   if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
     str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[!h]")
   } else {
@@ -640,7 +645,21 @@ styling_latex_HOLD_position <- function(x) {
   }
 }
 
+styling_latex_HOLD_position2 <- function(x) {
+
+  table_info <- magic_mirror2(x)
+  tablepath <- path_to(table_info$parsedInput,
+                    is_env, envtype = "table")
+  contents <- get_contents(get_item(table_info$parsedInput, tablepath))
+  bracket_options(contents) <- "[H]"
+  range <- LaTeX2range(tablepath, NULL)
+  table_info$parsedInput <- set_range(table_info$parsedInput, range, contents)
+  structure(deparseLatex(table_info$parsedInput),
+            kable_meta = table_info)
+}
+
 styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
+  stop("Not parseLatex compatible")
   # You cannot put longtable in a resizebox
   # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
   if (table_info$tabular == "longtable") {
@@ -663,6 +682,7 @@ styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
 styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
                                         repeat_header_method,
                                         repeat_header_continued) {
+  stop("Not parseLatex compatible")
   x <- str_split(x, "\n")[[1]]
   # These two defs won't be used, but make it clear
   # the rules are defined
@@ -737,6 +757,7 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 }
 
 styling_latex_full_width <- function(x, table_info) {
+  stop("Not parseLatex compatible")
   col_align <- as.character(factor(
     table_info$align_vector, c("c", "l", "r"),
     c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")
@@ -769,8 +790,26 @@ styling_latex_position <- function(x, table_info, position, latex_options,
   )
 }
 
+styling_latex_position2 <- function(x, table_info, position, latex_options,
+                                   table.envir, wraptable_position) {
+  hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
+  if (length(hold_position) == 0) hold_position <- ""
+  switch(
+    position,
+    center = styling_latex_position_center2(x, table_info, hold_position,
+                                           table.envir),
+    left = styling_latex_position_left2(x, table_info),
+    right = styling_latex_position_right2(x, table_info, hold_position,
+                                         table.envir),
+    float_left = styling_latex_position_float2(x, table_info, "l", table.envir,
+                                              wraptable_position),
+    float_right = styling_latex_position_float2(x, table_info, "r", table.envir,
+                                               wraptable_position)
+  )
+}
 styling_latex_position_center <- function(x, table_info, hold_position,
                                           table.envir) {
+  stop("Not parseLatex compatible")
   if (!table_info$table_env && table_info$tabular == "tabular") {
     x <- paste0("\\begin{", table.envir, "}\n\\centering", x,
                 "\n\\end{", table.envir, "}")
@@ -785,15 +824,51 @@ styling_latex_position_center <- function(x, table_info, hold_position,
   return(x)
 }
 
+styling_latex_position_center2 <- function(x, table_info, hold_position,
+                                          table.envir) {
+  if (!table_info$table_env && table_info$tabular == "tabular") {
+    env <- parseLatex(paste0("\\begin{", table.envir, "}\n\\end{", table.envir, "}"))
+    env <- set_contents(env[[1]],
+                        latex2("\n\\centering\n",
+                               x, "\n"))
+    if (hold_position == "hold_position") {
+      x <- styling_latex_hold_position2(x)
+    } else if(hold_position == "HOLD_position") {
+      x <- styling_latex_HOLD_position2(x)
+    }
+  } else if (table_info$table_env) {
+    x <- sub("^(\\\\begin\\{table}[^\n]*)\\n", "\\1\n\\\\centering", x)
+  }
+  return(x)
+}
+
 styling_latex_position_left <- function(x, table_info) {
+  stop("Not parseLatex compatible")
   if (table_info$tabular != "longtable") return(sub("\\\\centering\\n", "", x))
   longtable_option <- "\\[l\\]"
   sub(paste0("\\\\begin\\{longtable\\}", table_info$valign2),
       paste0("\\\\begin\\{longtable\\}", longtable_option), x)
 }
 
+styling_latex_position_left2 <- function(x, table_info) {
+  if (table_info$tabular != "longtable") {
+    centeridx <- find_sequence(x, "\\centering\n",
+                               ignore_whitespace = FALSE)
+    if (!length(centeridx))
+      centeridx <- find_sequence(x, "\\centering")
+
+    return(set_range(x, centeridx, list()))
+  }
+  longtable_option <- "[l]"
+
+
+  sub(paste0("\\\\begin\\{longtable\\}", table_info$valign2),
+      paste0("\\\\begin\\{longtable\\}", longtable_option), x)
+}
+
 styling_latex_position_right <- function(x, table_info, hold_position,
                                          table.envir) {
+  stop("Not parseLatex compatible")
   warning("Position = right is only supported for longtable in LaTeX. ",
           "Setting back to center...")
   styling_latex_position_center(x, table_info, hold_position, table.envir)
@@ -823,7 +898,56 @@ styling_latex_position_float <- function(x, table_info, option, table.envir,
   return(x)
 }
 
+styling_latex_position_float2 <- function(x, table_info, option, table.envir,
+                                         wraptable_width) {
+  if (table_info$tabular == "longtable") {
+    warning("wraptable is not supported for longtable.")
+    if (option == "l") return(styling_latex_position_left2(x, table_info))
+    if (option == "r") return(styling_latex_position_right2(x, table_info, F,
+                                                           table.envir))
+  }
+  # Copy caption & centering from table env to wraptable
+  captionEtc <- NULL
+  if (table_info$table_env) {
+    input <- table_info$parsedInput
+    tablepath <- find_env(input, "table")
+    if (length(tablepath)) {
+      table <- get_item(input, tablepath)
+      contents <- get_contents(table)
+      opts <- bracket_options(table)
+      tabular <- find_env(contents, table_info$tabular)
+      if (length(tabular) && tabular > 1)
+        captionEtc <- as_LaTeX2(contents[1:(tabular-1)])
+    }
+  }
+  wrapper <- parseLatex(
+    paste0(sprintf("\\begin{wraptable}{%s}{%s}", option, wraptable_width),
+           "\\end{wraptable}"))[[1]]
+  tabular <- get_item(table_info$parsedInput,
+                    table_info$tablePath)
+  wrapper <- set_contents(wrapper, c(
+                              as_LaTeX2(get_contents(wrapper)),
+                              captionEtc,
+                              as_LaTeX2("\n"),
+                              as_LaTeX2(tabular)))
+  if (table_info$table_env) {
+    input <- table_info$parsedInput
+    tablepath <- find_env(input, "table")
+    input <- set_item(input, tablepath, wrapper)
+    table_info$parsedInput <- input
+  } else
+    table_info$parsedInput <- as_LaTeX2(wrapper)
+
+  table_info$tabular <- "wraptable"
+  table_info$tablePath <- path_to(table_info$parsedInput,
+                                  is_env,
+                                  envtypes = table_info$tabular)
+  structure(deparseLatex(table_info$parsedInput),
+            kable_meta = table_info)
+}
+
 styling_latex_font_size <- function(x, table_info, font_size) {
+  stop("Not parseLatex compatible")
   row_height <- font_size + 2
   if (table_info$tabular != "longtable" & table_info$table_env) {
     return(sub(table_info$begin_tabular,
@@ -840,6 +964,7 @@ styling_latex_font_size <- function(x, table_info, font_size) {
 }
 
 styling_latex_table_env <- function(x, current_env, latex_table_env) {
+  stop("Not parseLatex compatible")
   x <- sub(
     paste0("begin\\{", current_env, "\\}\\[t\\]"),
     paste0("begin\\{", latex_table_env, "\\}"), x
