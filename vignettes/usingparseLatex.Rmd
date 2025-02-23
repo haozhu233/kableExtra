@@ -83,6 +83,19 @@ table
 table_info$parsedInput[[table_info$tablePath]] <- table
 ```
 
+### Editing whole rows
+
+The `parseLatex::row_to_vector()` function converts a row from the
+table into a character vector.  If you need to edit multiple
+entries, this may be convenient.  For example,
+```{r}
+table
+row <- row_to_vector(tableRow(table, 2))
+row
+row[2:3] <- as.numeric(row[2:3]) + 1
+tableRow(table, 2) <- vector_to_row(row)
+table
+```
 
 ### Editing alignment
 
