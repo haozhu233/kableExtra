@@ -1,0 +1,108 @@
+---
+title: "Using parseLatex in kableExtra"
+author: "Duncan Murdoch"
+date: "2025-02-23"
+output: 
+  html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Using parseLatex in kableExtra}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(parseLatex)
+```
+
+## Introduction
+
+These are notes about how to modify the LaTeX related code in
+`kableExtra` to use the `parseLatex` package.
+
+But first, why would you want to do this?
+
+The motivation for developing the `parseLatex` package was to
+support editing LaTeX code, because getting the regular expressions
+right for regexp-based editing is so hard.  Having the LaTeX syntax
+tree represented in an R object makes some editing easier.
+
+Is it worth the trouble to reimplement all the code?  That's not 
+clear yet.  I think it will be easier to get things right in 
+complicated situations, but will it be fast enough?  
+
+In any case, I've put together these notes to help remind myself
+of how to do the edits.  Whether I'll recommend incorporated the
+edits into `kableExtra`, and whether Hao will accept my
+recommendation remains to be seen.
+
+There are a lot of table-specific functions in `parseLatex`.  See
+https://dmurdoch.github.io/parseLatex/reference/index.html#tables for the list.
+
+
+### Changes to `table_info`
+
+Many `kableExtra` functions use `magic_mirror_latex` to 
+extract a lot of information from
+the `kable` output.  By convention, this is saved
+in a list named `table_info`, and cached in the output in 
+an attribute named `kable_meta`.
+
+This branch uses `magic_mirror_latex2` to do the extraction.  It
+adds the following fields:
+
+- `parsedInput`:  the result of running `parseLatex(kable_input)`.
+This is the main target of edits; it is deparsed at the end to
+give the output.
+- `tablePath`:  the path within `parsedInput` to the `tabular`
+environment (or `tabularx`, `longtable`, etc.).  Thus `parsedInput[[tablePath]]` should return the table.
+
+It drops these fields:
+
+- `valign2`, `valign3`: versions of `valign` with different escaping.
+- `begin_tabular`, `end_tabular`:  cached versions of the start 
+and end of the table
+- `align_vector` and `align_vector_origin`:  versions of `align`
+used in computations
+
+## Tasks
+
+### Editing cell contents
+
+The basic strategy is to get the parsed table, change a cell,
+and put back the table.  For example:
+```{r}
+latex <- kbl(mtcars[1:3, 1:3], format = "latex")
+table_info <- kableExtra:::magic_mirror2(latex)
+table <- with(table_info, parsedInput[[tablePath]])
+table
+tableCell(table, 2, 4) <- "modified"
+table
+table_info$parsedInput[[table_info$tablePath]] <- table
+```
+
+
+### Editing alignment
+
+Use `parseLatex::columnOptions()` to extract the alignment
+spec, and the assignment version to modify it.  For example:
+```{r}
+table
+columnOptions(table)
+# You don't need to wrap in braces, but you could if you wanted.
+columnOptions(table) <- "lrrr"
+table
+```
+
+### Editing rules (lines) in the table
+
+```{r}
+table
+# The rules come before corresponding line, and after the last one
+rules(table)
+rule(table, 2) <- NULL
+rules(table)
+table
+```
