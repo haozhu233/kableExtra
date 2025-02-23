@@ -160,8 +160,7 @@ magic_mirror_latex2 <- function(kable_input){
                      contents = NULL,
                      centering = FALSE, table_env = FALSE,
                      parsedInput = NULL,
-                     tablePath = NULL,
-                     parsedTable = NULL)
+                     tablePath = NULL)
   parsed <- parseLatex(kable_input)
   table_info$parsedInput <- parsed
   tablepath <- path_to(parsed, is_fn = is_env,
