@@ -539,7 +539,7 @@ pdfTable_styling2 <- function(kable_input,
 
   # hold_position is only meaningful in a table environment
   if ("hold_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_hold_position(out)
+    out <- styling_latex_hold_position2(out)
   }
 
   # HOLD_position is only meaningful in a table environment
@@ -584,25 +584,23 @@ pdfTable_styling2 <- function(kable_input,
 
   out <- styling_latex_position2(out, table_info, position, latex_options,
                                 table.envir, wraptable_width)
-
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-
+  meta <- attr(out, "kable_meta")
+  if (!is.null(meta))
+    table_info <- meta
   if (row_label_position != "l") {
-    stop("not parseLatex compatible")
-    if (table_info$tabular == "longtable") {
-      out <- sub("\\\\begin\\{longtable\\}\\{l",
-                 paste0("\\\\begin\\{longtable\\}\\{",
-                        row_label_position),
-                 out)
-    } else {
-      out <- sub("\\\\begin\\{tabular\\}\\{l",
-                 paste0("\\\\begin\\{tabular\\}\\{",
-                        row_label_position),
-                 out)
-    }
+    table <- with(table_info, parsedInput[[tablePath]])
+    opts <- get_contents(columnOptions(table))
+    if (!is_text(opts[[1]]))
+      stop("Unrecognized column options: ", deparseLatex(opts))
+    saveattr <- attributes(opts[[1]])
+    opts[[1]] <- sub("^.", row_label_position, opts[[1]])
+    attributes(opts[[1]]) <- saveattr
+    columnOptions(table) <- opts
+    table_info$parsedInput[[table_info$tablePath]] <- table
   }
 
+  out <- structure(deparseLatex(table_info$parsedInput), format = "latex", class = "knitr_kable")
+  attr(out, "kable_meta") <- table_info
   return(out)
 }
 
@@ -629,12 +627,27 @@ styling_latex_striped2 <- function(x, table_info, color, stripe_index) {
 }
 
 styling_latex_hold_position <- function(x) {
-  stop("Not parseLatex compatible")
   if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
     str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[!h]")
   } else {
     str_replace(x, "\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]")
   }
+}
+
+styling_latex_hold_position2 <- function(x) {
+  table_info <- magic_mirror2(x)
+  table <- find_env(table_info$parsedInput, "table")
+  # If it's not in a table, we can't set the hold pos
+  if (!length(table))
+    return(x)
+  contents <- get_contents(table_info$parsedInput[[table]])
+  bracket_options(contents) <- "!h"
+  table_info$parsedInput[[table]] <- set_contents(table_info$parsedInput[[table]], contents)
+  saveattr <- attributes(x)
+  saveattr$kable_meta <- table_info
+  x <- deparseLatex(table_info$parsedInput)
+  attributes(x) <- saveattr
+  x
 }
 
 styling_latex_HOLD_position <- function(x) {
@@ -646,16 +659,19 @@ styling_latex_HOLD_position <- function(x) {
 }
 
 styling_latex_HOLD_position2 <- function(x) {
-
   table_info <- magic_mirror2(x)
-  tablepath <- path_to(table_info$parsedInput,
-                    is_env, envtype = "table")
-  contents <- get_contents(get_item(table_info$parsedInput, tablepath))
-  bracket_options(contents) <- "[H]"
-  range <- LaTeX2range(tablepath, NULL)
-  table_info$parsedInput <- set_range(table_info$parsedInput, range, contents)
-  structure(deparseLatex(table_info$parsedInput),
-            kable_meta = table_info)
+  table <- find_env(table_info$parsedInput, "table")
+  # If it's not in a table, we can't set the hold pos
+  if (!length(table))
+    return(x)
+  contents <- get_contents(table_info$parsedInput[[table]])
+  bracket_options(contents) <- "H"
+  table_info$parsedInput[[table]] <- set_contents(table_info$parsedInput[[table]], contents)
+  saveattr <- attributes(x)
+  saveattr$kable_meta <- table_info
+  x <- deparseLatex(table_info$parsedInput)
+  attributes(x) <- saveattr
+  x
 }
 
 styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
@@ -809,7 +825,6 @@ styling_latex_position2 <- function(x, table_info, position, latex_options,
 }
 styling_latex_position_center <- function(x, table_info, hold_position,
                                           table.envir) {
-  stop("Not parseLatex compatible")
   if (!table_info$table_env && table_info$tabular == "tabular") {
     x <- paste0("\\begin{", table.envir, "}\n\\centering", x,
                 "\n\\end{", table.envir, "}")
@@ -831,6 +846,10 @@ styling_latex_position_center2 <- function(x, table_info, hold_position,
     env <- set_contents(env[[1]],
                         latex2("\n\\centering\n",
                                x, "\n"))
+    saveattr <- attributes(x)
+    x <- deparseLatex(latex2(env))
+    attributes(x) <- saveattr
+
     if (hold_position == "hold_position") {
       x <- styling_latex_hold_position2(x)
     } else if(hold_position == "HOLD_position") {

@@ -67,6 +67,10 @@ and end of the table
 - `align_vector` and `align_vector_origin`:  versions of `align`
 used in computations
 
+Currently the code using `parseLatex` uses very similar arguments to the 
+original `kableExtra` code, but in the long run the internal functions should not 
+keep parsing and deparsing, they should work directly on the `parsedInput` object.
+
 ## Tasks
 
 ### Editing cell contents
