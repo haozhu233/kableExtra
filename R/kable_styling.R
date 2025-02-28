@@ -588,7 +588,7 @@ pdfTable_styling2 <- function(kable_input,
   if (!is.null(meta))
     table_info <- meta
   if (row_label_position != "l") {
-    table <- with(table_info, parsedInput[[tablePath]])
+    table <- with(table_info, parsedInput[[tabularPath]])
     opts <- get_contents(columnOptions(table))
     if (!is_text(opts[[1]]))
       stop("Unrecognized column options: ", deparseLatex(opts))
@@ -596,7 +596,7 @@ pdfTable_styling2 <- function(kable_input,
     opts[[1]] <- sub("^.", row_label_position, opts[[1]])
     attributes(opts[[1]]) <- saveattr
     columnOptions(table) <- opts
-    table_info$parsedInput[[table_info$tablePath]] <- table
+    table_info$parsedInput[[table_info$tabularPath]] <- table
   }
 
   out <- structure(deparseLatex(table_info$parsedInput), format = "latex", class = "knitr_kable")
@@ -691,6 +691,27 @@ styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
   x <- sub(table_info$begin_tabular,
            paste0("\\\\resizebox{\\\\ifdim\\\\width\\", d,"\\\\linewidth\\\\linewidth\\\\else\\\\width\\\\fi\\}\\{\\!\\}\\{\n",
 		  table_info$begin_tabular),
+           x)
+  sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
+}
+
+styling_latex_scale2 <- function(x, table_info, dir=c("down", "up")) {
+  stop("Not parseLatex compatible")
+  # You cannot put longtable in a resizebox
+  # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
+  if (table_info$tabular == "longtable") {
+    warning("Longtable cannot be resized.")
+    return(x)
+  }
+  if (dir=="down") {
+    d <- ">"
+  } else {
+    d <- "<"
+  }
+
+  x <- sub(table_info$begin_tabular,
+           paste0("\\\\resizebox{\\\\ifdim\\\\width\\", d,"\\\\linewidth\\\\linewidth\\\\else\\\\width\\\\fi\\}\\{\\!\\}\\{\n",
+                  table_info$begin_tabular),
            x)
   sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
 }
@@ -943,7 +964,7 @@ styling_latex_position_float2 <- function(x, table_info, option, table.envir,
     paste0(sprintf("\\begin{wraptable}{%s}{%s}", option, wraptable_width),
            "\\end{wraptable}"))[[1]]
   tabular <- get_item(table_info$parsedInput,
-                    table_info$tablePath)
+                    table_info$tabularPath)
   wrapper <- set_contents(wrapper, c(
                               as_LaTeX2(get_contents(wrapper)),
                               captionEtc,
@@ -958,7 +979,7 @@ styling_latex_position_float2 <- function(x, table_info, option, table.envir,
     table_info$parsedInput <- as_LaTeX2(wrapper)
 
   table_info$tabular <- "wraptable"
-  table_info$tablePath <- path_to(table_info$parsedInput,
+  table_info$tabularPath <- path_to(table_info$parsedInput,
                                   is_env,
                                   envtypes = table_info$tabular)
   structure(deparseLatex(table_info$parsedInput),

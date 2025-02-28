@@ -296,7 +296,7 @@ row_spec_latex2 <- function(kable_input, row, bold, italic, monospace,
 
   row <- row + table_info$position_offset
   table <- get_item(table_info$parsedInput,
-                    table_info$tablePath)
+                    table_info$tabularPath)
 
   for (i in row) {
     target_row <- parseLatex(table_info$contents[i])
@@ -310,7 +310,7 @@ row_spec_latex2 <- function(kable_input, row, bold, italic, monospace,
     table_info$contents[i] <- deparseLatex(new_row)
   }
   result <- table_info$parsedInput <- set_item(table_info$parsedInput,
-           table_info$tablePath,
+           table_info$tabularPath,
            table)
   out <- structure(deparseLatex(result), format = "latex", class = "knitr_kable")
   attr(out, "kable_meta") <- table_info

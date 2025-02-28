@@ -160,13 +160,18 @@ magic_mirror_latex2 <- function(kable_input){
                      contents = NULL,
                      centering = FALSE, table_env = FALSE,
                      parsedInput = NULL,
-                     tablePath = NULL)
+                     tablePath = NULL,
+                     tabularPath = NULL)
   parsed <- parseLatex(kable_input)
   table_info$parsedInput <- parsed
-  tablepath <- path_to(parsed, is_fn = is_env,
+  tablePath <- path_to(parsed, is_fn = is_env,
+                       envtypes = "table")
+  if (!length(tablePath)) tablePath <- NULL
+  table_info$tablePath <- tablePath
+  tabularPath <- path_to(parsed, is_fn = is_env,
                        envtypes = c("tabular", "tabularx", "longtable"))
-  table_info$tablePath <- tablepath
-  table <- parsed[[tablepath]]
+  table_info$tabularPath <- tabularPath
+  table <- parsed[[tabularPath]]
 
   # Tabular
   table_info$tabular <- envName(table)
@@ -184,7 +189,7 @@ magic_mirror_latex2 <- function(kable_input){
   table_info$valign <- deparseLatex(posOption(table))
 
   # N of columns
-  table_info$ncol <- tableNcol(table)
+  table_info$ncol <- ncol <- tableNcol(table)
 
   # Caption
   path <- path_to(parsed, is_macro, "\\caption")
@@ -208,22 +213,29 @@ magic_mirror_latex2 <- function(kable_input){
     table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)
     table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
   }
-  table_info$nrow <- tableNrow(table)
+  table_info$nrow <- nrow <- tableNrow(table)
   table_info$duplicated_rows <- (sum(duplicated(table_info$contents)) != 0)
   # Column names
   if (table_info$booktabs & !grepl(midrule_regexp, kable_input)) {
     table_info$colnames <- NULL
     table_info$position_offset <- 0
   } else {
-    table_info$colnames <- str_split(table_info$contents[1], " \\& ")[[1]]
+    colnames <- character(ncol)
+    for (i in seq_len(ncol))
+      colnames[i] <- trimws(deparseLatex(tableCell(table, 1, i)))
+    table_info$colnames <- colnames
     table_info$position_offset <- 1
   }
   # Row names
-  table_info$rownames <- str_extract(table_info$contents, "^[^ &]*")
+  rownames <- character(nrow)
+  for (i in seq_len(nrow))
+    rownames[i] <- trimws(deparseLatex(tableCell(table, i, 1)))
+
+  table_info$rownames <- rownames
 
   table_info$centering <- find_macro(parsed, "\\centering")
 
-  table_info$table_env <- length(find_env(parsed, envtypes = "table")) > 0
+  table_info$table_env <- !is.null(table_info$tablePath)
 
   return(table_info)
 }
