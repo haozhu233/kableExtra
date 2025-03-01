@@ -93,6 +93,7 @@ latex_row_cells2 <- function(x) {
   if (!inherits(x, "LaTeX2"))
     x <- parseLatex(x)
   result <- parseLatex::split_latex(x, c(find_char(x, "&"), find_macro(x, "\\\\")))
+  result <- lapply(result, trim_whitespace)
   result[-length(result)]
 }
 
@@ -384,3 +385,10 @@ md_table_parser <- function(md_table) {
 toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
 midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
 bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"
+
+# This is used internally by the parseLatex functions
+# to keep the text and parsed version in sync
+update_meta <- function(parsed, table_info) {
+  attr(parsed, "kable_meta") <- table_info
+  parsed
+}

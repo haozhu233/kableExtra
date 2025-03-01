@@ -281,22 +281,20 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   return(out)
 }
 
-row_spec_latex2 <- function(kable_input, row, bold, italic, monospace,
+row_spec_latex2 <- function(parsed, row, bold, italic, monospace,
                            underline, strikeout,
                            color, background, align, font_size, angle,
                            hline_after, extra_latex_after) {
-  table_info <- magic_mirror2(kable_input)
-  out <- solve_enc(kable_input)
+  table_info <- magic_mirror2(parsed)
 
   if (table_info$duplicated_rows) {
-    dup_fx_out <- fix_duplicated_rows_latex2(out, table_info)
+    dup_fx_out <- fix_duplicated_rows_latex2(parsed, table_info)
     out <- dup_fx_out[[1]]
     table_info <- dup_fx_out[[2]]
   }
 
   row <- row + table_info$position_offset
-  table <- get_item(table_info$parsedInput,
-                    table_info$tabularPath)
+  table <- parsed[[table_info$tabularPath]]
 
   for (i in row) {
     target_row <- parseLatex(table_info$contents[i])
@@ -309,12 +307,8 @@ row_spec_latex2 <- function(kable_input, row, bold, italic, monospace,
     tableRow(table, i) <- new_row
     table_info$contents[i] <- deparseLatex(new_row)
   }
-  result <- table_info$parsedInput <- set_item(table_info$parsedInput,
-           table_info$tabularPath,
-           table)
-  out <- structure(deparseLatex(result), format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-  return(out)
+  parsed[[table_info$tabularPath]] <- table
+  update_meta(parsed, table_info)
 }
 
 latex_new_row_builder <- function(target_row, table_info,
