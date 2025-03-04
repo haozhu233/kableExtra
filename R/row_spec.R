@@ -75,12 +75,14 @@ row_spec <- function(kable_input, row,
   }
 }
 
+#' @export
 row_spec2 <- function(kable_input, row,
                      bold = FALSE, italic = FALSE, monospace = FALSE,
                      underline = FALSE, strikeout = FALSE,
                      color = NULL, background = NULL, align = NULL,
                      font_size = NULL, angle = NULL, extra_css = NULL,
-                     hline_after = FALSE, extra_latex_after = NULL) {
+                     hline_after = FALSE, extra_latex_after = NULL,
+                     needs_parsing = TRUE) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -102,10 +104,18 @@ row_spec2 <- function(kable_input, row,
                          extra_css))
   }
   if (kable_format == "latex") {
-    return(row_spec_latex2(kable_input, row, bold, italic, monospace,
+    if (needs_parsing)
+      parsed <- kable_to_parsed(kable_input)
+    else
+      parsed <- kable_input
+    res <- row_spec_latex2(parsed, row, bold, italic, monospace,
                           underline, strikeout,
                           color, background, align, font_size, angle,
-                          hline_after, extra_latex_after))
+                          hline_after, extra_latex_after)
+    if (needs_parsing )
+      return(parsed_to_kable(res, kable_input))
+    else
+      return(res)
   }
 }
 
@@ -285,7 +295,7 @@ row_spec_latex2 <- function(parsed, row, bold, italic, monospace,
                            underline, strikeout,
                            color, background, align, font_size, angle,
                            hline_after, extra_latex_after) {
-  table_info <- magic_mirror2(parsed)
+  table_info <- magic_mirror_latex2(parsed)
 
   if (table_info$duplicated_rows) {
     dup_fx_out <- fix_duplicated_rows_latex2(parsed, table_info)
@@ -297,7 +307,7 @@ row_spec_latex2 <- function(parsed, row, bold, italic, monospace,
   table <- parsed[[table_info$tabularPath]]
 
   for (i in row) {
-    target_row <- parseLatex(table_info$contents[i])
+    target_row <- table_info$contents[[i]]
     new_row <- latex_new_row_builder2(target_row, table_info,
                                      bold, italic, monospace,
                                      underline, strikeout,
@@ -305,7 +315,7 @@ row_spec_latex2 <- function(parsed, row, bold, italic, monospace,
                                      hline_after, extra_latex_after)
 
     tableRow(table, i) <- new_row
-    table_info$contents[i] <- deparseLatex(new_row)
+    table_info$contents[[i]] <- new_row
   }
   parsed[[table_info$tabularPath]] <- table
   update_meta(parsed, table_info)
@@ -459,7 +469,7 @@ latex_new_row_builder2 <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex2(x)
-      latex2("\\textcolor", latex_color2(color), new_block(x))
+      latex2("\\textcolor", latex_color2(color)[[1]], new_block(x))
     })
   }
   if (!is.null(background)) {
@@ -480,7 +490,7 @@ latex_new_row_builder2 <- function(target_row, table_info,
       latex2("\\begingroup\\fontsize",
                 new_block(font_size),
                 new_block(as.numeric(font_size) + 2),
-                "\\selectfont", x, "\\endgroup")
+                "\\selectfont  ", x, "\\endgroup")
     })
   }
   if (!is.null(align)) {

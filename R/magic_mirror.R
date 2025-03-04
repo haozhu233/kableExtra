@@ -194,7 +194,7 @@ magic_mirror_latex2 <- function(parsed){
   if (!length(table_info$caption.short)) table_info["caption.short"] <- list(NULL)
 
   table_info$contents <- sapply(seq_len(tableNrow(table)),
-                                function(i) deparseLatex(tableRow(table, i)))
+                                function(i) tableRow(table, i))
 
   if (!is.null(attr(parsed, "n_head"))) {
     n_head <- attr(parsed, "n_head")

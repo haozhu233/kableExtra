@@ -66,26 +66,51 @@ comp(table.envir = "table*", position = "center")
 comp(wraptable_width = "5pt")
 }
 
+do_comps2 <- function() {
+  comp(2, fn = "row_spec")
+  comp(2, bold = TRUE, fn = "row_spec")
+  comp(2, italic = TRUE, fn = "row_spec")
+  comp(2, monospace = TRUE, fn = "row_spec")
+  comp(2, underline = TRUE, fn = "row_spec")
+  comp(2, strikeout = TRUE, fn = "row_spec")
+  comp(2, color = "red", fn = "row_spec")
+  comp(2, background = "red", fn = "row_spec")
+  comp(2, align = "l", fn = "row_spec")
+  comp(2, align = "c", fn = "row_spec")
+  comp(2, align = "r", fn = "row_spec")
+  comp(2, font_size = 12, fn = "row_spec")
+  comp(2, angle = 45, fn = "row_spec")
+  comp(2, hline_after = TRUE, fn = "row_spec")
+  comp(2, extra_latex_after = "This is extra!", fn = "row_spec")
+}
+
 latex <- kbl(head(mtcars), format="latex")
 
+do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", longtable = TRUE, caption = "The caption")
 
+do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", longtable = TRUE)
 
+do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex")
 
+do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", booktabs = TRUE, longtable = TRUE)
 
+do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", booktabs = TRUE, longtable = TRUE,
              caption = "The caption")
+
+do_comps2()
 do_comps()

@@ -89,10 +89,8 @@ latex_row_cells <- function(x) {
   stringr::str_split(x, " \\& ")
 }
 
-latex_row_cells2 <- function(x) {
-  if (!inherits(x, "LaTeX2"))
-    x <- parseLatex(x)
-  result <- parseLatex::split_latex(x, c(find_char(x, "&"), find_macro(x, "\\\\")))
+latex_row_cells2 <- function(parsed) {
+  result <- parseLatex::split_latex(parsed, c(find_char(parsed, "&"), find_macro(parsed, "\\\\")))
   result <- lapply(result, trim_whitespace)
   result[-length(result)]
 }
@@ -392,3 +390,15 @@ update_meta <- function(parsed, table_info) {
   attr(parsed, "kable_meta") <- table_info
   parsed
 }
+
+kable_to_parsed <- function(kable_input)
+  structure(parseLatex(kable_input),
+    # Add the attributes that may be expected later...
+    n_head = attr(kable_input, "n_head"),
+    format = "latex")
+
+parsed_to_kable <- function(parsed, kable_input)
+  structure(capture.output(parsed),
+            n_head = attr(kable_input, "n_head"),
+            format = "latex",
+            class = class(kable_input))

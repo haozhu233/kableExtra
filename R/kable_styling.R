@@ -242,7 +242,11 @@ kable_styling2 <- function(kable_input,
       full_width <- getOption("kable_styling_full_width", F)
     }
     repeat_header_method <- match.arg(repeat_header_method)
-    return(pdfTable_styling2(kable_input,
+
+    out <- solve_enc(kable_input)
+    parsed <- kable_to_parsed(out)
+
+    res <- pdfTable_styling2(parsed,
                             latex_options = latex_options,
                             full_width = full_width,
                             position = position,
@@ -255,12 +259,12 @@ kable_styling2 <- function(kable_input,
                             stripe_index = stripe_index,
                             latex_table_env = latex_table_env,
                             table.envir = table.envir,
-                            wraptable_width = wraptable_width))
+                            wraptable_width = wraptable_width)
+    return(parsed_to_kable(res, kable_input))
   }
 }
 
 extract_latex_from_kable <- function(kable_input) {
-  stop("Not parseLatex compatible")
   kable_attrs <- attributes(kable_input)
   regexp <- paste0("(?<!\\e)",   # Not escaped
                    "([$]{1}(?![ ])[^$]+(?<![$\\\\ ])[$]{1}", # $...$
@@ -279,7 +283,6 @@ extract_latex_from_kable <- function(kable_input) {
 }
 
 replace_latex_in_kable <- function(kable_input, latex) {
-  stop("Not parseLatex compatible")
   kable_attrs <- attributes(kable_input)
   for (n in names(latex)) {
     kable_input <- str_replace_all(kable_input, fixed(n), latex[n])
@@ -506,7 +509,7 @@ pdfTable_styling <- function(kable_input,
   return(out)
 }
 
-pdfTable_styling2 <- function(kable_input,
+pdfTable_styling2 <- function(parsed,
                              latex_options = "basic",
                              full_width = FALSE,
                              position,
@@ -526,12 +529,9 @@ pdfTable_styling2 <- function(kable_input,
     c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
     several.ok = TRUE
   )
+  if (!inherits(parsed, "LaTeX2"))
+    parsed <- kable_to_parsed(parsed)
 
-  out <- solve_enc(kable_input)
-  parsed <- parseLatex(out)
-  # Add the attributes that may be expected later...
-  attr(parsed, "n_head") <- attr(kable_input, "n_head")
-  attr(parsed, "format") <- "latex"
   table_info <- magic_mirror_latex2(parsed)
   parsed <- update_meta(parsed, table_info)
 
@@ -622,7 +622,8 @@ styling_latex_striped2 <- function(parsed, color, stripe_index) {
       max(1, table_info$nrow - table_info$position_offset),
       2)
   }
-  row_spec2(parsed, stripe_index, background = color)
+  row_spec2(parsed, stripe_index, background = color,
+            needs_parsing = FALSE)
 }
 
 styling_latex_hold_position <- function(x) {
