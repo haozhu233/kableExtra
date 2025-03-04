@@ -16,57 +16,64 @@ comp <- function(..., fn = "kable_styling") {
 
 do_comps <- function() {
   table_info <- magic_mirror(latex)
-comp()
-comp(latex_options = "striped")
-comp(latex_options = "hold_position")
-comp(latex_options = "HOLD_position")
-suppressWarnings(comp(latex_options = "scale_down")) # warnings for longtable
-suppressWarnings(comp(latex_options = "scale_up"))   # warnings for longtable
-comp(latex_options = "repeat_header")
 
-comp(full_width = TRUE) # expect difference here:  old code loses the [t]
-comp(full_width = FALSE)
+  comp(label = "The footnote", fn = "add_footnote")
+  comp(label = "The footnote", notation = "number", fn = "add_footnote")
+  comp(label = "The footnote", notation = "symbol", fn = "add_footnote")
+  comp(label = "The footnote", notation = "none", fn = "add_footnote")
+  comp(label = "The footnote", threeparttable = TRUE, fn = "add_footnote")
+  comp(label = "The footnote costs $2", fn = "add_footnote")
+  comp(label = "The footnote has math:  $1+1$", escape = FALSE, fn = "add_footnote")
 
-comp(position = "left")
-comp(position = "center")
-if (table_info$tabular == "longtable")
-  try(suppressWarnings(comp(position = "right")))
-else
-  suppressWarnings(comp(position = "right"))
-suppressWarnings(comp(position = "float_left")) # warnings from both for longtable
-if (table_info$tabular == "longtable")
-  try(suppressWarnings(comp(position = "float_right"))) # warnings from both
-else
-  suppressWarnings(comp(position = "float_right"))
-comp(font_size = 12)
+  comp()
+  comp(latex_options = "striped")
+  comp(latex_options = "hold_position")
+  comp(latex_options = "HOLD_position")
+  suppressWarnings(comp(latex_options = "scale_down")) # warnings for longtable
+  suppressWarnings(comp(latex_options = "scale_up"))   # warnings for longtable
+  comp(latex_options = "repeat_header")
 
-comp(row_label_position = "l")
-#comp(row_label_position = "c") # expect difference:  old code gives "l" not "c"
-#comp(row_label_position = "r") # expect difference:  old code gives "l" not "r"
+  comp(full_width = TRUE) # expect difference here:  old code loses the [t]
+  comp(full_width = FALSE)
 
-comp(repeat_header_text = "header test text")
+  comp(position = "left")
+  comp(position = "center")
+  if (table_info$tabular == "longtable")
+    try(suppressWarnings(comp(position = "right")))
+  else
+    suppressWarnings(comp(position = "right"))
+  suppressWarnings(comp(position = "float_left")) # warnings from both for longtable
+  if (table_info$tabular == "longtable")
+    try(suppressWarnings(comp(position = "float_right"))) # warnings from both
+  else
+    suppressWarnings(comp(position = "float_right"))
+  comp(font_size = 12)
 
-comp(repeat_header_method = "append")
-comp(repeat_header_method = "replace")
+  comp(row_label_position = "l")
+  #comp(row_label_position = "c") # expect difference:  old code gives "l" not "c"
+  #comp(row_label_position = "r") # expect difference:  old code gives "l" not "r"
 
-comp(repeat_header_continued = TRUE)
-comp(repeat_header_continued = FALSE)
-comp(repeat_header_continued = "continued test text")
+  comp(repeat_header_text = "header test text")
 
-comp(stripe_color = "red", latex_options = "striped")
+  comp(repeat_header_method = "append")
+  comp(repeat_header_method = "replace")
 
-comp(stripe_index = 3, latex_options = "striped")
+  comp(repeat_header_continued = TRUE)
+  comp(repeat_header_continued = FALSE)
+  comp(repeat_header_continued = "continued test text")
 
-try(
-comp(latex_table_env = "tabularx") # expect differences:  old code loses [t]
-)
+  comp(stripe_color = "red", latex_options = "striped")
 
-comp(table.envir = "table*", position = "center")
+  comp(stripe_index = 3, latex_options = "striped")
 
-comp(wraptable_width = "5pt")
-}
+  try(
+    comp(latex_table_env = "tabularx") # expect differences:  old code loses [t]
+  )
 
-do_comps2 <- function() {
+  comp(table.envir = "table*", position = "center")
+
+  comp(wraptable_width = "5pt")
+
   comp(2, fn = "row_spec")
   comp(2, bold = TRUE, fn = "row_spec")
   comp(2, italic = TRUE, fn = "row_spec")
@@ -85,32 +92,20 @@ do_comps2 <- function() {
 }
 
 latex <- kbl(head(mtcars), format="latex")
-
-do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", longtable = TRUE, caption = "The caption")
-
-do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", longtable = TRUE)
-
-do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex")
-
-do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", booktabs = TRUE, longtable = TRUE)
-
-do_comps2()
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", booktabs = TRUE, longtable = TRUE,
              caption = "The caption")
-
-do_comps2()
 do_comps()

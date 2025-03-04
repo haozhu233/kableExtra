@@ -183,12 +183,12 @@ magic_mirror_latex2 <- function(parsed){
   table_info$ncol <- ncol <- tableNcol(table)
 
   # Caption
-  path <- path_to(parsed, is_macro, "\\caption")
+  table_info$captionPath <- path <- path_to_caption(parsed)
   if (length(path)) {
-    container <- get_container(parsed, path)
-    which <- get_which(path)
-    table_info$caption.short <- bracket_options(container, start = which + 1)
-    table_info$caption <- container[[find_captions(container)[1]]]
+    table_info$caption <- get_contents(parsed[[path]])
+    idx <- attr(path, "idx")
+    fullcaption <- get_range(parsed, idx)
+    table_info$caption.short <- bracket_options(fullcaption, start = 2)
   }
 
   if (!length(table_info$caption.short)) table_info["caption.short"] <- list(NULL)

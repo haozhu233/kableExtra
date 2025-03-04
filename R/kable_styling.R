@@ -811,7 +811,7 @@ styling_latex_repeat_header2 <- function(parsed, repeat_header_text, repeat_head
       if (length(lab))
         caption_without_lab <- table_info$caption[-lab]
       else
-        caption_without_lab <- get_contents(table_info$caption)
+        caption_without_lab <- table_info$caption
       repeat_header_text <- latex2(caption_without_lab, " ", repeat_header_text)
     }
     continue_line <- latex2("\\caption[]", new_block(repeat_header_text), "\\\\\n")
