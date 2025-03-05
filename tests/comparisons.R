@@ -17,6 +17,16 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), bold = TRUE, fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), italic = TRUE, fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), monospace = TRUE, fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), underline = TRUE, fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), strikeout = TRUE, fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), align = "l", fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), align = "r", fn = "add_header_above")
+  comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), align = "p{2cm}", fn = "add_header_above")
+
   comp(label = "The footnote", fn = "add_footnote")
   comp(label = "The footnote", notation = "number", fn = "add_footnote")
   comp(label = "The footnote", notation = "symbol", fn = "add_footnote")
