@@ -46,6 +46,41 @@ add_indent <- function(kable_input, positions,
   }
 }
 
+#' @export
+add_indent2 <- function(kable_input, positions,
+                       level_of_indent = 1, all_cols = FALSE,
+                       target_cols = 1) {
+
+  if (!is.numeric(positions)) {
+    stop("Positions can only take numeric row numbers (excluding header rows).")
+  }
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  if (kable_format == "html") {
+    return(add_indent_html(
+      kable_input, positions, level_of_indent, all_cols, target_cols
+    ))
+  }
+  if (kable_format == "latex") {
+    parsed <- kable_to_parsed(kable_input)
+    parsed <- update_meta(parsed, magic_mirror2(parsed))
+    res <- add_indent_latex2(
+      parsed, positions, level_of_indent, all_cols, target_cols
+    )
+    parsed_to_kable(res, kable_input)
+  }
+}
+
 # Add indentation for LaTeX
 add_indent_latex <- function(kable_input, positions,
                              level_of_indent = 1, all_cols = FALSE,

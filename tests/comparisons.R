@@ -17,6 +17,10 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(positions = 2:3, fn = "add_indent")
+  comp(positions = 2:3, all_cols = TRUE, fn = "add_indent")
+  comp(positions = 2:3, target_cols = 3:4, fn = "add_indent")
+
   comp(group_label = "The label", start_row = 2,
        end_row = 5, fn = "pack_rows")
   comp(group_label = "The label", start_row = 2,
