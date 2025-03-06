@@ -97,10 +97,53 @@ add_indent_latex <- function(kable_input, positions,
 
 }
 
+add_indent_latex2 <- function(parsed, positions,
+                             level_of_indent = 1, all_cols = FALSE,
+                             target_cols = 1) {
+  table_info <- attr(parsed, "kable_meta")
+  table <- parsed[[table_info$tabularPath]]
+
+  level_of_indent<-as.numeric(level_of_indent)
+
+  max_position <- table_info$nrow - table_info$position_offset
+
+  if (max(positions) > max_position) {
+    stop("There aren't that many rows in the table. Check positions in ",
+         "add_indent_latex.")
+  }
+
+  for (i in positions + table_info$position_offset) {
+    rowtext <- table_info$contents[[i]]
+    new_rowtext <- latex_row_cells2(rowtext)
+    if (all_cols) {
+      new_rowtext <- lapply(new_rowtext, function(x) {
+        latex2("\\hspace", new_block(paste0(level_of_indent ,"em")), x)
+      })
+    } else {
+      if (all(target_cols %in% seq(table_info$ncol))) {
+        new_rowtext[target_cols] <- lapply(new_rowtext[target_cols], latex_indent_unit2,
+          level_of_indent)
+      } else {
+        stop("There aren't that many columns in the row. Check target_cols in ",
+             "add_indent_latex.")
+      }
+    }
+    new_rowtext <- vector_to_row(new_rowtext, linebreak = FALSE)
+    table_info$contents[[i]] <- new_rowtext
+    tableRow(table, i) <- new_rowtext
+  }
+  parsed[[table_info$tabularPath]] <- table
+  parsed <- update_meta(parsed, table_info)
+  parsed
+}
+
 latex_indent_unit <- function(rowtext, level_of_indent) {
   paste0("\\\\hspace\\{", level_of_indent ,"em\\}", rowtext)
 }
 
+latex_indent_unit2 <- function(rowtext, level_of_indent) {
+  latex2("\\hspace", new_block(paste0(level_of_indent ,"em")), rowtext)
+}
 
 
 # Add indentation for HTML

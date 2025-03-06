@@ -89,6 +89,12 @@ latex_row_cells <- function(x) {
   stringr::str_split(x, " \\& ")
 }
 
+latex_row_cells2 <- function(parsed) {
+  result <- parseLatex::split_latex(parsed, c(find_char(parsed, "&"), find_macro(parsed, "\\\\")))
+  result <- lapply(result, trim_whitespace)
+  result[-length(result)]
+}
+
 regex_escape <- function(x, double_backslash = FALSE) {
   if (double_backslash) {
     x <- gsub("\\\\", "\\\\\\\\", x)
@@ -296,6 +302,20 @@ clear_color_latex <- function(x, background = F) {
   return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
 }
 
+clear_color_latex2 <- function(x, background = F) {
+  term <- if (background) "\\cellcolor" else "\\textcolor"
+  locs <- find_macro(x, term)
+  del <- integer()
+  for (loc in locs) {
+    del <- c(del, loc, find_bracket_options(x, start = loc + 1),
+                  find_brace_options(x, start = loc + 1))
+  }
+  if (length(del))
+    drop_items(x, del)
+  else
+    x
+}
+
 sim_double_escape <- function(x) {
   return(sub("\\\\", "\\\\\\\\", x))
 }
@@ -371,3 +391,22 @@ md_table_parser <- function(md_table) {
 toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
 midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
 bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"
+
+# This is used internally by the parseLatex functions
+# to keep the text and parsed version in sync
+update_meta <- function(parsed, table_info) {
+  attr(parsed, "kable_meta") <- table_info
+  parsed
+}
+
+kable_to_parsed <- function(kable_input)
+  structure(parseLatex(kable_input),
+    # Add the attributes that may be expected later...
+    n_head = attr(kable_input, "n_head"),
+    format = "latex")
+
+parsed_to_kable <- function(parsed, kable_input)
+  structure(capture.output(parsed),
+            n_head = attr(kable_input, "n_head"),
+            format = "latex",
+            class = class(kable_input))

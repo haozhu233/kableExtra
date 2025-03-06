@@ -121,6 +121,70 @@ add_header_above <- function(kable_input, header = NULL,
   }
 }
 
+#' @export
+add_header_above2 <- function(kable_input, header = NULL,
+                             bold = FALSE, italic = FALSE, monospace = FALSE,
+                             underline = FALSE, strikeout = FALSE,
+                             align = "c", color = NULL, background = NULL,
+                             font_size = NULL, angle = NULL,
+                             escape = TRUE, line = TRUE, line_sep = 3,
+                             extra_css = NULL, include_empty = FALSE,
+                             border_left = FALSE, border_right = FALSE) {
+  if (is.null(header)) return(kable_input)
+
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  if ((length(align) != 1L) & (length(align) != length(header))) {
+    warning("Length of align vector supplied to add_header_above must either be 1 ",
+            "or the same length as the header supplied. The length of the align ",
+            sprintf("vector supplied is %i and the header length is %i.",
+                    length(align), length(header)),
+            "Using default of centering each element of row.")
+    align <- 'c'
+  }
+  if (is.null(header)) return(kable_input)
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named",
+           "vector it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
+  }
+  if (kable_format == "html") {
+    return(htmlTable_add_header_above(
+      kable_input, header, bold, italic, monospace, underline, strikeout,
+      align, color, background, font_size, angle, escape, line, line_sep,
+      extra_css, include_empty
+    ))
+  }
+  if (kable_format == "latex") {
+    parsed <- kable_to_parsed(kable_input)
+    res <- pdfTable_add_header_above2(
+      parsed, header, bold, italic, monospace, underline, strikeout,
+      align, color, background, font_size, angle, escape, line, line_sep,
+      border_left, border_right)
+    return(parsed_to_kable(res, kable_input))
+  }
+}
+
 # HTML
 htmlTable_add_header_above <- function(kable_input, header, bold, italic,
                                        monospace, underline, strikeout,
@@ -350,6 +414,61 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   return(out)
 }
 
+pdfTable_add_header_above2 <- function(parsed, header, bold, italic,
+                                      monospace, underline, strikeout, align,
+                                      color, background, font_size, angle,
+                                      escape, line, line_sep,
+                                      border_left, border_right) {
+  table_info <- magic_mirror2(parsed)
+
+  if (is.data.frame(header)){
+    if(ncol(header) == 2 & is.character(header[[1]]) & is.numeric(header[[2]])){
+      header <- data.frame(header = header[[1]], colspan = header[[2]],
+                           stringsAsFactors = FALSE)
+    }
+    else {
+      stop("If header input is provided as a data frame instead of a named vector ",
+           "it must consist of only two columns: ",
+           "The first should be a character vector with ",
+           "header names and the second should be a numeric vector with ",
+           "the number of columns the header should span.")
+    }
+  }
+  else {
+    header <- standardize_header_input(header)
+  }
+
+  if (escape)
+    header$header <- input_escape(header$header, align)
+
+  new_header_split <- pdfTable_new_header_generator2(
+    header, table_info$booktabs, bold, italic, monospace, underline, strikeout,
+    align, color, background, font_size, angle, line_sep,
+    border_left, border_right, line)
+  if (any(line)) {
+    new_header <- latex2(new_header_split[[1]], new_header_split[[2]])
+  } else {
+    new_header <- new_header_split[[1]]
+  }
+  table <- parsed[[table_info$tabularPath]]
+  hlines <- find_macro(table, c("\\hline",
+                                     "\\toprule"))
+
+  table <- insert_values(table,
+                         hlines[1] + 1,
+                         latex2("\n", new_header))
+  parsed[[table_info$tabularPath]] <- table
+  if (is.null(table_info$new_header_row)) {
+    table_info$new_header_row <- new_header_split[[1]]
+    table_info$header_df <- list(header)
+  } else {
+    table_info$new_header_row <- c(table_info$new_header_row, new_header_split[[1]])
+    table_info$header_df[[length(table_info$header_df) + 1]] <- header
+  }
+  update_meta(parsed, table_info)
+}
+
+
 ez_rep <- function(x, n) {
   if (is.null(x)) return(NULL)
   if (length(x) == 1) return(rep(x, n))
@@ -415,6 +534,72 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
   return(c(header_text, cline))
 }
 
+pdfTable_new_header_generator2 <- function(header_df, booktabs = FALSE,
+                                          bold, italic, monospace,
+                                          underline, strikeout, align,
+                                          color, background, font_size, angle,
+                                          line_sep, border_left, border_right, line) {
+  n <- nrow(header_df)
+  bold <- ez_rep(bold, n)
+  italic <- ez_rep(italic, n)
+  monospace <- ez_rep(monospace, n)
+  underline <- ez_rep(underline, n)
+  strikeout <- ez_rep(strikeout, n)
+  align <- ez_rep(align, n)
+  color <- ez_rep(color, n)
+  background <- ez_rep(background, n)
+  font_size <- ez_rep(font_size, n)
+  angle <- ez_rep(angle, n)
+  if (!booktabs && n > 1) {
+    align[1:(n - 1)] <- paste0(align[1:(n - 1)], "|")
+  }
+  if (border_left) {
+    align[1] <- paste0("|", align[1])
+  }
+  if (border_right) {
+    align[n] <- paste0(align[n], "|")
+  }
+
+  header <- lapply(header_df$header, latex2)
+  colspan <- header_df$colspan
+  header_text <- list()
+  for (i in seq_along(header)) {
+    if (bold[i]) header[[i]] <- latex2('\\textbf', new_block(header[[i]]))
+    if (italic[i]) header[[i]] <- latex2('\\em', new_block(header[[i]]))
+    if (monospace[i]) header[[i]] <- latex2('\\ttfamily', new_block(header[[i]]))
+    if (underline[i]) header[[i]] <- latex2('\\underline', new_block(header[[i]]))
+    if (strikeout[i]) header[[i]] <- latex2('\\sout', new_block(header[[i]]))
+    if (!is.null(color)) {
+      lcolor <- latex_color(color[i])
+      header[[i]] <- latex2("\\textcolor", lcolor, new_block(header[[i]]))
+    }
+    if (!is.null(background)) {
+      lbackground <- latex_color(background[i])
+      header[[i]] <- latex2("\\cellcolor", lbackground, new_block(header[[i]]))
+    }
+    if (!is.null(font_size)) {
+      header[[i]] <- latex2("\\bgroup\\fontsize",
+                            new_block(font_size[i]),
+                            new_block(as.numeric(font_size[i]) + 2),
+                            "\\selectfont ",
+                            header[[i]], "\\egroup", new_block())
+    }
+    if (!is.null(angle)) {
+      header[[i]] <- latex2("\\rotatebox", new_block(angle[i]),
+                            new_block(header[[i]]))
+    }
+    header_items <- latex2('\\multicolumn',
+                           new_block(colspan[i]),
+                           new_block(align[i]),
+                           new_block(header[[i]]))
+
+    header_text <- latex2(header_text, if (i > 1) " & ", header_items)
+  }
+  cline <- cline_gen2(header_df, booktabs, line_sep, line)
+  list(latex2(header_text, " \\\\\n"),
+       cline)
+}
+
 cline_gen <- function(header_df, booktabs, line_sep, line) {
   cline_end <- cumsum(header_df$colspan)
   cline_start <- c(0, cline_end) + 1
@@ -430,6 +615,30 @@ cline_gen <- function(header_df, booktabs, line_sep, line) {
   line <- line[keep]
   cline <- paste(cline[line], collapse = " ")
   return(cline)
+}
+
+cline_gen2 <- function(header_df, booktabs, line_sep, line) {
+  cline_end <- cumsum(header_df$colspan)
+  cline_start <- c(0, cline_end) + 1
+  cline_start <- cline_start[-length(cline_start)]
+  if (!booktabs)
+    cline_type <- latex2("\\cline")
+  else
+    cline_type <- latex2("\\cmidrule(l", new_block(paste0(line_sep, "pt")), "r", new_block(paste0(line_sep, "pt")), ")")
+  cline <- list()
+  for (i in seq_along(cline_end))
+    cline[[i]] <- latex2(cline_type, new_block(paste0(cline_start[i], "-", cline_end[i])))
+
+  line <- rep_len(line, length(cline))
+  keep <- trimws(header_df$header) != ""
+  cline <- cline[keep]
+  line <- line[keep]
+  cline <- cline[line]
+  result <- latex2()
+  for (i in seq_along(cline)) {
+    result <- latex2(result, cline[[i]], if (i < length(cline)) " ")
+  }
+  result
 }
 
 switch_align <- function(x) {
