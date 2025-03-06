@@ -108,6 +108,10 @@ regex_escape <- function(x, double_backslash = FALSE) {
   return(x)
 }
 
+regex_unescape <- function(x) {
+  sapply(x, function(y) sub(".", y, "."))
+}
+
 as_kable_xml <- function(bodynode) {
   out <- structure(as.character(bodynode),
                    format = "html", class = "knitr_kable")
@@ -294,6 +298,10 @@ clear_color_latex <- function(x, background = F) {
 
 sim_double_escape <- function(x) {
   return(sub("\\\\", "\\\\\\\\", x))
+}
+
+sim_all_double_escape <- function(x) {
+  return(gsub("\\\\", "\\\\\\\\", x))
 }
 
 # Here (v 1.4.0) we introduced a simple markdown table parser to compensate the

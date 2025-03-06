@@ -133,7 +133,7 @@ group_row_index_translator <- function(index) {
   index <- standardize_header_input(index)
   index$start <- cumsum(c(1, index$colspan))[1:length(index$colspan)]
   index$end <- cumsum(index$colspan)
-  index$header <- trimws(index$header)
+  index$header <- trimws(regex_unescape(index$header))
   index <- index[index$header != "", ]
   return(index)
 }
@@ -244,7 +244,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   if (escape) {
     group_label <- input_escape(group_label, latex_align)
   } else {
-    group_label <- sim_double_escape(group_label)
+    group_label <- sim_all_double_escape(group_label)
   }
 
   if (bold) {
