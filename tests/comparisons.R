@@ -17,6 +17,21 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, latex_gap_space = "5pt", fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, latex_align = "r", fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, bold = TRUE, fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, hline_before = TRUE, fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, hline_after = TRUE, fn = "pack_rows")
+  comp(group_label = "The label", start_row = 2,
+       end_row = 5, color = "red", fn = "pack_rows")
+
   comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), fn = "add_header_above")
   comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), bold = TRUE, fn = "add_header_above")
   comp(header = c(" ", "Group 1" = 5, "Group 2" = 6), italic = TRUE, fn = "add_header_above")

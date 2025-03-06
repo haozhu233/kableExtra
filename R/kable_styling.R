@@ -1017,12 +1017,9 @@ styling_latex_position_left2 <- function(parsed) {
   }
   longtable_option <- latex2("[l]")
   table <- parsed[[table_info$tabularPath]]
-  contents <- get_contents(table)
-  idx <- find_bracket_options(contents)
-  if (length(idx)) {
-    contents <- drop_items(contents, idx)
-    table <- set_contents(table, contents)
-  }
+  idx <- find_bracket_options(table)
+  if (length(idx))
+    table <- drop_items(table, idx)
   table <- insert_values(table, 1L, longtable_option)
   parsed[[table_info$tabularPath]] <- table
   parsed
@@ -1044,12 +1041,9 @@ styling_latex_position_right2 <- function(parsed, hold_position, table_envir) {
   } else {
     longtable_option <- latex2("[r]")
     table <- parsed[[table_info$tabularPath]]
-    contents <- get_contents(table)
-    idx <- find_bracket_options(contents)
-    if (length(idx)) {
-      contents <- drop_items(contents, idx)
-      table <- set_contents(table, contents)
-    }
+    idx <- find_bracket_options(table)
+    if (length(idx))
+      table <- drop_items(table, idx)
     table <- insert_values(table, 1L, longtable_option)
     parsed[[table_info$tabularPath]] <- table
     parsed
