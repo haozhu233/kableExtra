@@ -1,5 +1,5 @@
 
-kableExtra 1.4.0.11
+kableExtra 1.4.0.12
 --------------------------------------------------------------------------------
 
 New Features:
@@ -28,6 +28,8 @@ in the wrong directory if an error occurred (#865).
 stopped it from working with `tabularx` tables (#861).
 * Complex alignment options like `p{1cm}` were not
 handled properly by `kable_styling()` (#876).
+* Fixed a bug in `group_rows()`/`pack_rows()` which caused
+LaTeX code to be mangled (#887).
 
 
 kableExtra 1.4.0
