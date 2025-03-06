@@ -293,7 +293,7 @@ clear_color_latex <- function(x, background = F) {
 }
 
 sim_double_escape <- function(x) {
-  return(sub("\\\\", "\\\\\\\\", x))
+  return(gsub("\\\\", "\\\\\\\\", x))
 }
 
 # Here (v 1.4.0) we introduced a simple markdown table parser to compensate the

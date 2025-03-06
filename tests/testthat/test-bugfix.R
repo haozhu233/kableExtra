@@ -1,3 +1,11 @@
+test_that("Issue #887: multiple escapes", {
+  expect_snapshot(
+    kbl(x = head(mtcars), format = "latex") %>%
+      pack_rows(group_label = "Group $\\Delta = \\text{A}^1$",
+                start_row = 2, end_row = 5, escape = FALSE)
+  )
+})
+
 test_that("Issue #876: complex alignment", {
   expect_snapshot(
     kbl(x = mtcars[1:2,1:2],
