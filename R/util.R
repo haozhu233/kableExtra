@@ -410,3 +410,13 @@ parsed_to_kable <- function(parsed, kable_input)
             n_head = attr(kable_input, "n_head"),
             format = "latex",
             class = class(kable_input))
+
+remove_addlinespace <- function(table) {
+  idx <- find_macro(table, "\\addlinespace")
+  for (i in rev(seq_along(idx)))
+    if (!is_char(table[[idx[i] + 1]], "\n"))
+      idx <- idx[-i]
+  if (length(idx) > 0)
+    table <- drop_items(table, c(idx, idx + 1))
+  table
+}

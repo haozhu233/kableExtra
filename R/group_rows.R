@@ -168,14 +168,20 @@ group_rows2 <- function(kable_input, group_label = NULL,
                              bold, italic, monospace, underline, strikeout,
                              color, background))}
     if (kable_format == "latex") {
-      parsed <- kable_to_parsed(kable_input)
+      if (inherits(kable_input, "LaTeX2"))
+        parsed <- kable_input
+      else
+        parsed <- kable_to_parsed(kable_input)
       res <- group_rows_latex2(parsed, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
                               bold, italic, hline_before, hline_after,
                               extra_latex_after, indent, latex_wrap_text,
                               monospace, underline, strikeout,
                               color, background)
-      return(parsed_to_kable(res, kable_input))
+      if (inherits(kable_input, "LaTeX2"))
+        return(res)
+      else
+        return(parsed_to_kable(res, kable_input))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -478,12 +484,7 @@ group_rows_latex2 <- function(parsed, group_label, start_row, end_row,
                          min(find_tableRow(table, rownum)),
                          pre_rowtext)
 
-  idx <- find_macro(table, "\\addlinespace")
-  for (i in rev(seq_along(idx)))
-    if (!is_char(table[[idx[i] + 1]], "\n"))
-      idx <- idx[-i]
-  if (length(idx) > 0)
-    table <- drop_items(table, c(idx, idx + 1))
+  table <- remove_addlinespace(table)
 
   table_info$group_rows_used <- TRUE
   parsed[[table_info$tabularPath]] <- table

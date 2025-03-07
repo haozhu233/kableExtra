@@ -86,6 +86,50 @@ collapse_rows <- function(kable_input, columns = NULL,
   }
 }
 
+#' @export
+collapse_rows2 <- function(kable_input, columns = NULL,
+                          valign = c("middle", "top", "bottom"),
+                          latex_hline = c("full", "major", "none", "custom",
+                                          "linespace"),
+                          row_group_label_position = c("identity", "stack", "first"),
+                          custom_latex_hline = NULL,
+                          row_group_label_fonts = NULL,
+                          headers_to_remove = NULL,
+                          target = NULL,
+                          col_names = TRUE,
+                          longtable_clean_cut = TRUE) {
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  valign <- match.arg(valign)
+  if (!is.null(target)) {
+    if (length(target) > 1 && is.integer(target)) {
+      stop("target can only be a length 1 integer")
+    }
+  }
+  if (kable_format == "html") {
+    return(collapse_rows_html(kable_input, columns, valign, target))
+  }
+  if (kable_format == "latex") {
+    latex_hline <- match.arg(latex_hline)
+    row_group_label_position <- match.arg(row_group_label_position,
+                                          c("identity", "stack", "first"))
+    parsed <- kable_to_parsed(kable_input)
+    res <- collapse_rows_latex2(parsed, columns, latex_hline, valign,
+                               row_group_label_position, row_group_label_fonts, custom_latex_hline,
+                               headers_to_remove, target, col_names, longtable_clean_cut)
+    parsed_to_kable(res, kable_input)
+  }
+}
+
 collapse_rows_html <- function(kable_input, columns, valign, target) {
   kable_attrs <- attributes(kable_input)
   important_nodes <- read_kable_as_xml(kable_input)
@@ -319,11 +363,178 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   return(out)
 }
 
+collapse_rows_latex2 <- function(parsed, columns, latex_hline, valign,
+                                row_group_label_position, row_group_label_fonts,
+                                custom_latex_hline, headers_to_remove, target,
+                                col_names, longtable_clean_cut) {
+  table_info <- magic_mirror2(parsed)
+  if (table_info$nrow <= 2) return(kable_input)
+
+  table <- parsed[[table_info$tabularPath]]
+  table <- remove_addlinespace(table)
+
+  valign <- switch(
+    valign,
+    top = "[t]",
+    middle = "",
+    bottom = "[b]"
+  )
+
+  if (is.null(columns)) {
+    columns <- seq(1, table_info$ncol)
+  }
+
+  kable_dt <- kable_dt_latex2(table, col_names)
+
+  collapse_matrix_rev <- collapse_row_matrix(kable_dt, columns, html = TRUE,
+                                             target)
+  collapse_matrix <- collapse_row_matrix(kable_dt, columns, html = FALSE,
+                                         target)
+
+  new_kable_dt <- kable_dt
+  for (j in seq_along(columns)) {
+    column_align <- columnOption(table, columns[j])
+    column_width <- ifelse(
+      is.null(table_info$column_width[[paste0("column_", columns[j])]]),
+      "*", table_info$column_width[paste0("column_", columns[j])])
+    for (i in seq(1:nrow(collapse_matrix))) {
+      if(row_group_label_position == 'stack'){
+        if(columns[j] < ncol(collapse_matrix) || collapse_matrix_rev[i, j] == 0){
+          new_kable_dt[i, columns[j]] <- ""
+        }
+      } else if(row_group_label_position == 'first'){
+        if(columns[j] <= ncol(collapse_matrix) && collapse_matrix_rev[i, j] == 0){
+          new_kable_dt[i, columns[j]] <- ""
+        }
+      } else {
+        # We need to account for the cmidrules that
+        # are to the right of this column
+        num_rows <- collapse_matrix[i, j]
+        num_cols <- ncol(collapse_matrix) - j
+        if (all(num_rows > 0, num_cols > 0, valign != "[b]", latex_hline != "none")) {
+          vmove <- sum(rowSums(collapse_matrix[i - seq_len(num_rows-1), j + seq_len(num_cols), drop = FALSE]) > 0)
+          if(valign == "") {
+            vmove <- 0.5 * vmove
+          }
+        } else {
+          vmove <- 0
+        }
+        new_kable_dt[i, columns[j]] <- collapse_new_dt_item2(
+          x = kable_dt[i, columns[j]], span = collapse_matrix[i, j], width = column_width,
+          align = column_align, valign = valign,
+          vmove = vmove, latex_hline = latex_hline
+        )
+      }
+    }
+  }
+
+  midrule_matrix <- collapse_row_matrix(kable_dt, seq(1, table_info$ncol),
+                                        html = FALSE, target)
+  midrule_matrix[setdiff(seq(1, table_info$ncol), columns)] <- 1
+
+  ex_bottom <- table_info$nrow - 1
+
+  # # Remove rules
+  # rules <- find_rules(table)
+  # rules <- unlist(rules[-c(1:2, length(rules))])
+  # table <- drop_items(table, rules)
+
+  new_contents <- list()
+  if(row_group_label_position == 'stack'){
+    if(is.null(headers_to_remove)) headers_to_remove <- head(columns, -1)
+    table_info$colnames[headers_to_remove] <- ""
+    new_header <- paste(table_info$colnames, collapse = ' & ')
+    out <- sub(contents[1], new_header, out)
+    table_info$contents[1] <- new_header
+  }
+  if(latex_hline == 'custom' & is.null(custom_latex_hline)){
+    if(row_group_label_position == 'stack'){
+      custom_latex_hline = 1:2
+    } else {
+      custom_latex_hline = 1
+    }
+  }
+
+  if (table_info$tabular == "longtable" && longtable_clean_cut) {
+    if (max(collapse_matrix) > 50) {
+      warning("It seems that you have a group larger than 50 rows and span ",
+              "over a page. You probably want to set longtable_clean_cut to ",
+              "be FALSE.")
+    }
+    pagebreak_hint <- "\\pagebreak[0]"
+    nopagebreak <- "\\nopagebreak"
+  } else {
+    pagebreak_hint <- ""
+    nopagebreak <- ""
+  }
+
+  for (i in seq(1:nrow(collapse_matrix))) {
+    new_contents[[i]] <- vector_to_row(new_kable_dt[i, ])
+    table_info$contents[[i + 1]] <- new_contents[[i]]
+    if (i == 1) {
+      row_midrule <- rule(table, 2)
+    } else {
+      row_midrule <- switch(
+        latex_hline,
+        "none" = "",
+        "full" = paste0(
+          midline_groups2(which(as.numeric(midrule_matrix[i-1, ]) > 0),
+                         table_info$booktabs),
+          ifelse(
+            sum(as.numeric(midrule_matrix[i-1, ]) > 0) == ncol(midrule_matrix),
+            pagebreak_hint, nopagebreak
+          )
+        ),
+        "major" = ifelse(
+          sum(as.numeric(midrule_matrix[i-1, ]) > 0) == ncol(midrule_matrix),
+              paste0(midline_groups2(which(as.numeric(midrule_matrix[i-1, ]) > 0),
+                                           table_info$booktabs), pagebreak_hint),
+          nopagebreak
+        ),
+        "custom" = ifelse(
+          sum(as.numeric(midrule_matrix[i-1, custom_latex_hline])) > 0,
+          midline_groups2(which(as.numeric(midrule_matrix[i-1, ]) > 0),
+                         table_info$booktabs),
+          ""
+        ),
+        "linespace"= ifelse(
+          sum(as.numeric(midrule_matrix[i-1, ]) > 0) == ncol(midrule_matrix),
+          "\\addlinespace",
+          ""
+        )
+      )
+    }
+    new_contents[[i]] <- latex2("\n", row_midrule, "\n", new_contents[[i]])
+    table_info$contents[[i + 1]] <- new_contents[[i]]
+    tableRow(table, i + 1, withExtras = TRUE) <- new_contents[[i]]
+  }
+  parsed[[table_info$tabularPath]] <- table
+  table_info$collapse_rows <- TRUE
+  table_info$collapse_matrix <- collapse_matrix
+  parsed <- update_meta(parsed, table_info)
+  if(row_group_label_position == 'stack'){
+    group_row_index_list <- collapse_rows_index(kable_dt, head(columns, -1))
+    parsed <- collapse_rows_latex_stack2(parsed, group_row_index_list, row_group_label_fonts)
+  }
+  parsed
+}
+
 kable_dt_latex <- function(x, col_names) {
   if (col_names) {
     x <- x[-1]
   }
   data.frame(do.call(rbind, str_split(x, " & ")), stringsAsFactors = FALSE)
+}
+
+
+kable_dt_latex2 <- function(table, col_names) {
+  result <- matrix("", tableNrow(table), tableNcol(table))
+  for (i in 1:nrow(result)) {
+    result[i,] <- row_to_vector(tableRow(table, i))
+  }
+  if (col_names)
+    result <- result[-1, ]
+  result
 }
 
 collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
@@ -364,6 +575,38 @@ collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
   return(out)
 }
 
+collapse_new_dt_item2 <- function(x, span, width = NULL, align, valign,
+                                 vmove = 0, latex_hline) {
+  if (span == 0) return("")
+  if (span == 1) return(x)
+  out <- latex2(
+    "\\multirow", valign,
+    new_block(if (any(valign != "[t]",
+                      !latex_hline %in% c("none", "major", "linespace"))) -span else (-(span - 1))),
+    new_block(if (is.null(width)) "*" else width),
+    switch(
+      latex_hline,
+      "full" = paste0(
+        "[", span - 1,
+        "\\dimexpr\\aboverulesep+\\belowrulesep+\\cmidrulewidth]"
+      ),
+      "custom" = paste0(
+        "[", vmove,
+        "\\dimexpr\\aboverulesep+\\belowrulesep+\\cmidrulewidth]"
+      ),
+      paste0("[\\normalbaselineskip]")
+    ),
+    new_block(latex2(
+    switch(deparseLatex(align),
+           "l" = "\\raggedright\\arraybackslash",
+           "c" = "\\centering\\arraybackslash",
+           "r" = "\\raggedleft\\arraybackslash"),
+    "  ",
+    x))
+  )
+  deparseLatex(out)
+}
+
 midline_groups <- function(x, booktabs = T) {
   diffs <- c(1, diff(x))
   start_indexes <- c(1, which(diffs > 1))
@@ -373,6 +616,20 @@ midline_groups <- function(x, booktabs = T) {
     out <- paste0("\\\\cmidrule{", ranges, "}")
   } else {
     out <- paste0("\\\\cline{", ranges, "}")
+  }
+  out <- paste0(out, collapse = "\n")
+  return(out)
+}
+
+midline_groups2 <- function(x, booktabs = TRUE) {
+  diffs <- c(1, diff(x))
+  start_indexes <- c(1, which(diffs > 1))
+  end_indexes <- c(start_indexes - 1, length(x))
+  ranges <- paste0(x[start_indexes], "-", x[end_indexes])
+  if (booktabs) {
+    out <- paste0("\\cmidrule{", ranges, "}")
+  } else {
+    out <- paste0("\\cline{", ranges, "}")
   }
   out <- paste0(out, collapse = "\n")
   return(out)
@@ -433,6 +690,39 @@ collapse_rows_latex_stack <- function(kable_input, group_row_index_list,
       list(kable_input = out, index = group_row_index_list[[i]], escape = FALSE),
       group_row_args)
     out <- do.call(group_rows, group_row_args)
+  }
+  return(out)
+}
+
+collapse_rows_latex_stack2 <- function(parsed, group_row_index_list,
+                                      row_group_label_fonts){
+  merge_lists <- function(default_list, updated_list){
+    for(x in names(updated_list)){
+      default_list[[x]] <- updated_list[[x]]
+    }
+    return(default_list)
+  }
+  default_font_list <- list(
+    list(bold = T, italic = F),
+    list(bold = F, italic = T),
+    list(bold = F, italic = F)
+  )
+  n_default_fonts = length(default_font_list)
+  n_supplied_fonts = length(row_group_label_fonts)
+  group_row_font_list <- list()
+  for(i in 1:length(group_row_index_list)){
+    if(i > n_default_fonts){
+      group_row_args <- default_font_list[[n_default_fonts]]
+    } else {
+      group_row_args <- default_font_list[[i]]
+    }
+    if(i <= n_supplied_fonts){
+      group_row_args <- merge_lists(group_row_args, row_group_label_fonts[[i]])
+    }
+    group_row_args <- merge_lists(
+      list(parsed = parsed, index = group_row_index_list[[i]], escape = FALSE),
+      group_row_args)
+    parsed <- do.call(group_rows2, group_row_args)
   }
   return(out)
 }

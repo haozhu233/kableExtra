@@ -17,6 +17,12 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(fn = "collapse_rows")
+  comp(fn = "collapse_rows", valign = "bottom")
+  comp(fn = "collapse_rows", columns = 3)
+  try(comp(fn = "collapse_rows", latex_hline = "major")) # old gives extra newlines
+  comp(fn = "collapse_rows", headers_to_remove = 3)
+
   comp(positions = 2:3, fn = "add_indent")
   comp(positions = 2:3, all_cols = TRUE, fn = "add_indent")
   comp(positions = 2:3, target_cols = 3:4, fn = "add_indent")
