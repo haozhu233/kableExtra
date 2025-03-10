@@ -17,6 +17,20 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(column = 2, fn = "column_spec")
+  comp(column = 2, width = "2cm", fn = "column_spec")
+  comp(column = 2, bold = TRUE, fn = "column_spec")
+  comp(column = 2, monospace = TRUE, fn = "column_spec")
+  comp(column = 2, color = "red", fn = "column_spec")
+  comp(column = 2, background = "red", fn = "column_spec")
+  comp(column = 2, border_left = TRUE, fn = "column_spec")
+  comp(column = 2, border_right = TRUE, fn = "column_spec")
+  comp(column = 2, latex_column_spec = "p{1cm}", fn = "column_spec")
+  comp(column = 2, latex_valign = "m", width = "2cm", fn = "column_spec")
+  comp(column = 2, link = "https://www.r-project.org", fn = "column_spec")
+  comp(column = 2, link = "https://www.r-project.org", new_tab = FALSE, fn = "column_spec")
+  comp(column = 2, image = "https://www.r-project.org/Rlogo.png", fn = "column_spec")
+
   comp(fn = "collapse_rows")
   comp(fn = "collapse_rows", valign = "bottom")
   comp(fn = "collapse_rows", columns = 3)

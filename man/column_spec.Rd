@@ -117,6 +117,6 @@ internally, any backslashes must be escaped.
 x <- knitr::kable(head(mtcars), "html")
 column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
 x <- knitr::kable(head(mtcars), "latex", booktabs = TRUE)
-column_spec(x, 1, latex_column_spec = ">{\\\\\\\\color{red}}c")
+column_spec(x, 1, latex_column_spec = ">{color{red}}c")
 }
 }

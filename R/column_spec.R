@@ -62,7 +62,7 @@
 #' x <- knitr::kable(head(mtcars), "html")
 #' column_spec(x, 1:2, width = "20em", bold = TRUE, italic = TRUE)
 #' x <- knitr::kable(head(mtcars), "latex", booktabs = TRUE)
-#' column_spec(x, 1, latex_column_spec = ">{\\\\color{red}}c")
+#' column_spec(x, 1, latex_column_spec = ">{color{red}}c")
 #' }
 #' @export
 column_spec <- function(kable_input, column,
@@ -108,6 +108,56 @@ column_spec <- function(kable_input, column,
                              border_left, border_right,
                              latex_column_spec, latex_valign, include_thead,
                              link, image))
+  }
+}
+
+#' @export
+column_spec2 <- function(kable_input, column,
+                        width = NULL, bold = FALSE, italic = FALSE,
+                        monospace = FALSE, underline = FALSE, strikeout = FALSE,
+                        color = NULL, background = NULL,
+                        border_left = FALSE, border_right = FALSE,
+                        width_min = NULL, width_max = NULL,
+                        extra_css = NULL, include_thead = FALSE,
+                        latex_column_spec = NULL, latex_valign = 'p',
+                        link = NULL, new_tab = TRUE,
+                        tooltip = NULL, popover = NULL, image = NULL) {
+  if (!is.numeric(column)) {
+    stop("column must be numeric. ")
+  }
+  kable_format <- attr(kable_input, "format")
+  if (kable_format %in% c("pipe", "markdown")) {
+    kable_input <- md_table_parser(kable_input)
+    kable_format <- attr(kable_input, "format")
+  }
+
+  if (!kable_format %in% c("html", "latex")) {
+    warning("Please specify format in kable. kableExtra can customize either ",
+            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "for details.")
+    return(kable_input)
+  }
+  if (kable_format == "html") {
+    return(column_spec_html(kable_input, column, width,
+                            bold, italic, monospace,
+                            underline, strikeout,
+                            color, background,
+                            border_left, border_right,
+                            width_min, width_max,
+                            extra_css, include_thead,
+                            link, new_tab, tooltip, popover, image))
+  }
+  if (kable_format == "latex") {
+    parsed <- kable_to_parsed(kable_input)
+    parsed <- update_meta(parsed, magic_mirror2(parsed))
+    res <- column_spec_latex2(parsed, column, width,
+                             bold, italic, monospace,
+                             underline, strikeout,
+                             color, background,
+                             border_left, border_right,
+                             latex_column_spec, latex_valign, include_thead,
+                             link, image)
+    return(parsed_to_kable(res, kable_input))
   }
 }
 
@@ -436,6 +486,86 @@ column_spec_latex <- function(kable_input, column, width,
   return(out)
 }
 
+column_spec_latex2 <- function(parsed, columns, width,
+                              bold, italic, monospace,
+                              underline, strikeout,
+                              color, background,
+                              border_left, border_right,
+                              latex_column_spec, latex_valign, include_thead,
+                              link, image) {
+  table_info <- attr(parsed, "kable_meta")
+  table <- parsed[[table_info$tabularPath]]
+
+  if (!is.null(table_info$collapse_rows)) {
+    message("Usually it is recommended to use column_spec before collapse_rows,",
+            " especially in LaTeX, to get a desired result. ")
+  }
+
+  kable_align_old <- columnOptions(table)
+
+  for (column in columns) {
+    columnOption(table, column) <- latex_column_align_builder2(
+        columnOption(table, column),
+        width, border_left, border_right,
+        latex_column_spec, latex_valign)
+  }
+  parsed[[table_info$tabularPath]] <- table
+
+  if (!is.null(width)) {
+    for (column in columns)
+      parsed <- replace_makecell_with_newline2(parsed, column)
+  }
+
+  nrows <- length(table_info$contents)
+  off <- table_info$position_offset
+
+  bold <- ensure_len_latex(bold, nrows, off, include_thead, FALSE, "bold")
+  italic <- ensure_len_latex(italic, nrows, off, include_thead, FALSE, "italic")
+  monospace <- ensure_len_latex(monospace, nrows, off, include_thead, FALSE,
+                                "monospace")
+  underline <- ensure_len_latex(underline, nrows, off, include_thead, FALSE,
+                                "underline")
+  strikeout <- ensure_len_latex(strikeout, nrows, off, include_thead, FALSE,
+                                "strikeout")
+  color <- ensure_len_latex(color, nrows, off, include_thead, "black", "color")
+  background <- ensure_len_latex(background, nrows, off, include_thead, "white",
+                                 "background")
+  link <- ensure_len_latex(link, nrows, off, include_thead, "#", "link")
+  image <- ensure_len_latex(image, nrows, off, include_thead, "", "image")
+
+  if (include_thead) {
+    rows <- seq(1, nrows)
+  } else {
+    rows <- seq(1 + off, nrows)
+  }
+
+  # issue #658: offset generates bad indices with single row tables
+  rows <- intersect(rows, seq(nrows))
+
+  for (i in rows) {
+    target_row <- tableRow(table, i)
+    new_row <- latex_cell_builder2(
+      target_row, columns, table_info,
+      bold[i], italic[i], monospace[i], underline[i],
+      strikeout[i], color[i], background[i], link[i], image[i]
+      # font_size, angle
+    )
+    table_info$contents[[i]] <- new_row
+    tableRow(table, i) <- new_row
+  }
+
+  parsed[[table_info$tabularPath]] <- table
+
+  if (!is.null(width)) {
+    if (is.null(table_info$column_width)) {
+      table_info$column_width <- list()
+    }
+    for (column in columns) {
+      table_info$column_width[[paste0("column_", column)]] <- width
+    }
+  }
+  update_meta(parsed, table_info)
+}
 ensure_len_latex <- function(x, l, off, include_thead, def, name) {
   if (is.null(x)) return(NULL)
   if (length(x) == 1) return(rep(x, l))
@@ -491,8 +621,78 @@ latex_column_align_builder <- function(x, width,
   return(x)
 }
 
+latex_column_align_builder2 <- function(x, width,
+                                       border_left, border_right,
+                                       latex_column_spec, latex_valign) {
+  extra_align <- ""
+  if (!is.null(width)) {
+    extra_align <- switch(x[[1]],
+                          "l" = "\\raggedright\\arraybackslash",
+                          "c" = "\\centering\\arraybackslash",
+                          "r" = "\\raggedleft\\arraybackslash")
+    x <- latex2(latex_valign, new_block(width))
+  }
+  latex_array_options <- latex2(">", new_block( extra_align))
+  x <- latex2(latex_array_options, x)
+  if (border_left) {
+    x <- latex2("|", x)
+  }
+  if (border_right) {
+    x <- latex2(x, "|")
+  }
+  if (!is.null(latex_column_spec))
+    x <- latex_column_spec
+
+  latex2(x)
+}
+
 replace_makecell_with_newline <- function(kable_input, table_info, column) {
   if (!str_detect(kable_input, "makecell")) return(list(kable_input, table_info))
+
+  browser()
+
+  contents_table <- data.frame(sapply(table_info$contents,
+                                      function(x) {str_split(x, " \\& ")[[1]]}),
+                               stringsAsFactors = F)
+  names(contents_table) <- paste0("x", 1:table_info$nrow)
+  rows_check_makecell <- str_detect(contents_table[column, ], "makecell")
+  if (sum(rows_check_makecell) == 0) return(list(kable_input, table_info))
+  rows_to_replace <- which(rows_check_makecell)
+
+  for (i in column) {
+    target_column <- contents_table[i, ]
+    for (j in which(str_detect(target_column, "\\\\\\\\makecell"))) {
+      contents_table[i, j] <- str_replace(
+        contents_table[i, j], "\\\\\\\\makecell\\\\\\[.\\\\\\]\\\\\\{", "")
+      contents_table[i, j] <- str_replace(
+        contents_table[i, j], "\\\\\\}$", "")
+      contents_table[i, j] <- str_replace_all(
+        contents_table[i, j], "\\\\\\\\\\\\\\\\", "\\\\\\\\newline "
+      )
+    }
+  }
+
+  new_contents <- unlist(lapply(contents_table, paste, collapse = " & "))
+  for (i in rows_to_replace) {
+    kable_input <- sub(table_info$contents[i], new_contents[i], kable_input,
+                       perl = T)
+    table_info$contents[i] <- new_contents[i]
+  }
+
+  return(list(kable_input, table_info))
+}
+
+replace_makecell_with_newline2 <- function(parsed, column) {
+  table_info <- attr(parsed, "kable_meta")
+  table <- parsed[[table_info$tabularPath]]
+  makecell <- find_macro(table, "\\makecell")
+  if (!length(makecell)) return(parsed)
+
+  browser()
+
+  #done to here
+
+
   contents_table <- data.frame(sapply(table_info$contents,
                                       function(x) {str_split(x, " \\& ")[[1]]}),
                                stringsAsFactors = F)
@@ -596,6 +796,69 @@ latex_cell_builder <- function(target_row, column, table_info,
   }
 
   new_row <- paste(new_row, collapse = " & ")
+
+  return(new_row)
+}
+
+latex_cell_builder2 <- function(target_row, columns, table_info,
+                               bold, italic, monospace,
+                               underline, strikeout,
+                               color, background, link, image
+                               # font_size, angle
+) {
+  new_row <- latex_row_cells2(target_row)
+  for (column in columns) {
+    if (bold) {
+      new_row[[column]] <- latex2("\\textbf", new_block(new_row[[column]]))
+    }
+    if (italic) {
+      new_row[[column]] <- latex2("\\em", new_block(new_row[[column]]))
+    }
+    if (monospace) {
+      new_row[[column]] <- latex2("\\ttfamily", new_block(new_row[[column]]))
+    }
+    if (underline) {
+      new_row[[column]] <- latex2("\\underline", new_block(new_row[[column]]))
+    }
+    if (strikeout) {
+      new_row[[column]] <- latex2("\\sout", new_block(new_row[[column]]))
+    }
+    if (!is.null(color)) {
+      clean_columns <- clear_color_latex2(new_row[[column]])
+      new_row[[column]] <- latex2("\\textcolor", latex_color2(color)[[1]], new_block(clean_columns))
+    }
+    if (!is.null(background)) {
+      clean_columns <- clear_color_latex2(new_row[[column]], TRUE)
+      new_row[[column]] <- latex2("\\cellcolor", latex_color2(background)[[1]], new_block(clean_columns))
+    }
+
+    if (!is.null(link)) {
+      new_row[[column]] <- latex2("\\href", new_block(escape_latex2(link)), new_block(new_row[[column]]))
+    }
+
+    if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
+      image <- image[[1]]
+      if (inherits(image, "kableExtraInlinePlots")) {
+        new_row[[column]] <- latex2(
+          new_row[[column]],
+          '\\includegraphics[width=',
+          round(image$width / image$res, 2), 'in, height=',
+          round(image$height / image$res, 2), 'in]',
+          new_block(image$path)
+        )
+      } else {
+        if (!is.null(image) && !is.na(image) && image != "") {
+          new_row[[column]] <- latex2(
+            new_row[[column]],
+            '\\includegraphics',
+            new_block(image)
+          )
+        }
+      }
+    }
+  }
+
+  new_row <- vector_to_row(new_row)
 
   return(new_row)
 }
