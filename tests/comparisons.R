@@ -17,6 +17,31 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(fn = "footnote")
+  comp(general = "General comment", fn = "footnote")
+  comp(general = "General comment", general_title = "General title", fn = "footnote")
+  comp(general = "General comment", general_title = "General title", title_format = "bold", fn = "footnote")
+  comp(number = c("Footnote 1", "Footnote 2"), fn = "footnote")
+  comp(number = c("Footnote 1", "Footnote 2"), number_title = "Number title", fn = "footnote")
+  comp(alphabet = c("Footnote a", "Footnote b"), fn = "footnote")
+  comp(alphabet = c("Footnote a", "Footnote b"),
+       alphabet_title = "Alpha title", fn = "footnote")
+  comp(symbol = c("Symbol 1", "Symbol 2"), fn = "footnote")
+  comp(symbol = c("Symbol 1", "Symbol 2"), symbol_manual = c('*', '**', '***'), fn = "footnote") # symbol_manual handled differently, so avoid backslash
+  comp(symbol = c("Symbol 1", "Symbol 2"),
+       symbol_title = "Symbol title", fn = "footnote")
+  comp(general = "General comment", alphabet = c("Footnote a", "Footnote b"), footnote_order = c("alphabet", "general"), fn = "footnote")
+  comp(general = "General comment General comment General comment General comment General comment General comment",
+       footnote_as_chunk = TRUE, fn = "footnote")
+  comp(general = "this is math: $1 + 1$", escape = TRUE, fn = "footnote")
+  comp(general = "this is math: $1 + 1$", escape = FALSE, fn = "footnote")
+  comp(general = "General comment General comment General comment General comment General comment General comment",
+       threeparttable = TRUE, fn = "footnote")
+  comp(general = "General comment", fixed_small_size = TRUE,
+       fn = "footnote")
+  try(comp(general = "General comment", show_every_page = TRUE,
+       fn = "footnote")) # old code is wrong for longtable
+
   comp(column = 2, fn = "column_spec")
   comp(column = 2, width = "2cm", fn = "column_spec")
   comp(column = 2, bold = TRUE, fn = "column_spec")

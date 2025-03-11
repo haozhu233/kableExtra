@@ -566,6 +566,7 @@ pdfTable_styling2 <- function(parsed,
                                        repeat_header_method, repeat_header_continued)
     table_info <- attr(parsed, "kable_meta")
     table_info$repeat_header_latex <- TRUE
+    parsed <- update_meta(parsed, table_info)
   }
 
   if (full_width) {

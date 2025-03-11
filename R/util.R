@@ -402,11 +402,13 @@ update_meta <- function(parsed, table_info) {
 kable_to_parsed <- function(kable_input)
   structure(parseLatex(kable_input),
     # Add the attributes that may be expected later...
+    kable_meta = attr(kable_input, "kable_meta"),
     n_head = attr(kable_input, "n_head"),
     format = "latex")
 
 parsed_to_kable <- function(parsed, kable_input)
   structure(capture.output(parsed),
+            kable_meta = attr(parsed, "kable_meta"),
             n_head = attr(kable_input, "n_head"),
             format = "latex",
             class = class(kable_input))
