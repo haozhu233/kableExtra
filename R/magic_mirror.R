@@ -33,6 +33,7 @@ magic_mirror <- function(kable_input){
   return(table_info)
 }
 
+#' @export
 magic_mirror2 <- function(kable_input){
   kable_format <- attr(kable_input, "format")
   if (kable_format == "latex") {

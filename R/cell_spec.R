@@ -319,3 +319,21 @@ text_spec <- function(x, format,
             extra_css, escape, background_as_tile,
             latex_background_in_cell)
 }
+
+#' @export
+text_spec2 <- function(x, format,
+                      bold = FALSE, italic = FALSE, monospace = FALSE,
+                      underline = FALSE, strikeout = FALSE,
+                      color = NULL, background = NULL,
+                      align = NULL, font_size = NULL, angle = NULL,
+                      tooltip = NULL, popover = NULL, link = NULL,
+                      new_tab = FALSE, extra_css = NULL,
+                      escape = TRUE,
+                      background_as_tile = TRUE,
+                      latex_background_in_cell = FALSE) {
+  cell_spec2(x, format, bold, italic, monospace, underline, strikeout,
+            color, background, align,
+            font_size, angle, tooltip, popover, link, new_tab,
+            extra_css, escape, background_as_tile,
+            latex_background_in_cell)
+}
