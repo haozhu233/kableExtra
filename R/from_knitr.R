@@ -14,16 +14,7 @@ escape_latex <- function(x, newlines = FALSE, spaces = FALSE) {
   x
 }
 
-escape_latex2 <- function(x) {
-  x = gsub('\\\\', '\\\\\\\\textbackslash', x)
-  x = gsub('([#$%&_{}])', '\\\\\\\\\\1', x)
-  x = gsub('\\\\textbackslash', '\\\\\\\\textbackslash{}', x)
-  x = gsub('~', '\\\\\\\\textasciitilde{}', x)
-  x = gsub('\\^', '\\\\\\\\textasciicircum{}', x)
-  x
-}
-
-escape_latex2_2 <- function(x) {
+escape_latex2_ <- function(x) {
   x = gsub('\\\\', '\\\\textbackslash', x)
   x = gsub('([#$%&_{}])', '\\\\\\1', x)
   x = gsub('\\\\textbackslash', '\\\\textbackslash{}', x)

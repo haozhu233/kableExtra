@@ -50,7 +50,7 @@ Save kable to files
 }
 \examples{
 \dontrun{
-library(kableExtra)
+library(kableExtra2)
 
 kable(mtcars[1:5, ], "html") \%>\%
   kable_styling("striped") \%>\%

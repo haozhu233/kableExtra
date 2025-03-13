@@ -16,7 +16,7 @@ This document includes documentations for legacy/unrecommended features in this 
 Unless there are significant differences between HTML/LaTeX, I will only keep one copy of documentation in HTML here since most of the functions in this packages share a very similar interface between their HTML and LaTeX ends. 
 
 ```{r, warning=FALSE}
-library(kableExtra)
+library(kableExtra2)
 dt <- mtcars[1:5, 1:6]
 ```
 

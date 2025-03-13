@@ -37,44 +37,12 @@ add_indent <- function(kable_input, positions,
   if (kable_format == "html") {
     return(add_indent_html(
       kable_input, positions, level_of_indent, all_cols, target_cols
-      ))
-  }
-  if (kable_format == "latex") {
-    return(add_indent_latex(
-      kable_input, positions, level_of_indent, all_cols, target_cols
-      ))
-  }
-}
-
-#' @export
-add_indent2 <- function(kable_input, positions,
-                       level_of_indent = 1, all_cols = FALSE,
-                       target_cols = 1) {
-
-  if (!is.numeric(positions)) {
-    stop("Positions can only take numeric row numbers (excluding header rows).")
-  }
-  kable_format <- attr(kable_input, "format")
-  if (kable_format %in% c("pipe", "markdown")) {
-    kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
-  }
-
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (kable_format == "html") {
-    return(add_indent_html(
-      kable_input, positions, level_of_indent, all_cols, target_cols
     ))
   }
   if (kable_format == "latex") {
     parsed <- kable_to_parsed(kable_input)
-    parsed <- update_meta(parsed, magic_mirror2(parsed))
-    res <- add_indent_latex2(
+    parsed <- update_meta(parsed, magic_mirror(parsed))
+    res <- add_indent_latex(
       parsed, positions, level_of_indent, all_cols, target_cols
     )
     parsed_to_kable(res, kable_input)
@@ -82,57 +50,7 @@ add_indent2 <- function(kable_input, positions,
 }
 
 # Add indentation for LaTeX
-add_indent_latex <- function(kable_input, positions,
-                             level_of_indent = 1, all_cols = FALSE,
-                             target_cols = 1) {
-  table_info <- magic_mirror(kable_input)
-  out <- solve_enc(kable_input)
-  level_of_indent<-as.numeric(level_of_indent)
-
-  if (table_info$duplicated_rows) {
-    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
-    out <- dup_fx_out[[1]]
-    table_info <- dup_fx_out[[2]]
-  }
-
-  max_position <- table_info$nrow - table_info$position_offset
-
-  if (max(positions) > max_position) {
-    stop("There aren't that many rows in the table. Check positions in ",
-         "add_indent_latex.")
-  }
-
-  for (i in positions + table_info$position_offset) {
-    rowtext <- table_info$contents[i]
-    new_rowtext <- unlist(latex_row_cells(rowtext))
-    if (all_cols) {
-      new_rowtext <- lapply(new_rowtext, function(x) {
-        paste0("\\\\hspace\\{", level_of_indent ,"em\\}", x)
-      })
-      new_rowtext <- paste(unlist(new_rowtext), collapse = " & ")
-    } else {
-      if (all(target_cols %in% seq(table_info$ncol))) {
-        new_rowtext[target_cols] <- latex_indent_unit(
-          new_rowtext[target_cols], level_of_indent)
-      } else {
-        stop("There aren't that many columns in the row. Check target_cols in ",
-         "add_indent_latex.")
-      }
-    }
-    new_rowtext <- paste(unlist(new_rowtext), collapse = " & ")
-    out <- sub(paste0(rowtext, "(\\\\\\\\\\*?(\\[.*\\])?\n)"),
-               paste0(new_rowtext, "\\1"),
-               out, perl = TRUE)
-    table_info$contents[i] <- new_rowtext
-  }
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-  return(out)
-
-
-}
-
-add_indent_latex2 <- function(parsed, positions,
+add_indent_latex <- function(parsed, positions,
                              level_of_indent = 1, all_cols = FALSE,
                              target_cols = 1) {
   table_info <- attr(parsed, "kable_meta")
@@ -149,14 +67,14 @@ add_indent_latex2 <- function(parsed, positions,
 
   for (i in positions + table_info$position_offset) {
     rowtext <- table_info$contents[[i]]
-    new_rowtext <- latex_row_cells2(rowtext)
+    new_rowtext <- latex_row_cells(rowtext)
     if (all_cols) {
       new_rowtext <- lapply(new_rowtext, function(x) {
         latex2("\\hspace", new_block(paste0(level_of_indent ,"em")), x)
       })
     } else {
       if (all(target_cols %in% seq(table_info$ncol))) {
-        new_rowtext[target_cols] <- lapply(new_rowtext[target_cols], latex_indent_unit2,
+        new_rowtext[target_cols] <- lapply(new_rowtext[target_cols], latex_indent_unit,
           level_of_indent)
       } else {
         stop("There aren't that many columns in the row. Check target_cols in ",
@@ -173,10 +91,6 @@ add_indent_latex2 <- function(parsed, positions,
 }
 
 latex_indent_unit <- function(rowtext, level_of_indent) {
-  paste0("\\\\hspace\\{", level_of_indent ,"em\\}", rowtext)
-}
-
-latex_indent_unit2 <- function(rowtext, level_of_indent) {
   latex2("\\hspace", new_block(paste0(level_of_indent ,"em")), rowtext)
 }
 

@@ -59,16 +59,6 @@ html_color <- function(colors) {
   sapply(colors, html_color_)
 }
 
-latex_color_ <- function(color) {
-  if (substr(color, 1, 1) != "#") {
-    return(paste0("\\{", color, "\\}"))
-  } else {
-    color <- sub("#", "", color)
-    if (nchar(color) == 8) color <- substr(color, 1, 6)
-    return(paste0("\\[HTML\\]\\{", color, "\\}"))
-  }
-}
-
 latex_color__ <- function(color) {
   if (substr(color, 1, 1) != "#") {
     return(paste0("{", color, "}"))
@@ -79,7 +69,7 @@ latex_color__ <- function(color) {
   }
 }
 
-latex_color_2 <- function(color) {
+latex_color_ <- function(color) {
   if (substr(color, 1, 1) != "#") {
     return(new_block(color))
   } else {
@@ -88,19 +78,10 @@ latex_color_2 <- function(color) {
     return(lapply(color, function(x) latex2("[HTML]", new_block(x))))
   }
 }
+
 latex_color <- function(colors, escape = TRUE) {
   colors <- as.character(colors)
-  if (escape) {
-    return(sapply(colors, latex_color_))
-  } else {
-    return(sapply(colors, latex_color__))
-  }
-
-}
-
-latex_color2 <- function(colors, escape = TRUE) {
-  colors <- as.character(colors)
-  lapply(colors, function(x) latex2(latex_color_2(x)))
+  lapply(colors, function(x) latex2(latex_color_(x)))
 }
 
 #' Generate common font size for continuous values

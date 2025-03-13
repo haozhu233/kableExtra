@@ -93,86 +93,11 @@ group_rows <- function(kable_input, group_label = NULL,
                              bold, italic, monospace, underline, strikeout,
                              color, background))}
     if (kable_format == "latex") {
-      return(group_rows_latex(kable_input, group_label, start_row, end_row,
-                              latex_gap_space, escape, latex_align, colnum,
-                              bold, italic, hline_before, hline_after,
-                              extra_latex_after, indent, latex_wrap_text,
-                              monospace, underline, strikeout,
-                              color, background))
-    }
-  } else {
-    index <- group_row_index_translator(index)
-    out <- kable_input
-    if (kable_format == "html") {
-      for (i in 1:nrow(index)) {
-        if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
-                                    use label_row_css instead.")
-        out <- group_rows_html(out, index$header[i],
-                               index$start[i], index$end[i],
-                               label_row_css, escape, colnum, indent,
-                               bold, italic, monospace, underline, strikeout,
-                               color, background)
-      }
-    }
-    if (kable_format == "latex") {
-      for (i in 1:nrow(index)) {
-        out <- group_rows_latex(out, index$header[i],
-                               index$start[i], index$end[i],
-                               latex_gap_space, escape, latex_align, colnum,
-                               bold, italic, hline_before, hline_after,
-                               extra_latex_after, indent, latex_wrap_text,
-                               monospace, underline, strikeout,
-                               color, background)
-      }
-    }
-    return(out)
-  }
-}
-
-#' @export
-group_rows2 <- function(kable_input, group_label = NULL,
-                       start_row = NULL, end_row = NULL,
-                       index = NULL,
-                       label_row_css = "border-bottom: 1px solid;",
-                       latex_gap_space = "0.3em",
-                       escape = TRUE, latex_align = "l",
-                       latex_wrap_text = FALSE,
-                       colnum = NULL,
-                       bold = TRUE,
-                       italic = FALSE,
-                       hline_before = FALSE,
-                       hline_after = FALSE,
-                       extra_latex_after = NULL,
-                       indent = TRUE,
-                       monospace = FALSE, underline = FALSE, strikeout = FALSE,
-                       color = NULL, background = NULL) {
-
-  kable_format <- attr(kable_input, "format")
-  if (kable_format %in% c("pipe", "markdown")) {
-    kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
-  }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-
-  if (is.null(index)) {
-    if (kable_format == "html") {
-      if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
-                                    use label_row_css instead.")
-      return(group_rows_html(kable_input, group_label, start_row, end_row,
-                             label_row_css, escape, colnum, indent,
-                             bold, italic, monospace, underline, strikeout,
-                             color, background))}
-    if (kable_format == "latex") {
       if (inherits(kable_input, "LaTeX2"))
         parsed <- kable_input
       else
         parsed <- kable_to_parsed(kable_input)
-      res <- group_rows_latex2(parsed, group_label, start_row, end_row,
+      res <- group_rows_latex(parsed, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
                               bold, italic, hline_before, hline_after,
                               extra_latex_after, indent, latex_wrap_text,
@@ -309,110 +234,13 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   return(out)
 }
 
-group_rows_latex <- function(kable_input, group_label, start_row, end_row,
+group_rows_latex <- function(parsed, group_label, start_row, end_row,
                              gap_space, escape, latex_align, colnum,
                              bold = T, italic = F, hline_before = F, hline_after = F,
                              extra_latex_after = NULL, indent, latex_wrap_text = F,
                              monospace = F, underline = F, strikeout = F,
                              color = NULL, background = NULL) {
-  table_info <- magic_mirror(kable_input)
-  out <- solve_enc(kable_input)
-
-  if (table_info$duplicated_rows) {
-    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
-    out <- dup_fx_out[[1]]
-    table_info <- dup_fx_out[[2]]
-  }
-
-  if (escape) {
-    group_label <- input_escape(group_label, latex_align)
-  } else {
-    group_label <- sim_all_double_escape(group_label)
-  }
-
-  if (bold) {
-    group_label <- paste0("\\\\textbf{", group_label, "}")
-  }
-
-  if (italic) group_label <- paste0("\\\\textit{", group_label, "}")
-
-  if (monospace) {
-    group_label <- paste0("\\\\ttfamily\\{", group_label, "\\}")
-  }
-  if (underline) {
-    group_label <- paste0("\\\\underline\\{", group_label, "\\}")
-  }
-  if (strikeout) {
-    group_label <- paste0("\\\\sout\\{", group_label, "\\}")
-  }
-  if (!is.null(color)) {
-    group_label <- paste0("\\\\textcolor", latex_color(color), "\\{",
-                              group_label, "\\}")
-  }
-  if (!is.null(background)) {
-    group_label <- paste0("\\\\cellcolor", latex_color(background), "\\{",
-                              group_label, "\\}")
-  }
-  # Add group label
-  if (latex_wrap_text) {
-    latex_align <- switch(
-      latex_align,
-      "l" = "p{\\\\linewidth}",
-      "c" = ">{\\\\centering\\\\arraybackslash}p{\\\\linewidth}",
-      "r" = ">{\\\\centering\\\\arraybackslash}p{\\\\linewidth}"
-    )
-  }
-
-
-  rowtext <- table_info$contents[start_row + table_info$position_offset]
-  if (table_info$booktabs) {
-    pre_rowtext <- paste0("\\\\addlinespace[", gap_space, "]\n")
-  } else {
-    pre_rowtext <- ''
-    hline_after <- TRUE
-  }
-  pre_rowtext <- paste0(
-    pre_rowtext,
-    ifelse(hline_before,"\\\\hline\n", ""),
-    "\\\\multicolumn{", ifelse(is.null(colnum),
-                               table_info$ncol,
-                               colnum),
-    "}{", latex_align,"}{", group_label,
-    "}\\\\\\\\\n", ifelse(hline_after, "\\\\hline\n", '')
-  )
-  if(!is.null(extra_latex_after)){
-    pre_rowtext <- paste0(pre_rowtext,
-                      regex_escape(extra_latex_after, double_backslash = TRUE))
-  }
-  new_rowtext <- paste0(pre_rowtext, rowtext)
-  if (start_row + 1 == table_info$nrow &
-      !is.null(table_info$repeat_header_latex) & table_info$booktabs) {
-    out <- sub(paste0(rowtext, "\\\\\\\\\\*\n"),
-               paste0(new_rowtext, "\\\\\\\\\\*\n"),
-               out)
-  } else {
-    out <- sub(paste0(rowtext, "\\\\\\\\\n"),
-               paste0(new_rowtext, "\\\\\\\\\n"),
-               out)
-  }
-
-  out <- gsub("\\\\addlinespace\n", "", out)
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  table_info$group_rows_used <- TRUE
-  attr(out, "kable_meta") <- table_info
-  if (indent) {
-    out <- add_indent_latex(out, seq(start_row, end_row))
-  }
-  return(out)
-}
-
-group_rows_latex2 <- function(parsed, group_label, start_row, end_row,
-                             gap_space, escape, latex_align, colnum,
-                             bold = T, italic = F, hline_before = F, hline_after = F,
-                             extra_latex_after = NULL, indent, latex_wrap_text = F,
-                             monospace = F, underline = F, strikeout = F,
-                             color = NULL, background = NULL) {
-  table_info <- magic_mirror2(parsed)
+  table_info <- magic_mirror(parsed)
 
   if (escape)
     group_label <- input_escape(group_label, latex_align)
@@ -434,7 +262,7 @@ group_rows_latex2 <- function(parsed, group_label, start_row, end_row,
     group_label <- latex2("\\sout", new_block(group_label))
   }
   if (!is.null(color)) {
-    group_label <- latex2("\\textcolor", latex_color2(color)[[1]],
+    group_label <- latex2("\\textcolor", latex_color(color)[[1]],
                           new_block(group_label))
   }
   if (!is.null(background)) {
@@ -490,7 +318,7 @@ group_rows_latex2 <- function(parsed, group_label, start_row, end_row,
   parsed[[table_info$tabularPath]] <- table
   parsed <- update_meta(parsed, table_info)
   if (indent) {
-    parsed <- add_indent_latex2(parsed, 1 + seq(start_row, end_row))
+    parsed <- add_indent_latex(parsed, 1 + seq(start_row, end_row))
   }
   parsed
 }
@@ -515,6 +343,3 @@ auto_index <- function(x) {
 #' @rdname group_rows
 #' @export
 pack_rows <- group_rows
-
-#' @export
-pack_rows2 <- group_rows2

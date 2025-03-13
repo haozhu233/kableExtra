@@ -75,8 +75,9 @@
 #' @importFrom graphics par text hist boxplot
 #' @importFrom svglite svglite
 #' @import htmltools
-#' @name kableExtra-package
+#' @name kableExtra2-package
 #' @aliases kableExtra
+#' @aliases kableExtra2
 #' @keywords package
 "_PACKAGE"
 

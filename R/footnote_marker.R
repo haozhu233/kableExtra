@@ -76,7 +76,7 @@ footnote_marker_symbol <- function(x, format, double_escape = FALSE) {
     }
   }
   number_index <- read.csv(system.file("symbol_index.csv",
-                                       package = "kableExtra"))
+                                       package = "kableExtra2"))
   if (format == "html") {
     x <- number_index$symbol.html[x]
     return(paste0("<sup>", x, "</sup>"))

@@ -158,95 +158,11 @@ kable_styling <- function(kable_input,
       full_width <- getOption("kable_styling_full_width", F)
     }
     repeat_header_method <- match.arg(repeat_header_method)
-    return(pdfTable_styling(kable_input,
-                            latex_options = latex_options,
-                            full_width = full_width,
-                            position = position,
-                            font_size = font_size,
-                            row_label_position = row_label_position,
-                            repeat_header_text = repeat_header_text,
-                            repeat_header_method = repeat_header_method,
-                            repeat_header_continued = repeat_header_continued,
-                            stripe_color = stripe_color,
-                            stripe_index = stripe_index,
-                            latex_table_env = latex_table_env,
-                            table.envir = table.envir,
-                            wraptable_width = wraptable_width))
-  }
-}
-
-#' @export
-kable_styling2 <- function(kable_input,
-                          bootstrap_options = "basic",
-                          latex_options = "basic",
-                          full_width = NULL,
-                          position = "center",
-                          font_size = NULL,
-                          row_label_position = "l",
-                          repeat_header_text = "\\textit{(continued)}",
-                          repeat_header_method = c("append", "replace"),
-                          repeat_header_continued = FALSE,
-                          stripe_color = "gray!10",
-                          stripe_index = NULL,
-                          latex_table_env = NULL,
-                          protect_latex = TRUE,
-                          table.envir = "table",
-                          fixed_thead = FALSE,
-                          htmltable_class = NULL,
-                          html_font = NULL,
-                          wraptable_width = '0pt') {
-
-  if (length(bootstrap_options) == 1 && bootstrap_options == "basic") {
-    bootstrap_options <- getOption("kable_styling_bootstrap_options", "basic")
-  }
-  if (length(latex_options) == 1 && latex_options == "basic") {
-    latex_options <- getOption("kable_styling_latex_options", "basic")
-  }
-  if (position == "center") {
-    position <- getOption("kable_styling_position", "center")
-  }
-  position <- match.arg(position,
-                        c("center", "left", "right", "float_left", "float_right"))
-  if (is.null(font_size)) {
-    font_size <- getOption("kable_styling_font_size", NULL)
-  }
-
-  kable_format <- attr(kable_input, "format")
-  if (kable_format %in% c("pipe", "markdown")) {
-    kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
-  }
-
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (kable_format == "html") {
-    if (is.null(full_width)) {
-      full_width <- getOption("kable_styling_full_width", T)
-    }
-    return(htmlTable_styling(kable_input,
-                             bootstrap_options = bootstrap_options,
-                             full_width = full_width,
-                             position = position,
-                             font_size = font_size,
-                             protect_latex = protect_latex,
-                             fixed_thead = fixed_thead,
-                             htmltable_class = htmltable_class,
-                             html_font = html_font))
-  }
-  if (kable_format == "latex") {
-    if (is.null(full_width)) {
-      full_width <- getOption("kable_styling_full_width", F)
-    }
-    repeat_header_method <- match.arg(repeat_header_method)
 
     out <- solve_enc(kable_input)
     parsed <- kable_to_parsed(out)
 
-    res <- pdfTable_styling2(parsed,
+    res <- pdfTable_styling(parsed,
                             latex_options = latex_options,
                             full_width = full_width,
                             position = position,
@@ -410,106 +326,7 @@ htmlTable_styling <- function(kable_input,
 }
 
 # LaTeX table style ------------
-pdfTable_styling <- function(kable_input,
-                             latex_options = "basic",
-                             full_width = FALSE,
-                             position,
-                             font_size,
-                             row_label_position,
-                             repeat_header_text,
-                             repeat_header_method,
-                             repeat_header_continued,
-                             stripe_color,
-                             stripe_index,
-                             latex_table_env,
-                             table.envir,
-                             wraptable_width) {
-
-  latex_options <- match.arg(
-    latex_options,
-    c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
-    several.ok = T
-  )
-
-  out <- NULL
-  out <- solve_enc(kable_input)
-
-  table_info <- magic_mirror(kable_input)
-
-  if ("striped" %in% latex_options) {
-    out <- styling_latex_striped(out, table_info, stripe_color, stripe_index)
-    table_info <- magic_mirror(out)
-  }
-
-  # hold_position is only meaningful in a table environment
-  if ("hold_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_hold_position(out)
-  }
-
-  # HOLD_position is only meaningful in a table environment
-  if ("HOLD_position" %in% latex_options & table_info$table_env) {
-    out <- styling_latex_HOLD_position(out)
-  }
-
-  if ("scale_down" %in% latex_options) {
-    out <- styling_latex_scale(out, table_info, "down")
-  }
-
-  if ("scale_up" %in% latex_options) {
-    out <- styling_latex_scale(out, table_info, "up")
-  }
-
-  if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
-    out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
-                                       repeat_header_method, repeat_header_continued)
-    table_info$repeat_header_latex <- TRUE
-  }
-
-  if (full_width) {
-    latex_table_env <- ifelse(table_info$tabular == "longtable",
-                              "longtabu", "tabu")
-    full_width_return <- styling_latex_full_width(out, table_info)
-    out <- full_width_return[[1]]
-    table_info$align_vector <- full_width_return[[2]]
-  }
-
-  if (!is.null(font_size)) {
-    out <- styling_latex_font_size(out, table_info, font_size)
-  }
-
-  if (!is.null(latex_table_env)) {
-    out <- styling_latex_table_env(out, table_info$tabular, latex_table_env)
-    table_info$tabular <- latex_table_env
-    table_info$begin_tabular <- sub("tabular", latex_table_env,
-                                    table_info$begin_tabular)
-    table_info$end_tabular <- sub("tabular", latex_table_env,
-                                  table_info$end_tabular)
-  }
-
-  out <- styling_latex_position(out, table_info, position, latex_options,
-                                table.envir, wraptable_width)
-
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-
-  if (row_label_position != "l") {
-    if (table_info$tabular == "longtable") {
-      out <- sub("\\\\begin\\{longtable\\}\\{l",
-                 paste0("\\\\begin\\{longtable\\}\\{",
-                        row_label_position),
-                 out)
-    } else {
-      out <- sub("\\\\begin\\{tabular\\}\\{l",
-                 paste0("\\\\begin\\{tabular\\}\\{",
-                        row_label_position),
-                 out)
-    }
-  }
-
-  return(out)
-}
-
-pdfTable_styling2 <- function(parsed,
+pdfTable_styling <- function(parsed,
                              latex_options = "basic",
                              full_width = FALSE,
                              position,
@@ -532,37 +349,37 @@ pdfTable_styling2 <- function(parsed,
   if (!inherits(parsed, "LaTeX2"))
     parsed <- kable_to_parsed(parsed)
 
-  table_info <- magic_mirror_latex2(parsed)
+  table_info <- magic_mirror_latex(parsed)
   parsed <- update_meta(parsed, table_info)
 
   if ("striped" %in% latex_options) {
-    parsed <- styling_latex_striped2(parsed, stripe_color, stripe_index)
+    parsed <- styling_latex_striped(parsed, stripe_color, stripe_index)
   }
 
   # hold_position is only meaningful in a table environment
   if ("hold_position" %in% latex_options && table_info$table_env) {
-    parsed <- styling_latex_hold_position2(parsed)
+    parsed <- styling_latex_hold_position(parsed)
     table_info <- attr(parsed, "kable_meta")
   }
 
   # HOLD_position is only meaningful in a table environment
   if ("HOLD_position" %in% latex_options && table_info$table_env) {
-    parsed <- styling_latex_HOLD_position2(parsed)
+    parsed <- styling_latex_HOLD_position(parsed)
     table_info <- attr(parsed, "kable_meta")
   }
 
   if ("scale_down" %in% latex_options) {
-    parsed <- styling_latex_scale2(parsed, "down")
+    parsed <- styling_latex_scale(parsed, "down")
     table_info <- attr(parsed, "kable_meta")
   }
 
   if ("scale_up" %in% latex_options) {
-    parsed <- styling_latex_scale2(parsed, "up")
+    parsed <- styling_latex_scale(parsed, "up")
     table_info <- attr(parsed, "kable_meta")
   }
 
   if ("repeat_header" %in% latex_options && table_info$tabular == "longtable") {
-    parsed <- styling_latex_repeat_header2(parsed, repeat_header_text,
+    parsed <- styling_latex_repeat_header(parsed, repeat_header_text,
                                        repeat_header_method, repeat_header_continued)
     table_info <- attr(parsed, "kable_meta")
     table_info$repeat_header_latex <- TRUE
@@ -571,21 +388,21 @@ pdfTable_styling2 <- function(parsed,
 
   if (full_width) {
     latex_table_env <- if (table_info$tabular == "longtable") "longtabu" else "tabu"
-    parsed <- styling_latex_full_width2(parsed)
+    parsed <- styling_latex_full_width(parsed)
     table_info$repeat_header_latex <- TRUE
   }
 
   if (!is.null(font_size)) {
-    parsed <- styling_latex_font_size2(parsed, font_size)
+    parsed <- styling_latex_font_size(parsed, font_size)
     table_info <- attr(parsed, "kable_meta")
   }
 
   if (!is.null(latex_table_env)) {
-    parsed <- styling_latex_table_env2(parsed, latex_table_env)
+    parsed <- styling_latex_table_env(parsed, latex_table_env)
     table_info <- attr(parsed, "kable_meta")
   }
 
-  parsed <- styling_latex_position2(parsed, position, latex_options,
+  parsed <- styling_latex_position(parsed, position, latex_options,
                                 table.envir, wraptable_width)
   table_info <- attr(parsed, "kable_meta")
   if (row_label_position != "l") {
@@ -603,18 +420,7 @@ pdfTable_styling2 <- function(parsed,
   update_meta(parsed, table_info)
 }
 
-styling_latex_striped <- function(x, table_info, color, stripe_index) {
-  if (is.null(stripe_index)) {
-    stripe_index <- seq(
-      1,
-      # Issue #613
-      max(1, table_info$nrow - table_info$position_offset),
-      2)
-  }
-  row_spec(x, stripe_index, background = color)
-}
-
-styling_latex_striped2 <- function(parsed, color, stripe_index) {
+styling_latex_striped <- function(parsed, color, stripe_index) {
   table_info <- attr(parsed, "kable_meta")
   if (is.null(stripe_index)) {
     stripe_index <- seq(
@@ -623,19 +429,11 @@ styling_latex_striped2 <- function(parsed, color, stripe_index) {
       max(1, table_info$nrow - table_info$position_offset),
       2)
   }
-  row_spec2(parsed, stripe_index, background = color,
+  row_spec(parsed, stripe_index, background = color,
             needs_parsing = FALSE)
 }
 
-styling_latex_hold_position <- function(x) {
-  if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
-    str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[!h]")
-  } else {
-    str_replace(x, "\\\\begin\\{table\\}", "\\\\begin\\{table\\}[!h]")
-  }
-}
-
-styling_latex_hold_position2 <- function(parsed) {
+styling_latex_hold_position <- function(parsed) {
   table_info <- attr(parsed, "kable_meta")
   table <- find_env(parsed, "table")
   # If it's not in a table, we can't set the hold pos
@@ -648,15 +446,7 @@ styling_latex_hold_position2 <- function(parsed) {
   update_meta(parsed, table_info)
 }
 
-styling_latex_HOLD_position <- function(x) {
-  if (str_detect(x, "\\\\begin\\{table\\}\\[t\\]")) {
-    str_replace(x, "\\\\begin\\{table\\}\\[t\\]", "\\\\begin\\{table\\}[H]")
-  } else {
-    str_replace(x, "\\\\begin\\{table\\}", "\\\\begin\\{table\\}[H]")
-  }
-}
-
-styling_latex_HOLD_position2 <- function(parsed) {
+styling_latex_HOLD_position <- function(parsed) {
   table_info <- attr(parsed, "kable_meta")
   table <- find_env(parsed, "table")
   # If it's not in a table, we can't set the hold pos
@@ -669,27 +459,7 @@ styling_latex_HOLD_position2 <- function(parsed) {
   update_meta(parsed, table_info)
 }
 
-styling_latex_scale <- function(x, table_info, dir=c("down", "up")) {
-  # You cannot put longtable in a resizebox
-  # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
-  if (table_info$tabular == "longtable") {
-    warning("Longtable cannot be resized.")
-    return(x)
-  }
-  if (dir=="down") {
-    d <- ">"
-  } else {
-    d <- "<"
-  }
-
-  x <- sub(table_info$begin_tabular,
-           paste0("\\\\resizebox{\\\\ifdim\\\\width\\", d,"\\\\linewidth\\\\linewidth\\\\else\\\\width\\\\fi\\}\\{\\!\\}\\{\n",
-		  table_info$begin_tabular),
-           x)
-  sub(table_info$end_tabular, paste0(table_info$end_tabular, "\\}"), x)
-}
-
-styling_latex_scale2 <- function(parsed, dir=c("down", "up")) {
+styling_latex_scale <- function(parsed, dir=c("down", "up")) {
   table_info <- attr(parsed, "kable_meta")
   # You cannot put longtable in a resizebox
   # http://tex.stackexchange.com/questions/83457/how-to-resize-or-scale-a-longtable-revised
@@ -715,83 +485,7 @@ styling_latex_scale2 <- function(parsed, dir=c("down", "up")) {
   update_meta(parsed, table_info)
 }
 
-styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
-                                        repeat_header_method,
-                                        repeat_header_continued) {
-  x <- str_split(x, "\n")[[1]]
-  # These two defs won't be used, but make it clear
-  # the rules are defined
-  midrule <- "\\midrule"
-  bottomrule <- "\\bottomrule"
-  #
-  if (table_info$booktabs) {
-    header_rows_start <- grep(paste0("^", toprule_regexp, "$"),  x)[1]
-    if (is.null(table_info$colnames)) {
-      header_rows_end <- header_rows_start
-    } else {
-      header_rows_end <- grep(paste0("^", midrule_regexp, "$"), x)[1]
-      midrule <- sub(midrule_regexp, "\\1", x[header_rows_end])
-    }
-  } else {
-    header_rows_start <- which(x == "\\hline")[1]
-    header_rows_end <- which(x == "\\hline")[2]
-  }
-
-  if (is.na(table_info$caption)) {
-    continue_line <- paste0(
-      "\\multicolumn{", table_info$ncol, "}{@{}l}{", repeat_header_text,
-      "}\\\\"
-    )
-  } else {
-    if (repeat_header_method == "append") {
-      caption_without_lab <- sub("\\\\label\\{[^\\}]*\\}", "", table_info$caption)
-      repeat_header_text <- paste(caption_without_lab, repeat_header_text)
-    }
-    continue_line <- paste0("\\caption[]{", repeat_header_text, "}\\\\")
-  }
-
-  if (!table_info$booktabs) {
-    bottom_part <- NULL
-  } else {
-    index_bottomrule <- grep(paste0("^", bottomrule_regexp, "$"), x)
-    bottomrule <- x[index_bottomrule]
-    x <- x[-index_bottomrule]
-    x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*")
-
-    if (repeat_header_continued == FALSE) {
-      bottom_part <- paste0( "\n\\endfoot\n", bottomrule,
-                             "\n\\endlastfoot")
-    } else {
-      if (repeat_header_continued == TRUE) {
-        bottom_text <- "\\textit{(continued \\ldots)}"
-      } else {
-        bottom_text <- repeat_header_continued
-      }
-      bottom_part <- paste0(
-        midrule, "\n",
-        "\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\\\n",
-        "\\endfoot\n",
-        bottomrule, "\n",
-        "\\endlastfoot"
-      )
-    }
-  }
-
-  # x[index_bottomrule - 1] <- paste0(x[index_bottomrule - 1], "*\\bottomrule")
-  x <- c(
-    x[1:header_rows_end],
-    "\\endfirsthead",
-    continue_line,
-    x[header_rows_start:header_rows_end],
-    "\\endhead",
-    bottom_part,
-    x[(header_rows_end + 1):length(x)]
-  )
-  x <- paste0(x, collapse = "\n")
-  return(x)
-}
-
-styling_latex_repeat_header2 <- function(parsed, repeat_header_text, repeat_header_method, repeat_header_continued) {
+styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_header_method, repeat_header_continued) {
   table_info <- attr(parsed, "kable_meta")
   table <- parsed[[table_info$tabularPath]]
   rules <- find_rules(table)
@@ -864,21 +558,6 @@ styling_latex_repeat_header2 <- function(parsed, repeat_header_text, repeat_head
   update_meta(parsed, table_info)
 }
 
-styling_latex_full_width <- function(x, table_info) {
-  col_align <- as.character(factor(
-    table_info$align_vector, c("c", "l", "r"),
-    c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")
-  ))
-  col_align[is.na(col_align)] <- table_info$align_vector[is.na(col_align)]
-  col_align_vector <- col_align
-  col_align <- paste0(" to \\\\linewidth {", paste(col_align, collapse = ""), "}")
-  x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
-           table_info$begin_tabular, x)
-  x <- sub(table_info$begin_tabular,
-      paste0(table_info$begin_tabular, col_align), x)
-  return(list(x, col_align_vector))
-}
-
 align_letters <- function(align, n) {
   result <- character(n)
   j <- 0
@@ -894,7 +573,7 @@ align_letters <- function(align, n) {
   result
 }
 
-styling_latex_full_width2 <- function(parsed) {
+styling_latex_full_width <- function(parsed) {
   table_info <- attr(parsed, "kable_meta")
   table <- parsed[[table_info$tabularPath]]
   table_info$tabular <- envName(table) <- "tabu"
@@ -925,58 +604,25 @@ styling_latex_full_width2 <- function(parsed) {
   update_meta(parsed, table_info)
 }
 
-styling_latex_position <- function(x, table_info, position, latex_options,
-                                   table.envir, wraptable_position) {
-  hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
-  if (length(hold_position) == 0) hold_position <- ""
-  switch(
-    position,
-    center = styling_latex_position_center(x, table_info, hold_position,
-                                           table.envir),
-    left = styling_latex_position_left(x, table_info),
-    right = styling_latex_position_right(x, table_info, hold_position,
-                                         table.envir),
-    float_left = styling_latex_position_float(x, table_info, "l", table.envir,
-                                              wraptable_position),
-    float_right = styling_latex_position_float(x, table_info, "r", table.envir,
-                                               wraptable_position)
-  )
-}
-
-styling_latex_position2 <- function(parsed, position, latex_options,
+styling_latex_position <- function(parsed, position, latex_options,
                                    table.envir, wraptable_position) {
   table_info <- attr(parsed, "kable_meta")
   hold_position <- intersect(c("hold_position", "HOLD_position"), latex_options)
   if (length(hold_position) == 0) hold_position <- ""
   switch(
     position,
-    center = styling_latex_position_center2(parsed, hold_position,
+    center = styling_latex_position_center(parsed, hold_position,
                                            table.envir),
-    left = styling_latex_position_left2(parsed),
-    right = styling_latex_position_right2(parsed, hold_position, table.envir),
-    float_left = styling_latex_position_float2(parsed, "l", table.envir,
+    left = styling_latex_position_left(parsed),
+    right = styling_latex_position_right(parsed, hold_position, table.envir),
+    float_left = styling_latex_position_float(parsed, "l", table.envir,
                                               wraptable_position),
-    float_right = styling_latex_position_float2(parsed, "r", table.envir,
+    float_right = styling_latex_position_float(parsed, "r", table.envir,
                                                wraptable_position)
   )
 }
-styling_latex_position_center <- function(x, table_info, hold_position,
-                                          table.envir) {
-  if (!table_info$table_env && table_info$tabular == "tabular") {
-    x <- paste0("\\begin{", table.envir, "}\n\\centering", x,
-                "\n\\end{", table.envir, "}")
-    if (hold_position == "hold_position") {
-      x <- styling_latex_hold_position(x)
-    } else if(hold_position == "HOLD_position") {
-      x <- styling_latex_HOLD_position(x)
-    }
-  } else if (table_info$table_env) {
-    x <- sub("^(\\\\begin\\{table}[^\n]*)\\n", "\\1\n\\\\centering", x)
-  }
-  return(x)
-}
 
-styling_latex_position_center2 <- function(parsed, hold_position,
+styling_latex_position_center <- function(parsed, hold_position,
                                           table.envir) {
   table_info <- attr(parsed, "kable_meta")
   if (!table_info$table_env && table_info$tabular == "tabular") {
@@ -988,9 +634,9 @@ styling_latex_position_center2 <- function(parsed, hold_position,
     table_info$tabularPath <- getTabularPath(parsed)
     parsed <- update_meta(parsed, table_info)
     if (hold_position == "hold_position") {
-      parsed <- styling_latex_hold_position2(parsed)
+      parsed <- styling_latex_hold_position(parsed)
     } else if(hold_position == "HOLD_position") {
-      parsed <- styling_latex_HOLD_position2(parsed)
+      parsed <- styling_latex_HOLD_position(parsed)
     }
   } else if (table_info$table_env) {
     stop("Not implemented yet")
@@ -999,14 +645,7 @@ styling_latex_position_center2 <- function(parsed, hold_position,
   parsed
 }
 
-styling_latex_position_left <- function(x, table_info) {
-  if (table_info$tabular != "longtable") return(sub("\\\\centering\\n", "", x))
-  longtable_option <- "\\[l\\]"
-  sub(paste0("\\\\begin\\{longtable\\}", table_info$valign2),
-      paste0("\\\\begin\\{longtable\\}", longtable_option), x)
-}
-
-styling_latex_position_left2 <- function(parsed) {
+styling_latex_position_left <- function(parsed) {
   table_info <- attr(parsed, "kable_meta")
   if (table_info$tabular != "longtable") {
     centeridx <- find_sequence(parsed, "\\centering")
@@ -1026,19 +665,12 @@ styling_latex_position_left2 <- function(parsed) {
   parsed
 }
 
-styling_latex_position_right <- function(x, table_info, hold_position,
-                                         table.envir) {
-  warning("Position = right is only supported for longtable in LaTeX. ",
-          "Setting back to center...")
-  styling_latex_position_center(x, table_info, hold_position, table.envir)
-}
-
-styling_latex_position_right2 <- function(parsed, hold_position, table_envir) {
+styling_latex_position_right <- function(parsed, hold_position, table_envir) {
   table_info <- attr(parsed, "kable_meta")
   if (table_info$tabular != "longtable") {
     warning("Position = right is only supported for longtable in LaTeX. ",
           "Setting back to center...")
-    styling_latex_position_center2(parsed, hold_position, table_envir)
+    styling_latex_position_center(parsed, hold_position, table_envir)
   } else {
     longtable_option <- latex2("[r]")
     table <- parsed[[table_info$tabularPath]]
@@ -1051,37 +683,13 @@ styling_latex_position_right2 <- function(parsed, hold_position, table_envir) {
   }
 }
 
-styling_latex_position_float <- function(x, table_info, option, table.envir,
-                                         wraptable_width) {
-  if (table_info$tabular == "longtable") {
-    warning("wraptable is not supported for longtable.")
-    if (option == "l") return(styling_latex_position_left(x, table_info))
-    if (option == "r") return(styling_latex_position_right(x, table_info, F,
-                                                           table.envir))
-  }
-  size_matrix <- sapply(sapply(table_info$contents, str_split, " & "), nchar)
-  col_max_length <- apply(size_matrix, 1, max) + 4
-  if (table_info$table_env) {
-    option <- sprintf("\\\\begin\\{wraptable\\}\\{%s\\}", option)
-    option <- paste0(option, "\\{", wraptable_width, "\\}")
-    x <- sub("\\\\begin\\{table\\}\\[\\!h\\]", "\\\\begin\\{table\\}", x)
-    x <- sub("\\\\begin\\{table\\}", option, x)
-    x <- sub("\\\\end\\{table\\}", "\\\\end\\{wraptable\\}", x)
-  } else {
-    option <- sprintf("\\begin{wraptable}{%s}", option)
-    option <- paste0(option, "{0pt}")
-    x <- paste0(option, x, "\\end{wraptable}")
-  }
-  return(x)
-}
-
-styling_latex_position_float2 <- function(parsed, option, table.envir,
+styling_latex_position_float <- function(parsed, option, table.envir,
                                          wraptable_width) {
   table_info <- attr(parsed, "kable_meta")
   if (table_info$tabular == "longtable") {
     warning("wraptable is not supported for longtable.")
-    if (option == "l") return(styling_latex_position_left2(parsed))
-    if (option == "r") return(styling_latex_position_right2(parsed, hold_position, table_info$tabular))
+    if (option == "l") return(styling_latex_position_left(parsed))
+    if (option == "r") return(styling_latex_position_right(parsed, hold_position, table_info$tabular))
   }
   # Copy caption & centering from table env to wraptable
   captionEtc <- NULL
@@ -1116,23 +724,7 @@ styling_latex_position_float2 <- function(parsed, option, table.envir,
   update_meta(parsed, table_info)
 }
 
-styling_latex_font_size <- function(x, table_info, font_size) {
-  row_height <- font_size + 2
-  if (table_info$tabular != "longtable" & table_info$table_env) {
-    return(sub(table_info$begin_tabular,
-               paste0("\\\\fontsize\\{", font_size, "\\}\\{", row_height,
-                      "\\}\\\\selectfont\n", table_info$begin_tabular),
-               x))
-  }
-  # For longtable and tabular without table environment. Simple wrap around
-  # fontsize is good enough
-  return(paste0(
-    "\\begingroup\\fontsize{", font_size, "}{", row_height, "}\\selectfont\n", x,
-    "\n\\endgroup{}"
-  ))
-}
-
-styling_latex_font_size2 <- function(parsed, font_size) {
+styling_latex_font_size <- function(parsed, font_size) {
   table_info <- attr(parsed, "kable_meta")
   row_height <- font_size + 2
   if (table_info$tabular != "longtable" && table_info$table_env) {
@@ -1153,23 +745,7 @@ styling_latex_font_size2 <- function(parsed, font_size) {
   return(update_meta(parsed, table_info))
 }
 
-styling_latex_table_env <- function(x, current_env, latex_table_env) {
-  x <- sub(
-    paste0("begin\\{", current_env, "\\}\\[t\\]"),
-    paste0("begin\\{", latex_table_env, "\\}"), x
-  )
-  x <- sub(
-    paste0("begin\\{", current_env, "\\}"),
-    paste0("begin\\{", latex_table_env, "\\}"), x
-  )
-  x <- sub(
-    paste0("end\\{", current_env, "\\}"),
-    paste0("end\\{", latex_table_env, "\\}"), x
-  )
-  return(x)
-}
-
-styling_latex_table_env2 <- function(parsed, latex_table_env) {
+styling_latex_table_env <- function(parsed, latex_table_env) {
   table_info <- attr(parsed, "kable_meta")
   table <- parsed[[table_info$tabularPath]]
   if (envName(table) != table_info$tabular)

@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(kableExtra)
+#' library(kableExtra2)
 #'
 #' kable(mtcars, "latex", booktabs = T) %>%
 #' kable_styling(latex_options = c("striped", "scale_down")) %>%

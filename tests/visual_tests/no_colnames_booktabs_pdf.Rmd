@@ -10,7 +10,7 @@ output: pdf_document
 ```{r, include=F}
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 ```
 
 ```{r}

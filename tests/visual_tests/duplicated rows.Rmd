@@ -5,7 +5,7 @@ output: pdf_document
 
 ```{r}
 library(dplyr)
-library(kableExtra)
+library(kableExtra2)
 
 tbl1 <- bind_rows(mtcars, mtcars, mtcars, mtcars)
 

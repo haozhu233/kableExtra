@@ -85,11 +85,7 @@ positions_corrector <- function(positions, group_header_rows, n_row) {
   return(adjust_numbers + positions)
 }
 
-latex_row_cells <- function(x) {
-  stringr::str_split(x, " \\& ")
-}
-
-latex_row_cells2 <- function(parsed) {
+latex_row_cells <- function(parsed) {
   result <- parseLatex::split_latex(parsed, c(find_char(parsed, "&"), find_macro(parsed, "\\\\")))
   result <- lapply(result, trim_whitespace)
   result[-length(result)]
@@ -246,31 +242,6 @@ latex_pkg_list <- function() {
   ))
 }
 
-# Fix duplicated rows in LaTeX tables
-fix_duplicated_rows_latex <- function(kable_input, table_info) {
-  # Since sub/string_replace start from beginning, we count unique value from
-  # behind.
-  rev_contents <- rev(table_info$contents)
-  dup_index <- rev(ave(seq_along(rev_contents), rev_contents,
-                       FUN = seq_along))
-  for (i in which(dup_index != 1)) {
-    dup_row <- table_info$contents[i]
-    empty_times <- dup_index[i] - 1
-    # insert empty_times before last non whitespace characters
-    new_row <- str_replace(
-      dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
-      paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
-    kable_input <- sub(
-      paste0(dup_row, "(?=\\s*\\\\\\\\\\*?(\\[.*\\])?)"),
-      new_row,
-      kable_input,
-      perl = TRUE)
-    table_info$contents[i] <- new_row
-  }
-  table_info$duplicated_rows <- FALSE
-  return(list(kable_input, table_info))
-}
-
 # Solve enc issue for LaTeX tables
 solve_enc <- function(x) {
   if (Encoding(x) == "UTF-8"){
@@ -284,25 +255,11 @@ solve_enc <- function(x) {
 }
 
 input_escape <- function(x, latex_align) {
-  x <- escape_latex2(x)
+  x <- escape_latex(x)
   x <- linebreak(x, align = latex_align, double_escape = TRUE)
 }
 
 clear_color_latex <- function(x, background = F) {
-  term <- if (background) "cellcolor" else "textcolor"
-  regex_1 <- sprintf(
-    "\\\\\\\\%s\\\\\\[HTML\\\\\\]\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
-  )
-  regex_2 <- sprintf(
-    "\\\\\\\\%s\\\\\\{[a-zA-Z0-9]*\\\\\\}\\\\\\{", term
-  )
-  origin_len <- nchar(x)
-  x <- stringr::str_remove(x, regex_1)
-  x <- stringr::str_remove(x, regex_2)
-  return(ifelse(nchar(x) != origin_len, stringr::str_remove(x, "\\\\\\}$"), x))
-}
-
-clear_color_latex2 <- function(x, background = F) {
   term <- if (background) "\\cellcolor" else "\\textcolor"
   locs <- find_macro(x, term)
   del <- integer()

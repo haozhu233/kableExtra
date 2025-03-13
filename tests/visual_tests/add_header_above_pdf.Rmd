@@ -10,7 +10,7 @@ header-includes:
 
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 options(knitr.table.format = "latex", 
         kable_styling_latex_options = c("striped", "hold_position"),
         kable_styling_full_width = T)

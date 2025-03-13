@@ -10,7 +10,7 @@ vignette: >
 # Plain HTML 
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 dt <- mtcars[1:5, 1:2]
 
 kable(dt, format = "html")

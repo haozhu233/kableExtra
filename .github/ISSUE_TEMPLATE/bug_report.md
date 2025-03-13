@@ -23,6 +23,6 @@ output: html_document
 ---
 
 ```{r}
-library(kableExtra)
+library(kableExtra2)
 ```
 ````

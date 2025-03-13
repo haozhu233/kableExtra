@@ -27,7 +27,7 @@ and then try to put it in an R Markdown document using
 }
 \examples{
 \dontrun{
-library(kableExtra)
+library(kableExtra2)
 
 kable(mtcars, "latex", booktabs = T) \%>\%
 kable_styling(latex_options = c("striped", "scale_down")) \%>\%

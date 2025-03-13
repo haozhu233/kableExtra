@@ -85,10 +85,10 @@ header_separate_html <- function(kable_input, sep, ...) {
 
   for (l in seq(2, length(header_layers))) {
     out <- do.call(
-      kableExtra::add_header_above,
+      add_header_above,
       list(
         kable_input = out,
-        kableExtra::auto_index(header_layers[[l]]),
+        auto_index(header_layers[[l]]),
         ...
       )
     )
@@ -119,12 +119,6 @@ header_separate_latex <- function(kable_input, sep, ...) {
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
-  if (table_info$duplicated_rows) {
-    dup_fx_out <- fix_duplicated_rows_latex(out, table_info)
-    out <- dup_fx_out[[1]]
-    table_info <- dup_fx_out[[2]]
-  }
-
   if (!is.null(table_info$new_header_row)) {
     warning("Your table already has more than 1 rows of thead. header_separate ",
             "won't work in this case and is returning the original input. ")
@@ -148,10 +142,10 @@ header_separate_latex <- function(kable_input, sep, ...) {
 
   for (l in seq(2, length(header_layers))) {
     out <- do.call(
-      kableExtra::add_header_above,
+      add_header_above,
       list(
         kable_input = out,
-        kableExtra::auto_index(header_layers[[l]]),
+        auto_index(header_layers[[l]]),
         ...
       )
     )

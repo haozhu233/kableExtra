@@ -8,7 +8,7 @@ editor_options:
 # Test table 1
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 options(knitr.table.format = "html")
 dt <- mtcars[1:5, 1:4]
 

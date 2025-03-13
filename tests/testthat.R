@@ -1,4 +1,4 @@
 library(testthat)
-library(kableExtra)
+library(kableExtra2)
 
-test_check("kableExtra")
+test_check("kableExtra2")

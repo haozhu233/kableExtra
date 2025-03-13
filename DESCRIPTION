@@ -1,4 +1,4 @@
-Package: kableExtra
+Package: kableExtra2
 Type: Package
 Title: Construct Complex Table with 'kable' and Pipe Syntax
 Version: 1.4.0.12
@@ -47,7 +47,7 @@ Imports:
     digest,
     graphics,
     svglite,
-    parseLatex (>= 0.3.10)
+    parseLatex (>= 0.3.11)
 Suggests:
     testthat,
     magick,

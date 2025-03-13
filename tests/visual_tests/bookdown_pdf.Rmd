@@ -10,7 +10,7 @@ output:
 ```{r}
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 
 table1 <- tribble(~Term, ~Definition,
                          "Adverse event (AE)", " Any untoward medical occurrence in a subject to whom a medicinal product has been administered including occurrences which are not necessarily caused by or related to that product.",

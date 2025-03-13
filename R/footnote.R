@@ -112,9 +112,9 @@ footnote <- function(kable_input,
       footnote_contents <- lapply(footnote_contents, escape_html)
       footnote_titles <- lapply(footnote_titles, escape_html)
     } else {
-      footnote_contents <- lapply(footnote_contents, escape_latex2)
+      footnote_contents <- lapply(footnote_contents, escape_latex2_)
       footnote_contents <- lapply(footnote_contents, linebreak)
-      footnote_titles <- lapply(footnote_titles, escape_latex2)
+      footnote_titles <- lapply(footnote_titles, escape_latex2_)
       footnote_titles <- lapply(footnote_titles, linebreak)
     }
   }
@@ -129,126 +129,16 @@ footnote <- function(kable_input,
     return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
   }
   if (kable_format == "latex") {
-    return(footnote_latex(kable_input, footnote_table, footnote_as_chunk,
-                          threeparttable, fixed_small_size, show_every_page))
-  }
-}
-
-#' @export
-footnote2 <- function(kable_input,
-                     general = NULL,
-                     number = NULL,
-                     alphabet = NULL,
-                     symbol = NULL,
-                     footnote_order = c("general", "number",
-                                        "alphabet", "symbol"),
-                     footnote_as_chunk = FALSE,
-                     escape = TRUE,
-                     threeparttable = FALSE,
-                     fixed_small_size = FALSE,
-                     show_every_page = FALSE,
-                     general_title = "Note: ",
-                     number_title = "",
-                     alphabet_title = "",
-                     symbol_title = "",
-                     title_format = "italic",
-                     symbol_manual = NULL
-) {
-  kable_format <- attr(kable_input, "format")
-  if (kable_format %in% c("pipe", "markdown")) {
-    kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
-  }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (length(alphabet) > 26) {
-    alphabet <- alphabet[1:26]
-    warning("Please don't use more than 26 footnotes in table_footnote ",
-            "alphabet. Use number instead.")
-  }
-  if (length(symbol) > 20) {
-    symbol <- symbol[1:20]
-    warning("Please don't use more than 20 footnotes in table_footnote ",
-            "symbol. Use number instead.")
-  }
-  footnote_titles <- list(
-    general = general_title, number = number_title,
-    alphabet = alphabet_title, symbol = symbol_title
-  )
-  footnote_contents <- list(
-    general = general, number = number, alphabet = alphabet, symbol = symbol
-  )
-  notnull <- names(footnote_contents)[!sapply(footnote_contents, is.null)]
-  if (length(notnull) == 0) {return(kable_input)}
-  footnote_order <- footnote_order[footnote_order %in% notnull]
-  footnote_titles <- footnote_titles[footnote_order]
-  footnote_contents <- footnote_contents[footnote_order]
-  if (escape) {
-    if (kable_format == "html") {
-      footnote_contents <- lapply(footnote_contents, escape_html)
-      footnote_titles <- lapply(footnote_titles, escape_html)
-    } else {
-      footnote_contents <- lapply(footnote_contents, escape_latex2_2)
-      footnote_contents <- lapply(footnote_contents, linebreak)
-      footnote_titles <- lapply(footnote_titles, escape_latex2_2)
-      footnote_titles <- lapply(footnote_titles, linebreak)
-    }
-  }
-  title_format <- match.arg(title_format, c("italic", "bold", "underline"),
-                            several.ok = TRUE)
-  footnote_titles <- lapply(footnote_titles, footnote_title_format2,
-                            kable_format, title_format)
-  footnote_table <- footnote_table_maker2(
-    kable_format, footnote_titles, footnote_contents, symbol_manual
-  )
-  if (kable_format == "html") {
-    return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
-  }
-  if (kable_format == "latex") {
     parsed <- kable_to_parsed(kable_input)
     if (is.null(attr(parsed, "kable_meta")))
-      parsed <- update_meta(parsed, magic_mirror2(parsed))
-    res <- footnote_latex2(parsed, footnote_table, footnote_as_chunk,
+      parsed <- update_meta(parsed, magic_mirror(parsed))
+    res <- footnote_latex(parsed, footnote_table, footnote_as_chunk,
                           threeparttable, fixed_small_size, show_every_page)
     return(parsed_to_kable(res, kable_input))
   }
 }
 
 footnote_title_format <- function(x, format, title_format) {
-  if (x == "") return(x)
-  if (format == "html") {
-    title_style <- ""
-    if ("italic" %in% title_format) {
-      title_style <- paste0(title_style, "font-style: italic;")
-    }
-    if ("bold" %in% title_format) {
-      title_style <- paste0(title_style, "font-weight: bold;")
-    }
-    if ("underline" %in% title_format) {
-      title_style <- paste0(title_style, "text-decoration: underline;")
-    }
-    return(paste0(
-      '<span style="', title_style, '">', x, '</span>'
-    ))
-  } else {
-    if ("italic" %in% title_format) {
-      x <- paste0("\\\\textit\\{", x, "\\}")
-    }
-    if ("bold" %in% title_format) {
-      x <- paste0("\\\\textbf\\{", x, "\\}")
-    }
-    if ("underline" %in% title_format) {
-      x <- paste0("\\\\underline\\{", x, "\\}")
-    }
-    return(x)
-  }
-}
-
-footnote_title_format2 <- function(x, format, title_format) {
   if (x == "") return(x)
   if (format == "html") {
     title_style <- ""
@@ -282,53 +172,7 @@ footnote_table_maker <- function(format, footnote_titles, footnote_contents,
                                  symbol_manual) {
   if (is.null(symbol_manual)) {
     number_index <- read.csv(system.file("symbol_index.csv",
-                                         package = "kableExtra"))
-    if (format == "latex") {
-      symbol_index <- number_index$symbol.latex
-    } else {
-      symbol_index <- number_index$symbol.html
-    }
-  } else {
-    symbol_index <- symbol_manual
-  }
-
-
-  if (!is.null(footnote_contents$general)) {
-    footnote_contents$general <- data.frame(
-      index = "",
-      footnote = footnote_contents$general
-    )
-  }
-  if (!is.null(footnote_contents$number)) {
-    footnote_contents$number <- data.frame(
-      index = as.character(1:length(footnote_contents$number)),
-      footnote = footnote_contents$number
-    )
-  }
-  if (!is.null(footnote_contents$alphabet)) {
-    footnote_contents$alphabet <- data.frame(
-      index = letters[1:length(footnote_contents$alphabet)],
-      footnote = footnote_contents$alphabet
-    )
-  }
-  if (!is.null(footnote_contents$symbol)) {
-    footnote_contents$symbol <- data.frame(
-      index = symbol_index[1:length(footnote_contents$symbol)],
-      footnote = footnote_contents$symbol
-    )
-  }
-
-  out <- list()
-  out$contents <- footnote_contents
-  out$titles <- footnote_titles
-  return(out)
-}
-
-footnote_table_maker2 <- function(format, footnote_titles, footnote_contents,
-                                 symbol_manual) {
-  if (is.null(symbol_manual)) {
-    number_index <- read.csv(system.file("symbol_index.csv",
-                                         package = "kableExtra"))
+                                         package = "kableExtra2"))
     if (format == "latex") {
       symbol_index <- number_index$symbol.latex2
     } else {
@@ -426,127 +270,14 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 }
 
 # LaTeX
-footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
-                           threeparttable, fixed_small_size, show_every_page) {
-  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
-
-  table_info <- magic_mirror(kable_input)
-  out <- solve_enc(kable_input)
-  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
-
-  footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
-                                     table_info$ncol, threeparttable)
-  if (threeparttable) {
-    if (table_info$tabular %in% c("longtable", "longtabu") ) {
-      out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
-                 paste0("\\\\begin{ThreePartTable}\n\\\\begin{TableNotes}",
-                        ifelse(footnote_as_chunk, "[para]", ""),
-                        ifelse(fixed_small_size,"\n\\\\small\n","\n"), footnote_text,
-                        "\n\\\\end{TableNotes}\n\\\\begin{",
-                        table_info$tabular, "}"),
-                 out)
-      out <- sub(paste0("\\\\end\\{",table_info$tabular, "\\}"),
-                 paste0("\\\\end{", table_info$tabular,
-                        "}\n\\\\end{ThreePartTable}"),
-                 out)
-      if (!show_every_page) {
-        if (table_info$booktabs) {
-          out <- sub(bottomrule_regexp,
-                     "\\1\n\\\\insertTableNotes",
-                     out)
-        } else if (!show_every_page) {
-          out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
-                     "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
-                     out)
-        }
-      }
-    } else {
-      if (table_info$tabular == "tabu") {
-        stop("Please use `longtable = T` in your kable function. ",
-             "Full width threeparttable only works with longtable.")
-      }
-      out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
-                 paste0("\\\\begin{threeparttable}\n\\\\begin{",
-                        table_info$tabular, "}"),
-                 out)
-      out <- sub(table_info$end_tabular,
-                 paste0("\\\\end{", table_info$tabular,
-                        "}\n\\\\begin{tablenotes}",
-                        ifelse(footnote_as_chunk, "[para]", ""),
-                        ifelse(fixed_small_size,"\n\\\\small\n","\n"), footnote_text,
-                        "\n\\\\end{tablenotes}\n\\\\end{threeparttable}"),
-                 out)
-    }
-  } else {
-    if(!show_every_page) {
-      if (table_info$booktabs) {
-        out <- sub(bottomrule_regexp,
-                   paste0("\\1\n", footnote_text),
-                   out)
-      } else {
-        out <- sub(table_info$end_tabular,
-                   paste0(footnote_text, "\n\\\\end{", table_info$tabular, "}"),
-                   out)
-      }
-    }
-  }
-
-  if (table_info$tabular == "longtable" & show_every_page) {
-    fn_regexp <- ifelse(threeparttable, "\\\\insertTableNotes",
-                        footnote_text)
-    fn_text <- gsub("\\\\", "\\", fn_regexp, fixed = TRUE)
-    if(is.null(table_info$repeat_header_latex)) {
-      # need full \begin{longtable} command
-      # table_info valign2 ok but align missing vertical lines
-      longtable_start <- sub(".*\\\\begin\\{longtable\\}",
-                             "\\\\begin\\{longtable\\}", out)
-      longtable_text <- sub("\n.*", "", longtable_start)
-      out <- sub(longtable_text,
-                 paste(longtable_text, fn_text, "\n\\endfoot\n"),
-                 out, fixed = TRUE)
-    } else {
-      if(!table_info$booktabs){
-        out <- sub(
-          "\\\\endhead\\n",
-          paste0("\\\\endhead\n",
-                 fn_regexp, "\n\\\\endfoot\n",
-                 fn_regexp, "\n\\\\endlastfoot\n"),
-          out)
-      } else {
-        if (grepl(  # no repeat_header_continued in kable_styling
-          "\\\\endhead\\n\\n\\\\endfoot",
-          out)) {
-          out <- sub(
-            "\\\\endhead\\n\\n\\\\endfoot",
-            paste0("\\\\endhead\n\\\\midrule\n", fn_regexp, "\n\\\\endfoot"),
-            out)
-        } else {  # repeat_header_continued in kable_styling
-          out <- sub(
-            "\\\\endfoot",
-            paste0(fn_regexp, "\n\\\\endfoot"),
-            out)
-        }
-        out <- sub(
-          "\\\\endlastfoot",
-          paste0(fn_regexp, "\n\\\\endlastfoot"),
-          out)
-      }
-    }
-  }
-
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
-  return(out)
-}
-
-footnote_latex2 <- function(parsed, footnote_table, footnote_as_chunk,
+footnote_latex <- function(parsed, footnote_table, footnote_as_chunk,
                            threeparttable, fixed_small_size, show_every_page) {
   fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
 
   table_info <- attr(parsed, "kable_meta")
   table <- parsed[[table_info$tabularPath]]
 
-  footnote_text <- latex_tfoot_maker2(footnote_table, footnote_as_chunk,
+  footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
   if (threeparttable) {
     if (table_info$tabular %in% c("longtable", "longtabu") ) {
@@ -648,54 +379,7 @@ latex_tfoot_maker <- function(footnote_table, footnote_as_chunk, ncol,
   return(footnote_text)
 }
 
-latex_tfoot_maker2 <- function(footnote_table, footnote_as_chunk, ncol,
-                              threeparttable) {
-  footnote_types <- names(footnote_table$contents)
-  footnote_text <- c()
-  if (threeparttable) {
-    for (i in footnote_types) {
-      footnote_text <- c(footnote_text, latex_tfoot_maker_tpt_2(
-        footnote_table$contents[[i]], footnote_table$titles[[i]],
-        footnote_as_chunk, ncol))
-    }
-  } else {
-    for (i in footnote_types) {
-      footnote_text <- c(footnote_text, latex_tfoot_maker_2(
-        footnote_table$contents[[i]], footnote_table$titles[[i]],
-        footnote_as_chunk, ncol))
-    }
-  }
-  footnote_text <- paste0(footnote_text, collapse = "\n")
-  return(footnote_text)
-}
-
 latex_tfoot_maker_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
-  footnote_text <- apply(ft_contents, 1, function(x) {
-    if (x[1] == "") {
-      x[2]
-    } else {
-      paste0('\\\\textsuperscript{', x[1], '} ', x[2])
-    }
-  })
-  if (ft_title != "") {
-    title_text <- ft_title
-    footnote_text <- c(title_text, footnote_text)
-  }
-  if (!ft_chunk) {
-    footnote_text <- paste0(
-      '\\\\multicolumn{', ncol, '}{l}{\\\\rule{0pt}{1em}', footnote_text, '}\\\\\\\\'
-    )
-  } else {
-    footnote_text <- paste0(
-      '\\\\multicolumn{', ncol, '}{l}{\\\\rule{0pt}{1em}',
-      paste0(footnote_text, collapse = " "),
-      '}\\\\\\\\'
-    )
-  }
-  return(footnote_text)
-}
-
-latex_tfoot_maker_2 <- function(ft_contents, ft_title, ft_chunk, ncol) {
   footnote_text <- apply(ft_contents, 1, function(x) {
     if (x[1] == "") {
       x[2]
@@ -722,27 +406,6 @@ latex_tfoot_maker_2 <- function(ft_contents, ft_title, ft_chunk, ncol) {
 }
 
 latex_tfoot_maker_tpt_ <- function(ft_contents, ft_title, ft_chunk, ncol) {
-  footnote_text <- apply(ft_contents, 1, function(x) {
-    if (x[1] == "") {
-      paste0('\\\\item ', x[2])
-    } else {
-      paste0('\\\\item[', x[1], '] ', x[2])
-    }
-  })
-  if (ft_title != "") {
-    title_text <- paste0('\\\\item ', ft_title, ' ')
-    footnote_text <- c(title_text, footnote_text)
-  }
-  footnote_text <- paste0(footnote_text, collapse = "\n")
-  # if (!ft_chunk) {
-  #   footnote_text <- paste0(footnote_text, collapse = "\n")
-  # } else {
-  #   footnote_text <- paste0(footnote_text, collapse = " ")
-  # }
-  return(footnote_text)
-}
-
-latex_tfoot_maker_tpt_2 <- function(ft_contents, ft_title, ft_chunk, ncol) {
   footnote_text <- apply(ft_contents, 1, function(x) {
     if (x[1] == "") {
       paste0('\\item  ', x[2])

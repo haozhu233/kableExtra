@@ -1,4 +1,4 @@
-.onLoad <- function(libname = find.package("kableExtra"), pkgname = "kableExtra") {
+.onLoad <- function(libname = find.package("kableExtra2"), pkgname = "kableExtra2") {
   if (knitr::is_latex_output())
     use_latex_packages()
 

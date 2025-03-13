@@ -7,7 +7,7 @@ output: pdf_document
 
 ```{r, include=F}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 library(dplyr)
 ```
 

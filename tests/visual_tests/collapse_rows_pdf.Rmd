@@ -8,7 +8,7 @@ output:
 ```{r}
 library(knitr)
 library(dplyr)
-library(kableExtra)
+library(kableExtra2)
 mtcars %>%
   kable("latex") %>%
   kable_styling(latex_options = "striped", full_width = T) %>%

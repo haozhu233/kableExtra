@@ -7,7 +7,7 @@ output: pdf_document
 
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 
 dt <- mtcars[, 1:2]
 colnames(dt)[1] <- paste0("mpg", footnote_marker_alphabet(2, "latex"))

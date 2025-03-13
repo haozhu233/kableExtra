@@ -7,7 +7,7 @@ output: html_document
 
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 
 mtcars[1:5, 1:5] %>%
   kable("html", caption = paste0("test", footnote_marker_alphabet(1))) %>%

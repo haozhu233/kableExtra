@@ -20,7 +20,7 @@ test_that("Issue #861:  pack_rows with tabularx", {
   expect_snapshot(
     kbl(mtcars, format="latex", tabular = "tabularx",
         valign="{\\textwidth}") %>%
-      kableExtra::pack_rows("XXX", 1,2)
+      kableExtra2::pack_rows("XXX", 1,2)
 
   )
 }

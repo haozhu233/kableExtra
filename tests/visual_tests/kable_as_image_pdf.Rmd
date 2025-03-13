@@ -8,7 +8,7 @@ output:
 
 ```{r, fig.width=3}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 
 kable(mtcars, format = "latex", booktabs=TRUE, caption="hello") %>% 
   kable_styling(latex_options=c("scale_down", "hold_position")) %>%

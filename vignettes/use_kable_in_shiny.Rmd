@@ -34,7 +34,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   library(dplyr)
-  library(kableExtra)
+  library(kableExtra2)
    output$mtcars_kable <- function() {
      req(input$mpg)
      mtcars %>%

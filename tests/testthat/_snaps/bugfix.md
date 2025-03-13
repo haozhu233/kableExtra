@@ -49,7 +49,7 @@
 
     Code
       kbl(mtcars, format = "latex", tabular = "tabularx", valign = "{\\textwidth}") %>%
-        kableExtra::pack_rows("XXX", 1, 2)
+        kableExtra2::pack_rows("XXX", 1, 2)
     Output
       
       \begin{tabularx}{\textwidth}{l|r|r|r|r|r|r|r|r|r|r|r}

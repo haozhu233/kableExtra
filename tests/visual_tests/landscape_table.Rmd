@@ -36,7 +36,7 @@ Nam non libero ut felis euismod efficitur. Maecenas ligula nisi, rutrum eu turpi
 
 ```{r}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 dt <- mtcars[1:5, 1:8]
 dt <- cbind(dt, dt, dt)
 ```

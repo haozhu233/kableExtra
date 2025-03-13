@@ -1,9 +1,9 @@
 library(waldo)
-library(kableExtra)
+library(kableExtra2)
 
 comp <- function(..., fn = "kable_styling") {
-  old <- get(fn)
-  new <- get(paste0(fn, "2"))
+  old <- get(fn, envir = asNamespace("kableExtra"))
+  new <- get(fn, envir = asNamespace("kableExtra2"))
   print(sys.call())
   diff <- waldo::compare(capture.output(old(latex, ...)),
                  capture.output(new(latex, ...)))

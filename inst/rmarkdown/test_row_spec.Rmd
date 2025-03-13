@@ -3,7 +3,7 @@ output: pdf_document
 ---
 
 ```{r}
-library(kableExtra)
+library(kableExtra2)
 df <- data.frame(1:4, 4:7)
 kbl(df, format = "latex") |>
     row_spec(3,

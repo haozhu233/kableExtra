@@ -15,7 +15,7 @@ output: html_document
 <div><div class = "tooltip">sss</div>ssa</div>
 ```{r, include=F}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 library(dplyr)
 ```
 

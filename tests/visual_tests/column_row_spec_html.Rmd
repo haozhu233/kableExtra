@@ -15,7 +15,7 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r cars}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 library(xml2)
 
 y <- knitr::kable(head(mtcars), "html")

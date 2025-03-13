@@ -21,7 +21,7 @@
 #' @param density density argument passed to magick if needed. Default is 300.
 #' @examples
 #' \dontrun{
-#' library(kableExtra)
+#' library(kableExtra2)
 #'
 #' kable(mtcars[1:5, ], "html") %>%
 #'   kable_styling("striped") %>%

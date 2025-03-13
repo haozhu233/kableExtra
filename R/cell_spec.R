@@ -79,40 +79,7 @@ cell_spec <- function(x, format,
                           class, escape, background_as_tile))
   }
   if (tolower(format) == "latex") {
-    return(cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
-                           color, background, align, font_size, angle, escape,
-                           latex_background_in_cell))
-  }
-}
-
-#' @export
-cell_spec2 <- function(x, format,
-                      bold = FALSE, italic = FALSE, monospace = FALSE,
-                      underline = FALSE, strikeout = FALSE,
-                      color = NULL, background = NULL,
-                      align = NULL, font_size = NULL, angle = NULL,
-                      tooltip = NULL, popover = NULL, link = NULL,
-                      new_tab = FALSE, extra_css = NULL,
-                      class = NULL,
-                      escape = TRUE,
-                      background_as_tile = TRUE,
-                      latex_background_in_cell = TRUE) {
-
-  if (missing(format) || is.null(format)) {
-    if (knitr::is_latex_output()) {
-      format <- "latex"
-    } else {
-      format <- "html"
-    }
-  }
-  if (tolower(format) == "html") {
-    return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
-                          color, background, align, font_size, angle,
-                          tooltip, popover, link, new_tab, extra_css,
-                          class, escape, background_as_tile))
-  }
-  if (tolower(format) == "latex") {
-    res <- cell_spec_latex2(x, bold, italic, monospace, underline, strikeout,
+    res <- cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle, escape,
                            latex_background_in_cell)
     sapply(res, function(y) if (inherits(y, "LaTeX2"))
@@ -220,33 +187,6 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
                             color, background, align, font_size, angle, escape,
                             latex_background_in_cell) {
   if (escape) x <- escape_latex(x)
-  x <- sprintf(ifelse(bold, "\\textbf{%s}", "%s"), x)
-  x <- sprintf(ifelse(italic, "\\em{%s}", "%s"), x)
-  x <- sprintf(ifelse(monospace, "\\ttfamily{%s}", "%s"), x)
-  x <- sprintf(ifelse(underline, "\\underline{%s}", "%s"), x)
-  x <- sprintf(ifelse(strikeout, "\\sout{%s}", "%s"), x)
-  if (!is.null(color)) {
-    color <- latex_color(color, escape = FALSE)
-    x <- paste0("\\textcolor", color, "{", x, "}")
-  }
-  if (!is.null(background)) {
-    background <- latex_color(background, escape = FALSE)
-    background_env <- ifelse(latex_background_in_cell, "cellcolor", "colorbox")
-    x <- paste0("\\", background_env, background, "{", x, "}")
-  }
-  if (!is.null(font_size)) {
-    x <- paste0("\\bgroup\\fontsize{", font_size, "}{", as.numeric(font_size) + 2,
-           "}\\selectfont ", x, "\\egroup{}")
-  }
-  if (!is.null(angle)) x <- paste0("\\rotatebox{", angle, "}{", x, "}")
-  if (!is.null(align)) x <- paste0("\\multicolumn{1}{", align, "}{", x, "}")
-  return(x)
-}
-
-cell_spec_latex2 <- function(x, bold, italic, monospace, underline, strikeout,
-                            color, background, align, font_size, angle, escape,
-                            latex_background_in_cell) {
-  if (escape) x <- escape_latex(x)
   x <- lapply(x, latex2)
   n <- length(x)
   bold <- ez_rep(bold, n)
@@ -271,7 +211,7 @@ cell_spec_latex2 <- function(x, bold, italic, monospace, underline, strikeout,
     if (strikeout[i])
       x[[i]] <- latex2("\\sout", new_block(x[[i]]))
     if (!is.null(color)) {
-      lcolor <- latex_color2(color[i], escape = FALSE)
+      lcolor <- latex_color(color[i], escape = FALSE)
       x[[i]] <- latex2("\\textcolor", lcolor, new_block(x[[i]]))
     }
     if (!is.null(background)) {
@@ -300,7 +240,6 @@ cell_spec_latex2 <- function(x, bold, italic, monospace, underline, strikeout,
   return(x)
 }
 
-
 #' @rdname cell_spec
 #' @export
 text_spec <- function(x, format,
@@ -314,24 +253,6 @@ text_spec <- function(x, format,
                       background_as_tile = TRUE,
                       latex_background_in_cell = FALSE) {
   cell_spec(x, format, bold, italic, monospace, underline, strikeout,
-            color, background, align,
-            font_size, angle, tooltip, popover, link, new_tab,
-            extra_css, escape, background_as_tile,
-            latex_background_in_cell)
-}
-
-#' @export
-text_spec2 <- function(x, format,
-                      bold = FALSE, italic = FALSE, monospace = FALSE,
-                      underline = FALSE, strikeout = FALSE,
-                      color = NULL, background = NULL,
-                      align = NULL, font_size = NULL, angle = NULL,
-                      tooltip = NULL, popover = NULL, link = NULL,
-                      new_tab = FALSE, extra_css = NULL,
-                      escape = TRUE,
-                      background_as_tile = TRUE,
-                      latex_background_in_cell = FALSE) {
-  cell_spec2(x, format, bold, italic, monospace, underline, strikeout,
             color, background, align,
             font_size, angle, tooltip, popover, link, new_tab,
             extra_css, escape, background_as_tile,

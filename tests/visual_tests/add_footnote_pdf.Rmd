@@ -6,7 +6,7 @@ output: pdf_document
 # Through Pandoc
 ```{r through_pandoc}
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 dt <- mtcars[1:5, 1:2]
 colnames(dt)[1] <- c("mpg[note]")
 rownames(dt)[2] <- c("Mazda RX4 Wag[note]")

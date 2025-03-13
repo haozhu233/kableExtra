@@ -44,7 +44,7 @@ devtools::install_github("haozhu233/kableExtra")
 
 ## Basic Usage
 ```r
-library(kableExtra)
+library(kableExtra2)
 dt <- mtcars[1:5, 1:4]
 
 # HTML table

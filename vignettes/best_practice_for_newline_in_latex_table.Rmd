@@ -32,7 +32,7 @@ Wrapping texts and make newlines may seem to be the same but they are actually q
 If you are only trying stop your texts from "overflowing", you can get it done by setting a fixed width with `kableExtra::column_spec`. This is the most recommended practice as it's fairly straightforward. The column width controls the width for both table header and table body. 
 
 ```{r, warning=F, message=F}
-library(kableExtra)
+library(kableExtra2)
 dt <- data.frame(
   Items = c("Item 1", "Item 2", "Item 3"),
   Text_1 = c("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vehicula tempor ex. Morbi malesuada sagittis turpis, at venenatis nisl luctus a. ","In eu urna at magna luctus rhoncus quis in nisl. Fusce in velit varius, posuere risus et, cursus augue. Duis eleifend aliquam ante, a aliquet ex tincidunt in. ", "Vivamus venenatis egestas eros ut tempus. Vivamus id est nisi. Aliquam molestie erat et sollicitudin venenatis. In ac lacus at velit scelerisque mattis. "),

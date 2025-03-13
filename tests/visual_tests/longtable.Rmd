@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(kableExtra2)
 
 dt <- rbind(mtcars[1:30,], mtcars) 
 
