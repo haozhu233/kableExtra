@@ -17,6 +17,8 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(fn = "landscape")
+  comp(margin = "1cm", fn = "landscape")
   comp(fn = "footnote")
   comp(general = "General comment", fn = "footnote")
   comp(general = "General comment", general_title = "General title", fn = "footnote")
