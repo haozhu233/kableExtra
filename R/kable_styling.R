@@ -159,8 +159,7 @@ kable_styling <- function(kable_input,
     }
     repeat_header_method <- match.arg(repeat_header_method)
 
-    out <- solve_enc(kable_input)
-    parsed <- kable_to_parsed(out)
+    parsed <- kable_to_parsed(kable_input)
 
     res <- pdfTable_styling(parsed,
                             latex_options = latex_options,
@@ -490,7 +489,19 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
   table <- parsed[[table_info$tabularPath]]
   rules <- find_rules(table)
   header_rows_start <- rules[[1]][1]
-  header_rows_end <- rules[[2]][length(rules[[2]])]
+  header_rows_end <- rules[[1]][length(rules[[1]])]
+  if (!is.null(table_info$colnames)) {
+    for (i in seq_along(rules)[-1]) {
+      if (length(rules[[i]])) {
+        rule <- find_macro(rule(table, i, idx = rules),
+                           c("\\hline", "\\midrule"))
+        if (length(rule)) {
+          header_rows_end <- rules[[i]][length(rules[[i]])]
+          break
+        }
+      }
+    }
+  }
   if (table_info$booktabs && is.null(table_info$colnames)) {
     idx <- find_macro(table, "\\\\")
     header_rows_end <- min(idx[idx > header_rows_start])
@@ -639,8 +650,13 @@ styling_latex_position_center <- function(parsed, hold_position,
       parsed <- styling_latex_HOLD_position(parsed)
     }
   } else if (table_info$table_env) {
-    stop("Not implemented yet")
-    x <- sub("^(\\\\begin\\{table}[^\n]*)\\n", "\\1\n\\\\centering", x)
+    table <- parsed[[table_info$tablePath]]
+    newline <- find_char(table, "\n")
+    if (length(newline)) {
+      table <- insert_values(table, newline[1] + 1,
+                             latex2("\\centering"))
+      parsed[[table_info$tablePath]] <- table
+    }
   }
   parsed
 }
