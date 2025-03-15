@@ -311,7 +311,9 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
         )
       )
     }
-    if (row_midrule != "")
+    # row_midrule might be LaTeX2 from the table,
+    # or a character string.
+    if (!is.character(row_midrule) || row_midrule != "")
       new_contents[[i]] <- latex2(row_midrule, "\n", new_contents[[i]])
     table_info$contents[[i + 1]] <- new_contents[[i]]
     table <- drop_items(table, rules[[i+1]])
