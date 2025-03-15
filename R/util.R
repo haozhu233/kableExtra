@@ -256,7 +256,7 @@ solve_enc <- function(x) {
 
 input_escape <- function(x, latex_align) {
   x <- escape_latex(x)
-  x <- linebreak(x, align = latex_align, double_escape = TRUE)
+  x <- linebreak(x, align = latex_align, double_escape = FALSE)
 }
 
 clear_color_latex <- function(x, background = F) {
