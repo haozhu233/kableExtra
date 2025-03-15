@@ -150,41 +150,27 @@
       \rowcolor{gray!6}
       \midrule
        & 1 & 0\\
-      
       \rowcolor{gray!6}
        & 2 & 1\\
-      
       \rowcolor{gray!6}
        & 3 & 0\\
-      
       \rowcolor{gray!6}
        & 4 & 0\\
-      
       \rowcolor{gray!6}
        & 5 & 1\\
-      
       \rowcolor{gray!6}
        & 6 & 0\\
-      
       \rowcolor{gray!6}
       \multirow{-7}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{c}} & 7 & 1\\
-      
        & 8 & 0\\
-      
        & 9 & 1\\
-      
       \multirow{-3}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{d}} & 10 & 0\\
-      
       \rowcolor{gray!6}
        & 11 & 1\\
-      
       \rowcolor{gray!6}
       \multirow{-2}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{c}} & 12 & 1\\
-      
        & 13 & 0\\
-      
        & 14 & 0\\
-      
       \multirow{-3}{5em}[\normalbaselineskip]{\centering\arraybackslash \textbf{d}} & 15 & 1\\
       \bottomrule
       \end{tabular}

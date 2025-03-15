@@ -59,6 +59,7 @@ magic_mirror_latex <- function(parsed){
   align <- get_contents(columnOptions(table))
   align <- drop_items(align, find_char(align, "|"))
   table_info$align <- align
+  table_info$align_vector_origin <- unlist(lapply(align, strsplit, split = ""))
 
   # valign
   table_info$valign <- deparseLatex(posOption(table))

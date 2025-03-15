@@ -197,7 +197,7 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
 
   new_kable_dt <- kable_dt
   for (j in seq_along(columns)) {
-    column_align <- columnOption(table, columns[j])
+    column_align <- table_info$align_vector_origin[columns[j]]
     column_width <- ifelse(
       is.null(table_info$column_width[[paste0("column_", columns[j])]]),
       "*", table_info$column_width[[paste0("column_", columns[j])]])
@@ -311,9 +311,9 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
         )
       )
     }
-    new_contents[[i]] <- latex2(row_midrule, "\n", new_contents[[i]])
+    if (row_midrule != "")
+      new_contents[[i]] <- latex2(row_midrule, "\n", new_contents[[i]])
     table_info$contents[[i + 1]] <- new_contents[[i]]
-
     table <- drop_items(table, rules[[i+1]])
     tableRow(table, i + 1, withExtras = TRUE) <- latex2(tableRow(table, i + 1, withExtras = TRUE, withData = FALSE), new_contents[[i]])
   }
@@ -360,7 +360,7 @@ collapse_new_dt_item <- function(x, span, width = NULL, align, valign,
       paste0("[\\normalbaselineskip]")
     ),
     new_block(latex2(
-    switch(deparseLatex(align),
+    switch(align,
            "l" = "\\raggedright\\arraybackslash",
            "c" = "\\centering\\arraybackslash",
            "r" = "\\raggedleft\\arraybackslash"),
