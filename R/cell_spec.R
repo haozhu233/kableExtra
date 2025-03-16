@@ -223,8 +223,8 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
     }
     if (!is.null(font_size)) {
       x[[i]] <- latex2("\\bgroup\\fontsize",
-                       new_block(font_size),
-                       new_block(as.numeric(font_size) + 2),
+                       new_block(font_size[i]),
+                       new_block(as.numeric(font_size[i]) + 2),
                        "\\selectfont ", x[[i]],
                        "\\egroup{}")
     }

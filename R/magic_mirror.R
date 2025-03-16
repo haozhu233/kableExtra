@@ -90,7 +90,7 @@ magic_mirror_latex <- function(parsed){
   }
   table_info$nrow <- nrow <- tableNrow(table)
   # Column names
-  if (table_info$booktabs && length(find_sequence(parsed, "\\midrule")) == 0) {
+  if (table_info$booktabs && length(find_macro(table, "\\midrule")) == 0) {
     table_info$colnames <- NULL
     table_info$position_offset <- 0
   } else {

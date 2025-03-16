@@ -123,7 +123,6 @@ group_rows <- function(kable_input, group_label = NULL,
       }
     }
     if (kable_format == "latex") {
-      browser()
       for (i in 1:nrow(index)) {
         out <- group_rows_latex(out, index$header[i],
                                 index$start[i], index$end[i],

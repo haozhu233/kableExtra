@@ -361,7 +361,7 @@ column_spec_latex <- function(parsed, columns, width,
 
   for (column in columns) {
     columnOption(table, column) <- latex_column_align_builder(
-        columnOption(table, column),
+        table_info$align_vector_origin[column],
         width, border_left, border_right,
         latex_column_spec, latex_valign)
   }

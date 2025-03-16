@@ -55,7 +55,7 @@ landscape_latex <- function(parsed, margin) {
     table_info$tabularPath <- c(2, table_info$tabularPath)
     if (!is.null(table_info$tablePath))
       table_info$tablePath <- c(2, table_info$tablepath)
-    parsed <- update_meta(parsed)
+    parsed <- update_meta(parsed, table_info)
   }
 
   attr(parsed, "landscape") <- TRUE

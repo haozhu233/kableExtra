@@ -651,11 +651,19 @@ styling_latex_position_center <- function(parsed, hold_position,
     }
   } else if (table_info$table_env) {
     table <- parsed[[table_info$tablePath]]
-    newline <- find_char(table, "\n")
-    if (length(newline)) {
-      table <- insert_values(table, newline[1] + 1,
+    idx <- find_catcode(table, NEWLINE)
+    if (length(idx)) {
+      idx <- idx[1]
+      newline <- table[[idx]]
+      if (nchar(newline) > 1) {
+        table <- insert_values(table, idx + 1, split_chars(newline))
+        table <- drop_items(table, idx)
+      }
+      table <- insert_values(table, idx + 1,
                              latex2("\\centering"))
       parsed[[table_info$tablePath]] <- table
+      table_info$tabularPath <- getTabularPath(parsed)
+      parsed <- update_meta(parsed, table_info)
     }
   }
   parsed

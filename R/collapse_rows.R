@@ -247,9 +247,9 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
   if(row_group_label_position == 'stack'){
     if(is.null(headers_to_remove)) headers_to_remove <- head(columns, -1)
     table_info$colnames[headers_to_remove] <- ""
-    new_header <- paste(table_info$colnames, collapse = ' & ')
-    out <- sub(contents[1], new_header, out)
-    table_info$contents[1] <- new_header
+    for (i in headers_to_remove)
+      tableCell(table, 1, i) <- ""
+    table_info$contents[1] <- tableRow(table, 1)
   }
   if(latex_hline == 'custom' & is.null(custom_latex_hline)){
     if(row_group_label_position == 'stack'){
@@ -437,9 +437,9 @@ collapse_rows_latex_stack <- function(parsed, group_row_index_list,
       group_row_args <- merge_lists(group_row_args, row_group_label_fonts[[i]])
     }
     group_row_args <- merge_lists(
-      list(parsed = parsed, index = group_row_index_list[[i]], escape = FALSE),
+      list(kable_input = parsed, index = group_row_index_list[[i]], escape = FALSE),
       group_row_args)
-    parsed <- do.call(group_rows2, group_row_args)
+    parsed <- do.call(group_rows, group_row_args)
   }
-  return(out)
+  return(parsed)
 }
