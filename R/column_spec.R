@@ -533,11 +533,11 @@ latex_cell_builder <- function(target_row, columns, table_info,
     }
     if (!is.null(color)) {
       clean_columns <- clear_color_latex(new_row[[column]])
-      new_row[[column]] <- latex2("\\textcolor", latex_color(color)[[1]], new_block(clean_columns))
+      new_row[[column]] <- latex2("\\textcolor", latex_color_(color), new_block(clean_columns))
     }
     if (!is.null(background)) {
       clean_columns <- clear_color_latex(new_row[[column]], TRUE)
-      new_row[[column]] <- latex2("\\cellcolor", latex_color(background)[[1]], new_block(clean_columns))
+      new_row[[column]] <- latex2("\\cellcolor", latex_color_(background), new_block(clean_columns))
     }
 
     if (!is.null(link)) {

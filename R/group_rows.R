@@ -262,11 +262,11 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
     group_label <- latex2("\\sout", new_block(group_label))
   }
   if (!is.null(color)) {
-    group_label <- latex2("\\textcolor", latex_color(color)[[1]],
+    group_label <- latex2("\\textcolor", latex_color_(color),
                           new_block(group_label))
   }
   if (!is.null(background)) {
-    group_label <- latex2("\\cellcolor", latex_color(background),
+    group_label <- latex2("\\cellcolor", latex_color_(background),
                           new_block(group_label))
   }
   # Add group label

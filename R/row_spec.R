@@ -266,7 +266,7 @@ latex_new_row_builder <- function(target_row, table_info,
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x)
-      latex2("\\textcolor", latex_color(color)[[1]], new_block(x))
+      latex2("\\textcolor", latex_color_(color), new_block(x))
     })
   }
   if (!is.null(background)) {
@@ -279,7 +279,7 @@ latex_new_row_builder <- function(target_row, table_info,
       stop("Oops, assumed only one color")
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x, background = TRUE)
-      latex2("\\cellcolor", latex_color(background)[[1]], new_block(x))
+      latex2("\\cellcolor", latex_color_(background), new_block(x))
     })
   }
   if (!is.null(font_size)) {

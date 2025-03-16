@@ -82,9 +82,10 @@ cell_spec <- function(x, format,
     res <- cell_spec_latex(x, bold, italic, monospace, underline, strikeout,
                            color, background, align, font_size, angle, escape,
                            latex_background_in_cell)
-    sapply(res, function(y) if (inherits(y, "LaTeX2"))
+    vapply(res, function(y) if (inherits(y, "LaTeX2"))
                               deparseLatex(y)
-                            else y)
+                            else y,
+           "")
   }
 }
 
@@ -211,31 +212,31 @@ cell_spec_latex <- function(x, bold, italic, monospace, underline, strikeout,
     if (strikeout[i])
       x[[i]] <- latex2("\\sout", new_block(x[[i]]))
     if (!is.null(color)) {
-      lcolor <- latex_color(color[i], escape = FALSE)
+      lcolor <- latex_color_(color[i])
       x[[i]] <- latex2("\\textcolor", lcolor, new_block(x[[i]]))
     }
     if (!is.null(background)) {
-      lbackground <- latex_color(background[i], escape = FALSE)
+      lbackground <- latex_color_(background[i])
       x[[i]] <- latex2(if (latex_background_in_cell) "\\cellcolor" else "\\colorbox",
                        lbackground,
                        new_block(x[[i]]))
     }
     if (!is.null(font_size)) {
       x[[i]] <- latex2("\\bgroup\\fontsize",
-                       new_group(font_size),
-                       new_group(as.numeric(font_size) + 2),
+                       new_block(font_size),
+                       new_block(as.numeric(font_size) + 2),
                        "\\selectfont ", x[[i]],
                        "\\egroup{}")
     }
     if (!is.null(angle))
       x[[i]] <- latex2("\\rotatebox",
                        new_block(angle[i]),
-                       new_block(x))
+                       new_block(x[[i]]))
 
     if (!is.null(align))
       x[[i]] <- latex2("\\multicolumn{1}",
                        new_block(align[i]),
-                       new_block(x))
+                       new_block(x[[i]]))
   }
   return(x)
 }

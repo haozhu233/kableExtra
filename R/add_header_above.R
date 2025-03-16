@@ -390,11 +390,11 @@ pdfTable_new_header_generator <- function(header_df, booktabs = FALSE,
     if (underline[i]) header[[i]] <- latex2('\\underline', new_block(header[[i]]))
     if (strikeout[i]) header[[i]] <- latex2('\\sout', new_block(header[[i]]))
     if (!is.null(color)) {
-      lcolor <- latex_color(color[i])
+      lcolor <- latex_color_(color[i])
       header[[i]] <- latex2("\\textcolor", lcolor, new_block(header[[i]]))
     }
     if (!is.null(background)) {
-      lbackground <- latex_color(background[i])
+      lbackground <- latex_color_(background[i])
       header[[i]] <- latex2("\\cellcolor", lbackground, new_block(header[[i]]))
     }
     if (!is.null(font_size)) {
