@@ -79,10 +79,9 @@ kbl <- function(x, format, digits = getOption("digits"),
     align <- strsplit(align, '')[[1]]
   }
   if (missing(format) || is.null(format)) {
-    if (knitr::is_latex_output())
-      format <- "latex"
-    else
-      format <- "html"
+    format <- getOption("knitr.table.format",
+                        if (knitr::is_latex_output()) "latex"
+                        else "html")
   }
   if (format == "latex") {
     use_latex_packages()
