@@ -515,7 +515,7 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
     if (repeat_header_method == "append") {
       lab <- find_macro(table_info$caption, "\\label")
       if (length(lab))
-        caption_without_lab <- table_info$caption[-lab]
+        caption_without_lab <- table_info$caption[-c(lab, lab+1)]
       else
         caption_without_lab <- table_info$caption
       repeat_header_text <- latex2(caption_without_lab, " ", repeat_header_text)
