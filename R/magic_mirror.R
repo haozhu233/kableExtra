@@ -38,7 +38,8 @@ magic_mirror_latex <- function(parsed){
                      contents = NULL,
                      centering = FALSE, table_env = FALSE,
                      tablePath = NULL,
-                     tabularPath = NULL)
+                     tabularPath = NULL,
+                     dataRows = integer())
 
   tablePath <- path_to(parsed, is_fn = is_env,
                        envtypes = "table")
@@ -89,6 +90,7 @@ magic_mirror_latex <- function(parsed){
     table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
   }
   table_info$nrow <- nrow <- tableNrow(table)
+
   # Column names
   if (table_info$booktabs && length(find_macro(table, "\\midrule")) == 0) {
     table_info$colnames <- NULL
@@ -99,7 +101,9 @@ magic_mirror_latex <- function(parsed){
       colnames[i] <- trimws(deparseLatex(tableCell(table, 1, i)))
     table_info$colnames <- colnames
     table_info$position_offset <- 1
+    table_info$dataRows <- seq_len(nrow - 1) + 1L
   }
+  table_info$dataRows <- seq_len(nrow)
   # Row names
   rownames <- character(nrow)
   for (i in seq_len(nrow))

@@ -302,22 +302,23 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
                           extra_latex_after)
   }
 
-  rows <- rownum:table_info$nrow
-  table_info$contents[rows + 1] <- table_info$contents[rows]
   table_info$contents[[rownum]] <- pre_rowtext
-  table_info$nrow <- table_info$nrow + 1
   table <- parsed[[table_info$tabularPath]]
+  datarows <- table_info$dataRows
+  newrow <- datarows[rownum]
   table <- insert_values(table,
-                         min(find_tableRow(table, rownum)),
+                         min(find_tableRow(table, newrow)),
                          pre_rowtext)
-
+  rows <- rownum:table_info$nrow
+  datarows[rows] <- datarows[rows] + 1L
   table <- remove_addlinespace(table)
 
   table_info$group_rows_used <- TRUE
+  table_info$dataRows <- datarows
   parsed[[table_info$tabularPath]] <- table
   parsed <- update_meta(parsed, table_info)
   if (indent) {
-    parsed <- add_indent_latex(parsed, 1 + seq(start_row, end_row))
+    parsed <- add_indent_latex(parsed, seq(start_row, end_row))
   }
   parsed
 }

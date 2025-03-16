@@ -336,6 +336,7 @@ pdfTable_add_header_above <- function(parsed, header, bold, italic,
   table <- insert_values(table,
                          hlines[1] + 1,
                          latex2("\n", new_header))
+  table_info$dataRows <- table_info$dataRows + 1
   parsed[[table_info$tabularPath]] <- table
   if (is.null(table_info$new_header_row)) {
     table_info$new_header_row <- new_header_split[[1]]

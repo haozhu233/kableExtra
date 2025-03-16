@@ -58,6 +58,11 @@ adds the following fields:
 environment (or `tabularx`, `longtable`, etc.).  Thus `parsedInput[[tabularPath]]` should return the table.
 - `tablePath`:  the path within `parsedInput` to the `table` environment,
 if there is one.  Otherwise this is `NULL`.
+- `dataRows`:  This is a vector that gives the translation between
+the original data rows of the input and the `tableRow` values.  For example, if 5 header lines are added, then there will be no more `dataRows` values, but all will be increased by 5.  For consistency
+with the old code, the original header row counts as a data row,
+i.e. `kbl(mtcars[1:5, ])` would have 6 data rows, with the first
+being the header, and the rest containing the `mtcars` data.
 
 It drops these fields:
 

@@ -65,8 +65,10 @@ add_indent_latex <- function(parsed, positions,
          "add_indent_latex.")
   }
 
+  datarows <- table_info$dataRows
   for (i in positions + table_info$position_offset) {
-    rowtext <- table_info$contents[[i]]
+    newrow <- datarows[i]
+    rowtext <- tableRow(table, newrow)
     new_rowtext <- latex_row_cells(rowtext)
     if (all_cols) {
       new_rowtext <- lapply(new_rowtext, function(x) {
@@ -83,7 +85,7 @@ add_indent_latex <- function(parsed, positions,
     }
     new_rowtext <- vector_to_row(new_rowtext, linebreak = FALSE)
     table_info$contents[[i]] <- new_rowtext
-    tableRow(table, i) <- new_rowtext
+    tableRow(table, newrow) <- new_rowtext
   }
   parsed[[table_info$tabularPath]] <- table
   parsed <- update_meta(parsed, table_info)
