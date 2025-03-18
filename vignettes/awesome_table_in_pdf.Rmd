@@ -56,6 +56,7 @@ Here we are using the first few columns and rows from dataset `mtcars`
 ```{r, echo = F}
 options(kableExtra.latex.load_packages = F)
 options(knitr.table.format = "latex")
+set.seed(59)
 ```
 
 ```{r}

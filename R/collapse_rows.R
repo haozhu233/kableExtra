@@ -249,7 +249,7 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
     table_info$colnames[headers_to_remove] <- ""
     for (i in headers_to_remove)
       tableCell(table, 1, i) <- ""
-    table_info$contents[1] <- tableRow(table, 1)
+    table_info$contents[[1]] <- tableRow(table, 1)
   }
   if(latex_hline == 'custom' & is.null(custom_latex_hline)){
     if(row_group_label_position == 'stack'){

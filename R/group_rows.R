@@ -140,7 +140,7 @@ group_row_index_translator <- function(index) {
   index <- standardize_header_input(index)
   index$start <- cumsum(c(1, index$colspan))[1:length(index$colspan)]
   index$end <- cumsum(index$colspan)
-  index$header <- trimws(regex_unescape(index$header))
+  index$header <- trimws(index$header)
   index <- index[index$header != "", ]
   return(index)
 }
