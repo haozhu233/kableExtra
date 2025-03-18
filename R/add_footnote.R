@@ -28,6 +28,8 @@ add_footnote <- function(input, label = NULL,
                          escape = TRUE) {
   if (is.null(label)) return(input)
 
+  format <- attr(input, "format")
+
   if (!threeparttable) {
     threeparttable <- getOption("kable_footnote_threeparttable", FALSE)
   }
@@ -41,13 +43,25 @@ add_footnote <- function(input, label = NULL,
   } else {
     if (notation == "symbol") {
       notation <- paste0(notation, ".", attr(input, "format"))
+      # FIXME:  temporary kludge
+      if (format == "latex")
+        notation <- paste0(notation, "2")
     }
 
-    ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra"))
+    ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra2"))
     ids <- ids.ops[, notation]
     ids.intable <- gsub("\\*", "\\\\*", ids)
   }
 
+  if (format == "latex") {
+    parsed <- kable_to_parsed(input)
+    res <- add_footnote_latex(parsed, label,
+                              notation,
+                              ids,
+                              threeparttable,
+                              escape)
+    return(parsed_to_kable(res, input))
+  }
 
   #count the number of items in label and intable notation
   count.label <- length(label)
@@ -72,7 +86,7 @@ add_footnote <- function(input, label = NULL,
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
   # time to define their `kable` format.
-  if (!attr(input, "format") %in% c("html", "latex")) {
+  if (!format %in% c("html", "latex")) {
     if (notation == "none")
       ids.innote <- ids.intable  # issue #672
     else
@@ -103,146 +117,9 @@ add_footnote <- function(input, label = NULL,
     )
   }
 
-  # LaTeX Tables --------------------------------
-  if (attr(input, "format") == "latex") {
-    # Clean the entry for labels
-    if (escape) {
-      label <- escape_latex(label)
-      label <- linebreak(label)
-    }
-    # Labels remain unparsed for now...
-
-    parsed <- kable_to_parsed(input)
-    table_info <- magic_mirror(parsed)
-    table <- parsed[[table_info$tabularPath]]
-
-    if (table_info$tabular == "longtable") {
-      if (notation != "number") {
-        warning("Notation is set to 'number' and other formats are not supported.")
-        notation <- "number"
-      }
-      # If longtable is used, then use page footnote instead of threeparttable
-      # as it makes more sense to see the footnote at the bottom of page if
-      # table is longer than one page.
-      if (threeparttable) {
-        warning("Threeparttable does not support longtable.")
-        threeparttable <- FALSE
-      }
-
-      # Longtable doesn't support footnote in caption directly.
-      # See http://tex.stackexchange.com/questions/50151/footnotes-in-longtable-captions
-
-      count.in.caption.note <- 0
-      if (length(table_info$caption)) {
-        notes <- find_pattern(table_info$caption,
-                              "\\[note\\]", all = TRUE)
-
-        count.in.caption.note <- length(notes)
-      }
-      if (count.in.caption.note != 0) {
-        caption.footnote <- latex2(paste0("\\addtocounter{footnote}{-",
-                                   count.in.caption.note, "}"))
-
-        for (i in rev(seq_len(count.in.caption.note))) {
-          table_info$caption <-
-            set_range(table_info$caption,
-                      notes[[i]],
-                      latex2("\\protect\\footnotemark ",
-                             export))
-          caption.footnote <- insert_values(caption.footnote, length(caption.footnote) + 1,
-                                            latex2(
- "\n\\stepcounter{footnote}\\footnotetext", new_block(
-            label[i])))
-        }
-        parsed[[table_info$captionPath]] <-
-          new_block(table_info$caption)
-
-        if (str_detect(export, toprule_regexp)) {
-          export <- sub(toprule_regexp,
-                        paste0("\\1\n", caption.footnote), export)
-        } else {
-          export <- sub("\\\\hline",
-                        paste0("\\\\hline\n", caption.footnote), export)
-        }
-      }
-      for (i in (count.in.caption.note + 1):count.intablenote) {
-        export <- sub("\\[note\\]",
-                      paste0("\\\\footnote[", i, "]{", label[i], "}"), export)
-      }
-      for (i in extra.notation) {
-        export <- gsub(paste0("\\[note", i, "\\]"),
-                       paste0("\\\\footnotemark[", i, "]"),
-                       export)
-      }
-    } else {
-      # Replace in-table notation with appropriate symbol
-      for (i in seq_len(count.intablenote)) {
-        export <- sub("\\[note\\]",
-                      paste0("\\\\textsuperscript{", ids.intable[i], "}"),
-                      export)
-      }
-
-      # Fix extra in table notation
-      for (i in extra.notation) {
-        export <- gsub(paste0("\\[note", i, "\\]"),
-                       paste0("\\\\textsuperscript{", ids.intable[i], "}"),
-                       export)
-      }
-      if (threeparttable) {
-        # generate footer with appropriate symbol
-        usepackage_latex("threeparttable")
-        footer <- ""
-        for (i in 1:count.label) {
-          footer <- paste0(footer,"\\\\item [", ids[i], "] ", label[i], "\n")
-        }
-
-        if (grepl("\\\\caption\\{.*?\\}", export)) {
-          export <- sub("\\\\caption\\{",
-                        "\\\\begin{threeparttable}\n\\\\caption{",
-                        export)
-        } else {
-          export <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
-                        paste0("\\\\begin{threeparttable}\n\\\\begin{",
-                               table_info$tabular, "}"),
-                        export)
-        }
-        export <- gsub(
-          "\\\\end\\{tabular\\}",
-          paste0("\\\\end{tabular}\n\\\\begin{tablenotes}\n\\\\small\n",
-                 footer, "\\\\end{tablenotes}\n\\\\end{threeparttable}"),
-          export)
-      } else {
-        contents <- strsplit(deparseLatex(table), "\n")[[1]]
-        table.width <- max(nchar(
-          str_replace_all(
-            str_replace_all(contents, "\\[note\\]", ""),
-            "\\[note[0-9]{1,2}\\]", ""))) + 2 * (table_info$ncol - 1)
-        footer <- ""
-        for (i in 1:count.label) {
-          label.wrap <- strwrap(label[i], table.width)
-          footer <- latex2(footer, "\\multicolumn",
-                           new_block(table_info$ncol),
-                           "{l}",
-                           new_block(latex2("\\textsuperscript",
-                           new_block(ids[i]), " ",
-                           label.wrap[1])), "\\\\\n")
-          if (length(label.wrap) > 1) {
-            for (j in 2:length(label.wrap)) {
-              footer <- latex2(footer, "\\multicolumn",
-                               new_block(table_info$ncol),
-                               "{l}", new_block(label.wrap[j]), "\\\\\n")
-            }
-          }
-        }
-        table <- insert_values(table, length(table) + 1,                                 footer)
-        parsed[[table_info$tabularPath]] <- table
-        export <- parsed_to_kable(parsed, input)
-      }
-    }
-  }
 
   # HTML Tables -------------------
-  if (attr(input, "format") == "html") {
+  if (format == "html") {
     # Clean the entry for labels
     table_info <- magic_mirror(input)
     if (escape) {
@@ -277,3 +154,152 @@ add_footnote <- function(input, label = NULL,
   attr(export, "kable_meta") <- table_info
   return(export)
 }
+
+replace_note_latex <- function(parsed, note_location, ids) {
+  for (i in rev(seq_along(note_location))) {
+    note <- get_range(parsed, note_location[[i]])
+    if (length(find_pattern(note, "[0-9]", all = FALSE))) {
+      digits <- find_catcode(note, "SPECIAL")
+      value <- 0
+      for (j in seq_along(digits)) {
+        chars <- note[[digits[j]]]
+        if (grepl("[0-9]", chars))
+          value <- 10*value + as.numeric(chars)
+      }
+    } else
+      value <- i
+    parsed <- set_range(parsed, note_location[[i]],
+                        latex2("\\textsuperscript",
+                                       new_block(latex2(ids[value]))))
+  }
+  parsed
+}
+
+add_footnote_latex <- function(parsed, label,
+                               notation,
+                               ids,
+                               threeparttable,
+                               escape) {
+
+  #count the number of items in label and intable notation
+  count.label <- length(label)
+  notes <- find_pattern(parsed, "\\[note[0-9]{0,2}\\]", all = TRUE)
+  count.notes <- length(notes)
+  if (count.notes != 0 && count.label != count.notes) {
+    warning(paste("You entered", count.label, "labels but you put",
+                  count.notes, "[note] markers in your table."))
+  }
+
+  # Clean the entry for labels
+  if (escape) {
+    label <- escape_latex(label)
+    label <- linebreak(label)
+  }
+  # Labels remain unparsed for now...
+
+  table_info <- magic_mirror(parsed)
+
+  if (table_info$tabular == "longtable") {
+    if (notation != "number") {
+      warning("Notation is set to 'number' and other formats are not supported.")
+      notation <- "number"
+    }
+    # If longtable is used, then use page footnote instead of threeparttable
+    # as it makes more sense to see the footnote at the bottom of page if
+    # table is longer than one page.
+    if (threeparttable) {
+      warning("Threeparttable does not support longtable.")
+      threeparttable <- FALSE
+    }
+
+    # Longtable doesn't support footnote in caption directly.
+    # See http://tex.stackexchange.com/questions/50151/footnotes-in-longtable-captions
+
+    count.in.caption.note <- 0
+    if (length(table_info$captionPath)) {
+      caption_notes <- find_pattern(table_info$caption,
+                                    "\\[note[0-9]{0,2}\\]", all = TRUE)
+
+      count.in.caption.note <- length(caption_notes)
+    }
+    if (count.in.caption.note != 0) {
+      caption.footnote <- latex2(paste0("\\addtocounter{footnote}{-",
+                                        count.in.caption.note, "}"))
+      caption <- replace_note_latex(table_info$caption,
+                                    caption_notes, ids)
+
+      for (i in seq_len(count.in.caption.note)) {
+        caption.footnote <- insert_values(caption.footnote, length(caption.footnote) + 1,
+                                          latex2(
+                                            "\n\\stepcounter{footnote}\\footnotetext", new_block(
+                                              label[i])))
+      }
+      parsed[[table_info$captionPath]] <-
+        table_info$caption <- caption
+
+      rule <- find_macro(table, "\\toprule", all = FALSE)
+      if (!length(rule))
+        rule <- find_macro(table, "\\hline", all = FALSE)
+      if (length(rule))
+        table <- insert_values(table, rule + 1,
+                               latex2("\\1\n", caption.footnote))
+    }
+    parsed <- replace_note_latex(parsed, notes, ids)
+  } else {
+    # Replace in-table notation with appropriate symbol
+    parsed <- replace_note_latex(parsed, notes, ids)
+
+    table_info$tabularPath <- getTabularPath(parsed)
+    table <- parsed[[table_info$tabularPath]]
+    if (threeparttable) {
+      # generate footer with appropriate symbol
+      usepackage_latex("threeparttable")
+      footer <- ""
+      for (i in 1:count.label) {
+        footer <- paste0(footer,"\\item  [", ids[i], "] ", label[i], "\n")
+      }
+
+      if (length(table_info$tablePath)) {
+        table <- parsed[[table_info$tablePath]]
+        contents <- get_contents(table)
+        threepart <- new_env("threeparttable", latex2("\n", contents, "\n"))
+        table <- set_contents(table, threepart)
+        parsed[[table_info$tablePath]] <- table
+      } else {
+        table <- parsed[[table_info$tabularPath]]
+        parsed[[table_info$tabularPath]] <-
+          new_env("threeparttable", "\n", table, "\n",
+                  new_env("tablenotes",
+                          "\n\\small\n",
+                          latex2(footer)), "\n")
+      }
+      table_info$tabularPath <- getTabularPath(parsed)
+    } else {
+      contents <- strsplit(deparseLatex(table), "\n")[[1]]
+      table.width <- max(nchar(
+          str_replace_all(contents, "\\[note[0-9]{0,2}\\]",
+                          "")) + 2 * (table_info$ncol - 1))
+      footer <- ""
+      for (i in 1:count.label) {
+        label.wrap <- strwrap(label[i], table.width)
+        footer <- latex2(footer, "\\multicolumn",
+                         new_block(table_info$ncol),
+                         "{l}",
+                         new_block(latex2("\\textsuperscript",
+                                          new_block(ids[i]), " ",
+                                          label.wrap[1])), "\\\\\n")
+        if (length(label.wrap) > 1) {
+          for (j in 2:length(label.wrap)) {
+            footer <- latex2(footer, "\\multicolumn",
+                             new_block(table_info$ncol),
+                             "{l}", new_block(label.wrap[j]), "\n")
+          }
+        }
+      }
+      table <- insert_values(table, length(table) + 1,                                 footer)
+      parsed[[table_info$tabularPath]] <- table
+    }
+  }
+  parsed
+}
+
