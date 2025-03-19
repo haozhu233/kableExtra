@@ -10,10 +10,7 @@
 magic_mirror <- function(kable_input){
   kable_format <- attr(kable_input, "format")
   if (kable_format == "latex") {
-    if (inherits(kable_input, "LaTeX2"))
-      parsed <- kable_input
-    else
-      parsed <- parseLatex(kable_input)
+    parsed <- kable_to_parsed(kable_input)
     table_info <- magic_mirror_latex(parsed)
   }
   if (kable_format == "html") {

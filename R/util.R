@@ -356,19 +356,27 @@ update_meta <- function(parsed, table_info) {
   parsed
 }
 
-kable_to_parsed <- function(kable_input)
-  structure(parseLatex(kable_input),
-    # Add the attributes that may be expected later...
-    kable_meta = attr(kable_input, "kable_meta"),
-    n_head = attr(kable_input, "n_head"),
-    format = "latex")
+kable_to_parsed <- function(kable_input) {
+  if (inherits(kable_input, "LaTeX2"))
+    kable_input
+  else
+    structure(parseLatex(kable_input),
+      # Add the attributes that may be expected later...
+      kable_meta = attr(kable_input, "kable_meta"),
+      n_head = attr(kable_input, "n_head"),
+      format = "latex")
+}
 
-parsed_to_kable <- function(parsed, kable_input)
-  structure(capture.output(parsed),
+parsed_to_kable <- function(parsed, kable_input) {
+  if (inherits(kable_input, "LaTeX2"))
+    parsed
+  else
+    structure(capture.output(parsed),
             kable_meta = attr(parsed, "kable_meta"),
             n_head = attr(kable_input, "n_head"),
             format = "latex",
             class = class(kable_input))
+}
 
 remove_addlinespace <- function(table) {
   idx <- find_macro(table, "\\addlinespace")

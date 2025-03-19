@@ -93,25 +93,19 @@ group_rows <- function(kable_input, group_label = NULL,
                              bold, italic, monospace, underline, strikeout,
                              color, background))}
     if (kable_format == "latex") {
-      if (inherits(kable_input, "LaTeX2"))
-        parsed <- kable_input
-      else
-        parsed <- kable_to_parsed(kable_input)
+      parsed <- kable_to_parsed(kable_input)
       res <- group_rows_latex(parsed, group_label, start_row, end_row,
                               latex_gap_space, escape, latex_align, colnum,
                               bold, italic, hline_before, hline_after,
                               extra_latex_after, indent, latex_wrap_text,
                               monospace, underline, strikeout,
                               color, background)
-      if (inherits(kable_input, "LaTeX2"))
-        return(res)
-      else
-        return(parsed_to_kable(res, kable_input))
+      return(parsed_to_kable(res, kable_input))
     }
   } else {
     index <- group_row_index_translator(index)
-    out <- kable_input
     if (kable_format == "html") {
+      out <- kable_input
       for (i in 1:nrow(index)) {
         if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")
@@ -123,8 +117,9 @@ group_rows <- function(kable_input, group_label = NULL,
       }
     }
     if (kable_format == "latex") {
+      parsed <- kable_to_parsed(kable_input)
       for (i in 1:nrow(index)) {
-        out <- group_rows_latex(out, index$header[i],
+        parsed <- group_rows_latex(parsed, index$header[i],
                                 index$start[i], index$end[i],
                                 latex_gap_space, escape, latex_align, colnum,
                                 bold, italic, hline_before, hline_after,
@@ -132,6 +127,7 @@ group_rows <- function(kable_input, group_label = NULL,
                                 monospace, underline, strikeout,
                                 color, background)
       }
+      out <- parsed_to_kable(parsed, kable_input)
     }
     return(out)
   }

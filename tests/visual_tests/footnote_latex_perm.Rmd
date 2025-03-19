@@ -7,8 +7,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = !TRUE)
-devtools::load_all()
-# library(kableExtra2)
+library(kableExtra2)
 
 dat <- data.frame(
   Col1 = LETTERS[rep(1:26, each = 2)],

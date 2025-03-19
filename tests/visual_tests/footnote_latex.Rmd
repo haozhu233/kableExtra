@@ -32,5 +32,5 @@ mtcars[1:5, 1:5] %>%
 ```
 
 ```{r}
-kable(cars, caption = 'table caption', format = 'latex', escape = TRUE) %>% kableExtra::footnote(general = 'an_underscore', escape = T)
+kable(cars, caption = 'table caption', format = 'latex', escape = TRUE) %>% kableExtra2::footnote(general = 'an_underscore', escape = T)
 ```

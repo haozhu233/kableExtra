@@ -541,8 +541,7 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
     }
 
     if (repeat_header_continued == FALSE) {
-      bottom_part <- latex2( "\n\\endfoot\n", bottomrule,
-                             "\\endlastfoot\n")
+      bottom_part <- latex2( "\n\\endfoot\n\\bottomrule\n\\endlastfoot\n")
     } else {
       if (repeat_header_continued == TRUE) {
         bottom_text <- latex2("\\textit{(continued \\ldots)}")
@@ -550,11 +549,9 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
         bottom_text <- latex2(repeat_header_continued)
       }
       bottom_part <- latex2(
-        midrule, "\n",
+        "\\midrule\n",
         paste0("\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\\\n"),
-        "\\endfoot\n",
-        bottomrule, "\n",
-        "\\endlastfoot"
+        "\\endfoot\n\\bottomrule\n\\endlastfoot"
       )
     }
   }

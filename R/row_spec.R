@@ -291,21 +291,20 @@ latex_new_row_builder <- function(target_row, table_info,
     })
   }
   if (!is.null(align)) {
+    align <- rep(align, table_info$ncol)
     if (!is.null(table_info$column_width)) {
       p_align <- switch(align,
                         "l" = "\\raggedright\\arraybackslash",
                         "c" = "\\centering\\arraybackslash",
                         "r" = "\\raggedleft\\arraybackslash")
-      align <- rep(align, table_info$ncol)
-      stop("this one is not finished yet...")
       p_cols <- as.numeric(sub("column_", "", names(table_info$column_width)))
       for (i in 1:length(p_cols)) {
-        align[p_cols[i]] <- paste0("\\>\\{", p_align, "\\}p\\{",
-                                   table_info$column_width[[i]], "\\}")
+        align[p_cols[i]] <- paste0(">{", p_align, "}p{",
+                                   table_info$column_width[[i]], "}")
       }
     }
-    new_row <- lapply(new_row, function(x) {
-      latex2("\\multicolumn{1}", new_block(align), new_block(x))
+    new_row <- lapply(seq_along(new_row), function(i) {
+      latex2("\\multicolumn{1}", new_block(align[i]), new_block(new_row[[i]]))
     })
   }
 
