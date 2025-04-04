@@ -229,7 +229,7 @@ add_footnote_latex <- function(parsed, label,
                                     caption_notes, ids)
 
       for (i in seq_len(count.in.caption.note)) {
-        caption.footnote <- insert_values(caption.footnote, length(caption.footnote) + 1,
+        caption.footnote <- insert_values(caption.footnote, length(caption.footnote), after = TRUE,
                                           latex2(
                                             "\n\\stepcounter{footnote}\\footnotetext", new_block(
                                               label[i])))
@@ -241,7 +241,7 @@ add_footnote_latex <- function(parsed, label,
       if (!length(rule))
         rule <- find_macro(table, "\\hline", all = FALSE)
       if (length(rule))
-        table <- insert_values(table, rule + 1,
+        table <- insert_values(table, rule, after = TRUE,
                                latex2("\\1\n", caption.footnote))
     }
     parsed <- replace_note_latex(parsed, notes, ids)
@@ -296,7 +296,8 @@ add_footnote_latex <- function(parsed, label,
           }
         }
       }
-      table <- insert_values(table, length(table) + 1,                                 footer)
+      table <- insert_values(table, length(table),
+                             after = TRUE, footer)
       parsed[[table_info$tabularPath]] <- table
     }
   }

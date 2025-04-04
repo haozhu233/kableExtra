@@ -488,15 +488,19 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
   table_info <- attr(parsed, "kable_meta")
   table <- parsed[[table_info$tabularPath]]
   rules <- find_rules(table)
-  header_rows_start <- rules[[1]][1]
-  header_rows_end <- rules[[1]][length(rules[[1]])]
+
+  header_rows_start <- path_to_index(c(rules[[1]]$path, rules[[1]]$range[1]), table)
+  header_rows_end <- path_to_index(c(rules[[1]]$path, max(rules[[1]]$range)), table)
+
+  # Get the column names and the following rule
   if (!is.null(table_info$colnames)) {
     for (i in seq_along(rules)[-1]) {
       if (length(rules[[i]])) {
-        rule <- find_macro(rule(table, i, idx = rules),
+        rule <- find_macro(rule(table, i),
                            c("\\hline", "\\midrule"))
         if (length(rule)) {
-          header_rows_end <- rules[[i]][length(rules[[i]])]
+          start <- path_to_index(c(rules[[i]]$path, min(rules[[i]]$range)), table)
+          header_rows_end <- max(rule) + start - 1L
           break
         }
       }
@@ -524,24 +528,23 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
   }
 
   if (!table_info$booktabs) {
-    bottom_part <- NULL
+    bottom_part <- NULL #; message(531)
   } else {
     index_bottomrule <- rules[[length(rules)]]
     if (length(index_bottomrule)) {
-      bottomrule <- table[index_bottomrule]
-      contents <- get_contents(table)
-      contents <- contents[-index_bottomrule]
-      lastnewline <- find_macro(contents, c("\\\\", "\\\\*"))
-      lastnewline <- lastnewline[length(lastnewline)]
-      if (contents[[lastnewline]] == "\\\\") {
-        contents <- contents[-lastnewline]
-        contents <- insert_values(contents, lastnewline, latex2("\\\\*"))
-      }
-      table <- set_contents(table, contents)
+      bottomrule <- get_range(table, index_bottomrule)
+      table <- drop_items(table, index_bottomrule)
+      lastnewline <- find_macro(table, "\\\\", path = TRUE)
+      nextitem <- lastnewline <- lastnewline[[length(lastnewline)]]
+      n <- length(lastnewline)
+      nextitem[n] <- nextitem[n] + 1L
+      if (length(table[[lastnewline[-n]]]) < nextitem[n] ||
+          !is_char(table[[nextitem]], "*"))
+        table <- insert_values(table, nextitem, latex2("*"))
     }
 
     if (repeat_header_continued == FALSE) {
-      bottom_part <- latex2( "\n\\endfoot\n\\bottomrule\n\\endlastfoot\n")
+      bottom_part <- latex2( "\n\n\\endfoot\n\\bottomrule\n\\endlastfoot") #; message(547)
     } else {
       if (repeat_header_continued == TRUE) {
         bottom_text <- latex2("\\textit{(continued \\ldots)}")
@@ -549,19 +552,21 @@ styling_latex_repeat_header <- function(parsed, repeat_header_text, repeat_heade
         bottom_text <- latex2(repeat_header_continued)
       }
       bottom_part <- latex2(
-        "\\midrule\n",
-        paste0("\\multicolumn{", table_info$ncol, "}{r@{}}{", bottom_text, "}\\\\\n"),
-        "\\endfoot\n\\bottomrule\n\\endlastfoot"
-      )
+        "\n\\midrule\n\\multicolumn", new_block(table_info$ncol), "{r@{}}", new_block(bottom_text),
+        "\\\\\n\\endfoot\n\\bottomrule\n\\endlastfoot") #; message(554)
     }
   }
 
-  insertion <- latex2("\\endfirsthead\n",
+  header_rows_start <- index_to_path(header_rows_start, table)
+  header_rows_end <- index_to_path(header_rows_end, table)
+  header_rows <- paths_to_ranges(header_rows_start, header_rows_end, table)
+  insertion <- latex2("\n\\endfirsthead\n",
                       continue_line,
-                      table[header_rows_start:header_rows_end],
-                      "\\endhead\n",
+                      get_ranges(table, header_rows),
+                      "\n\\endhead",
                       bottom_part)
-  table <- insert_values(table, header_rows_end+1, insertion)
+  table <- insert_values(table, header_rows_end,
+                         after = TRUE, insertion)
   parsed[[table_info$tabularPath]] <- table
   update_meta(parsed, table_info)
 }
@@ -598,16 +603,14 @@ styling_latex_full_width <- function(parsed) {
   col_align <- parseLatex(paste0("{", paste(col_align, collapse = ""), "}"))
   table_info$align <- col_align
   idx <- find_posOption(table)
-  if (length(idx)) {
-    contents <- get_contents(table)
-    contents <- contents[-idx]
-    table <- set_contents(table, contents)
-  }
+  if (length(idx))
+    table <- set_range(table, idx, NULL)
   idx <- find_columnOptions(table)
-  table <- set_range(table, LaTeX2range(NULL, idx),
+  table <- set_range(table, idx,
                      col_align)
   tabuarg <- parseLatex(" to \\linewidth  ")
-  table <- insert_values(table, idx, tabuarg)
+  path <- c(idx$path, idx$range[1])
+  table <- insert_values(table, path, tabuarg)
   parsed[[table_info$tabularPath]] <- table
   update_meta(parsed, table_info)
 }
@@ -653,10 +656,10 @@ styling_latex_position_center <- function(parsed, hold_position,
       idx <- idx[1]
       newline <- table[[idx]]
       if (nchar(newline) > 1) {
-        table <- insert_values(table, idx + 1, split_chars(newline))
+        table <- insert_values(table, idx, after = TRUE, split_chars(newline))
         table <- drop_items(table, idx)
       }
-      table <- insert_values(table, idx + 1,
+      table <- insert_values(table, idx, after = TRUE,
                              latex2("\\centering"))
       parsed[[table_info$tablePath]] <- table
       table_info$tabularPath <- getTabularPath(parsed)
@@ -759,8 +762,8 @@ styling_latex_font_size <- function(parsed, font_size) {
   # fontsize is good enough
   start <- paste0(
     "\\begingroup\\fontsize{", font_size, "}{", row_height, "}\\selectfont\n")
-  parsed <- insert_values(parsed, 1, parseLatex(start))
-  parsed <- insert_values(parsed, length(parsed) + 1,
+  parsed <- insert_values(parsed, 1L, parseLatex(start))
+  parsed <- insert_values(parsed, length(parsed), after = TRUE,
                           parseLatex("\n\\endgroup{}"))
   table_info$tabularPath <- getTabularPath(parsed)
   return(update_meta(parsed, table_info))

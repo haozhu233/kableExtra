@@ -84,11 +84,9 @@ add_indent_latex <- function(parsed, positions,
       }
     }
     new_rowtext <- vector_to_row(new_rowtext, linebreak = FALSE)
-    table_info$contents[[i]] <- new_rowtext
     tableRow(table, newrow) <- new_rowtext
   }
   parsed[[table_info$tabularPath]] <- table
-  parsed <- update_meta(parsed, table_info)
   parsed
 }
 

@@ -86,6 +86,7 @@ positions_corrector <- function(positions, group_header_rows, n_row) {
 }
 
 latex_row_cells <- function(parsed) {
+  parsed <- flatten_itemlists(parsed)
   result <- parseLatex::split_latex(parsed, c(find_char(parsed, "&"), find_macro(parsed, "\\\\")))
   result <- lapply(result, trim_whitespace)
   result[-length(result)]
@@ -356,17 +357,38 @@ update_meta <- function(parsed, table_info) {
   parsed
 }
 
+#' Convert between kable text format and parsed format
+#'
+#' @param kable_input Output from `kbl()` or other functions producing
+#' `"knitr_kable"` objects.
+#'
+#' @returns A `"LaTeX2"` object containing the parsed version of the
+#' table.
+#'
+#' @export
 kable_to_parsed <- function(kable_input) {
   if (inherits(kable_input, "LaTeX2"))
     kable_input
-  else
-    structure(parseLatex(kable_input),
+  else {
+    parsed <- parseLatex(kable_input)
+    tabularPath <- getTabularPath(parsed)
+    if (!length(tabularPath))
+      stop("Cannot find a tabular environment.")
+    table <- parsed[[tabularPath]]
+    parsed[[tabularPath]] <- prepare_table(table)
+    structure(parsed,
       # Add the attributes that may be expected later...
       kable_meta = attr(kable_input, "kable_meta"),
       n_head = attr(kable_input, "n_head"),
       format = "latex")
+  }
 }
 
+#' @rdname kable_to_parsed
+#' @param parsed Previous [LaTeX2] object to convert back.
+#'
+#' @returns A `"knitr_kable"` object corresponding to the `parsed` input.
+#' @export
 parsed_to_kable <- function(parsed, kable_input) {
   if (inherits(kable_input, "LaTeX2"))
     parsed
@@ -379,11 +401,14 @@ parsed_to_kable <- function(parsed, kable_input) {
 }
 
 remove_addlinespace <- function(table) {
-  idx <- find_macro(table, "\\addlinespace")
-  for (i in rev(seq_along(idx)))
-    if (!is_char(table[[idx[i] + 1]], "\n"))
-      idx <- idx[-i]
-  if (length(idx) > 0)
-    table <- drop_items(table, c(idx, idx + 1))
+  paths <- find_macro(table, "\\addlinespace", path = TRUE)
+  for (i in rev(seq_along(paths))) {
+    path0 <- path1 <- paths[[i]]
+    path1[length(path1)] <- path1[length(path1)] + 1
+    if (is_char(table[[path1]], "\n")) {
+      n <- length(path1)
+      table <- drop_items(table, LaTeX2range(path0[-n], c(path0[n], path1[n])))
+    }
+  }
   table
 }

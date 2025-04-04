@@ -47,7 +47,7 @@ Imports:
     digest,
     graphics,
     svglite,
-    parseLatex (>= 0.3.12)
+    parseLatex (>= 0.4)
 Suggests:
     testthat,
     magick,

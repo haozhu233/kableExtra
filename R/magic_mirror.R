@@ -21,7 +21,7 @@ magic_mirror <- function(kable_input){
 
 # Magic mirror for latex tables --------------
 getTabularPath <- function(parsed)
-  path_to(parsed, is_fn = is_env,
+  path_to(parsed, test = is_env,
           envtypes = c("tabular", "tabularx", "longtable", "tabu"))
 
 magic_mirror_latex <- function(parsed){
@@ -38,7 +38,7 @@ magic_mirror_latex <- function(parsed){
                      tabularPath = NULL,
                      dataRows = integer())
 
-  tablePath <- path_to(parsed, is_fn = is_env,
+  tablePath <- path_to(parsed, test = is_env,
                        envtypes = "table")
   if (!length(tablePath)) tablePath <- NULL
   table_info$tablePath <- tablePath
@@ -50,7 +50,7 @@ magic_mirror_latex <- function(parsed){
   table_info$tabular <- envName(table)
 
   # Booktabs
-  table_info$booktabs <- length(path_to(table, is_fn = is_macro, "\\toprule")) > 0
+  table_info$booktabs <- length(path_to(table, test = is_macro, "\\toprule")) > 0
 
   # Alignment is a sequence with each element being a single letter, or a
   # single letter followed by a measurement in braces, e.g. "p{1cm}"
@@ -69,20 +69,16 @@ magic_mirror_latex <- function(parsed){
   table_info$captionPath <- path <- path_to_caption(parsed)
   if (length(path)) {
     table_info$caption <- get_contents(parsed[[path]])
-    idx <- attr(path, "idx")
+    idx <- attr(path, "extra")
     fullcaption <- get_range(parsed, idx)
     table_info$caption.short <- bracket_options(fullcaption, start = 2)
   }
 
   if (!length(table_info$caption.short)) table_info["caption.short"] <- list(NULL)
 
-  table_info$contents <- lapply(seq_len(tableNrow(table)),
-                                function(i) tableRow(table, i))
-
   if (!is.null(attr(parsed, "n_head"))) {
     n_head <- attr(parsed, "n_head")
     table_info$new_header_row <- table_info$contents[seq(n_head - 1, 1)]
-    table_info$contents <- table_info$contents[-seq(1, n_head - 1)]
     table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)
     table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
   }

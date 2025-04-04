@@ -108,6 +108,7 @@ do_comps <- function() {
   suppressWarnings(comp(latex_options = "scale_down")) # warnings for longtable
   suppressWarnings(comp(latex_options = "scale_up"))   # warnings for longtable
   comp(latex_options = "repeat_header")
+  comp(latex_options = "repeat_header", repeat_header_continued = TRUE)
 
   comp(full_width = TRUE) # expect difference here:  old code loses the [t]
   comp(full_width = FALSE)

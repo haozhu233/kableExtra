@@ -302,9 +302,7 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
   table <- parsed[[table_info$tabularPath]]
   datarows <- table_info$dataRows
   newrow <- datarows[rownum]
-  table <- insert_values(table,
-                         min(find_tableRow(table, newrow)),
-                         pre_rowtext)
+  tableRow(table, newrow) <- latex2(pre_rowtext, tableRow(table, newrow))
   rows <- rownum:table_info$nrow
   datarows[rows] <- datarows[rows] + 1L
   table <- remove_addlinespace(table)
@@ -313,6 +311,7 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
   table_info$dataRows <- datarows
   parsed[[table_info$tabularPath]] <- table
   parsed <- update_meta(parsed, table_info)
+
   if (indent) {
     parsed <- add_indent_latex(parsed, seq(start_row, end_row))
   }

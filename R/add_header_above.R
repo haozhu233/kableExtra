@@ -330,11 +330,10 @@ pdfTable_add_header_above <- function(parsed, header, bold, italic,
     new_header <- new_header_split[[1]]
   }
   table <- parsed[[table_info$tabularPath]]
-  hlines <- find_macro(table, c("\\hline",
-                                     "\\toprule"))
-
+  location <- find_macro(table, c("\\hline",
+                                     "\\toprule"), path = TRUE, all = FALSE)
   table <- insert_values(table,
-                         hlines[1] + 1,
+                         location, after = TRUE,
                          latex2("\n", new_header))
   table_info$dataRows <- table_info$dataRows + 1
   parsed[[table_info$tabularPath]] <- table

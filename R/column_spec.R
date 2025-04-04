@@ -372,7 +372,7 @@ column_spec_latex <- function(parsed, columns, width,
       parsed <- replace_makecell_with_newline(parsed, column)
   }
 
-  nrows <- length(table_info$contents)
+  nrows <- tableNrow(table)
   off <- table_info$position_offset
 
   bold <- ensure_len_latex(bold, nrows, off, include_thead, FALSE, "bold")

@@ -292,7 +292,7 @@ footnote_latex <- function(parsed, footnote_table, footnote_as_chunk,
                  "\n")
       table_info$tabularPath <- c(table_info$tabularPath, 4)
       if (!show_every_page) {
-          table <- insert_values(table, length(table) + 1,
+          table <- insert_values(table, length(table), after = TRUE,
                                  "\\insertTableNotes\n")
       }
     } else {
@@ -313,7 +313,7 @@ footnote_latex <- function(parsed, footnote_table, footnote_as_chunk,
     }
   } else {
     if(!show_every_page) {
-        table <- insert_values(table, length(table) + 1,
+        table <- insert_values(table, length(table), after = TRUE,
                                latex2(footnote_text, "\n"))
     }
   }
@@ -325,21 +325,21 @@ footnote_latex <- function(parsed, footnote_table, footnote_as_chunk,
       # This test is a little bit risky, depending on keeping
       # table_info from a previous kable_styling call
       loc <- find_brace_options(table)
-      table <- insert_values(table, loc + 1,
+      table <- insert_values(table, loc, after = TRUE,
                              latex2(" ", fn, " \n\\endfoot\n"))
     } else {
       if(!table_info$booktabs){
         loc <- find_macro(table, "\\endhead")
         if (is_char(table[[loc + 1]], "\n"))
           loc <- loc + 1
-        table <- insert_values(table, loc + 1,
+        table <- insert_values(table, loc, after = TRUE,
                                latex2(fn, "\n\\endfoot\n",
                                       fn, "\n\\endlastfoot\n"))
       } else {
         blank_after_endhead <- find_pattern(table, "\\endhead\n\n\\endfoot")
         if (length(blank_after_endhead)) {
           loc <- find_macro(table, "\\endhead")
-          table <- insert_values(table, loc + 2,
+          table <- insert_values(table, loc + 1, after = TRUE,
                                  latex2("\\midrule\n", fn))
         } else {
           loc <- find_macro(table, "\\endfoot")

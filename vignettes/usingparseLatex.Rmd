@@ -86,14 +86,16 @@ is attached, holding the `table_info` list.
 The basic strategy is to get the parsed table, change a cell,
 and put back the table.  For example:
 ```{r}
-library(parseLatex)
 latex <- kbl(mtcars[1:3, 1:3], format = "latex")
-parsed <- structure(parseLatex(latex), format = "latex")
+parsed <- kable_to_parsed(latex)
 table_info <- magic_mirror(parsed)
 table <- with(table_info, parsed[[tabularPath]])
 table
+tableCell(table, 2, 4)
 tableCell(table, 2, 4) <- "modified"
+tableCell(table, 2, 4)
 table
+# put the table back into the full document
 parsed[[table_info$tabularPath]] <- table
 ```
 
@@ -133,3 +135,67 @@ rule(table, 2) <- NULL
 rules(table)
 table
 ```
+
+## Forms of indexing
+
+LaTeX documents are naturally hierarchical in structure, and
+the `LaTeX2` and related classes in `parseLatex` mirror this structure
+as lists of items in which the items can also be lists of items.
+
+Two forms of indexing are used in `parseLatex`.  One form, usually
+called an "index", is a scalar.  In simple cases it corresponds to
+R's `x[[index]]`, i.e. it simply selects an item from the list `x`.
+The other form is called a "path".  It is typically a vector, and
+corresponds to `x[[path]]`, which is expanded by R to
+`x[[path[1]]][[path[2]]] ... [[path[length(path)]]]`.
+
+However, things are not always simple. For performance reasons,
+`parseLatex` has some items (with tag `"ITEMLIST"`)
+which correspond to logical groupings in LaTeX rather than syntactic
+groupings.  For example, the `prepare_table()` function groups items
+in a tabular environment into the items that appear before any rows,
+then a group for each row in the table. The rows are also broken up
+into the parts before the cells, and a separate list for each cell.
+
+By convention, the `index` into a list containing itemlists ignores
+them.  It will return the `index`th item from the list after all the 
+itemlist items have been concatenated.
+
+For example, a table might be
+```
+\begin{tabular}{ll}
+1 & 2 \\
+3 & 4 \\
+\end{tabular}
+```
+Before adding itemlists by calling `prepare_table()`, this table will 
+have 9 items:  `{ll}`, `1`, `&`, `2`, `\\`, `3`, `&`, `4`, and `\\` 
+plus whitespace between them. Ignoring whitespace, the item at 
+index 2 would be `1`.  
+
+After `table <- prepare_table(...)` is
+called, `table[[2]]` will refer to the itemlist containing the whole
+first row `"1 & 2 \\"`.  Nevertheless, we would still say `1` is at
+index location 2, and could use the `index_to_path()` function to 
+find its path, which would be something like `c(2,2,1)`, i.e. the
+first item in the second itemlist (first cell) in the second itemlist
+(first row) in the table.
+
+The `path_to_index()` function can convert back to an index if that
+makes sense, but it doesn't always make sense.  In the example above,
+the path `c(1,1,1)` would refer to the `ll` text in the column
+options of the table.  That does not have an index in the table,
+only the full block `{ll}` does, and it is index 1.
+
+Some related concepts and functions:
+
+- A `LaTeX2range` or "range" for short is an object that contains a path and a vector of
+entries within the item given by the path.  `get_range()` can be
+used to extract those items from the full object.
+- `paths_to_ranges()` takes two paths, and constructs a list
+of `LaTeX2range` objects that contain all the items from one path
+to the next.
+This is a slow process and should be avoided by setting up
+the itemlists in advance to match the kind of subsetting that is
+expected. 
+

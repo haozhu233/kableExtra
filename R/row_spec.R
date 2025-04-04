@@ -213,7 +213,7 @@ row_spec_latex <- function(parsed, row, bold, italic, monospace,
   table <- parsed[[table_info$tabularPath]]
 
   for (i in row) {
-    target_row <- table_info$contents[[i]]
+    target_row <- tableRow(table, i)
     new_row <- latex_new_row_builder(target_row, table_info,
                                      bold, italic, monospace,
                                      underline, strikeout,
