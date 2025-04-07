@@ -276,7 +276,6 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
   }
 
   rownum <- start_row + table_info$position_offset
-  rowtext <- table_info$contents[[rownum]]
   if (table_info$booktabs) {
     pre_rowtext <- paste0("\\addlinespace[", gap_space, "]\n")
   } else {
@@ -298,7 +297,6 @@ group_rows_latex <- function(parsed, group_label, start_row, end_row,
                           extra_latex_after)
   }
 
-  table_info$contents[[rownum]] <- pre_rowtext
   table <- parsed[[table_info$tabularPath]]
   datarows <- table_info$dataRows
   newrow <- datarows[rownum]

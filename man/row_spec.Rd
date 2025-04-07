@@ -19,8 +19,7 @@ row_spec(
   angle = NULL,
   extra_css = NULL,
   hline_after = FALSE,
-  extra_latex_after = NULL,
-  needs_parsing = TRUE
+  extra_latex_after = NULL
 )
 }
 \arguments{

@@ -17,6 +17,8 @@ comp <- function(..., fn = "kable_styling") {
 do_comps <- function() {
   table_info <- magic_mirror(latex)
 
+  comp(fn = "header_separate")
+
   comp(fn = "landscape")
   comp(margin = "1cm", fn = "landscape")
   comp(fn = "footnote")
@@ -168,7 +170,9 @@ do_comps <- function() {
   comp(2, extra_latex_after = "This is extra!", fn = "row_spec")
 }
 
-latex <- kbl(head(mtcars), format="latex")
+df <- head(mtcars)
+colnames(df)[1:10] <- paste0(rep(c("mean", "sd"), each= 5), "_", colnames(df)[1:10])
+latex <- kbl(df, format="latex")
 do_comps()
 
 latex <- kbl(head(mtcars), format="latex", longtable = TRUE, caption = "The caption")

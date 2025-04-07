@@ -369,7 +369,8 @@ column_spec_latex <- function(parsed, columns, width,
 
   if (!is.null(width)) {
     for (column in columns)
-      parsed <- replace_makecell_with_newline(parsed, column)
+      table <- replace_makecell_with_newline(table, column)
+    parsed[[table_info$tabularPath]] <- table
   }
 
   nrows <- tableNrow(table)
@@ -406,7 +407,6 @@ column_spec_latex <- function(parsed, columns, width,
       strikeout[i], color[i], background[i], link[i], image[i]
       # font_size, angle
     )
-    table_info$contents[[i]] <- new_row
     tableRow(table, i) <- new_row
   }
 
@@ -465,46 +465,30 @@ latex_column_align_builder <- function(x, width,
   latex2(x)
 }
 
-replace_makecell_with_newline <- function(parsed, column) {
-  table_info <- attr(parsed, "kable_meta")
-  table <- parsed[[table_info$tabularPath]]
-  makecell <- find_macro(table, "\\makecell")
-  if (!length(makecell)) return(parsed)
+replace_makecell_with_newline <- function(table, column) {
+  makecell <- find_macro(table, "\\makecell", path = TRUE, all = TRUE)
+  if (!length(makecell)) return(table)
 
-  browser()
-
-  #done to here
-
-
-  contents_table <- data.frame(sapply(table_info$contents,
-                                      function(x) {str_split(x, " \\& ")[[1]]}),
-                               stringsAsFactors = F)
-  names(contents_table) <- paste0("x", 1:table_info$nrow)
-  rows_check_makecell <- str_detect(contents_table[column, ], "makecell")
-  if (sum(rows_check_makecell) == 0) return(list(kable_input, table_info))
-  rows_to_replace <- which(rows_check_makecell)
-
-  for (i in column) {
-    target_column <- contents_table[i, ]
-    for (j in which(str_detect(target_column, "\\\\\\\\makecell"))) {
-      contents_table[i, j] <- str_replace(
-        contents_table[i, j], "\\\\\\\\makecell\\\\\\[.\\\\\\]\\\\\\{", "")
-      contents_table[i, j] <- str_replace(
-        contents_table[i, j], "\\\\\\}$", "")
-      contents_table[i, j] <- str_replace_all(
-        contents_table[i, j], "\\\\\\\\\\\\\\\\", "\\\\\\\\newline "
-      )
-    }
+  for (i in seq_along(makecell)) {
+    path <- makecell[[i]]
+    macro <- path[length(path)]
+    if (length(path) > 1L)
+      cell <- table[[path[-length(path)]]]
+    else
+      cell <- table
+    textpath <- find_brace_options(cell, start = macro + 1L, path = TRUE)
+    text <- cell[[textpath]]
+    newline <- find_macro(text, "\\\\", path = TRUE, all = TRUE)
+    for (j in seq_along(newline))
+      text[[newline[[j]]]] <- latex2("\\newline")[[1]]
+    cell <- insert_values(cell, textpath, after = TRUE, get_contents(text))
+    cell <- drop_items(cell, macro:textpath)
+    if (length(path) > 1L)
+      table[[path[-length(path)]]] <- cell
+    else
+      table <- cell
   }
-
-  new_contents <- unlist(lapply(contents_table, paste, collapse = " & "))
-  for (i in rows_to_replace) {
-    kable_input <- sub(table_info$contents[i], new_contents[i], kable_input,
-                       perl = T)
-    table_info$contents[i] <- new_contents[i]
-  }
-
-  return(list(kable_input, table_info))
+  table
 }
 
 

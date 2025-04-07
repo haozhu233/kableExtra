@@ -46,8 +46,7 @@ row_spec <- function(kable_input, row,
                      underline = FALSE, strikeout = FALSE,
                      color = NULL, background = NULL, align = NULL,
                      font_size = NULL, angle = NULL, extra_css = NULL,
-                     hline_after = FALSE, extra_latex_after = NULL,
-                     needs_parsing = TRUE) {
+                     hline_after = FALSE, extra_latex_after = NULL) {
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
@@ -69,9 +68,10 @@ row_spec <- function(kable_input, row,
                          extra_css))
   }
   if (kable_format == "latex") {
-    if (needs_parsing)
+    needs_parsing <- !inherits(kable_input, "LaTeX2")
+    if (needs_parsing) {
       parsed <- kable_to_parsed(kable_input)
-    else
+    } else
       parsed <- kable_input
     res <- row_spec_latex(parsed, row, bold, italic, monospace,
                           underline, strikeout,
@@ -221,7 +221,6 @@ row_spec_latex <- function(parsed, row, bold, italic, monospace,
                                      hline_after, extra_latex_after)
 
     tableRow(table, i) <- new_row
-    table_info$contents[[i]] <- new_row
   }
   parsed[[table_info$tabularPath]] <- table
   update_meta(parsed, table_info)

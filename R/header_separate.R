@@ -32,11 +32,13 @@ header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
     )))
   }
   if (kable_format == "latex") {
-    return(do.call(header_separate_latex, list(
-      kable_input = kable_input,
+    parsed <- kable_to_parsed(kable_input)
+    parsed <- do.call(header_separate_latex, list(
+      parsed = parsed,
       sep = sep,
       ...
-    )))
+    ))
+    parsed_to_kable(parsed, kable_input)
   }
 }
 
@@ -115,43 +117,44 @@ process_header_sep <- function(header_sep) {
   return(header_layers)
 }
 
-header_separate_latex <- function(kable_input, sep, ...) {
-  table_info <- magic_mirror(kable_input)
-  out <- solve_enc(kable_input)
+header_separate_latex <- function(parsed, sep, ...) {
+  table_info <- magic_mirror(parsed)
 
   if (!is.null(table_info$new_header_row)) {
     warning("Your table already has more than 1 rows of thead. header_separate ",
             "won't work in this case and is returning the original input. ")
-    return(kable_input)
+    return(parsed)
   }
 
-  original_header_cells <- str_split(table_info$contents[1], " & ")[[1]]
+  table <- parsed[[table_info$tabularPath]]
+
+  original_header_cells <- row_to_vector(tableRow(table, 1L))
+
+  if (!nchar(original_header_cells[1]))
+    original_header_cells[1] <- " "
 
   header_sep <- stringr::str_split(original_header_cells, sep)
   header_layers <- process_header_sep(header_sep)
 
   # Fix the original header row
-  new_header_row_one <- paste0(header_layers[[1]], collapse = ' & ')
+  new_header_row_one <- vector_to_row(header_layers[[1]])
 
-  out <- stringr::str_replace(out, paste0(table_info$contents[1], "\\\\\\\\"),
-                              paste0(new_header_row_one, "\\\\\\\\"))
-  table_info$contents[1] <- new_header_row_one
+  tableRow(table, 1L) <- new_header_row_one
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  parsed[[table_info$tabularPath]] <- table
 
-  for (l in seq(2, length(header_layers))) {
-    out <- do.call(
+  for (l in seq_along(header_layers)[-1]) {
+    parsed <- do.call(
       add_header_above,
       list(
-        kable_input = out,
+        kable_input = parsed,
         auto_index(header_layers[[l]]),
         ...
       )
     )
   }
 
-  return(out)
+  return(parsed)
 }
 
 

@@ -172,7 +172,7 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
                                 custom_latex_hline, headers_to_remove, target,
                                 col_names, longtable_clean_cut) {
   table_info <- magic_mirror(parsed)
-  if (table_info$nrow <= 2) return(kable_input)
+  if (table_info$nrow <= 2) return(parsed)
 
   table <- parsed[[table_info$tabularPath]]
   table <- remove_addlinespace(table)
@@ -249,7 +249,6 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
     table_info$colnames[headers_to_remove] <- ""
     for (i in headers_to_remove)
       tableCell(table, 1, i) <- ""
-    table_info$contents[[1]] <- tableRow(table, 1)
   }
   if(latex_hline == 'custom' & is.null(custom_latex_hline)){
     if(row_group_label_position == 'stack'){
@@ -277,7 +276,6 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
   # to be recalculated.
   for (i in rev(seq_len(nrow(collapse_matrix)))) {
     new_contents[[i]] <- vector_to_row(new_kable_dt[i, ])
-    table_info$contents[[i + 1]] <- new_contents[[i]]
     if (i == 1) {
       row_midrule <- rule(table, 2)
     } else {
@@ -315,7 +313,6 @@ collapse_rows_latex <- function(parsed, columns, latex_hline, valign,
     # or a character string.
     if (!is.character(row_midrule) || row_midrule != "")
       new_contents[[i]] <- latex2(row_midrule, "\n", new_contents[[i]])
-    table_info$contents[[i + 1]] <- new_contents[[i]]
     table <- drop_items(table, rules[[i+1]])
     tableRow(table, i + 1, withExtras = TRUE) <- latex2(tableRow(table, i + 1, withExtras = TRUE, withData = FALSE), new_contents[[i]])
   }

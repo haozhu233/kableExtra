@@ -428,8 +428,7 @@ styling_latex_striped <- function(parsed, color, stripe_index) {
       max(1, table_info$nrow - table_info$position_offset),
       2)
   }
-  row_spec(parsed, stripe_index, background = color,
-            needs_parsing = FALSE)
+  row_spec(parsed, stripe_index, background = color)
 }
 
 styling_latex_hold_position <- function(parsed) {
@@ -713,7 +712,7 @@ styling_latex_position_float <- function(parsed, option, table.envir,
   if (table_info$tabular == "longtable") {
     warning("wraptable is not supported for longtable.")
     if (option == "l") return(styling_latex_position_left(parsed))
-    if (option == "r") return(styling_latex_position_right(parsed, hold_position, table_info$tabular))
+    if (option == "r") return(styling_latex_position_right(parsed, FALSE, table_info$tabular))
   }
   # Copy caption & centering from table env to wraptable
   captionEtc <- NULL

@@ -78,9 +78,11 @@ magic_mirror_latex <- function(parsed){
 
   if (!is.null(attr(parsed, "n_head"))) {
     n_head <- attr(parsed, "n_head")
-    table_info$new_header_row <- table_info$contents[seq(n_head - 1, 1)]
+    table_info$new_header_row <- character(n_head - 1L)
+    for (i in seq_len(n_head - 1L))
+      table_info$new_header_row[i] <-
+        deparseLatex(tableRow(table, n_head - i))
     table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)
-    table_info$new_header_row <- paste0(table_info$new_header_row, "\\\\\\\\")
   }
   table_info$nrow <- nrow <- tableNrow(table)
 
@@ -140,7 +142,6 @@ magic_mirror_html <- function(kable_input){
   table_info$colnames <- trimws(xml_text(table_info$colnames))
   table_info$ncol <- length(table_info$colnames)
   table_info$nrow_header <- length(xml_children(xml_child(kable_xml, "thead")))
-  table_info$nrow_body <- nrow(table_info$contents)
   table_info$table_class <- xml_attr(kable_xml, "class")
   table_info$table_style <- xml_attr(kable_xml, "style")
   return(table_info)
