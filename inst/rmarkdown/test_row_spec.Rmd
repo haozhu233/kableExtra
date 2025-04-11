@@ -3,6 +3,7 @@ output: pdf_document
 ---
 
 ```{r}
+set.seed(8)
 library(kableExtra)
 df <- data.frame(1:4, 4:7)
 kbl(df, format = "latex") |>

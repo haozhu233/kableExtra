@@ -6,6 +6,7 @@ output:
   pdf_document:
     toc: true
     toc_depth: 2
+    keep_tex: true
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}
@@ -54,6 +55,8 @@ devtools::install_github("haozhu233/kableExtra")
 Here we are using the first few columns and rows from dataset `mtcars`
 ```{r, echo = F}
 options(kableExtra.latex.load_packages = F)
+options(knitr.table.format = "latex")
+set.seed(59)
 ```
 
 ```{r}
@@ -180,7 +183,7 @@ kbl(long_dt, longtable = T, booktabs = T, caption = "Longtable") %>%
 ## Full width?
 If you have a small table and you want it to spread wide on the page, you can try the `full_width` option. Unlike `scale_down`, it won't change your font size. You can use `column_spec`, which will be explained later, together with `full_width` to achieve the best result.
 ```{r}
-kbl(dt, booktabs = T) %>%
+kbl(dt, booktabs = T, format = "latex") %>%
   kable_styling(full_width = T) %>%
   column_spec(1, width = "8cm")
 ```
