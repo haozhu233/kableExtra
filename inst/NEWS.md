@@ -1,5 +1,5 @@
 
-kableExtra 1.4.0.12
+kableExtra 1.4.0.13
 --------------------------------------------------------------------------------
 
 New Features:
@@ -30,6 +30,7 @@ stopped it from working with `tabularx` tables (#861).
 handled properly by `kable_styling()` (#876).
 * Fixed a bug in `group_rows()`/`pack_rows()` which caused
 LaTeX code to be mangled (#887).
+* `scroll_box()` no longer ignores `box_css` (#892).
 
 
 kableExtra 1.4.0

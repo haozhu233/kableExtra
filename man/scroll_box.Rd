@@ -20,7 +20,8 @@ scroll_box(
 
 \item{width}{A character string indicating the width of the box, e.g. \code{"100px"}}
 
-\item{box_css}{CSS text for the box}
+\item{box_css}{CSS text for the box.  If \code{height} is specified
+and \code{fixed_thead} is \code{TRUE}, the default is changed to suppress padding.}
 
 \item{extra_css}{Extra CSS styles}
 
