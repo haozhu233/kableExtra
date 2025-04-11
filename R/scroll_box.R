@@ -6,7 +6,8 @@
 #' @param kable_input A HTML kable object
 #' @param height A character string indicating the height of the box, e.g. `"50px"`
 #' @param width A character string indicating the width of the box, e.g. `"100px"`
-#' @param box_css CSS text for the box
+#' @param box_css CSS text for the box.  If `height` is specified
+#' and `fixed_thead` is `TRUE`, the default is changed to suppress padding.
 #' @param extra_css Extra CSS styles
 #' @param fixed_thead HTML table option so table header row is fixed at top.
 #' Values can be either T/F or `list(enabled = T/F, background = "anycolor")`.
@@ -43,7 +44,8 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
   if (is.null(height)) fixed_thead$enabled <- FALSE
 
   if (fixed_thead$enabled) {
-    box_css = "border: 1px solid #ddd; padding: 0px; "
+    if (missing(box_css))
+      box_css <- "border: 1px solid #ddd; padding: 0px; "
     important_nodes <- read_kable_as_xml(kable_input)
     body_node <- important_nodes$body
     kable_xml <- important_nodes$table
