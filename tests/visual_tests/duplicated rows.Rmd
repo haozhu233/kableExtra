@@ -9,7 +9,7 @@ library(kableExtra)
 
 tbl1 <- bind_rows(mtcars, mtcars, mtcars, mtcars)
 
-kable(tbl1, longtable = T, row.names = 1:128) %>%
+kable(tbl1, longtable = T, row.names = FALSE) %>%
   pack_rows(index = c("g1" = 3, "g2" = 6, "g3" = 5, "g4" = 5, "g1" = 3, "g2" = 6, "g3" = 5, "g4" = 5,
                       "g1" = 3, "g2" = 6, "g3" = 5, "g4" = 5))
 ```
