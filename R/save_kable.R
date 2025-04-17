@@ -232,7 +232,7 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   }
 
   temp_tex <- c(
-    "\\documentclass[border=1mm]{standalone}",
+    "\\documentclass[border=1mm,varwidth]{standalone}",
     "\\usepackage{amssymb, amsmath}",
     latex_pkg_list(),
     "\\usepackage{graphicx}",
