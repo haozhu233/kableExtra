@@ -419,6 +419,8 @@ column_spec_latex <- function(kable_input, column, width,
     temp_sub <- ifelse(i == 1 & (table_info$tabular == "longtable" |
                                    !is.null(table_info$repeat_header_latex)),
                        gsub, sub)
+    target_row <- str_replace_all(target_row, "(\\W)", "\\\\\\1") # prevent any special patterns from making it into the regex.
+    
     out <- temp_sub(target_row, new_row, out, perl = T)
     table_info$contents[i] <- new_row
   }
