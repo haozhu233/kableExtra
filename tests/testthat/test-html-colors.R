@@ -7,6 +7,6 @@ test_that("Issue #902: CSS alpha", {
   # without unnecessary rounding
   expect_match(
     html_color_("#FF000080"),
-    "rgba\\(255, 0, 0, 0\\.50[0-9]+\\)"
+    "rgba\\(255, 0, 0, 0\\.5\\)"
   )
 })
