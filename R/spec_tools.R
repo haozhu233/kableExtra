@@ -47,7 +47,8 @@ html_color_ <- function(color) {
   # 2024-01-23 Hao: Move it to a try catch flavor to catch some exception cases.
   tryCatch({
     rgba_code <- col2rgb(color, alpha = TRUE)
-    rgba_code[4] <- round(rgba_code[4])
+    # issue #902, alpha should be [0,1]
+    rgba_code[4,] <- rgba_code[4,] / 255
     return(paste0("rgba(", paste(rgba_code, collapse = ", "), ")"))
   },
     error = function(e) {return(as.character(color))}
