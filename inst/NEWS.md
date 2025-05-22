@@ -1,3 +1,11 @@
+kableExtra 1.4.0.14
+--------------------------------------------------------------------------------
+
+Bug Fixes:
+
+* Fixed a bug in `html_color()` to account for CSS's expectation that
+alpha be between 0 and 1, different from R's 0 and 255 (#902).
+
 
 kableExtra 1.4.0.13
 --------------------------------------------------------------------------------
@@ -117,7 +125,7 @@ in the form of "var", "a_mean", "a_sd", "b_mean" and "b_sd", this
 "mean", "sd", "mean" and "sd" and add an additional row with group a and b 
 there.
 
-* @r2evans significanntly improved the previous spec_** functions to generate 
+* @r2evans significantly improved the previous spec_** functions to generate
 mini plots. He also added a more general `spec_plot` function to use the base R general plot function (scatter, line / polygon).
 
 * Added a `spec_pointrange` function for forest-plot like figures. 
