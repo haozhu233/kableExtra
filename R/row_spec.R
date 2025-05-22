@@ -50,10 +50,10 @@ row_spec <- function(kable_input, row,
   if (!is.numeric(row)) {
     stop("row must be numeric. ")
   }
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -111,7 +111,7 @@ row_spec_html <- function(kable_input, row, bold, italic, monospace,
     if (is.null(kable_tbody))
       warning("No table body found")
     else {
-      group_header_rows <- attr(kable_input, "group_header_rows")
+      group_header_rows <- base::attr(kable_input, "group_header_rows", exact = TRUE)
       if (!is.null(group_header_rows)) {
         row <- positions_corrector(row, group_header_rows,
                                    length(xml_children(kable_tbody)))
@@ -243,7 +243,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   return(out)
 }
 

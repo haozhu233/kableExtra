@@ -52,6 +52,6 @@ xtable2kable <- function(x, ...) {
     out_meta$tabular <- xtable_print_options$tabular.environment
   }
   out_meta$xtable <- TRUE
-  attr(out, "kable_meta") <- out_meta
+  base::attr(out, "kable_meta") <- out_meta
   return(out)
 }

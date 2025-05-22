@@ -127,10 +127,10 @@ kable_styling <- function(kable_input,
     font_size <- getOption("kable_styling_font_size", NULL)
   }
 
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
 
   if (!kable_format %in% c("html", "latex")) {
@@ -401,7 +401,7 @@ pdfTable_styling <- function(kable_input,
                                 table.envir, wraptable_width)
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
 
   if (row_label_position != "l") {
     if (table_info$tabular == "longtable") {

@@ -70,10 +70,10 @@ add_header_above <- function(kable_input, header = NULL,
                              border_left = FALSE, border_right = FALSE) {
   if (is.null(header)) return(kable_input)
 
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -165,7 +165,7 @@ htmlTable_add_header_above <- function(kable_input, header, bold, italic,
   new_header_row <- htmlTable_new_header_generator(
     header, bold, italic, monospace, underline, strikeout, align,
     color, background, font_size, angle, line, line_sep, extra_css,
-    include_empty, attr(kable_input, 'lightable_class')
+    include_empty, base::attr(kable_input, 'lightable_class', exact = TRUE)
   )
   xml_add_child(kable_xml_thead, new_header_row, .where = 0)
   out <- as_kable_xml(body_node)
@@ -346,7 +346,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
     table_info$new_header_row <- c(table_info$new_header_row, new_header_split[1])
     table_info$header_df[[length(table_info$header_df) + 1]] <- header
   }
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   return(out)
 }
 

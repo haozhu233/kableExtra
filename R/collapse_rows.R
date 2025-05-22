@@ -56,10 +56,10 @@ collapse_rows <- function(kable_input, columns = NULL,
                           target = NULL,
                           col_names = TRUE,
                           longtable_clean_cut = TRUE) {
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -311,7 +311,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$collapse_rows <- TRUE
   table_info$collapse_matrix <- collapse_matrix
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   if(row_group_label_position == 'stack'){
     group_row_index_list <- collapse_rows_index(kable_dt, head(columns, -1))
     out <- collapse_rows_latex_stack(out, group_row_index_list, row_group_label_fonts)

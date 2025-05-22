@@ -22,10 +22,10 @@ add_indent <- function(kable_input, positions,
   if (!is.numeric(positions)) {
     stop("Positions can only take numeric row numbers (excluding header rows).")
   }
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
 
   if (!kable_format %in% c("html", "latex")) {
@@ -91,7 +91,7 @@ add_indent_latex <- function(kable_input, positions,
     table_info$contents[i] <- new_rowtext
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   return(out)
 
 
@@ -115,7 +115,7 @@ add_indent_html <- function(kable_input, positions,
   kable_tbody <- xml_tpart(kable_xml, "tbody")
   if (is.null(kable_tbody))
     return(kable_input)
-  group_header_rows <- attr(kable_input, "group_header_rows")
+  group_header_rows <- base::attr(kable_input, "group_header_rows")
   if (!is.null(group_header_rows)) {
     positions <- positions_corrector(positions, group_header_rows,
                                      length(xml_children(kable_tbody)))

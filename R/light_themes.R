@@ -80,7 +80,7 @@ kable_light <- function(kable_input, light_class, lightable_options,
   }
   out <- kable_styling(kable_input, "none", htmltable_class = light_class,
                        html_font = html_font, ...)
-  attr(out, "lightable") <- TRUE
-  attr(out, "lightable_class") <- light_class
+  base::attr(out, "lightable") <- TRUE
+  base::attr(out, "lightable_class") <- light_class
   return(out)
 }

@@ -35,14 +35,14 @@ save_kable <- function(x, file,
                        latex_header_includes = NULL, keep_tex = FALSE,
                        density = 300) {
 
-  if (!is.null(attr(x, "format"))) {
+  if (!is.null(base::attr(x, "format", exact = TRUE))) {
 
     # latex
-    if (attr(x, "format") == "latex") {
+    if (base::attr(x, "format", exact = TRUE) == "latex") {
       return(save_kable_latex(x, file, latex_header_includes, keep_tex, density))
 
       # markdown
-    } else if (attr(x, "format") == "pipe") {
+    } else if (base::attr(x, "format", exact = TRUE) == "pipe") {
 
       # good file extension: write to file
       if (tools::file_ext(file) %in% c("txt", "md", "markdown", "Rmd")) {
@@ -133,7 +133,7 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
         img_rework <- magick::image_trim(img_rework)
         img_info <- magick::image_info(img_rework)
         magick::image_write(img_rework, file, density = density)
-        attr(file, "info") <- img_info
+        base::attr(file, "info") <- img_info
       } else {
         message("save_kable will have the best result with magick installed. ")
       }
@@ -288,6 +288,6 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   }
 
   out <- paste0(file_no_ext, ".", tools::file_ext(file))
-  attr(out, "info") <- table_img_info
+  base::attr(out, "info") <- table_img_info
   return(invisible(out))
 }

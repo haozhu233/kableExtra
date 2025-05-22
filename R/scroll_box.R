@@ -31,10 +31,10 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
                        extra_css = NULL,
                        fixed_thead = TRUE
                        ) {
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (kable_format != "html") {
     return(kable_input)

@@ -8,7 +8,7 @@
 #' @export
 
 magic_mirror <- function(kable_input){
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format == "latex") {
     table_info <- magic_mirror_latex(kable_input)
   }
@@ -16,7 +16,7 @@ magic_mirror <- function(kable_input){
     table_info <- magic_mirror_html(kable_input)
   }
   if ("kable_meta" %in% names(attributes(kable_input))) {
-    out <- attr(kable_input, "kable_meta")
+    out <- base::attr(kable_input, "kable_meta", exact = TRUE)
     # if we return `kable_meta` immediately, `kable_styling` will use the
     # original `table_env` value. So if we call `kable_styling` twice on the
     # same object, it will nest a table within a table. Make sure this does not
@@ -98,8 +98,8 @@ magic_mirror_latex <- function(kable_input){
       !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption")) {
     table_info$contents <- table_info$contents[-1]
   }
-  if (!is.null(attr(kable_input, "n_head"))) {
-    n_head <- attr(kable_input, "n_head")
+  if (!is.null(base::attr(kable_input, "n_head", exact = TRUE))) {
+    n_head <- base::attr(kable_input, "n_head", exact = TRUE)
     table_info$new_header_row <- table_info$contents[seq(n_head - 1, 1)]
     table_info$contents <- table_info$contents[-seq(1, n_head - 1)]
     table_info$header_df <- extra_header_to_header_df(table_info$new_header_row)

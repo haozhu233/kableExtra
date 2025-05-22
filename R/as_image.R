@@ -41,15 +41,15 @@ as_image <- function(x, width = NULL, height = NULL, file = NULL, ...) {
 
   img_dpi <- 300
 
-  if (is.null(width) + is.null(height) <= 1 & is.null(attr(temp_img, "info"))) {
+  if (is.null(width) + is.null(height) <= 1 & is.null(base::attr(temp_img, "info", exact = TRUE))) {
     warning("You need to install magick in order to use width/height in ",
             "as_image. ")
   } else {
     if (!is.null(width)) {
-      img_dpi <- attr(temp_img, "info")$width / width
+      img_dpi <- base::attr(temp_img, "info", exact = TRUE)$width / width
     }
     if (!is.null(height)) {
-      img_dpi <- attr(temp_img, "info")$height / height
+      img_dpi <- base::attr(temp_img, "info", exact = TRUE)$height / height
     }
   }
 

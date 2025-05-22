@@ -72,10 +72,10 @@ group_rows <- function(kable_input, group_label = NULL,
                        monospace = FALSE, underline = FALSE, strikeout = FALSE,
                        color = NULL, background = NULL) {
 
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -153,7 +153,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
     group_label <- escape_html(group_label)
   }
 
-  group_header_rows <- attr(kable_input, "group_header_rows")
+  group_header_rows <- base::attr(kable_input, "group_header_rows", exact = TRUE)
   group_seq <- seq(start_row, end_row)
   if (!is.null(group_header_rows)) {
     group_seq <- positions_corrector(group_seq, group_header_rows,
@@ -174,8 +174,8 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   if (italic) group_label <- paste0("<em>", group_label, "</em>")
 
   if (label_row_css == "border-bottom: 1px solid;") {
-    if (!is.null(attr(kable_input, "lightable_class"))) {
-      lightable_class <- attr(kable_input, "lightable_class")
+    if (!is.null(base::attr(kable_input, "lightable_class", exact = TRUE))) {
+      lightable_class <- base::attr(kable_input, "lightable_class", exact = TRUE)
       if (lightable_class %in% c(
         "lightable-classic", "lightable-classic-2", "lightable-minimal")) {
         label_row_css <- "border-bottom: 0;"
@@ -219,7 +219,7 @@ group_rows_html <- function(kable_input, group_label, start_row, end_row,
   # add indentations to items
   out <- as_kable_xml(body_node)
   attributes(out) <- kable_attrs
-  attr(out, "group_header_rows") <- c(attr(out, "group_header_rows"), group_seq[1])
+  base::attr(out, "group_header_rows") <- c(base::attr(out, "group_header_rows", exact = TRUE), group_seq[1])
   if (indent) {
     out <- add_indent_html(out, positions = seq(start_row, end_row))
   }
@@ -316,7 +316,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   out <- gsub("\\\\addlinespace\n", "", out)
   out <- structure(out, format = "latex", class = "knitr_kable")
   table_info$group_rows_used <- TRUE
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   if (indent) {
     out <- add_indent_latex(out, seq(start_row, end_row))
   }

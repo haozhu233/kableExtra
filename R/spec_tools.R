@@ -150,7 +150,7 @@ spec_tooltip <- function(title, position = "right") {
     'title' = if(is.null(title)) '' else title
   )
   class(tooltip_options) <- "ke_tooltip"
-  attr(tooltip_options, 'list') <- tooltip_options_list
+  base::attr(tooltip_options, 'list') <- tooltip_options_list
   return(tooltip_options)
 }
 
@@ -187,7 +187,7 @@ spec_popover <- function(content = NULL, title = NULL,
     popover_options_list['title'] <- title
   }
   class(popover_options) <- "ke_popover"
-  attr(popover_options, 'list') <- popover_options_list
+  base::attr(popover_options, 'list') <- popover_options_list
   return(popover_options)
 }
 

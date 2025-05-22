@@ -13,10 +13,10 @@
 #'
 #' @export
 header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -144,7 +144,7 @@ header_separate_latex <- function(kable_input, sep, ...) {
   table_info$contents[1] <- new_header_row_one
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
 
   for (l in seq(2, length(header_layers))) {
     out <- do.call(

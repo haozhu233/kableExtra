@@ -12,10 +12,10 @@
 #' }
 remove_column <- function (kable_input, columns) {
     if (is.null(columns)) return(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
     if (kable_format %in% c("pipe", "markdown")) {
       kable_input <- md_table_parser(kable_input)
-      kable_format <- attr(kable_input, "format")
+      kable_format <- base::attr(kable_input, "format", exact = TRUE)
     }
     if (!kable_format %in% c("html", "latex")) {
         warning("Please specify format in kable. kableExtra can customize",
@@ -42,7 +42,7 @@ remove_column_html <- function (kable_input, columns) {
       return(kable_input)
     kable_thead <- xml_tpart(kable_xml, "thead")
 
-    group_header_rows <- attr(kable_input, "group_header_rows")
+    group_header_rows <- base::attr(kable_input, "group_header_rows", exact = TRUE)
     all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
 
     if (!is.null(group_header_rows)) {
@@ -52,7 +52,7 @@ remove_column_html <- function (kable_input, columns) {
                                                    group_header_rows]
     }
 
-    collapse_matrix <- attr(kable_input, "collapse_matrix")
+    collapse_matrix <- base::attr(kable_input, "collapse_matrix", exact = TRUE)
     collapse_columns <- NULL
     if (!is.null(collapse_matrix)) {
         collapse_columns <- sort(as.numeric(sub("x", "",

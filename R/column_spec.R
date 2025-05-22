@@ -78,10 +78,10 @@ column_spec <- function(kable_input, column,
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
 
   if (!kable_format %in% c("html", "latex")) {
@@ -127,7 +127,7 @@ column_spec_html <- function(kable_input, column, width,
   if (is.null(kable_tbody))
     return(kable_input)
 
-  group_header_rows <- attr(kable_input, "group_header_rows")
+  group_header_rows <- base::attr(kable_input, "group_header_rows", exact = TRUE)
   all_contents_rows <- seq(1, length(xml_children(kable_tbody)))
 
   if (!is.null(group_header_rows)) {
@@ -314,13 +314,13 @@ column_spec_html_cell <- function(target_cell, width, width_min, width_max,
   # favor popover over tooltip
   if (!is.null(popover)) {
     if (!inherits(popover, "ke_popover")) popover <- spec_popover(popover)
-    popover_list <- lapply(attr(popover, 'list'), enc2utf8)
+    popover_list <- lapply(base::attr(popover, 'list', exact = TRUE), enc2utf8)
     for (p in names(popover_list)) {
       xml_attr(target_cell, p) <- popover_list[p]
     }
   } else if (!is.null(tooltip)) {
     if (!inherits(tooltip, "ke_tooltip")) tooltip <- spec_tooltip(tooltip)
-    tooltip_list <- lapply(attr(tooltip, 'list'), enc2utf8)
+    tooltip_list <- lapply(base::attr(tooltip, 'list', exact = TRUE), enc2utf8)
     for (t in names(tooltip_list)) {
       xml_attr(target_cell, t) <- tooltip_list[t]
     }
@@ -432,7 +432,7 @@ column_spec_latex <- function(kable_input, column, width,
       table_info$column_width[[paste0("column_", i)]] <- width
     }
   }
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   return(out)
 }
 

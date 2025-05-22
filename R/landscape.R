@@ -14,10 +14,10 @@
 #'
 #' @export
 landscape <- function(kable_input, margin = NULL) {
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -48,6 +48,6 @@ landscape_latex <- function(kable_input, margin) {
   }
   out <- structure(out, format = "latex", class = "knitr_kable")
   attributes(out) <- kable_attrs
-  attr(out, "landscape") <- TRUE
+  base::attr(out, "landscape") <- TRUE
   return(out)
 }

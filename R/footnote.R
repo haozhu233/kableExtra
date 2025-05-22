@@ -74,10 +74,10 @@ footnote <- function(kable_input,
                      title_format = "italic",
                      symbol_manual = NULL
 ) {
-  kable_format <- attr(kable_input, "format")
+  kable_format <- base::attr(kable_input, "format", exact = TRUE)
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
-    kable_format <- attr(kable_input, "format")
+    kable_format <- base::attr(kable_input, "format", exact = TRUE)
   }
   if (!kable_format %in% c("html", "latex")) {
     warning("Please specify format in kable. kableExtra can customize either ",
@@ -376,7 +376,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   }
 
   out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  base::attr(out, "kable_meta") <- table_info
   return(out)
 }
 

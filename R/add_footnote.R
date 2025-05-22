@@ -40,7 +40,7 @@ add_footnote <- function(input, label = NULL,
     ids.intable <- ids
   } else {
     if (notation == "symbol") {
-      notation <- paste0(notation, ".", attr(input, "format"))
+      notation <- paste0(notation, ".", base::attr(input, "format", exact = TRUE))
     }
 
     ids.ops <- read.csv(system.file("symbol_index.csv", package = "kableExtra"))
@@ -72,7 +72,7 @@ add_footnote <- function(input, label = NULL,
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
   # time to define their `kable` format.
-  if (!attr(input, "format") %in% c("html", "latex")) {
+  if (!base::attr(input, "format", exact = TRUE) %in% c("html", "latex")) {
     if (notation == "none")
       ids.innote <- ids.intable  # issue #672
     else
@@ -104,7 +104,7 @@ add_footnote <- function(input, label = NULL,
   }
 
   # LaTeX Tables --------------------------------
-  if (attr(input, "format") == "latex") {
+  if (base::attr(input, "format", exact = TRUE) == "latex") {
     # Clean the entry for labels
     if (escape) {
       label <- escape_latex(label)
@@ -224,7 +224,7 @@ add_footnote <- function(input, label = NULL,
   }
 
   # HTML Tables -------------------
-  if (attr(input, "format") == "html") {
+  if (base::attr(input, "format", exact = TRUE) == "html") {
     # Clean the entry for labels
     table_info <- magic_mirror(input)
     if (escape) {
@@ -256,6 +256,6 @@ add_footnote <- function(input, label = NULL,
     # Paste footer to the table
     export[1] <- gsub("</tbody>\n", paste0("</tbody>\n", footer), export[1])
   }
-  attr(export, "kable_meta") <- table_info
+  base::attr(export, "kable_meta") <- table_info
   return(export)
 }
