@@ -53,8 +53,7 @@ Suggests:
     tinytex,
     formattable,
     sparkline,
-    webshot2,
-    here
+    webshot2
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Encoding: UTF-8
