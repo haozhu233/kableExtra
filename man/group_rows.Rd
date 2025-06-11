@@ -125,6 +125,17 @@ pay attention to the differences in color codes between HTML and LaTeX.}
 \description{
 Group a few rows in a table together under a label.
 }
+\details{
+In HTML output, it is an error to insert a break
+between groups that would fall within collapsed rows
+produced by \code{\link[=collapse_rows]{collapse_rows()}}.  To work around
+this, modify the column entries that follow the break
+to be different from those before the break, e.g.
+by adding a zero-width space (Unicode \code{"\\u200B"})
+to those in the later group, so that \code{\link[=collapse_rows]{collapse_rows()}}
+will think the entries are different and will not
+collapse them together.
+}
 \examples{
 \dontrun{
 x <- knitr::kable(head(mtcars), "html")
