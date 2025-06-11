@@ -1,10 +1,13 @@
-kableExtra 1.4.0.14
+kableExtra 1.4.0.15
 --------------------------------------------------------------------------------
 
 Bug Fixes:
 
 * Fixed a bug in `html_color()` to account for CSS's expectation that
 alpha be between 0 and 1, different from R's 0 and 255 (#902).
+* Using `pack_rows()` or `group_rows()` to insert a separator
+that falls within a collapsed label did not render properly in HTML.
+It is now an error to do that; see `?pack_rows` for a workaround (#840).
 
 
 kableExtra 1.4.0.13
