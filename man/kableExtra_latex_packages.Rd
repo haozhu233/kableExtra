@@ -4,7 +4,11 @@
 \alias{kableExtra_latex_packages}
 \title{LaTeX Packages}
 \usage{
-kableExtra_latex_packages()
+kableExtra_latex_packages(xelatex = FALSE)
+}
+\arguments{
+\item{xelatex}{Is \code{xelatex} going to be used to process
+the file?}
 }
 \description{
 This function shows all LaTeX packages that is supposed to be

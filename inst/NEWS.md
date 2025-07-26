@@ -1,4 +1,4 @@
-kableExtra 1.4.0.15
+kableExtra 1.4.0.16
 --------------------------------------------------------------------------------
 
 Bug Fixes:
@@ -8,6 +8,12 @@ alpha be between 0 and 1, different from R's 0 and 255 (#902).
 * Using `pack_rows()` or `group_rows()` to insert a separator
 that falls within a collapsed label did not render properly in HTML.
 It is now an error to do that; see `?pack_rows` for a workaround (#840).
+* `save_kable()` could fail when a LaTeX table was wrapped in 
+a floating environment.  Now the inner environment is extracted (#908).
+* `save_kable()` on a LaTeX table processed with `xelatex`
+generated a warning that `inputenc` shouldn't be used.  The
+`kableExtra_latex_packages()` function has gained an extra 
+argument to support this.
 
 
 kableExtra 1.4.0.13

@@ -222,6 +222,11 @@ remove_html_doc <- function(x){
   writeLines(out, x)
 }
 
+extract_tabular <- function(x, info) {
+  x <- sub(paste0(".*(", info$begin_tabular, ")"), "\\1", x)
+  sub(paste0("(", info$end_tabular, ").*"), "\\1", x)
+}
+
 save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) {
 
   # if file extension is .tex, write to file, return the table as an
@@ -230,11 +235,17 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
     writeLines(x, file, useBytes = T)
     return(invisible(x))
   }
+  # The standalone class doesn't work well with
+  # floats, so extract just the tabular part
+  # of the table
+  info <- magic_mirror_latex(x)
+  if (info$table_env)
+    x <- extract_tabular(x, info)
 
   temp_tex <- c(
     "\\documentclass[border=1mm]{standalone}",
     "\\usepackage{amssymb, amsmath}",
-    latex_pkg_list(),
+    latex_pkg_list(xelatex = TRUE),
     "\\usepackage{graphicx}",
     "\\usepackage{xunicode}",
     "\\usepackage{xcolor}",
