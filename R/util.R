@@ -204,13 +204,15 @@ read_table_data_from_xml <- function(kable_xml) {
 }
 
 #' LaTeX Packages
+#' @param xelatex Is `xelatex` going to be used to process
+#' the file?
 #' @description This function shows all LaTeX packages that is supposed to be
 #' loaded for this package in a R Markdown YAML format.
 #'
 #' @export
-kableExtra_latex_packages <- function() {
+kableExtra_latex_packages <- function(xelatex = FALSE) {
 
-  pkg_list <- paste0("  - ", latex_pkg_list())
+  pkg_list <- paste0("  - ", latex_pkg_list(xelatex))
 
   pkg_text <- paste0(
     "header-includes:\n",
@@ -220,7 +222,7 @@ kableExtra_latex_packages <- function() {
   cat(pkg_text)
 }
 
-latex_pkg_list <- function() {
+latex_pkg_list <- function(xelatex = FALSE) {
   return(c(
     "\\usepackage{booktabs}",
     "\\usepackage{longtable}",
@@ -234,7 +236,7 @@ latex_pkg_list <- function() {
     "\\usepackage{threeparttable}",
     "\\usepackage{threeparttablex}",
     "\\usepackage[normalem]{ulem}",
-    "\\usepackage[utf8]{inputenc}",
+    if (!xelatex) "\\usepackage[utf8]{inputenc}",
     "\\usepackage{makecell}",
     "\\usepackage{xcolor}"
   ))
