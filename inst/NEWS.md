@@ -1,4 +1,4 @@
-kableExtra 1.4.0.17
+kableExtra 1.4.0.18
 --------------------------------------------------------------------------------
 
 Bug Fixes:
@@ -15,6 +15,8 @@ to allow it (#897, #908).
 generated a warning that `inputenc` shouldn't be used.  The
 `kableExtra_latex_packages()` function has gained an extra 
 argument to support this.
+* `column_spec()` sometimes created incorrect LaTeX when
+the table contained `"."` characters (#900).
 
 
 kableExtra 1.4.0.13
