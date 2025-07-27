@@ -239,11 +239,12 @@ save_kable_latex <- function(x, file, latex_header_includes, keep_tex, density) 
   # floats, so extract just the tabular part
   # of the table
   info <- magic_mirror_latex(x)
+  options <- "border=1mm"
   if (info$table_env)
-    x <- extract_tabular(x, info)
+    options <- paste(options, "varwidth", sep = ",")
 
   temp_tex <- c(
-    "\\documentclass[border=1mm]{standalone}",
+    paste0("\\documentclass[", options, "]{standalone}"),
     "\\usepackage{amssymb, amsmath}",
     latex_pkg_list(xelatex = TRUE),
     "\\usepackage{graphicx}",
