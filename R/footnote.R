@@ -271,6 +271,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                            threeparttable, fixed_small_size, show_every_page) {
   fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
 
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
   fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
@@ -375,8 +376,8 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
     }
   }
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
+
   return(out)
 }
 

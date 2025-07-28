@@ -6,6 +6,11 @@
 #' provide better documentation (and auto-complete yay) and at the same time,
 #' solve the auto format setting in a better way.
 #'
+#' As of `kableExtra` version 1.4.0.19, this function also
+#' records the value of the `booktabs` argument in its output
+#' so that it doesn't have to be guessed from the text of the
+#' result when needed later in other functions.
+#'
 #' @note The current set of arguments were written for
 #' `knitr` version 1.45.  If you are using an older
 #' or newer version, some of the default values may be different.
@@ -75,6 +80,7 @@ kbl <- function(x, format, digits = getOption("digits"),
                 linesep = if (booktabs) c('', '', '', '', '\\addlinespace') else '\\hline',
                 caption.short = '',
                 table.envir = if (!is.null(caption)) 'table', ...) {
+  kbl_booktabs <- booktabs
   if (!missing(align) && length(align) == 1L && !grepl('[^lcr]', align)) {
     align <- strsplit(align, '')[[1]]
   }
@@ -120,5 +126,5 @@ kbl <- function(x, format, digits = getOption("digits"),
       caption = caption, label = label, format.args = format.args,
       escape = escape, ...
     )
-  out
+  structure(out, kbl_booktabs = kbl_booktabs)
 }

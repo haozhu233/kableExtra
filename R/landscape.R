@@ -46,8 +46,7 @@ landscape_latex <- function(kable_input, margin) {
       "\n\\newgeometry{margin=", margin, "}", out, "\n\\restoregeometry"
     )
   }
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attributes(out) <- kable_attrs
+  out <- finalize_latex(out, kable_attrs, kable_attrs$kable_meta)
   attr(out, "landscape") <- TRUE
   return(out)
 }

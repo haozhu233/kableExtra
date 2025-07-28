@@ -140,6 +140,11 @@ However, it has many latex/html specific arguments hidden under the ground
 unless you check its source code. This wrapper function is created to
 provide better documentation (and auto-complete yay) and at the same time,
 solve the auto format setting in a better way.
+
+As of \code{kableExtra} version 1.4.0.19, this function also
+records the value of the \code{booktabs} argument in its output
+so that it doesn't have to be guessed from the text of the
+result when needed later in other functions.
 }
 \note{
 The current set of arguments were written for

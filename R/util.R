@@ -374,3 +374,12 @@ md_table_parser <- function(md_table) {
 toprule_regexp <- "(\\\\toprule(\\[[^]]*])?)"
 midrule_regexp <- "(\\\\midrule(\\[[^]]*])?)"
 bottomrule_regexp <- "(\\\\bottomrule(\\[[^]]*])?)"
+
+finalize_latex <- function(out, kable_attrs, table_info) {
+  kable_attrs$format <- "latex"
+  attributes(out) <- kable_attrs
+  if (!inherits(out, "knitr_kable"))
+    class(out) <- "knitr_kable"
+  attr(out, "kable_meta") <- table_info
+  out
+}

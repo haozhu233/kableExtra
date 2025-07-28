@@ -335,7 +335,7 @@ pdfTable_styling <- function(kable_input,
                              latex_table_env,
                              table.envir,
                              wraptable_width) {
-
+  kable_attrs <- attributes(kable_input)
   latex_options <- match.arg(
     latex_options,
     c("basic", "striped", "hold_position", "HOLD_position", "scale_down", "scale_up", "repeat_header"),
@@ -400,8 +400,7 @@ pdfTable_styling <- function(kable_input,
   out <- styling_latex_position(out, table_info, position, latex_options,
                                 table.envir, wraptable_width)
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
 
   if (row_label_position != "l") {
     if (table_info$tabular == "longtable") {
