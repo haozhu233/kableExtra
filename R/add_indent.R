@@ -50,6 +50,7 @@ add_indent <- function(kable_input, positions,
 add_indent_latex <- function(kable_input, positions,
                              level_of_indent = 1, all_cols = FALSE,
                              target_cols = 1) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
   level_of_indent<-as.numeric(level_of_indent)
@@ -90,8 +91,7 @@ add_indent_latex <- function(kable_input, positions,
                out, perl = TRUE)
     table_info$contents[i] <- new_rowtext
   }
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
   return(out)
 
 

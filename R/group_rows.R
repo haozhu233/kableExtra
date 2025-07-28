@@ -249,6 +249,7 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              extra_latex_after = NULL, indent, latex_wrap_text = F,
                              monospace = F, underline = F, strikeout = F,
                              color = NULL, background = NULL) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -331,9 +332,11 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   }
 
   out <- gsub("\\\\addlinespace\n", "", out)
-  out <- structure(out, format = "latex", class = "knitr_kable")
+
   table_info$group_rows_used <- TRUE
-  attr(out, "kable_meta") <- table_info
+
+  out <- finalize_latex(out, kable_attrs, table_info)
+
   if (indent) {
     out <- add_indent_latex(out, seq(start_row, end_row))
   }

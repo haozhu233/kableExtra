@@ -39,6 +39,7 @@ magic_mirror_latex <- function(kable_input){
                      rownames = NULL, caption = NULL, caption.short = NULL,
                      contents = NULL,
                      centering = FALSE, table_env = FALSE)
+  kbl_booktabs <- attr(kable_input, "kbl_booktabs")
   # Tabular
   table_info$tabular <- ifelse(
     grepl("\\\\begin\\{tabular\\}", kable_input),
@@ -51,7 +52,10 @@ magic_mirror_latex <- function(kable_input){
   )
 
   # Booktabs
-  table_info$booktabs <- grepl(toprule_regexp, kable_input)
+  if (!is.null(kbl_booktabs))
+    table_info$booktabs <- kbl_booktabs
+  else
+    table_info$booktabs <- grepl(toprule_regexp, kable_input)
   # Alignment is a sequence with each element being a single letter, or a
   # single letter followed by a measurement in braces, e.g. "p{1cm}"
   align1 <- "[[:alpha:]](?:\\{[^{}]*\\})?\\|*"

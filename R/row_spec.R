@@ -198,6 +198,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                            underline, strikeout,
                            color, background, align, font_size, angle,
                            hline_after, extra_latex_after) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -242,8 +243,8 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     }
   }
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
+
   return(out)
 }
 

@@ -296,6 +296,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
                                       color, background, font_size, angle,
                                       escape, line, line_sep,
                                       border_left, border_right) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
 
   if (is.data.frame(header)){
@@ -337,7 +338,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   out <- str_replace(solve_enc(kable_input),
                      hline_type,
                      paste0("\\1\n", new_header))
-  out <- structure(out, format = "latex", class = "knitr_kable")
+
   # new_header_row <- latex_contents_escape(new_header_split[1])
   if (is.null(table_info$new_header_row)) {
     table_info$new_header_row <- new_header_split[1]
@@ -346,7 +347,7 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
     table_info$new_header_row <- c(table_info$new_header_row, new_header_split[1])
     table_info$header_df[[length(table_info$header_df) + 1]] <- header
   }
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
   return(out)
 }
 

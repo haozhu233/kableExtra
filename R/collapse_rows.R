@@ -169,6 +169,7 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
                                 row_group_label_position, row_group_label_fonts,
                                 custom_latex_hline, headers_to_remove, target,
                                 col_names, longtable_clean_cut) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   if (table_info$nrow <= 2) return(kable_input)
   out <- solve_enc(kable_input)
@@ -308,10 +309,12 @@ collapse_rows_latex <- function(kable_input, columns, latex_hline, valign,
     }
     out <- sub(contents[i + 1], new_contents[i], out, perl=TRUE)
   }
-  out <- structure(out, format = "latex", class = "knitr_kable")
+
   table_info$collapse_rows <- TRUE
   table_info$collapse_matrix <- collapse_matrix
-  attr(out, "kable_meta") <- table_info
+
+  out <- finalize_latex(out, kable_attrs, table_info)
+
   if(row_group_label_position == 'stack'){
     group_row_index_list <- collapse_rows_index(kable_dt, head(columns, -1))
     out <- collapse_rows_latex_stack(out, group_row_index_list, row_group_label_fonts)

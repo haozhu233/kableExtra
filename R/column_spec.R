@@ -346,6 +346,7 @@ column_spec_latex <- function(kable_input, column, width,
                               border_left, border_right,
                               latex_column_spec, latex_valign, include_thead,
                               link, image) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   if (!is.null(table_info$collapse_rows)) {
     message("Usually it is recommended to use column_spec before collapse_rows,",
@@ -423,7 +424,6 @@ column_spec_latex <- function(kable_input, column, width,
     table_info$contents[i] <- new_row
   }
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
   if (!is.null(width)) {
     if (is.null(table_info$column_width)) {
       table_info$column_width <- list()
@@ -432,7 +432,7 @@ column_spec_latex <- function(kable_input, column, width,
       table_info$column_width[[paste0("column_", i)]] <- width
     }
   }
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
   return(out)
 }
 

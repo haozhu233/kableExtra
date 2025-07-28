@@ -1,4 +1,4 @@
-kableExtra 1.4.0.18
+kableExtra 1.4.0.19
 --------------------------------------------------------------------------------
 
 Bug Fixes:
@@ -17,6 +17,8 @@ generated a warning that `inputenc` shouldn't be used.  The
 argument to support this.
 * `column_spec()` sometimes created incorrect LaTeX when
 the table contained `"."` characters (#900).
+* `column_spec()` failed to set column width
+in `booktabs` tables with customized rules (#891).
 
 
 kableExtra 1.4.0.13

@@ -116,6 +116,7 @@ process_header_sep <- function(header_sep) {
 }
 
 header_separate_latex <- function(kable_input, sep, ...) {
+  kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
 
@@ -143,8 +144,7 @@ header_separate_latex <- function(kable_input, sep, ...) {
                               paste0(new_header_row_one, "\\\\\\\\"))
   table_info$contents[1] <- new_header_row_one
 
-  out <- structure(out, format = "latex", class = "knitr_kable")
-  attr(out, "kable_meta") <- table_info
+  out <- finalize_latex(out, kable_attrs, table_info)
 
   for (l in seq(2, length(header_layers))) {
     out <- do.call(
