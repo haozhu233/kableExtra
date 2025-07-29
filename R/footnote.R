@@ -269,12 +269,11 @@ html_tfoot_maker_ <- function(ft_contents, ft_title, ft_type, ft_chunk) {
 # LaTeX
 footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                            threeparttable, fixed_small_size, show_every_page) {
-  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
+  fn_regexp <- NULL
 
   kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
-  fn_regexp <- fn_text <- longtable_start <- longtable_text <- NULL
 
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
@@ -336,16 +335,11 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   if (table_info$tabular == "longtable" & show_every_page) {
     fn_regexp <- ifelse(threeparttable, "\\\\insertTableNotes",
                         footnote_text)
-    fn_text <- gsub("\\\\", "\\", fn_regexp, fixed = TRUE)
     if(is.null(table_info$repeat_header_latex)) {
       # need full \begin{longtable} command
       # table_info valign2 ok but align missing vertical lines
-      longtable_start <- sub(".*\\\\begin\\{longtable\\}",
-                             "\\\\begin\\{longtable\\}", out)
-      longtable_text <- sub("\n.*", "", longtable_start)
-      out <- sub(longtable_text,
-                 paste(longtable_text, fn_text, "\n\\endfoot\n"),
-                 out, fixed = TRUE)
+      out <- sub("(.*\\\\begin\\{longtable\\}\\[.*]\\{.*?\\})(.*)",
+        paste("\\1", fn_regexp, "\\\\endfoot\n\\2", sep = "\n"), out)
     } else {
       if(!table_info$booktabs){
         out <- sub(
