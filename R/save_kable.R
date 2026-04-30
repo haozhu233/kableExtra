@@ -41,6 +41,10 @@ save_kable <- function(x, file,
     if (attr(x, "format") == "latex") {
       return(save_kable_latex(x, file, latex_header_includes, keep_tex, density))
 
+      # docx
+    } else if (attr(x, "format") == "docx") {
+      return(save_kable_png(x, file, ...))
+
       # markdown
     } else if (attr(x, "format") == "pipe") {
 
@@ -163,6 +167,17 @@ save_kable_html <- function(x, file, bs_theme, self_contained,
   }
 
   return(invisible(file))
+}
+
+save_kable_png <- function(x, file, ...) {
+  fn <- tempfile(fileext = ".html")
+  on.exit(unlink(fn))
+  writeLines(x, fn)
+  if (missing(file)) file <- tempfile(fileext = ".png")
+  dots <- list(...)
+  if (!"selector" %in% names(dots)) dots$selector <- "table"
+  do.call(webshot2::webshot, c(list(url = fn, file = file), dots))
+  invisible(file)
 }
 
 # Local version of htmltools::save_html with fix to relative path.

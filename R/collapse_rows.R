@@ -68,7 +68,7 @@ collapse_rows <- function(kable_input, columns = NULL,
       stop("target can only be a length 1 integer")
     }
   }
-  if (kable_format == "html") {
+  if (kable_format %in% c("html", "docx")) {
     return(collapse_rows_html(kable_input, columns, valign, target))
   }
   if (kable_format == "latex") {

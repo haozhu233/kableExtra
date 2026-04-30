@@ -35,8 +35,8 @@ xtable2kable <- function(x, ...) {
 
   xtable_print_options <- list(...)
   if ("type" %in% names(xtable_print_options) &&
-      xtable_print_options$type == "html") {
-    out <- structure(out, format = "html", class = "knitr_kable")
+      xtable_print_options$type %in% c("html", "docx")) {
+    out <- structure(out, format = xtable_print_options$type, class = "knitr_kable")
     return(out)
   }
 

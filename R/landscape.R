@@ -20,6 +20,7 @@ landscape <- function(kable_input, margin = NULL) {
     kable_format <- attr(kable_input, "format")
   }
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(kable_input)
   }
   if (kable_format == "latex") {

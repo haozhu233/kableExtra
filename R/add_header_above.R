@@ -101,7 +101,7 @@ add_header_above <- function(kable_input, header = NULL,
   else {
     header <- standardize_header_input(header)
   }
-  if (kable_format == "html") {
+  if (kable_format %in% c("html", "docx")) {
     return(htmlTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
       align, color, background, font_size, angle, escape, line, line_sep,

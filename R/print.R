@@ -17,6 +17,8 @@ print.kableExtra <- function(x, ...) {
     htmlDependencies(html_kable) <- dep
     class(html_kable) <- "shiny.tag.list"
     print(html_kable)
+  } else if (attr(x, "format") == "docx") {
+    webshot_table_to_png(x)
   } else {
     cat(as.character(x))
   }
@@ -70,6 +72,9 @@ html_dependency_lightable <- function() {
 
 #' @export
 knit_print.kableExtra <- function(x, ...) {
+  if (attr(x, "format") == "docx") {
+    return(include_graphics(save_kable_png(x)))
+  }
   x <- paste0(x, "\n\n")
   kp_dependency <- getOption("kableExtra.knit_print.dependency",
                              default = TRUE)

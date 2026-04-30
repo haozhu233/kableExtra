@@ -36,7 +36,7 @@ footnote_marker_number <- function(x, format, double_escape = FALSE) {
       format <- "html"
     }
   }
-  if (format == "html") {
+  if (format %in% c("html", "docx")) {
     return(paste0("<sup>", x, "</sup>"))
   } else if (!double_escape) {
     return(paste0("\\textsuperscript{", x, "}"))
@@ -56,7 +56,7 @@ footnote_marker_alphabet <- function(x, format, double_escape = FALSE) {
     }
   }
   if (is.numeric(x)) x <- letters[x]
-  if (format == "html") {
+  if (format %in% c("html", "docx")) {
     return(paste0("<sup>", x, "</sup>"))
   } else if (!double_escape) {
     return(paste0("\\textsuperscript{", x, "}"))
@@ -77,7 +77,7 @@ footnote_marker_symbol <- function(x, format, double_escape = FALSE) {
   }
   number_index <- read.csv(system.file("symbol_index.csv",
                                        package = "kableExtra"))
-  if (format == "html") {
+  if (format %in% c("html", "docx")) {
     x <- number_index$symbol.html[x]
     return(paste0("<sup>", x, "</sup>"))
   } else if (!double_escape) {

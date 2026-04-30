@@ -29,6 +29,7 @@ add_indent <- function(kable_input, positions,
   }
 
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(add_indent_html(
       kable_input, positions, level_of_indent, all_cols, target_cols
       ))

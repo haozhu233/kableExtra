@@ -56,6 +56,7 @@ row_spec <- function(kable_input, row,
     kable_format <- attr(kable_input, "format")
   }
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
                          underline, strikeout,
                          color, background, align, font_size, angle,

@@ -134,6 +134,7 @@ kable_styling <- function(kable_input,
   }
 
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     if (is.null(full_width)) {
       full_width <- getOption("kable_styling_full_width", T)
     }

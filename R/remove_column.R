@@ -20,7 +20,7 @@ remove_column <- function (kable_input, columns) {
     if (!confirm_format(kable_format)) return(kable_input)
 
     columns <- sort(unique(columns))
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
         return(remove_column_html(kable_input, columns))
     } else if (kable_format == "latex") {
         stop("Removing columns was not implemented for latex kables yet")

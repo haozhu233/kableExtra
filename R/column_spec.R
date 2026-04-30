@@ -85,6 +85,7 @@ column_spec <- function(kable_input, column,
   }
 
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(column_spec_html(kable_input, column, width,
                             bold, italic, monospace,
                             underline, strikeout,

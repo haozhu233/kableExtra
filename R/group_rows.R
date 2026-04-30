@@ -91,7 +91,7 @@ group_rows <- function(kable_input, group_label = NULL,
   if (!confirm_format(kable_format)) return(kable_input)
 
   if (is.null(index)) {
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
       if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
@@ -109,7 +109,7 @@ group_rows <- function(kable_input, group_label = NULL,
   } else {
     index <- group_row_index_translator(index)
     out <- kable_input
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
       for (i in 1:nrow(index)) {
         if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")

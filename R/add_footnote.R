@@ -72,7 +72,7 @@ add_footnote <- function(input, label = NULL,
   # markdown doesn't support complex table formats but this solution
   # should be able to satisfy people who don't want to spend extra
   # time to define their `kable` format.
-  if (!attr(input, "format") %in% c("html", "latex")) {
+  if (!attr(input, "format") %in% c("html", "latex", "docx")) {
     if (notation == "none")
       ids.innote <- ids.intable  # issue #672
     else
@@ -224,7 +224,7 @@ add_footnote <- function(input, label = NULL,
   }
 
   # HTML Tables -------------------
-  if (attr(input, "format") == "html") {
+  if (attr(input, "format") %in% c("html", "docx")) {
     # Clean the entry for labels
     table_info <- magic_mirror(input)
     if (escape) {

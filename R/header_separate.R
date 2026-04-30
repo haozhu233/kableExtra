@@ -19,6 +19,7 @@ header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
     kable_format <- attr(kable_input, "format")
   }
   if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(do.call(header_separate_html, list(
       kable_input = kable_input,
       sep = sep,

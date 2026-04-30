@@ -12,7 +12,7 @@ magic_mirror <- function(kable_input){
   if (kable_format == "latex") {
     table_info <- magic_mirror_latex(kable_input)
   }
-  if (kable_format == "html") {
+  if (kable_format %in% c("html", "docx")) {
     table_info <- magic_mirror_html(kable_input)
   }
   if ("kable_meta" %in% names(attributes(kable_input))) {
