@@ -1,3 +1,12 @@
+kableExtra 1.4.0.20
+--------------------------------------------------------------------------------
+
+New Features:
+
+* added "docx" to the list of supported formats, which treats it
+internally as HTML the entire path until rendering into a docx file,
+then it uses `webshot2` to insert a PNG (@r2evans #917)
+
 kableExtra 1.4.0.19
 --------------------------------------------------------------------------------
 
