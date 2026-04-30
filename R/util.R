@@ -387,7 +387,7 @@ finalize_latex <- function(out, kable_attrs, table_info) {
 confirm_format <- function(kable_format) {
   if (!kable_format %in% c("html", "latex", "docx")) {
     warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
+            "HTML, LaTeX, or DOCX outputs. See https://haozhu233.github.io/kableExtra/ ",
             "for details.")
     FALSE
   } else TRUE
