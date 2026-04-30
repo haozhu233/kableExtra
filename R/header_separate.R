@@ -18,13 +18,7 @@ header_separate <- function(kable_input, sep = "[^[:alnum:]]+", ...) {
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (kable_format == "html") {
+  if (!confirm_format(kable_format)) return(kable_input)
     return(do.call(header_separate_html, list(
       kable_input = kable_input,
       sep = sep,
