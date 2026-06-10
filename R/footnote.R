@@ -79,12 +79,7 @@ footnote <- function(kable_input,
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
+  if (!confirm_format(kable_format)) return(kable_input)
   if (length(alphabet) > 26) {
     alphabet <- alphabet[1:26]
     warning("Please don't use more than 26 footnotes in table_footnote ",
@@ -108,7 +103,7 @@ footnote <- function(kable_input,
   footnote_titles <- footnote_titles[footnote_order]
   footnote_contents <- footnote_contents[footnote_order]
   if (escape) {
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
       footnote_contents <- lapply(footnote_contents, escape_html)
       footnote_titles <- lapply(footnote_titles, escape_html)
     } else {
@@ -125,7 +120,7 @@ footnote <- function(kable_input,
   footnote_table <- footnote_table_maker(
     kable_format, footnote_titles, footnote_contents, symbol_manual
   )
-  if (kable_format == "html") {
+  if (kable_format %in% c("html", "docx")) {
     return(footnote_html(kable_input, footnote_table, footnote_as_chunk))
   }
   if (kable_format == "latex") {
@@ -136,7 +131,7 @@ footnote <- function(kable_input,
 
 footnote_title_format <- function(x, format, title_format) {
   if (x == "") return(x)
-  if (format == "html") {
+  if (format %in% c("html", "docx")) {
     title_style <- ""
     if ("italic" %in% title_format) {
       title_style <- paste0(title_style, "font-style: italic;")

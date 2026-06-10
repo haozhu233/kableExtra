@@ -17,15 +17,10 @@ remove_column <- function (kable_input, columns) {
       kable_input <- md_table_parser(kable_input)
       kable_format <- attr(kable_input, "format")
     }
-    if (!kable_format %in% c("html", "latex")) {
-        warning("Please specify format in kable. kableExtra can customize",
-                " either HTML or LaTeX outputs. See ",
-                "https://haozhu233.github.io/kableExtra/ for details.")
-        return(kable_input)
-    }
+    if (!confirm_format(kable_format)) return(kable_input)
 
     columns <- sort(unique(columns))
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
         return(remove_column_html(kable_input, columns))
     } else if (kable_format == "latex") {
         stop("Removing columns was not implemented for latex kables yet")

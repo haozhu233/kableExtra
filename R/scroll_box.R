@@ -36,7 +36,7 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (kable_format != "html") {
+  if (!kable_format %in% c("html", "docx")) {
     return(kable_input)
   }
   kable_attrs <- attributes(kable_input)
@@ -77,7 +77,7 @@ scroll_box <- function(kable_input, height = NULL, width = NULL,
 
   out <- paste0('<div style="', paste(box_styles, collapse = ""), '">',
                 out, '</div>')
-  out <- structure(out, format = "html",
+  out <- structure(out, format = kable_format,
                    class = "knitr_kable")
   attributes(out) <- kable_attrs
 

@@ -75,12 +75,7 @@ add_header_above <- function(kable_input, header = NULL,
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
+  if (!confirm_format(kable_format)) return(kable_input)
   if ((length(align) != 1L) & (length(align) != length(header))) {
     warning("Length of align vector supplied to add_header_above must either be 1 ",
             "or the same length as the header supplied. The length of the align ",
@@ -106,7 +101,7 @@ add_header_above <- function(kable_input, header = NULL,
   else {
     header <- standardize_header_input(header)
   }
-  if (kable_format == "html") {
+  if (kable_format %in% c("html", "docx")) {
     return(htmlTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
       align, color, background, font_size, angle, escape, line, line_sep,

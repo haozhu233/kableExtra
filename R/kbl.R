@@ -110,14 +110,15 @@ kbl <- function(x, format, digits = getOption("digits"),
       midrule = midrule, linesep = linesep, caption.short = caption.short,
       table.envir = table.envir, ...
     )
-  } else if (format == "html") {
+  } else if (format %in% c("html", "docx")) {
     out <- knitr::kable(
-      x = x, format = format, digits = digits,
+      x = x, format = "html", digits = digits,
       row.names = row.names, col.names = col.names, align = align,
       caption = caption, label = label, format.args = format.args,
       escape = escape,
       table.attr = table.attr, ...
     )
+    attr(out, "format") <- format
     if (!"kableExtra" %in% class(out)) class(out) <- c("kableExtra", class(out))
   } else
     out <- knitr::kable(

@@ -72,7 +72,7 @@ cell_spec <- function(x, format,
       format <- "html"
     }
   }
-  if (tolower(format) == "html") {
+  if (tolower(format) %in% c("html", "docx")) {
     return(cell_spec_html(x, bold, italic, monospace, underline, strikeout,
                           color, background, align, font_size, angle,
                           tooltip, popover, link, new_tab, extra_css,

@@ -55,13 +55,8 @@ row_spec <- function(kable_input, row,
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (kable_format == "html") {
+  if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(row_spec_html(kable_input, row, bold, italic, monospace,
                          underline, strikeout,
                          color, background, align, font_size, angle,

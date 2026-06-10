@@ -88,15 +88,10 @@ group_rows <- function(kable_input, group_label = NULL,
     kable_input <- md_table_parser(kable_input)
     kable_format <- attr(kable_input, "format")
   }
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
+  if (!confirm_format(kable_format)) return(kable_input)
 
   if (is.null(index)) {
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
       if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")
       return(group_rows_html(kable_input, group_label, start_row, end_row,
@@ -114,7 +109,7 @@ group_rows <- function(kable_input, group_label = NULL,
   } else {
     index <- group_row_index_translator(index)
     out <- kable_input
-    if (kable_format == "html") {
+    if (kable_format %in% c("html", "docx")) {
       for (i in 1:nrow(index)) {
         if (!missing(latex_align)) warning("latex_align parameter is not used in HTML Mode,
                                     use label_row_css instead.")

@@ -28,13 +28,8 @@ add_indent <- function(kable_input, positions,
     kable_format <- attr(kable_input, "format")
   }
 
-  if (!kable_format %in% c("html", "latex")) {
-    warning("Please specify format in kable. kableExtra can customize either ",
-            "HTML or LaTeX outputs. See https://haozhu233.github.io/kableExtra/ ",
-            "for details.")
-    return(kable_input)
-  }
-  if (kable_format == "html") {
+  if (!confirm_format(kable_format)) return(kable_input)
+  if (kable_format %in% c("html", "docx")) {
     return(add_indent_html(
       kable_input, positions, level_of_indent, all_cols, target_cols
       ))
