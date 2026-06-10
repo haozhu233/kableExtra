@@ -279,7 +279,7 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
   footnote_text <- latex_tfoot_maker(footnote_table, footnote_as_chunk,
                                      table_info$ncol, threeparttable)
   if (threeparttable) {
-    if (table_info$tabular %in% c("longtable", "longtabu") ) {
+    if (table_info$tabular %in% c("longtable", "longtabu", "xltabular") ) {
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{ThreePartTable}\n\\\\begin{TableNotes}",
                         ifelse(footnote_as_chunk, "[para]", ""),
@@ -297,15 +297,17 @@ footnote_latex <- function(kable_input, footnote_table, footnote_as_chunk,
                      "\\1\n\\\\insertTableNotes",
                      out)
         } else if (!show_every_page) {
-          out <- sub("\\\\hline\n\\\\end\\{longtable\\}",
-                     "\\\\hline\n\\\\insertTableNotes\n\\\\end\\{longtable\\}",
+          out <- sub(paste0("\\\\hline\n", table_info$end_tabular),
+                     paste0("\\\\hline\n\\\\insertTableNotes\n",
+                            table_info$end_tabular),
                      out)
         }
       }
     } else {
       if (table_info$tabular == "tabu") {
-        stop("Please use `longtable = T` in your kable function. ",
-             "Full width threeparttable only works with longtable.")
+        stop("threeparttable does not support the legacy tabu environment. ",
+             "Please use `longtable = T` in your kable function or use the ",
+             "default table environment.")
       }
       out <- sub(paste0("\\\\begin\\{", table_info$tabular, "\\}"),
                  paste0("\\\\begin{threeparttable}\n\\\\begin{",

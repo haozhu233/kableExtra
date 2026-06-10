@@ -57,7 +57,8 @@ use_latex_packages <- function() {
     usepackage_latex("float")
     usepackage_latex("colortbl")
     usepackage_latex("pdflscape")
-    usepackage_latex("tabu")
+    usepackage_latex("tabularx")
+    usepackage_latex("xltabular")
     usepackage_latex("threeparttable")
     usepackage_latex("threeparttablex")
     usepackage_latex("ulem", "normalem")
@@ -233,7 +234,8 @@ latex_pkg_list <- function(xelatex = FALSE) {
     "\\usepackage{float}",
     "\\usepackage{colortbl}",
     "\\usepackage{pdflscape}",
-    "\\usepackage{tabu}",
+    "\\usepackage{tabularx}",
+    "\\usepackage{xltabular}",
     "\\usepackage{threeparttable}",
     "\\usepackage{threeparttablex}",
     "\\usepackage[normalem]{ulem}",

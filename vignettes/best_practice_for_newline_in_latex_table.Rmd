@@ -13,7 +13,8 @@ header-includes:
   - \usepackage{float}
   - \usepackage{colortbl}
   - \usepackage{pdflscape}
-  - \usepackage{tabu}
+  - \usepackage{tabularx}
+  - \usepackage{xltabular}
   - \usepackage{threeparttable}
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}

@@ -47,7 +47,11 @@ magic_mirror_latex <- function(kable_input){
     ifelse(
       grepl("\\\\begin\\{tabularx\\}", kable_input),
       "tabularx",
-      "longtable"
+      ifelse(
+        grepl("\\\\begin\\{xltabular\\}", kable_input),
+        "xltabular",
+        "longtable"
+      )
     )
   )
 
@@ -90,7 +94,7 @@ magic_mirror_latex <- function(kable_input){
   } else {
     table_info$caption <- str_match(kable_input, "caption\\{(.*?)\\n")[2]
   }
-  if (table_info$tabular == "longtable") {
+  if (table_info$tabular %in% c("longtable", "xltabular")) {
     table_info$caption <- str_sub(table_info$caption, 1, -4)
   } else {
     table_info$caption <- str_sub(table_info$caption, 1, -2)
@@ -98,7 +102,8 @@ magic_mirror_latex <- function(kable_input){
   # Contents
   table_info$contents <- str_match_all(kable_input, "\n(.*)\\\\\\\\")[[1]][,2]
   table_info$contents <- regex_escape(table_info$contents, T)
-  if (table_info$tabular == "longtable" & !is.na(table_info$caption) &
+  if (table_info$tabular %in% c("longtable", "xltabular") &
+      !is.na(table_info$caption) &
       !str_detect(kable_input, "\\\\begin\\{table\\}\\n\\n\\\\caption")) {
     table_info$contents <- table_info$contents[-1]
   }
@@ -125,7 +130,8 @@ magic_mirror_latex <- function(kable_input){
   table_info$centering <- grepl("\\\\centering", kable_input)
 
   table_info$table_env <- (!is.na(table_info$caption) &
-                           table_info$tabular != "longtable") ||
+                           !table_info$tabular %in%
+                             c("longtable", "xltabular")) ||
                           grepl("\\\\begin\\{table\\}", kable_input)
 
   return(table_info)

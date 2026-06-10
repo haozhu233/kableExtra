@@ -53,7 +53,9 @@ table.}
 table should have 100\\% width. Since HTML and pdf have different flavors on
 the preferable format for \code{full_width}. If not specified, a HTML table will
 have full width by default but this option will be set to \code{FALSE} for a
-LaTeX table}
+LaTeX table. For LaTeX tables, \code{full_width = TRUE} rewrites the table in
+the \code{tabularx} (or \code{xltabular} for longtables) environment with \code{X}
+columns so that it spreads to the full line width.}
 
 \item{position}{A character string determining how to position the table
 on a page. Possible values include \code{left}, \code{center}, \code{right}, \code{float_left}
@@ -84,7 +86,7 @@ for their strip lines. This option is not available in HTML}
 should have stripe color.}
 
 \item{latex_table_env}{LaTeX option. A character string to define customized
-table environment such as tabu or tabularx.You shouldn't expect all features
+table environment such as tabularx. You shouldn't expect all features
 could be supported in self-defined environments.}
 
 \item{protect_latex}{If \code{TRUE}, LaTeX code embedded between dollar signs

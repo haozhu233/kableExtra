@@ -27,7 +27,7 @@
         column_spec(1, width = "8cm")
     Output
       
-      \begin{tabu} to \linewidth {>{\raggedright\arraybackslash}p{8cm}>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+      \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{8cm}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
       \toprule
         & mpg & cyl & disp & hp & drat & wt\\
       \midrule
@@ -37,5 +37,5 @@
       Hornet 4 Drive & 21.4 & 6 & 258 & 110 & 3.08 & 3.215\\
       Hornet Sportabout & 18.7 & 8 & 360 & 175 & 3.15 & 3.440\\
       \bottomrule
-      \end{tabu}
+      \end{tabularx}
 

@@ -28,7 +28,9 @@
 #' table should have 100\% width. Since HTML and pdf have different flavors on
 #' the preferable format for `full_width`. If not specified, a HTML table will
 #' have full width by default but this option will be set to `FALSE` for a
-#' LaTeX table
+#' LaTeX table. For LaTeX tables, `full_width = TRUE` rewrites the table in
+#' the `tabularx` (or `xltabular` for longtables) environment with `X`
+#' columns so that it spreads to the full line width.
 #' @param position A character string determining how to position the table
 #' on a page. Possible values include `left`, `center`, `right`, `float_left`
 #' and `float_right`. Please see the package doc site for demonstrations. For
@@ -50,7 +52,7 @@
 #' @param stripe_index LaTeX option allowing users to customize which rows
 #' should have stripe color.
 #' @param latex_table_env LaTeX option. A character string to define customized
-#' table environment such as tabu or tabularx.You shouldn't expect all features
+#' table environment such as tabularx. You shouldn't expect all features
 #' could be supported in self-defined environments.
 #' @param protect_latex If `TRUE`, LaTeX code embedded between dollar signs
 #' will be protected from HTML escaping.
@@ -370,7 +372,8 @@ pdfTable_styling <- function(kable_input,
     out <- styling_latex_scale(out, table_info, "up")
   }
 
-  if ("repeat_header" %in% latex_options & table_info$tabular == "longtable") {
+  if ("repeat_header" %in% latex_options &
+      table_info$tabular %in% c("longtable", "xltabular")) {
     out <- styling_latex_repeat_header(out, table_info, repeat_header_text,
                                        repeat_header_method, repeat_header_continued)
     table_info$repeat_header_latex <- TRUE
@@ -378,7 +381,7 @@ pdfTable_styling <- function(kable_input,
 
   if (full_width) {
     latex_table_env <- ifelse(table_info$tabular == "longtable",
-                              "longtabu", "tabu")
+                              "xltabular", "tabularx")
     full_width_return <- styling_latex_full_width(out, table_info)
     out <- full_width_return[[1]]
     table_info$align_vector <- full_width_return[[2]]
@@ -545,11 +548,13 @@ styling_latex_repeat_header <- function(x, table_info, repeat_header_text,
 styling_latex_full_width <- function(x, table_info) {
   col_align <- as.character(factor(
     table_info$align_vector, c("c", "l", "r"),
-    c(">{\\\\centering}X", ">{\\\\raggedright}X", ">{\\\\raggedleft}X")
+    c(">{\\\\centering\\\\arraybackslash}X",
+      ">{\\\\raggedright\\\\arraybackslash}X",
+      ">{\\\\raggedleft\\\\arraybackslash}X")
   ))
   col_align[is.na(col_align)] <- table_info$align_vector[is.na(col_align)]
   col_align_vector <- col_align
-  col_align <- paste0(" to \\\\linewidth {", paste(col_align, collapse = ""), "}")
+  col_align <- paste0("{\\\\linewidth}{", paste(col_align, collapse = ""), "}")
   x <- sub(paste0(table_info$begin_tabular, "\\{[^\\\\n]*\\}"),
            table_info$begin_tabular, x)
   x <- sub(table_info$begin_tabular,

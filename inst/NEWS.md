@@ -1,6 +1,17 @@
 kableExtra 1.4.0.19
 --------------------------------------------------------------------------------
 
+Breaking Changes:
+
+* `kable_styling(full_width = TRUE)` now generates `tabularx` (or
+`xltabular` for longtables) instead of `tabu`/`longtabu`. The `tabu`
+LaTeX package is unmaintained and CRAN flagged it as unsupported, so
+kableExtra no longer loads it. Tables should look nearly identical; the
+column spec changes from `\begin{tabu} to \linewidth {...X}` to
+`\begin{tabularx}{\linewidth}{...\arraybackslash X}`. Users who
+explicitly request `latex_table_env = "tabu"` can still do so, but must
+load the `tabu` package themselves.
+
 Bug Fixes:
 
 * Fixed a bug in `html_color()` to account for CSS's expectation that

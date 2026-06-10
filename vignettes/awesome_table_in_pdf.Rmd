@@ -16,7 +16,8 @@ header-includes:
   - \usepackage{float}
   - \usepackage{colortbl}
   - \usepackage{pdflscape}
-  - \usepackage{tabu}
+  - \usepackage{tabularx}
+  - \usepackage{xltabular}
   - \usepackage{threeparttable}
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
@@ -97,7 +98,8 @@ header-includes:
   - \usepackage{float}
   - \usepackage{colortbl}
   - \usepackage{pdflscape}
-  - \usepackage{tabu}
+  - \usepackage{tabularx}
+  - \usepackage{xltabular}
   - \usepackage{threeparttable}
   - \usepackage{threeparttablex}
   - \usepackage[normalem]{ulem}
@@ -605,7 +607,7 @@ kbl(dt_footnote, align = "c", booktabs = T,
            footnote_as_chunk = T)
 ```
 
-If your table footnote is very long, please consider to put your table in a `ThreePartTable` frame. Note that, in kableExtra version <= 0.7.0, we were using `threeparttable` but since kableExtra 0.8.0, we start to use `ThreePartTable` from `threeparttablex` instead. `ThreePartTable` supports both the `longtable` and `tabu` environments. 
+If your table footnote is very long, please consider to put your table in a `ThreePartTable` frame. Note that, in kableExtra version <= 0.7.0, we were using `threeparttable` but since kableExtra 0.8.0, we start to use `ThreePartTable` from `threeparttablex` instead. `ThreePartTable` supports both the `longtable` and `xltabular` environments.
 
 ```{r}
 kbl(dt, align = "c", booktabs = T, caption = "s") %>%

@@ -281,9 +281,10 @@ latex_new_row_builder <- function(target_row, table_info,
   }
   if (!is.null(color)) {
     if (table_info$tabular == "tabu") {
-      warning("Setting full_width = TRUE will turn the table into a tabu ",
-              "environment where colors are not really easily configable ",
-              "with this package. Please consider turn off full_width.")
+      warning("This table uses the legacy tabu environment, where colors ",
+              "are not really easily configable with this package. Please ",
+              "consider using the default environment instead. Note that ",
+              "the tabu LaTeX package is no longer maintained.")
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x)
@@ -292,9 +293,10 @@ latex_new_row_builder <- function(target_row, table_info,
   }
   if (!is.null(background)) {
     if (table_info$tabular == "tabu") {
-      warning("Setting full_width = TRUE will turn the table into a tabu ",
-              "environment where colors are not really easily configable ",
-              "with this package. Please consider turn off full_width.")
+      warning("This table uses the legacy tabu environment, where colors ",
+              "are not really easily configable with this package. Please ",
+              "consider using the default environment instead. Note that ",
+              "the tabu LaTeX package is no longer maintained.")
     }
     new_row <- lapply(new_row, function(x) {
       x <- clear_color_latex(x, background = TRUE)
