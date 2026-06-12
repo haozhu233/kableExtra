@@ -14,7 +14,7 @@ output:
 
 说起来这包写了都一年了我还没写过中文文档，现在给大家补上。
 
-另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[http://haozhu233.github.io/kableExtra/](http://haozhu233.github.io/kableExtra/)。
+另外这中文版我就不发CRAN了，要看的麻烦移步这包的文档网站[https://haozhu233.github.io/kableExtra/](https://haozhu233.github.io/kableExtra/)。
 
 （因为我基本是在~~自由发挥~~重写一遍。。你们不要太去在意中文英文的不同哈。。。）
 

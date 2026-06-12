@@ -69,7 +69,7 @@ in both HTML and PDF.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://haozhu233.github.io/kableExtra/}
+  \item \url{https://haozhu233.github.io/kableExtra/}
   \item \url{https://github.com/haozhu233/kableExtra}
   \item Report bugs at \url{https://github.com/haozhu233/kableExtra/issues}
 }

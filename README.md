@@ -69,8 +69,8 @@ kbl(dt, booktabs = T, caption = "Demo Table") %>%
 ## More Information
 For more information, please check the package vignette.
 
-- [Create Awesome HTML Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html) ([中文](http://haozhu233.github.io/kableExtra/awesome_table_in_html_cn.html))
-- [Create Awesome LaTeX Table with `knitr::kable()` and kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
+- [Create Awesome HTML Table with `knitr::kable()` and kableExtra](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html) ([中文](https://haozhu233.github.io/kableExtra/awesome_table_in_html_cn.html))
+- [Create Awesome LaTeX Table with `knitr::kable()` and kableExtra](https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf)
 
 
 ## Acknowledgement
