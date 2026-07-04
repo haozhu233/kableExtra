@@ -212,6 +212,28 @@
       \hline
       \end{tabular}
 
+# pack_rows(index=, escape=FALSE) does not eat backslashes
+
+    Code
+      pack_rows(kbl(mtcars[1:4, 1:2], format = "latex", booktabs = TRUE), index = c(
+        `\\Delta` = 2, `\\alpha` = 2), escape = FALSE)
+    Output
+      
+      \begin{tabular}[t]{lrr}
+      \toprule
+        & mpg & cyl\\
+      \midrule
+      \addlinespace[0.3em]
+      \multicolumn{3}{l}{\textbf{\Delta}}\\
+      \hspace{1em}Mazda RX4 & 21.0 & 6\\
+      \hspace{1em}Mazda RX4 Wag & 21.0 & 6\\
+      \addlinespace[0.3em]
+      \multicolumn{3}{l}{\textbf{\alpha}}\\
+      \hspace{1em}Datsun 710 & 22.8 & 4\\
+      \hspace{1em}Hornet 4 Drive & 21.4 & 6\\
+      \bottomrule
+      \end{tabular}
+
 # Issue #806: custom rule widths
 
     Code

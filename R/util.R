@@ -110,6 +110,11 @@ regex_escape <- function(x, double_backslash = FALSE) {
   return(x)
 }
 
+# Undoes one round of the "pre-escape for str_replace" that internal callers
+# such as `column_spec()` apply: every `\\` (two chars) collapses to `\`, and
+# every `\c` (backslash + non-{`\`, `1-9`}) drops the backslash. Kept only for
+# internal use in `group_row_index_translator` where the input carries the
+# `\{`/`\}` signature that identifies internally-generated LaTeX.
 regex_unescape <- function(x) {
   sapply(x, function(y) sub(".", y, "."))
 }

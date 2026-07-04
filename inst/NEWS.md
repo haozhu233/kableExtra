@@ -23,6 +23,11 @@ pre-doubled input while still letting direct users pass raw
 single-backslash LaTeX (issue #836). A new `latex_prescaped` argument
 (`"auto"`, `TRUE`, `FALSE`) lets callers pin the behavior explicitly
 (#921).
+* `pack_rows(index = ..., escape = FALSE)` no longer silently drops
+backslashes from raw LaTeX labels. The `index =` branch used to run
+labels through an `unescape` step with no matching `escape` upstream,
+so raw LaTeX such as `"\\Delta"` rendered as `"Delta"`. The two
+`pack_rows()` code paths (`index =` vs `group_label =`) now agree.
 * Fixed a bug in `html_color()` to account for CSS's expectation that
 alpha be between 0 and 1, different from R's 0 and 255 (#902).
 * Using `pack_rows()` or `group_rows()` to insert a separator

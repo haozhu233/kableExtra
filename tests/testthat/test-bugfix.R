@@ -71,6 +71,17 @@ test_that("Issue #921: latex_prescaped = TRUE halves pre-doubled input", {
   )
 })
 
+test_that("pack_rows(index=, escape=FALSE) does not eat backslashes", {
+  # Prior to 1.4.1 the `index =` branch called `regex_unescape()` on the
+  # user-supplied labels, which silently halved every backslash. Raw LaTeX
+  # like "\\Delta" or "\\alpha" therefore rendered as "Delta"/"alpha". The
+  # two `pack_rows()` paths (`index =` vs `group_label =`) should agree.
+  expect_snapshot(
+    kbl(mtcars[1:4, 1:2], format = "latex", booktabs = TRUE) |>
+      pack_rows(index = c("\\Delta" = 2, "\\alpha" = 2), escape = FALSE)
+  )
+})
+
 test_that("Issue #812:  table without header works in collapse_rows", {
   tab <- kbl(mtcars[1:3, 1:4], col.names = NULL,
              format = "html", booktabs = TRUE) |>

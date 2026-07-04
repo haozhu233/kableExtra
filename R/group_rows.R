@@ -152,7 +152,18 @@ group_row_index_translator <- function(index) {
   index <- standardize_header_input(index)
   index$start <- cumsum(c(1, index$colspan))[1:length(index$colspan)]
   index$end <- cumsum(index$colspan)
-  index$header <- trimws(regex_unescape(index$header))
+  # `collapse_rows()` (via `collapse_rows_latex_stack()`) feeds
+  # `column_spec()`-decorated labels into `pack_rows(index = ...)`. Those
+  # labels are pre-escaped for downstream str_replace: `\` doubled and `{`/`}`
+  # escaped, e.g. `\\textbf\{X\}`. Undo one round of that escaping ONLY when
+  # we see the escaped-brace signature, so raw user LaTeX like `\Delta`
+  # (which never contains `\{`/`\}`) is left untouched. Users who really do
+  # want a literal `\{` in a raw label can set `latex_prescaped = FALSE`.
+  looks_prescaped <- grepl("\\\\[{}]", index$header)
+  if (any(looks_prescaped)) {
+    index$header[looks_prescaped] <- regex_unescape(index$header[looks_prescaped])
+  }
+  index$header <- trimws(index$header)
   index <- index[index$header != "", ]
   return(index)
 }
