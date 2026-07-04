@@ -50,6 +50,13 @@
 #' Default is FALSE.
 #' @param border_left T/F option for border on the left side in latex.
 #' @param border_right T/F option for border on the right side in latex.
+#' @param latex_prescaped Only used when `escape = FALSE` in a LaTeX table.
+#' Controls how backslashes in `header` are handled. `"auto"` (default)
+#' detects pre-doubled backslashes (e.g. from downstream packages such as
+#' `tablet`) and treats them as single backslashes; unpaired backslashes are
+#' treated as raw LaTeX. Use `TRUE` if you know your input is pre-doubled, or
+#' `FALSE` if it is raw LaTeX with unpaired backslashes such as a `\\\\` line
+#' break.
 #'
 #' @examples
 #' \dontrun{
@@ -67,7 +74,8 @@ add_header_above <- function(kable_input, header = NULL,
                              font_size = NULL, angle = NULL,
                              escape = TRUE, line = TRUE, line_sep = 3,
                              extra_css = NULL, include_empty = FALSE,
-                             border_left = FALSE, border_right = FALSE) {
+                             border_left = FALSE, border_right = FALSE,
+                             latex_prescaped = "auto") {
   if (is.null(header)) return(kable_input)
 
   kable_format <- attr(kable_input, "format")
@@ -117,7 +125,7 @@ add_header_above <- function(kable_input, header = NULL,
     return(pdfTable_add_header_above(
       kable_input, header, bold, italic, monospace, underline, strikeout,
       align, color, background, font_size, angle, escape, line, line_sep,
-      border_left, border_right))
+      border_left, border_right, latex_prescaped))
   }
 }
 
@@ -295,7 +303,8 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
                                       monospace, underline, strikeout, align,
                                       color, background, font_size, angle,
                                       escape, line, line_sep,
-                                      border_left, border_right) {
+                                      border_left, border_right,
+                                      latex_prescaped = "auto") {
   kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
 
@@ -319,10 +328,12 @@ pdfTable_add_header_above <- function(kable_input, header, bold, italic,
   if (escape) {
     header$header <- input_escape(header$header, align)
   } else {
-    # Issue 836:  backslashes in the replacement
-    # need to be escaped.  We can't use fixed() below,
-    # because we need the regexp pattern.
-    header$header <- gsub("\\\\", "\\\\\\\\", header$header)
+    # Issue 836: backslashes in the replacement need to be escaped
+    # (we can't use fixed() below, because we need the regexp pattern).
+    # For back-compat with callers such as `tablet` that already double
+    # their backslashes, `latex_prescaped` normalizes pre-doubled input
+    # before we re-double. See ?add_header_above.
+    header$header <- latex_maybe_prescaped(header$header, latex_prescaped)
   }
 
   hline_type <- switch(table_info$booktabs + 1, "(\\\\hline)", toprule_regexp)

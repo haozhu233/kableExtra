@@ -35,6 +35,42 @@ test_that("Issue #836:  latex allowed in add_header_above", {
 }
 )
 
+test_that("Issue #921: pre-doubled backslashes (tablet-style) round-trip", {
+  # Callers such as `tablet` pre-double every backslash before passing to
+  # add_header_above() / pack_rows(). With `latex_prescaped = "auto"` (default)
+  # the header/label is auto-detected as pre-doubled and produces the correct
+  # single-backslash LaTeX in the output.
+  expect_snapshot(
+    kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex") |>
+      add_header_above(c("\\\\(\\\\textrm{Group}\\\\)" = 2, " " = 1),
+                       escape = FALSE)
+  )
+  expect_snapshot(
+    kbl(mtcars[1:4, 1:2], format = "latex", booktabs = TRUE) |>
+      pack_rows("\\\\(\\\\textrm{Group}\\\\)", 1, 2, escape = FALSE)
+  )
+})
+
+test_that("Issue #921: latex_prescaped = FALSE preserves raw \\\\ line break", {
+  # For the rare case where a user really wants a `\\` LaTeX line break
+  # inside a header/label with escape = FALSE, `latex_prescaped = FALSE`
+  # disables the auto-normalization and treats the input as raw LaTeX.
+  expect_snapshot(
+    kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex") |>
+      add_header_above(c("A\\\\B" = 2, " " = 1),
+                       escape = FALSE, latex_prescaped = FALSE)
+  )
+})
+
+test_that("Issue #921: latex_prescaped = TRUE halves pre-doubled input", {
+  # Callers that always pre-double can pin the behavior explicitly.
+  expect_snapshot(
+    kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex") |>
+      add_header_above(c("\\\\textbf{H}" = 2, " " = 1),
+                       escape = FALSE, latex_prescaped = TRUE)
+  )
+})
+
 test_that("Issue #812:  table without header works in collapse_rows", {
   tab <- kbl(mtcars[1:3, 1:4], col.names = NULL,
              format = "html", booktabs = TRUE) |>

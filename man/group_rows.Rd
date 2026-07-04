@@ -27,7 +27,8 @@ group_rows(
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
-  background = NULL
+  background = NULL,
+  latex_prescaped = "auto"
 )
 
 pack_rows(
@@ -52,7 +53,8 @@ pack_rows(
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
-  background = NULL
+  background = NULL,
+  latex_prescaped = "auto"
 )
 }
 \arguments{
@@ -121,6 +123,14 @@ pay attention to the differences in color codes between HTML and LaTeX.}
 
 \item{background}{A character string for column background color. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}
+
+\item{latex_prescaped}{Only used when \code{escape = FALSE} in a LaTeX table.
+Controls how backslashes in \code{group_label}/\code{index} are handled. \code{"auto"}
+(default) detects pre-doubled backslashes (e.g. from downstream packages
+such as \code{tablet}) and treats them as single backslashes; unpaired
+backslashes are treated as raw LaTeX. Use \code{TRUE} if you know your input is
+pre-doubled, or \code{FALSE} if it is raw LaTeX with unpaired backslashes such
+as a \verb{\\\\\\\\} line break.}
 }
 \description{
 Group a few rows in a table together under a label.

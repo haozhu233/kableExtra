@@ -309,6 +309,37 @@ sim_all_double_escape <- function(x) {
   return(gsub("\\\\", "\\\\\\\\", x))
 }
 
+# Normalizes LaTeX header/label text so that backslashes survive the downstream
+# str_replace insertion (which halves any `\\` in the replacement string).
+#
+# `latex_prescaped`:
+#   "auto"  - detect pre-doubled input (every run of backslashes has even
+#             length, as produced by e.g. `tablet`) and halve those runs
+#             first; leave others as raw single-backslash LaTeX.
+#   TRUE    - treat input as pre-doubled; halve first (matches CRAN 1.4.0
+#             behavior for callers that already double their backslashes).
+#   FALSE   - treat input as raw single-backslash LaTeX (issue #836).
+#
+# All inputs are then re-doubled so the downstream `\\ -> \` step yields the
+# intended output. Pre-doubled inputs are byte-for-byte identical to their
+# CRAN 1.4.0 output.
+latex_maybe_prescaped <- function(x, latex_prescaped = "auto") {
+  if (identical(latex_prescaped, "auto")) {
+    runs <- regmatches(x, gregexpr("\\\\+", x))
+    is_prescaped <- vapply(
+      runs,
+      function(r) length(r) == 0 || all(nchar(r) %% 2 == 0),
+      logical(1)
+    )
+  } else if (isTRUE(latex_prescaped) || isFALSE(latex_prescaped)) {
+    is_prescaped <- rep_len(as.logical(latex_prescaped), length(x))
+  } else {
+    stop("`latex_prescaped` must be TRUE, FALSE, or \"auto\".")
+  }
+  x[is_prescaped] <- gsub("\\\\\\\\", "\\\\", x[is_prescaped])
+  gsub("\\\\", "\\\\\\\\", x)
+}
+
 # Here (v 1.4.0) we introduced a simple markdown table parser to compensate the
 # breaking change on changing the default of auto_format.
 line_separator <- function(line, idx_matrix) {

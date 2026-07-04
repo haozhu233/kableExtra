@@ -23,7 +23,8 @@ add_header_above(
   extra_css = NULL,
   include_empty = FALSE,
   border_left = FALSE,
-  border_right = FALSE
+  border_right = FALSE,
+  latex_prescaped = "auto"
 )
 }
 \arguments{
@@ -91,6 +92,14 @@ Default is FALSE.}
 \item{border_left}{T/F option for border on the left side in latex.}
 
 \item{border_right}{T/F option for border on the right side in latex.}
+
+\item{latex_prescaped}{Only used when \code{escape = FALSE} in a LaTeX table.
+Controls how backslashes in \code{header} are handled. \code{"auto"} (default)
+detects pre-doubled backslashes (e.g. from downstream packages such as
+\code{tablet}) and treats them as single backslashes; unpaired backslashes are
+treated as raw LaTeX. Use \code{TRUE} if you know your input is pre-doubled, or
+\code{FALSE} if it is raw LaTeX with unpaired backslashes such as a \verb{\\\\\\\\} line
+break.}
 }
 \description{
 Tables with multiple rows of header rows are extremely useful

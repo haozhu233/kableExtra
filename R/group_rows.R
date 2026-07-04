@@ -46,6 +46,13 @@
 #' pay attention to the differences in color codes between HTML and LaTeX.
 #' @param background A character string for column background color. Here please
 #' pay attention to the differences in color codes between HTML and LaTeX.
+#' @param latex_prescaped Only used when `escape = FALSE` in a LaTeX table.
+#' Controls how backslashes in `group_label`/`index` are handled. `"auto"`
+#' (default) detects pre-doubled backslashes (e.g. from downstream packages
+#' such as `tablet`) and treats them as single backslashes; unpaired
+#' backslashes are treated as raw LaTeX. Use `TRUE` if you know your input is
+#' pre-doubled, or `FALSE` if it is raw LaTeX with unpaired backslashes such
+#' as a `\\\\` line break.
 #'
 #' @details
 #' In HTML output, it is an error to insert a break
@@ -81,7 +88,8 @@ group_rows <- function(kable_input, group_label = NULL,
                        extra_latex_after = NULL,
                        indent = TRUE,
                        monospace = FALSE, underline = FALSE, strikeout = FALSE,
-                       color = NULL, background = NULL) {
+                       color = NULL, background = NULL,
+                       latex_prescaped = "auto") {
 
   kable_format <- attr(kable_input, "format")
   if (kable_format %in% c("pipe", "markdown")) {
@@ -109,7 +117,7 @@ group_rows <- function(kable_input, group_label = NULL,
                               bold, italic, hline_before, hline_after,
                               extra_latex_after, indent, latex_wrap_text,
                               monospace, underline, strikeout,
-                              color, background))
+                              color, background, latex_prescaped))
     }
   } else {
     index <- group_row_index_translator(index)
@@ -133,7 +141,7 @@ group_rows <- function(kable_input, group_label = NULL,
                                bold, italic, hline_before, hline_after,
                                extra_latex_after, indent, latex_wrap_text,
                                monospace, underline, strikeout,
-                               color, background)
+                               color, background, latex_prescaped)
       }
     }
     return(out)
@@ -248,7 +256,8 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
                              bold = T, italic = F, hline_before = F, hline_after = F,
                              extra_latex_after = NULL, indent, latex_wrap_text = F,
                              monospace = F, underline = F, strikeout = F,
-                             color = NULL, background = NULL) {
+                             color = NULL, background = NULL,
+                             latex_prescaped = "auto") {
   kable_attrs <- attributes(kable_input)
   table_info <- magic_mirror(kable_input)
   out <- solve_enc(kable_input)
@@ -262,7 +271,10 @@ group_rows_latex <- function(kable_input, group_label, start_row, end_row,
   if (escape) {
     group_label <- input_escape(group_label, latex_align)
   } else {
-    group_label <- sim_all_double_escape(group_label)
+    # For back-compat with callers such as `tablet` that already double their
+    # backslashes, `latex_prescaped` normalizes pre-doubled input before we
+    # re-double for downstream str_replace. See ?group_rows.
+    group_label <- latex_maybe_prescaped(group_label, latex_prescaped)
   }
 
   if (bold) {

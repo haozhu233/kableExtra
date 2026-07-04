@@ -14,6 +14,15 @@ load the `tabu` package themselves.
 
 Bug Fixes:
 
+* `add_header_above()` and `pack_rows()`/`group_rows()` now auto-detect
+pre-doubled backslashes when `escape = FALSE` in a LaTeX table, so
+downstream packages that already double their backslashes (e.g.
+`tablet`, and by extension `yamlet`) continue to render correctly. This
+restores byte-for-byte compatibility with the CRAN 1.4.0 behavior for
+pre-doubled input while still letting direct users pass raw
+single-backslash LaTeX (issue #836). A new `latex_prescaped` argument
+(`"auto"`, `TRUE`, `FALSE`) lets callers pin the behavior explicitly
+(#921).
 * Fixed a bug in `html_color()` to account for CSS's expectation that
 alpha be between 0 and 1, different from R's 0 and 255 (#902).
 * Using `pack_rows()` or `group_rows()` to insert a separator

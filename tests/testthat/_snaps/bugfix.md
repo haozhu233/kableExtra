@@ -141,6 +141,77 @@
       \hline
       \end{tabular}
 
+# Issue #921: pre-doubled backslashes (tablet-style) round-trip
+
+    Code
+      add_header_above(kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex"), c(
+        `\\\\(\\\\textrm{Group}\\\\)` = 2, ` ` = 1), escape = FALSE)
+    Output
+      
+      \begin{tabular}[t]{l|r|r}
+      \hline
+      \multicolumn{2}{c|}{\(\textrm{Group}\)} & \multicolumn{1}{c}{ } \\
+      \cline{1-2}
+      Mazda RX4 & 21 & 6\\
+      \hline
+      Mazda RX4 Wag & 21 & 6\\
+      \hline
+      \end{tabular}
+
+---
+
+    Code
+      pack_rows(kbl(mtcars[1:4, 1:2], format = "latex", booktabs = TRUE),
+      "\\\\(\\\\textrm{Group}\\\\)", 1, 2, escape = FALSE)
+    Output
+      
+      \begin{tabular}[t]{lrr}
+      \toprule
+        & mpg & cyl\\
+      \midrule
+      \addlinespace[0.3em]
+      \multicolumn{3}{l}{\textbf{\(\textrm{Group}\)}}\\
+      \hspace{1em}Mazda RX4 & 21.0 & 6\\
+      \hspace{1em}Mazda RX4 Wag & 21.0 & 6\\
+      Datsun 710 & 22.8 & 4\\
+      Hornet 4 Drive & 21.4 & 6\\
+      \bottomrule
+      \end{tabular}
+
+# Issue #921: latex_prescaped = FALSE preserves raw \\ line break
+
+    Code
+      add_header_above(kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex"), c(
+        `A\\\\B` = 2, ` ` = 1), escape = FALSE, latex_prescaped = FALSE)
+    Output
+      
+      \begin{tabular}[t]{l|r|r}
+      \hline
+      \multicolumn{2}{c|}{A\\B} & \multicolumn{1}{c}{ } \\
+      \cline{1-2}
+      Mazda RX4 & 21 & 6\\
+      \hline
+      Mazda RX4 Wag & 21 & 6\\
+      \hline
+      \end{tabular}
+
+# Issue #921: latex_prescaped = TRUE halves pre-doubled input
+
+    Code
+      add_header_above(kbl(mtcars[1:2, 1:2], col.names = NULL, format = "latex"), c(
+        `\\\\textbf{H}` = 2, ` ` = 1), escape = FALSE, latex_prescaped = TRUE)
+    Output
+      
+      \begin{tabular}[t]{l|r|r}
+      \hline
+      \multicolumn{2}{c|}{\textbf{H}} & \multicolumn{1}{c}{ } \\
+      \cline{1-2}
+      Mazda RX4 & 21 & 6\\
+      \hline
+      Mazda RX4 Wag & 21 & 6\\
+      \hline
+      \end{tabular}
+
 # Issue #806: custom rule widths
 
     Code
