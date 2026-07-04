@@ -28,36 +28,36 @@ row_spec(
 \item{row}{A numeric value or vector indicating which row(s) to be selected. You don't
 need to count in header rows or group labeling rows.}
 
-\item{bold}{A T/F value to control whether the text of the selected row
+\item{bold}{A T/F vector to control whether the cells of the selected row
 need to be bolded.}
 
-\item{italic}{A T/F value to control whether the text of the selected row
+\item{italic}{A T/F vector to control whether the cells of the selected row
 need to be emphasized.}
 
-\item{monospace}{A T/F value to control whether the text of the selected row
+\item{monospace}{A T/F vector to control whether the cells of the selected row
 need to be monospaced (verbatim)}
 
-\item{underline}{A T/F value to control whether the text of the selected row
+\item{underline}{A T/F vector to control whether the cells of the selected row
 need to be underlined}
 
-\item{strikeout}{A T/F value to control whether the text of the selected row
-need to be struck out.}
+\item{strikeout}{A T/F vector to control whether the cells of the selected row
+need to be struck out out.}
 
-\item{color}{A character string for row text color. For example, "red" or
+\item{color}{A character vector for column text color. For example, "red" or
 "#BBBBBB".}
 
-\item{background}{A character string for row background color. Here please
+\item{background}{A character vector for cell background colors. Here please
 pay attention to the differences in color codes between HTML and LaTeX.}
 
-\item{align}{A character string for cell alignment. For HTML, possible values could
+\item{align}{A character vector for column cell alignment. For HTML, possible values could
 be \code{l}, \code{c}, \code{r} plus \code{left}, \code{center}, \code{right}, \code{justify}, \code{initial} and \code{inherit}
 while for LaTeX, you can only choose from \code{l}, \code{c} & \code{r}.}
 
-\item{font_size}{A numeric input for font size. For HTML, you can also use
+\item{font_size}{A numeric vector for cell font sizes. For HTML, you can also use
 options including \code{xx-small}, \code{x-small}, \code{small}, \code{medium}, \code{large},
 \code{x-large}, \code{xx-large}, \code{smaller}, \code{larger}, \code{initial} and \code{inherit}.}
 
-\item{angle}{0-360, degree that the text will rotate.}
+\item{angle}{0-360, a numeric vector of cell text rotation in degrees.}
 
 \item{extra_css}{Extra css text to be passed into the cells of the row. Note
 that it's not for the whole row.}
@@ -66,7 +66,7 @@ that it's not for the whole row.}
 adds a hline after the row}
 
 \item{extra_latex_after}{Extra LaTeX text to be added after the row. Similar
-with \code{add.to.row} in xtable}
+with \code{add.to.row} in \code{xtable::xtable}}
 }
 \description{
 This function allows users to select a row and then specify
@@ -74,8 +74,22 @@ its look. It can also specify the format of the header row when \code{row} = 0.
 }
 \examples{
 \dontrun{
-x <- knitr::kable(head(mtcars), "html")
-row_spec(x, 1:2, bold = TRUE, italic = TRUE)
+x <- head(mtcars)
+k <- knitr::kable(x, "html")
+
+# First two rows bold and italic
+row_spec(k, 1:2, bold = TRUE, italic = TRUE)
+
+# Color columns of header alternating grey and green, via recycling
+row_spec(k, 0, color=c('grey','green'))
+
+# Color columns alternating grey and green in all rows, via recycling
+row_spec(k, 0:nrow(x), color=c('grey','green'))
+
+# Same thing using `column_spec`:
+k |>
+column_spec(seq(1, ncol(x)+1, by=2), color='grey') |>
+column_spec(seq(2, ncol(x)+1, by=2), color='green')
 }
 
 }

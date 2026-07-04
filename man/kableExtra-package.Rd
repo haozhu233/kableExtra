@@ -94,6 +94,7 @@ Other contributors:
   \item Duncan Murdoch [contributor]
   \item Vincent Arel-Bundock [contributor]
   \item Bill Evans [contributor]
+  \item Greg Warnes \email{greg@warnes.net} [contributor]
 }
 
 }
