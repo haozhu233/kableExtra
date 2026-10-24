@@ -58,7 +58,7 @@ use_latex_packages <- function() {
     usepackage_latex("colortbl")
     usepackage_latex("pdflscape")
     usepackage_latex("tabularx")
-    usepackage_latex("xltabular")
+    # usepackage_latex("xltabular")
     usepackage_latex("threeparttable")
     usepackage_latex("threeparttablex")
     usepackage_latex("ulem", "normalem")
