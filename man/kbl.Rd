@@ -52,8 +52,8 @@ a function, it must return a character string.}
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
 the number of digits for individual columns.}
 
-\item{row.names}{Logical: whether to include row names. By default, row names
-are included if \code{rownames(x)} is neither \code{NULL} nor identical to
+\item{row.names}{Whether to include row names. By default, row names are
+included if \code{rownames(x)} is neither \code{NULL} nor identical to
 \code{1:nrow(x)}.}
 
 \item{col.names}{A character vector of column names to be used in the table.}
@@ -72,12 +72,12 @@ option \code{tab.cap}.}
 from \code{knitr::\link[knitr]{opts_current}$get('label')} (i.e., the current
 chunk label). To disable the label, use \code{label = NA}.}
 
-\item{format.args}{A list of arguments to be passed to \code{\link{format}()}
+\item{format.args}{A list of arguments to be passed to \code{\link[=format]{format()}}
 to format table values, e.g. \code{list(big.mark = ',')}.}
 
-\item{escape}{Boolean; whether to escape special characters when producing
-HTML or LaTeX tables. When \code{escape = FALSE}, you have to make sure
-that special characters will not trigger syntax errors in LaTeX or HTML.}
+\item{escape}{Whether to escape special characters when producing HTML or
+LaTeX tables. When \code{escape = FALSE}, you have to make sure that
+special characters will not trigger syntax errors in LaTeX or HTML.}
 
 \item{table.attr}{A character string for addition HTML table attributes.
 This is convenient if you simply want to add a few HTML classes or styles.
