@@ -1,3 +1,11 @@
+kableExtra 1.4.1.1
+
+Bug Fixes:
+
+* `collapse_rows()` and `kable_styling()` did not work 
+together properly (#921).
+
+
 kableExtra 1.4.1
 --------------------------------------------------------------------------------
 
