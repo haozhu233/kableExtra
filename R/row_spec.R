@@ -221,7 +221,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
                   gsub else sub
     if (length(new_row) == 1) {
       # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", target_row, "\\E")
+      regex <- paste0("\\Q", regex_unescape(target_row), "\\E")
       if (grepl(regex, out)) {
         out <- temp_sub(regex, new_row, out, perl = TRUE)
       } else {
@@ -231,7 +231,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
       table_info$contents[i] <- new_row
     } else {
       # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", target_row, "\\E(\\\\\\\\)?")
+      regex <- paste0("\\Q", regex_unescape(target_row), "\\E(\\\\\\\\)?")
       if (any(grepl(regex, out))) {
         out <- temp_sub(regex,
           paste(new_row, collapse = ""), out, perl = TRUE)
