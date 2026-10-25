@@ -78,6 +78,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Hao Zhu \email{haozhu233@gmail.com} (\href{https://orcid.org/0000-0002-3386-6076}{ORCID})
 
+Authors:
+\itemize{
+  \item Hao Zhu \email{haozhu233@gmail.com} (\href{https://orcid.org/0000-0002-3386-6076}{ORCID})
+}
+
 Other contributors:
 \itemize{
   \item Thomas Travison [contributor]

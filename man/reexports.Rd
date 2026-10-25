@@ -12,8 +12,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{knitr}{\code{\link[knitr]{kable}}}
+  \item{knitr}{\code{\link[knitr:kable]{kable()}}}
 
-  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
+  \item{magrittr}{\code{\link[magrittr:\%>\%]{\%>\%}}}
 }}
 
