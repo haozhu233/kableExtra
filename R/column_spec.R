@@ -574,12 +574,20 @@ latex_cell_builder <- function(target_row, column, table_info,
   if (!is.null(image) && (length(image) > 1 || !is.null(image[[1]]))) {
     image <- image[[1]]
     if (inherits(image, "kableExtraInlinePlots")) {
+      width_inches <- formatC(
+        round(image$width / image$res, 2),
+        format = "f", digits = 2, decimal.mark = ".", drop0trailing = TRUE
+      )
+      height_inches <- formatC(
+        round(image$height / image$res, 2),
+        format = "f", digits = 2, decimal.mark = ".", drop0trailing = TRUE
+      )
       new_row[column] <- paste0(
         new_row[column],
         '\\\\includegraphics\\[width=',
         # '\\\\raisebox\\{-\\\\totalheight\\}\\{\\\\includegraphics\\[width=',
-        round(image$width / image$res, 2), 'in, height=',
-        round(image$height / image$res, 2), 'in\\]\\{',
+        width_inches, 'in, height=',
+        height_inches, 'in\\]\\{',
         image$path,
         '\\}'
         # '\\}\\}'
