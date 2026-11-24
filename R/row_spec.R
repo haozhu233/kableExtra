@@ -208,6 +208,7 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     table_info <- dup_fx_out[[2]]
   }
 
+  row_terminator <- "\\\\\\\\"
   row <- row + table_info$position_offset
   for (i in row) {
     target_row <- table_info$contents[i]
@@ -219,28 +220,15 @@ row_spec_latex <- function(kable_input, row, bold, italic, monospace,
     temp_sub <- if (i == 1 && (table_info$tabular == "longtable" ||
                                    !is.null(table_info$repeat_header_latex)))
                   gsub else sub
-    if (length(new_row) == 1) {
-      # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", regex_unescape(target_row), "\\E")
-      if (grepl(regex, out)) {
-        out <- temp_sub(regex, new_row, out, perl = TRUE)
-      } else {
-        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                        paste0(new_row, "\\\\\\\\"), out, perl = TRUE)
-      }
-      table_info$contents[i] <- new_row
+    # The row contents are already regex-escaped.
+    row_regex <- paste0("(?m)^", target_row, row_terminator)
+    replacement <- if (length(new_row) == 1) {
+      paste0(new_row, row_terminator)
     } else {
-      # fixed=TRUE is safer but does not always work
-      regex <- paste0("\\Q", regex_unescape(target_row), "\\E(\\\\\\\\)?")
-      if (any(grepl(regex, out))) {
-        out <- temp_sub(regex,
-          paste(new_row, collapse = ""), out, perl = TRUE)
-      } else {
-        out <- temp_sub(paste0(target_row, "\\\\\\\\"),
-                    paste(new_row, collapse = ""), out, perl = TRUE)
-      }
-      table_info$contents[i] <- new_row[1]
+      paste(new_row, collapse = "")
     }
+    out <- temp_sub(row_regex, replacement, out, perl = TRUE)
+    table_info$contents[i] <- new_row[1]
   }
 
   out <- finalize_latex(out, kable_attrs, table_info)
