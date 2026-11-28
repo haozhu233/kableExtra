@@ -1,3 +1,4 @@
+
 kableExtra 1.4.1.3
 --------------------------------------------------------------------------------
 
@@ -6,6 +7,8 @@ Bug Fixes:
 * `collapse_rows()` and `kable_styling()` did not work 
 together properly (#921).
 * `column_spec(image= ...)` could fail to display the image (#926).
+* `column_spec()` produced invalid LaTeX when the default
+decimal separator was a comma (#925).
 
 
 kableExtra 1.4.1

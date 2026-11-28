@@ -51,5 +51,18 @@ test_that("Rmarkdown example from inst/", {
     )
 })
 
+test_that("LaTeX image dimensions use a period decimal mark", {
+    df <- data.frame(item = c("a", "b"), image = "")
+    table <- kbl(df, format = "latex", booktabs = TRUE)
+    images <- spec_image(rep("fixture.png", 2), width = 50, height = 60, res = 300)
+    render_image <- function(decimal_mark) {
+        previous <- options(OutDec = decimal_mark)
+        on.exit(options(previous), add = TRUE)
+        as.character(column_spec(table, 2, image = images))
+    }
 
-
+    comma <- render_image(",")
+    expect_identical(comma, render_image("."))
+    expect_match(comma, "\\includegraphics[width=0.17in, height=0.2in]{fixture.png}",
+                 fixed = TRUE)
+})
