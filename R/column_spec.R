@@ -78,6 +78,9 @@ column_spec <- function(kable_input, column,
   if (!is.numeric(column)) {
     stop("column must be numeric. ")
   }
+  if (inherits(image, "kableExtraInlinePlots")) {
+    image <- list(image)
+  }
   kable_format <- attr(kable_input, "format")
   if (kable_format %in% c("pipe", "markdown")) {
     kable_input <- md_table_parser(kable_input)
