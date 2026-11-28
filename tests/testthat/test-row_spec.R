@@ -64,6 +64,44 @@ test_that("issue #582: RMD kable styling repeates rows when rendering striped ta
 })
 
 
+test_that("LaTeX: match the whole row when the last cell is empty", {
+    df <- data.frame(x = c("a", "b", "b", "c"), y = c("", "extra", "", ""))
+
+    for (booktabs in c(FALSE, TRUE)) {
+        for (longtable in c(FALSE, TRUE)) {
+            table <- kbl(df, format = "latex", booktabs = booktabs, longtable = longtable)
+            for (hline_after in c(FALSE, TRUE)) {
+                output <- row_spec(table, 3, bold = TRUE, hline_after = hline_after)
+                expect_match(output, "\nb & extra\\\\\n", fixed = TRUE)
+                expect_match(output, "\n\\textbf{b} & \\textbf{}\\\\\n", fixed = TRUE)
+            }
+        }
+    }
+
+    striped <- kbl(df, format = "latex") |>
+        kable_styling(latex_options = "striped")
+    expect_match(striped, "\nb & extra\\\\\n", fixed = TRUE)
+    expect_match(striped, "\n\\cellcolor{gray!10}{b} & \\cellcolor{gray!10}{}\\\\\n",
+                 fixed = TRUE)
+})
+
+test_that("LaTeX: disambiguate duplicates without styling a longer row", {
+    df <- data.frame(x = c("ab", "b", "b"), y = "same")
+    output <- kbl(df, format = "latex") |>
+        row_spec(2, bold = TRUE)
+    expect_match(output, "\nab & same\\\\\n", fixed = TRUE)
+    expect_match(output, "\n\\textbf{b} & ", fixed = TRUE)
+    expect_match(output, "\nb & same\\\\\n", fixed = TRUE)
+})
+
+test_that("LaTeX: match raw backslashes and brackets as row content", {
+    df <- data.frame(x = c("plain", "\\E["), y = "raw")
+    output <- kbl(df, format = "latex", escape = FALSE) |>
+        row_spec(2, bold = TRUE)
+    expect_match(output, "\n\\textbf{\\E[} & \\textbf{raw}\\\\\n", fixed = TRUE)
+})
+
+
 test_that("awesome table example", {
     set.seed(1024)
     collapse_rows_dt <- data.frame(

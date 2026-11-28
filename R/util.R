@@ -265,7 +265,7 @@ fix_duplicated_rows_latex <- function(kable_input, table_info) {
       dup_row, "(?<=\\s)([\\S]+[\\s]*)$",
       paste0("\\\\\\\\vphantom\\\\{", empty_times, "\\\\} \\1"))
     kable_input <- sub(
-      paste0(dup_row, "(?=\\s*\\\\\\\\\\*?(\\[.*\\])?)"),
+      paste0("(?m)^", dup_row, "(?=\\\\\\\\)"),
       new_row,
       kable_input,
       perl = TRUE)
