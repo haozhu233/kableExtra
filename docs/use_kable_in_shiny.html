@@ -147,6 +147,7 @@ server &lt;- function(input, output) {
      req(input$mpg)
      mtcars %&gt;%
        mutate(car = rownames(.)) %&gt;%
+       tibble::remove_rownames() %&gt;%
        select(car, everything()) %&gt;%
        filter(mpg &lt;= input$mpg) %&gt;%
        knitr::kable(&quot;html&quot;) %&gt;%
@@ -157,8 +158,7 @@ server &lt;- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server)</code></pre>
-<p>You can copy/paste the code above or simply run:</p>
-<pre class="r"><code>shiny::runGist(&quot;https://gist.github.com/haozhu233/9e675e1a8a1bb4744f9ebc9246a2366b&quot;)</code></pre>
+<p>Copy the example into an <code>app.R</code> file and run <code>shiny::runApp()</code> from that directory.</p>
 
 
 
